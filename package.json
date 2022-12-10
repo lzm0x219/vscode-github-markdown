@@ -1,0 +1,79 @@
+{
+  "name": "vscode-markdown-github",
+  "displayName": "vscode-markdown-github",
+  "version": "1.0.0-development",
+  "description": "A GitHub-style VSCode built-in markdown preview plugin.",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "github",
+    "markdown"
+  ],
+  "homepage": "https://github.com/lzm0x219/vscode-markdown-github#readme",
+  "bugs": {
+    "url": "https://github.com/lzm0x219/vscode-markdown-github/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lzm0x219/vscode-markdown-github.git"
+  },
+  "license": "MIT",
+  "author": "Monet Bird",
+  "main": "dist/main.js",
+  "scripts": {
+    "prebuild": "pnpm clean && pnpm check:typings",
+    "build": "concurrently npm:build:* -c 'auto'",
+    "build:css": "esbuild --bundle styles/main.css --outfile=dist/main.css --minify --analyze",
+    "build:extension": "esbuild src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --minify --analyze",
+    "check:typings": "tsc",
+    "clean": "del dist",
+    "predev": "pnpm clean",
+    "dev": "concurrently npm:dev:* -c 'auto'",
+    "dev:css": "esbuild --bundle styles/main.css --outfile=dist/main.css --watch",
+    "dev:extension": "esbuild src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
+    "preinstall": "npx only-allow pnpm -y",
+    "lint": "rome check",
+    "prepare": "is-ci || husky install",
+    "vscode:prepublish": "pnpm build"
+  },
+  "contributes": {
+    "markdown.markdownItPlugins": true,
+    "markdown.previewStyles": [
+      "./dist/main.css"
+    ]
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,cjs}": [
+      "rome format --write",
+      "rome check"
+    ],
+    "*.{md,html,css,json,yml}": "prettier --write",
+    "!(*pnpm-lock).yaml": "prettier --write",
+    "package.json": "pnpm sort-package-json"
+  },
+  "dependencies": {
+    "markdown-it-emoji": "2.0.2"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "12.2.3",
+    "@types/node": "18.11.12",
+    "@types/vscode": "1.74.0",
+    "@vscode/test-electron": "2.2.1",
+    "@vscode/vsce": "2.15.0",
+    "concurrently": "7.6.0",
+    "del-cli": "5.0.0",
+    "esbuild": "0.16.4",
+    "husky": "8.0.2",
+    "is-ci": "3.0.1",
+    "lint-staged": "13.1.0",
+    "prettier": "2.8.1",
+    "prettier-plugin-packagejson": "2.3.0",
+    "rome": "11.0.0",
+    "sort-package-json": "2.1.0",
+    "typescript": "4.9.4"
+  },
+  "engines": {
+    "vscode": "^1.20.0"
+  }
+}
