@@ -8,8 +8,45 @@
 
 ## Roadmap
 
-- [ ] Github Styles
+### Basic
+
+- Github themes
+  - [ ] Headings
+  - [ ] Styling text
+  - [ ] Bold
+  - [ ] Italic
+  - [ ] Strike through
+  - [ ] Bold and nested italic
+  - [ ] All bold and italic
+  - [ ] Subscript
+  - [ ] Superscript
+  - [ ] Paragraphs
+  - [ ] Quoting text
+  - [ ] Quoting code
+  - [ ] Supported color models
+  - [ ] Links
+  - [ ] Section links
+  - [ ] Images
+  - [ ] Lists
+  - [ ] Task lists
+  - [ ] Using emoji
+  - [ ] Footnotes
+  - [ ] Table
+  - [ ] Collapsed section
 - [ ] Multi-language Support
+
+### Advanced Features
+
+- [ ] Mentioning people and teams
+- [ ] Mermaid diagrams
+- [ ] GeoJSON and TopoJSON maps
+- [ ] STL 3D models
+- [ ] Mathematical expressions
+- [ ] Autolinked references and URLs
+
+### Misc
+
+- [ ] Automatically adapt to the theme
 
 ## Related Information
 
