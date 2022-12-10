@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@types/markdown-it": "12.2.3",
-    "@types/node": "18.11.12",
+    "@types/node": "18.11.13",
     "@types/vscode": "1.74.0",
     "@vscode/test-electron": "2.2.1",
     "@vscode/vsce": "2.15.0",
