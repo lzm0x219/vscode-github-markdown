@@ -1,14 +1,17 @@
 {
   "name": "vscode-markdown-github",
-  "displayName": "vscode-markdown-github",
-  "version": "1.0.0-development",
+  "displayName": "Github Markdown",
+  "version": "1.0.0-beta.0",
   "description": "A GitHub-style VSCode built-in markdown preview plugin.",
   "categories": [
     "Other"
   ],
   "keywords": [
     "github",
-    "markdown"
+    "github markdown",
+    "markdown",
+    "markdown style",
+    "markdown theme"
   ],
   "homepage": "https://github.com/lzm0x219/vscode-markdown-github#readme",
   "bugs": {
@@ -19,7 +22,10 @@
     "url": "git+https://github.com/lzm0x219/vscode-markdown-github.git"
   },
   "license": "MIT",
-  "author": "Monet Bird",
+  "author": {
+    "name": "Monet Bird"
+  },
+  "publisher": "lzm0x219",
   "main": "dist/main.js",
   "scripts": {
     "prebuild": "pnpm clean && pnpm check:typings",
@@ -89,5 +95,7 @@
   "engines": {
     "node": ">=16.x",
     "vscode": "^1.20.0"
-  }
+  },
+  "icon": "assets/logo.png",
+  "pricing": "Free"
 }
