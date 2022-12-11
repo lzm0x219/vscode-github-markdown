@@ -1,10 +1,23 @@
 # vscode-markdown-github
 
+<img src="https://i.328888.xyz/2022/12/12/yC8aN.png" align="right" width="100" />
+
 📝 A GitHub-style VSCode built-in markdown preview plugin.
 
-## Status
+## Feature
 
-🚧 In development...
+- 🐈 Completely restore the style of github markdown.
+- 🐈‍⬛ Multiple Github themes will be supported in the future.
+- 😺 Extends VS Code's built-in markdown preview.
+- 🚧 Long term maintenance.
+
+## Screenshot
+
+[![zh6naT.png](https://s1.ax1x.com/2022/12/12/zh6naT.png)](https://imgse.com/i/zh6naT)
+
+## Usage
+
+Please see the [VSCode Markdown Preview documentation](https://code.visualstudio.com/Docs/languages/markdown#_markdown-preview) for instructions on how to use this extension.
 
 ## Roadmap
 
