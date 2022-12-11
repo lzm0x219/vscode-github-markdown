@@ -24,13 +24,13 @@
   "scripts": {
     "prebuild": "pnpm clean && pnpm check:typings",
     "build": "concurrently npm:build:* -c 'auto'",
-    "build:css": "esbuild --bundle styles/main.css --outfile=dist/main.css --minify --analyze",
+    "build:css": "tsx scripts/buildStyles",
     "build:extension": "esbuild src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --minify --analyze",
     "check:typings": "tsc",
     "clean": "del dist",
     "predev": "pnpm clean",
     "dev": "concurrently npm:dev:* -c 'auto'",
-    "dev:css": "esbuild --bundle styles/main.css --outfile=dist/main.css --watch",
+    "dev:css": "tsx scripts/buildStyles -w",
     "dev:extension": "esbuild src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
     "preinstall": "npx only-allow pnpm -y",
     "lint": "rome check",
@@ -64,6 +64,7 @@
     "concurrently": "7.6.0",
     "del-cli": "5.0.0",
     "esbuild": "0.16.4",
+    "esbuild-sass-plugin": "2.4.3",
     "husky": "8.0.2",
     "is-ci": "3.0.1",
     "lint-staged": "13.1.0",
@@ -71,9 +72,12 @@
     "prettier-plugin-packagejson": "2.3.0",
     "rome": "11.0.0",
     "sort-package-json": "2.1.0",
-    "typescript": "4.9.4"
+    "tsx": "3.12.1",
+    "typescript": "4.9.4",
+    "zx": "7.1.1"
   },
   "engines": {
+    "node": ">=16.x",
     "vscode": "^1.20.0"
   }
 }
