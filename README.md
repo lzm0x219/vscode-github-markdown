@@ -21,7 +21,7 @@
     - [x] Subscript
     - [x] Superscript
   - [x] Paragraphs
-  - [ ] Quoting text
+  - [x] Quoting text
   - [ ] Quoting code
   - [ ] Supported color models
   - [ ] Links
