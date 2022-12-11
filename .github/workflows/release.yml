@@ -36,13 +36,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
-      - name: Publish pre-release version
-        if: success() && github.event.type == 'published'
-        run: pnpm release:pre
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      # - name: Publish pre-release version
+      #   if: success() && github.event.type == 'published'
+      #   run: pnpm release:pre
+      #   env:
+      #     VSCE_PAT: ${{ secrets.VSCE_PAT }}
       - name: Publish official version
-        if: success() && github.event.type == 'prereleased'
+        if: success()
         run: pnpm release
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
