@@ -16,6 +16,7 @@
     "octicon",
     "outfile",
     "packagejson",
-    "predev"
+    "predev",
+    "prereleased"
   ]
 }
