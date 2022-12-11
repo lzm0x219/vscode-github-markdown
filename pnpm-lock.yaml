@@ -15,6 +15,7 @@ specifiers:
   is-ci: 3.0.1
   lint-staged: 13.1.0
   markdown-it-emoji: 2.0.2
+  markdown-it-footnote: 3.0.3
   markdown-it-github-headings: 2.0.1
   markdown-it-highlightjs: 4.0.1
   markdown-it-task-lists: 2.1.1
@@ -29,6 +30,7 @@ specifiers:
 dependencies:
   highlight.js: 11.7.0
   markdown-it-emoji: 2.0.2
+  markdown-it-footnote: 3.0.3
   markdown-it-github-headings: 2.0.1
   markdown-it-highlightjs: 4.0.1
   markdown-it-task-lists: 2.1.1
@@ -1892,6 +1894,10 @@ packages:
 
   /markdown-it-emoji/2.0.2:
     resolution: {integrity: sha512-zLftSaNrKuYl0kR5zm4gxXjHaOI3FAOEaloKmRA5hijmJZvSjmxcokOLlzycb/HXlUFWzXqpIEoyEMCE4i9MvQ==}
+    dev: false
+
+  /markdown-it-footnote/3.0.3:
+    resolution: {integrity: sha512-YZMSuCGVZAjzKMn+xqIco9d1cLGxbELHZ9do/TSYVzraooV8ypsppKNmUJ0fVH5ljkCInQAtFpm8Rb3eXSrt5w==}
     dev: false
 
   /markdown-it-github-headings/2.0.1:

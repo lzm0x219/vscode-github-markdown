@@ -26,12 +26,14 @@
     "build": "concurrently npm:build:* -c 'auto'",
     "build:css": "tsx scripts/buildStyles",
     "build:extension": "esbuild src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --minify --analyze",
+    "build:web": "esbuild web/main.ts --bundle --outfile=dist/web.js --minify --analyze",
     "check:typings": "tsc",
     "clean": "del dist",
     "predev": "pnpm clean",
     "dev": "concurrently npm:dev:* -c 'auto'",
     "dev:css": "tsx scripts/buildStyles -w",
     "dev:extension": "esbuild src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
+    "dev:web": "esbuild web/main.ts --bundle --outfile=dist/web.js --sourcemap --watch",
     "preinstall": "npx only-allow pnpm -y",
     "lint": "rome check",
     "prepare": "is-ci || husky install",
@@ -39,6 +41,9 @@
   },
   "contributes": {
     "markdown.markdownItPlugins": true,
+    "markdown.previewScripts": [
+      "./dist/web.js"
+    ],
     "markdown.previewStyles": [
       "./dist/main.css"
     ]
@@ -55,6 +60,7 @@
   "dependencies": {
     "highlight.js": "11.7.0",
     "markdown-it-emoji": "2.0.2",
+    "markdown-it-footnote": "3.0.3",
     "markdown-it-github-headings": "2.0.1",
     "markdown-it-highlightjs": "4.0.1",
     "markdown-it-task-lists": "2.1.1"
