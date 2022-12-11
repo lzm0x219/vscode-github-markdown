@@ -32,8 +32,7 @@
   - [x] Task lists
     - [ ] Associate github's issue and pr
   - [x] Using emoji
-    - [ ] \<g-emoji\>
-  - [ ] Footnotes
+  - [x] Footnotes
   - [x] Table
   - [x] Collapsed section
 - [ ] Multi-language Support
