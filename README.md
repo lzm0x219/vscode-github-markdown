@@ -31,7 +31,7 @@
   - [x] Lists
   - [ ] Task lists
   - [x] Using emoji
-    - [ ] <g-emoji>
+    - [ ] \<g-emoji\>
   - [ ] Footnotes
   - [ ] Table
   - [ ] Collapsed section
