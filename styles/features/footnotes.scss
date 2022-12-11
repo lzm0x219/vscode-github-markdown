@@ -1,0 +1,41 @@
+.vscode-markdown-github {
+  .footnotes {
+    font-size: 12px;
+    color: var(--color-fg-muted);
+    border-top: 1px solid var(--color-border-default);
+
+    .footnote-backref {
+      font-family: monospace;
+    }
+
+    ol {
+      padding-left: 16px;
+
+      ul {
+        display: inline-block;
+        padding-left: 16px;
+        margin-top: 16px;
+      }
+    }
+
+    li {
+      position: relative;
+    }
+
+    li:target::before {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      bottom: -8px;
+      left: -24px;
+      pointer-events: none;
+      content: "";
+      border: 2px solid var(--color-accent-emphasis);
+      border-radius: 6px;
+    }
+
+    li:target {
+      color: var(--color-fg-default);
+    }
+  }
+}
