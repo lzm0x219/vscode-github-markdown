@@ -13,11 +13,11 @@
 - Github themes
   - [x] Headings
   - [ ] Styling text
-  - [ ] Bold
-  - [ ] Italic
-  - [ ] Strike through
-  - [ ] Bold and nested italic
-  - [ ] All bold and italic
+    - [ ] Bold
+    - [ ] Italic
+    - [ ] Strike through
+    - [ ] Bold and nested italic
+    - [ ] All bold and italic
   - [ ] Subscript
   - [ ] Superscript
   - [ ] Paragraphs
