@@ -24,7 +24,6 @@
   - [x] Quoting text
   - [x] Quoting code
     - [ ] Copy
-  - [ ] Supported color models
   - [x] Links
   - [x] Section links
   - [x] Images
@@ -35,6 +34,7 @@
   - [x] Footnotes
   - [x] Table
   - [x] Collapsed section
+  - [ ] Supported color models
 - [ ] Multi-language Support
 
 ### Advanced Features
