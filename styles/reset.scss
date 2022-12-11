@@ -1,7 +1,9 @@
 html,
-body {
+body,
+.markdown-body {
   padding: 0;
-  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 body.showEditorSelection .code-line {
@@ -13,8 +15,9 @@ body.showEditorSelection .code-line {
 }
 
 .vscode-body.scrollBeyondLastLine .vscode-markdown-github {
-  height: 100vh;
-  overflow-y: scroll;
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .vscode-dark.showEditorSelection .code-line:hover:before {
