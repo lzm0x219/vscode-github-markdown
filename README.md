@@ -20,7 +20,7 @@
     - [x] All bold and italic
     - [x] Subscript
     - [x] Superscript
-  - [ ] Paragraphs
+  - [x] Paragraphs
   - [ ] Quoting text
   - [ ] Quoting code
   - [ ] Supported color models
