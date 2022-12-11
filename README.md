@@ -34,7 +34,7 @@
     - [ ] \<g-emoji\>
   - [ ] Footnotes
   - [x] Table
-  - [ ] Collapsed section
+  - [x] Collapsed section
 - [ ] Multi-language Support
 
 ### Advanced Features

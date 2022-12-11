@@ -1,0 +1,17 @@
+.vscode-markdown-github {
+  details {
+    margin-top: 0;
+    margin-bottom: 16px;
+
+    summary {
+      cursor: pointer;
+    }
+
+    &:not([open]) {
+      // Set details content hidden by default for browsers that don't do this
+      > *:not(summary) {
+        display: none !important;
+      }
+    }
+  }
+}
