@@ -28,7 +28,7 @@
   - [x] Links
   - [x] Section links
   - [x] Images
-  - [ ] Lists
+  - [x] Lists
   - [ ] Task lists
   - [ ] Using emoji
   - [ ] Footnotes
