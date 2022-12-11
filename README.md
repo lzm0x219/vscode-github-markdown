@@ -25,7 +25,7 @@
   - [ ] Quoting code
   - [ ] Supported color models
   - [ ] Links
-  - [ ] Section links
+  - [x] Section links
   - [ ] Images
   - [ ] Lists
   - [ ] Task lists
