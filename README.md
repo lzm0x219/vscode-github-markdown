@@ -27,7 +27,7 @@
   - [ ] Supported color models
   - [x] Links
   - [x] Section links
-  - [ ] Images
+  - [x] Images
   - [ ] Lists
   - [ ] Task lists
   - [ ] Using emoji
