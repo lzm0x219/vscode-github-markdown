@@ -3,6 +3,14 @@ body {
   padding: 0;
 }
 
-body.scrollBeyondLastLine {
+.vscode-body.scrollBeyondLastLine {
   margin-bottom: 0;
+}
+
+.vscode-body.scrollBeyondLastLine .vscode-markdown-github {
+  padding-bottom: 100vh !important;
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+  display: none;
 }

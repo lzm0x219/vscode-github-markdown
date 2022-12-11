@@ -14,6 +14,7 @@ specifiers:
   is-ci: 3.0.1
   lint-staged: 13.1.0
   markdown-it-emoji: 2.0.2
+  markdown-it-github-headings: 2.0.1
   prettier: 2.8.1
   prettier-plugin-packagejson: 2.3.0
   rome: 11.0.0
@@ -24,6 +25,7 @@ specifiers:
 
 dependencies:
   markdown-it-emoji: 2.0.2
+  markdown-it-github-headings: 2.0.1
 
 devDependencies:
   '@types/markdown-it': 12.2.3
@@ -1477,6 +1479,10 @@ packages:
     resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}
     dev: true
 
+  /github-slugger/1.5.0:
+    resolution: {integrity: sha512-wIh+gKBI9Nshz2o46B0B3f5k/W+WI9ZAv6y5Dn5WJ5SK1t0TnDimB4WE5rmTD05ZAIn8HALCZVmCsvj0w0v0lw==}
+    dev: false
+
   /glob-parent/5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
@@ -1558,6 +1564,10 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
+  /html-entities/1.4.0:
+    resolution: {integrity: sha512-8nxjcBcd8wovbeKx7h3wTji4e6+rhaVuPNpMqwWgnHh+N9ToqsCs6XztWRBPQ+UtzsoMAdKZtUENoVzU/EMtZA==}
+    dev: false
+
   /htmlparser2/8.0.1:
     resolution: {integrity: sha512-4lVbmc1diZC7GUJQtRQ5yBAeUCL1exyMwmForWkRLnwyzWBFxN633SALPMGYaWZvKe9j1pRZJpauvmxENSp/EA==}
     dependencies:
@@ -1636,6 +1646,12 @@ packages:
   /ini/1.3.8:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
     dev: true
+
+  /innertext/1.0.3:
+    resolution: {integrity: sha512-ZC410b7IbrTrmt8bQb27xUOJgXkJu+XL6MVncb9FGyxjRIHyQqNjpSDY20zvSUttkAiYj0dait/67/sXyWvwYg==}
+    dependencies:
+      html-entities: 1.4.0
+    dev: false
 
   /is-arrayish/0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
@@ -1865,6 +1881,13 @@ packages:
 
   /markdown-it-emoji/2.0.2:
     resolution: {integrity: sha512-zLftSaNrKuYl0kR5zm4gxXjHaOI3FAOEaloKmRA5hijmJZvSjmxcokOLlzycb/HXlUFWzXqpIEoyEMCE4i9MvQ==}
+    dev: false
+
+  /markdown-it-github-headings/2.0.1:
+    resolution: {integrity: sha512-5CeRu1ANVJcEqCWxhYoECzb/7Wx//mW1eu3AoU3AgJe+wbSf4+ct83jRTQO0jQr5BPEMxaGVL6lPNS9Vf9nlHg==}
+    dependencies:
+      github-slugger: 1.5.0
+      innertext: 1.0.3
     dev: false
 
   /markdown-it/12.3.2:

@@ -5,6 +5,8 @@
   line-height: 1.5;
   word-wrap: break-word;
   padding: 16px 32px 32px;
+  color: var(--color-fg-default);
+  background-color: var(--color-canvas-default);
 
   &::before {
     display: table;
