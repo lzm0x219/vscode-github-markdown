@@ -1,6 +1,7 @@
 html,
 body {
   padding: 0;
+  overflow: hidden;
 }
 
 .vscode-body.scrollBeyondLastLine {
@@ -8,7 +9,8 @@ body {
 }
 
 .vscode-body.scrollBeyondLastLine .vscode-markdown-github {
-  padding-bottom: 100vh !important;
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 .vscode-dark.showEditorSelection .code-line:hover:before {
