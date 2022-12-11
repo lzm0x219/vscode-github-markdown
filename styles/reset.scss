@@ -4,6 +4,10 @@ body {
   overflow: hidden;
 }
 
+body.showEditorSelection .code-line {
+  position: static;
+}
+
 .vscode-body.scrollBeyondLastLine {
   margin-bottom: 0;
 }
