@@ -29,7 +29,8 @@
   - [x] Section links
   - [x] Images
   - [x] Lists
-  - [ ] Task lists
+  - [x] Task lists
+    - [ ] Associate github's issue and pr
   - [x] Using emoji
     - [ ] \<g-emoji\>
   - [ ] Footnotes
