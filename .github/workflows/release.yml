@@ -38,11 +38,11 @@ jobs:
       # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
       - name: Publish pre-release version
         if: success() && github.event.type == 'published'
-        run: pnpm publish:pre
+        run: pnpm release:pre
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
       - name: Publish official version
         if: success() && github.event.type == 'prereleased'
-        run: pnpm publish:pre
+        run: pnpm release
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
