@@ -17,6 +17,7 @@ specifiers:
   markdown-it-emoji: 2.0.2
   markdown-it-github-headings: 2.0.1
   markdown-it-highlightjs: 4.0.1
+  markdown-it-task-lists: 2.1.1
   prettier: 2.8.1
   prettier-plugin-packagejson: 2.3.0
   rome: 11.0.0
@@ -30,6 +31,7 @@ dependencies:
   markdown-it-emoji: 2.0.2
   markdown-it-github-headings: 2.0.1
   markdown-it-highlightjs: 4.0.1
+  markdown-it-task-lists: 2.1.1
 
 devDependencies:
   '@types/markdown-it': 12.2.3
@@ -1903,6 +1905,10 @@ packages:
     resolution: {integrity: sha512-EPXwFEN6P5nqR3G4KjT20r20xbGYKMMA/360hhSYFmeoGXTE6hsLtJAiB/8ID8slVH4CWHHEL7GX0YenyIstVQ==}
     dependencies:
       highlight.js: 11.7.0
+    dev: false
+
+  /markdown-it-task-lists/2.1.1:
+    resolution: {integrity: sha512-TxFAc76Jnhb2OUu+n3yz9RMu4CwGfaT788br6HhEDlvWfdeJcLUsxk1Hgw2yJio0OXsxv7pyIPmvECY7bMbluA==}
     dev: false
 
   /markdown-it/12.3.2:
