@@ -12,14 +12,14 @@
 
 - Github themes
   - [x] Headings
-  - [ ] Styling text
-    - [ ] Bold
-    - [ ] Italic
-    - [ ] Strike through
-    - [ ] Bold and nested italic
-    - [ ] All bold and italic
-    - [ ] Subscript
-    - [ ] Superscript
+  - [x] Styling text
+    - [x] Bold
+    - [x] Italic
+    - [x] Strike through
+    - [x] Bold and nested italic
+    - [x] All bold and italic
+    - [x] Subscript
+    - [x] Superscript
   - [ ] Paragraphs
   - [ ] Quoting text
   - [ ] Quoting code
