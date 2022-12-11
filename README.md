@@ -23,6 +23,7 @@
   - [x] Paragraphs
   - [x] Quoting text
   - [x] Quoting code
+    - [ ] Copy
   - [ ] Supported color models
   - [x] Links
   - [x] Section links
