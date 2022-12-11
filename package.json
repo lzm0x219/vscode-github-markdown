@@ -54,6 +54,7 @@
       "./dist/main.css"
     ]
   },
+  "activationEvents": [],
   "lint-staged": {
     "*.{ts,tsx,js,cjs}": [
       "rome format --write",
