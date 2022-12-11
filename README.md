@@ -11,7 +11,7 @@
 ### Basic
 
 - Github themes
-  - [ ] Headings
+  - [x] Headings
   - [ ] Styling text
   - [ ] Bold
   - [ ] Italic
