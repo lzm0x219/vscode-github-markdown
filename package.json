@@ -42,7 +42,11 @@
     "dev:web": "esbuild web/main.ts --bundle --outfile=dist/web.js --sourcemap --watch",
     "preinstall": "npx only-allow pnpm -y",
     "lint": "rome check",
+    "package": "pnpm vsce package --no-dependencies",
+    "package:pre": "pnpm vsce package --pre-release --no-dependencies",
     "prepare": "is-ci || husky install",
+    "publish": "pnpm vsce publish --no-dependencies",
+    "publish:pre": "pnpm vsce publish --pre-release --no-dependencies",
     "vscode:prepublish": "pnpm build"
   },
   "contributes": {
