@@ -4,7 +4,7 @@
 
 ## Status
 
-🤔 In designing...
+🚧 In development...
 
 ## Roadmap
 
@@ -18,8 +18,8 @@
     - [ ] Strike through
     - [ ] Bold and nested italic
     - [ ] All bold and italic
-  - [ ] Subscript
-  - [ ] Superscript
+    - [ ] Subscript
+    - [ ] Superscript
   - [ ] Paragraphs
   - [ ] Quoting text
   - [ ] Quoting code
