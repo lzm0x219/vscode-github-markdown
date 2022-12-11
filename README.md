@@ -30,7 +30,8 @@
   - [x] Images
   - [x] Lists
   - [ ] Task lists
-  - [ ] Using emoji
+  - [x] Using emoji
+    - [ ] <g-emoji>
   - [ ] Footnotes
   - [ ] Table
   - [ ] Collapsed section
