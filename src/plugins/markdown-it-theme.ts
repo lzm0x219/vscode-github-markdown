@@ -1,4 +1,4 @@
-export default function markdownItGithubTheme(md: markdownit) {
+export default function markdownItTheme(md: markdownit) {
 	const render = md.renderer.render;
 	const theme = "github-light-default";
 
