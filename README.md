@@ -33,7 +33,7 @@
   - [x] Using emoji
     - [ ] \<g-emoji\>
   - [ ] Footnotes
-  - [ ] Table
+  - [x] Table
   - [ ] Collapsed section
 - [ ] Multi-language Support
 
