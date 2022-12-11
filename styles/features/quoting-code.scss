@@ -1,0 +1,76 @@
+.vscode-markdown-github {
+  code,
+  tt {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    white-space: break-spaces;
+    background-color: var(--color-neutral-muted);
+    border-radius: 6px;
+    color: var(--color-fg-default);
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+      Liberation Mono, monospace;
+
+    br {
+      display: none;
+    }
+  }
+
+  del code {
+    text-decoration: inherit;
+  }
+
+  samp {
+    font-size: 85%;
+  }
+
+  pre {
+    word-wrap: normal;
+
+    code {
+      font-size: 100%;
+    }
+
+    // Code tags within code blocks (<pre>s)
+    > code {
+      padding: 0;
+      margin: 0;
+      word-break: normal;
+      white-space: pre;
+      background: transparent;
+      border: 0;
+    }
+  }
+
+  .highlight {
+    margin-bottom: 16px;
+
+    pre {
+      margin-bottom: 0;
+      word-break: normal;
+    }
+  }
+
+  .highlight pre,
+  pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: var(--color-canvas-subtle);
+    border-radius: 6px;
+  }
+
+  pre code,
+  pre tt {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+}

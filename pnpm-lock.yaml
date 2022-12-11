@@ -10,11 +10,13 @@ specifiers:
   del-cli: 5.0.0
   esbuild: 0.16.4
   esbuild-sass-plugin: 2.4.3
+  highlight.js: 11.7.0
   husky: 8.0.2
   is-ci: 3.0.1
   lint-staged: 13.1.0
   markdown-it-emoji: 2.0.2
   markdown-it-github-headings: 2.0.1
+  markdown-it-highlightjs: 4.0.1
   prettier: 2.8.1
   prettier-plugin-packagejson: 2.3.0
   rome: 11.0.0
@@ -24,8 +26,10 @@ specifiers:
   zx: 7.1.1
 
 dependencies:
+  highlight.js: 11.7.0
   markdown-it-emoji: 2.0.2
   markdown-it-github-headings: 2.0.1
+  markdown-it-highlightjs: 4.0.1
 
 devDependencies:
   '@types/markdown-it': 12.2.3
@@ -1557,6 +1561,11 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /highlight.js/11.7.0:
+    resolution: {integrity: sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==}
+    engines: {node: '>=12.0.0'}
+    dev: false
+
   /hosted-git-info/4.1.0:
     resolution: {integrity: sha512-kyCuEOWjJqZuDbRHzL8V93NzQhwIB71oFWSyzVo+KPZI+pnQPPxucdkrOZvkLRnrf5URsQM+IJ09Dw29cRALIA==}
     engines: {node: '>=10'}
@@ -1888,6 +1897,12 @@ packages:
     dependencies:
       github-slugger: 1.5.0
       innertext: 1.0.3
+    dev: false
+
+  /markdown-it-highlightjs/4.0.1:
+    resolution: {integrity: sha512-EPXwFEN6P5nqR3G4KjT20r20xbGYKMMA/360hhSYFmeoGXTE6hsLtJAiB/8ID8slVH4CWHHEL7GX0YenyIstVQ==}
+    dependencies:
+      highlight.js: 11.7.0
     dev: false
 
   /markdown-it/12.3.2:

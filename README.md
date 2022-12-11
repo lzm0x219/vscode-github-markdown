@@ -22,7 +22,7 @@
     - [x] Superscript
   - [x] Paragraphs
   - [x] Quoting text
-  - [ ] Quoting code
+  - [x] Quoting code
   - [ ] Supported color models
   - [ ] Links
   - [x] Section links
