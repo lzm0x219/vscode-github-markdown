@@ -16,6 +16,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > - 🚀 Performance
 > - 📝 Documentation
 
+## [v1.1.3] (2022-12-12)
+
+### 💎 Improve
+
+- Supported to version 1.41 and above.
+
 ## [v1.1.2] (2022-12-12)
 
 ### 🚧 Maintenance
@@ -47,6 +53,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Added full github markdown preview style. 🎉
 
+[v1.1.3]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.2...v1.1.3
 [v1.1.2]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.1...v1.1.2
 [v1.1.1]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.0.0...v1.1.0
