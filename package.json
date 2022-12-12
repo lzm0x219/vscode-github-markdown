@@ -79,7 +79,7 @@
   "devDependencies": {
     "@types/markdown-it": "12.2.3",
     "@types/node": "18.11.13",
-    "@types/vscode": "1.74.0",
+    "@types/vscode": "1.41.0",
     "@vscode/test-electron": "2.2.1",
     "@vscode/vsce": "2.15.0",
     "concurrently": "7.6.0",
@@ -98,8 +98,7 @@
     "zx": "7.1.1"
   },
   "engines": {
-    "node": ">=16.x",
-    "vscode": "^1.74.0"
+    "vscode": "^1.41.0"
   },
   "icon": "assets/logo.png",
   "pricing": "Free"
