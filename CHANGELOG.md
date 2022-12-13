@@ -16,6 +16,17 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > - 🚀 Performance
 > - 📝 Documentation
 
+## [v1.2.0] (2022-12-14)
+
+### ✨ Feature
+
+- Add commands and configure changes to preview themes.
+- Add the ability to automatically adapt to the editor's theme.
+
+### 🚧 Maintenance
+
+- Update codacy/codacy-analysis-cli-action digest to c4be364.
+
 ## [v1.1.3] (2022-12-12)
 
 ### 💎 Improve
@@ -53,6 +64,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Added full github markdown preview style. 🎉
 
+[v1.2.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.3...v1.2.0
 [v1.1.3]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.2...v1.1.3
 [v1.1.2]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.1...v1.1.2
 [v1.1.1]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.0...v1.1.1
