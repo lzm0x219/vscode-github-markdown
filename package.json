@@ -50,15 +50,53 @@
     "vscode:prepublish": "pnpm build"
   },
   "contributes": {
+    "commands": [
+      {
+        "command": "vscode-markdown-github.changeTheme",
+        "title": "Github Markdown: Change Preview Theme"
+      }
+    ],
+    "configuration": {
+      "title": "Github Markdown",
+      "properties": {
+        "vscode-markdown-github.theme": {
+          "type": "string",
+          "description": "Color theme for the styling of the Markdown preview.",
+          "enum": [
+            "github-light-default",
+            "github-dark-default"
+          ],
+          "enumItemLabels": [
+            "Github Light",
+            "Github Dark"
+          ],
+          "enumDescriptions": [
+            "Always use a GitHub-style light theme.",
+            "Always use a GitHub-style dark theme."
+          ],
+          "default": "github-light-default"
+        }
+      }
+    },
     "markdown.markdownItPlugins": true,
     "markdown.previewScripts": [
       "./dist/web.js"
     ],
     "markdown.previewStyles": [
       "./dist/main.css"
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "vscode-markdown-github.changeTheme",
+          "when": "editorLangId == markdown"
+        }
+      ]
+    }
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:vscode-markdown-github.changeTheme"
+  ],
   "lint-staged": {
     "*.{ts,tsx,js,cjs}": [
       "rome format --write",

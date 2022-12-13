@@ -1,7 +1,15 @@
 import vscode from "vscode";
+import { onChangeTheme } from "./themes";
+import commands from "./commands";
 import markdownItTheme from "./plugins/markdown-it-theme";
 
-export function activate(_context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) {
+	const registerCommands = commands.map(({ command, commandHander }) =>
+		vscode.commands.registerCommand(command, commandHander),
+	);
+
+	context.subscriptions.push(onChangeTheme, ...registerCommands);
+
 	return {
 		extendMarkdownIt(md: markdownit) {
 			return md
