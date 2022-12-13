@@ -3,11 +3,16 @@ import { configurationSection, getConfiguration } from "./configuration";
 
 export type Theme = typeof themes[number];
 
-export const themes = ["github-light-default", "github-dark-default"] as const;
+export const themes = [
+	"github-light-default",
+	"github-dark-default",
+	"vscode-theme-auto",
+] as const;
 
 export const themeAlias: Record<Theme, string> = {
 	"github-light-default": "Github Light",
 	"github-dark-default": "Github Dark",
+	"vscode-theme-auto": "Auto",
 };
 
 export const themeSection = "theme";
