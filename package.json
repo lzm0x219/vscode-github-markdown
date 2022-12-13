@@ -64,15 +64,18 @@
           "description": "Color theme for the styling of the Markdown preview.",
           "enum": [
             "github-light-default",
-            "github-dark-default"
+            "github-dark-default",
+            "vscode-theme-auto"
           ],
           "enumItemLabels": [
             "Github Light",
-            "Github Dark"
+            "Github Dark",
+            "Auto"
           ],
           "enumDescriptions": [
             "Always use a GitHub-style light theme.",
-            "Always use a GitHub-style dark theme."
+            "Always use a GitHub-style dark theme.",
+            "Always use VSCode's current theme."
           ],
           "default": "github-light-default"
         }
