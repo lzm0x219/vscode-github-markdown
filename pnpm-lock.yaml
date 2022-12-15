@@ -1,6 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@primer/css': 20.7.1
+  '@primer/primitives': 7.10.0
+  '@primer/view-components': 0.0.115
   '@types/markdown-it': 12.2.3
   '@types/node': 18.11.15
   '@types/vscode': 1.41.0
@@ -28,6 +31,9 @@ specifiers:
   zx: 7.1.1
 
 dependencies:
+  '@primer/css': 20.7.1
+  '@primer/primitives': 7.10.0
+  '@primer/view-components': 0.0.115
   highlight.js: 11.7.0
   markdown-it-emoji: 2.0.2
   markdown-it-footnote: 3.0.3
@@ -316,6 +322,54 @@ packages:
     dev: true
     optional: true
 
+  /@github/auto-check-element/5.2.0:
+    resolution: {integrity: sha512-YODZZUSeoZVJQ04p73MAohrEK37SJlVRDUTaFiPYse9K3z3bNEm+ekq5qYCIyDKGgX7hUhr3WZF35qHxr/zu0Q==}
+    dependencies:
+      '@github/mini-throttle': 1.0.7
+    dev: false
+
+  /@github/auto-complete-element/3.3.4:
+    resolution: {integrity: sha512-b9SBCLIQGfCI3G0pGYE8rBSUDON5iFKUgHXgAtVdgZii0dnLFxNl5tn1R/RaBEFdzBQPDl9vqu41TF/Hs3w8FA==}
+    dependencies:
+      '@github/combobox-nav': 2.1.5
+    dev: false
+
+  /@github/catalyst/1.6.0:
+    resolution: {integrity: sha512-u8A+DameixqpeyHzvnJWTGj+wfiskQOYHzSiJscCWVfMkIT3rxnbHMtGh3lMthaRY21nbUOK71WcsCnCrXhBJQ==}
+    dev: false
+
+  /@github/clipboard-copy-element/1.1.2:
+    resolution: {integrity: sha512-L6CMrcA5we0udafvoSuRCE/Ci/3xrLWKYRGup2IlhxF771bQYsQ2EB1of182pI8ZWM4oxgwzu37+igMeoZjN/A==}
+    dev: false
+
+  /@github/combobox-nav/2.1.5:
+    resolution: {integrity: sha512-dmG1PuppNKHnBBEcfylWDwj9SSxd/E/qd8mC1G/klQC3s7ps5q6JZ034mwkkG0LKfI+Y+UgEua/ROD776N400w==}
+    dev: false
+
+  /@github/details-menu-element/1.0.13:
+    resolution: {integrity: sha512-gMkii86w/oUP5dq8yOWZn1sgbgtFj3AYETxxtpsqRggZktgd8te4+npAn4Hm+936c/lxmEzXqfjARL/CzGR4+w==}
+    dev: false
+
+  /@github/image-crop-element/5.0.0:
+    resolution: {integrity: sha512-Vgm2OwWAs1ESoib/t5sjxsAYo6YTOxxAjWDRxswX7qrqoyCejTZ3hshdo4Ep5e+Mz/GVTZC3rdMtg06dk/eT4g==}
+    dev: false
+
+  /@github/mini-throttle/1.0.7:
+    resolution: {integrity: sha512-1fzCDXpxI4J59pNmO0r0Y1g+R8Sa2B5ersce8AuFu5STMu7b++9osdedK0zWduYowBIgsPQZihJBN19WrAF64g==}
+    dev: false
+
+  /@github/mini-throttle/2.1.0:
+    resolution: {integrity: sha512-iEeR2OdVCPkdIPUszL8gJnKNu4MR8ANh7y0u/LPyaatYezgaWxUZEzhFntloqQq+HE6MZkFy+cl+xzCNuljOdw==}
+    dev: false
+
+  /@github/relative-time-element/4.1.2:
+    resolution: {integrity: sha512-34izL9UqcgU2ZkziZVGuxQoCsswLM5jQ7Q7PYZ04GByaFASg8rdyZrLW3SaWzTFghANfr6l00RMBhjPX6PtxNw==}
+    dev: false
+
+  /@github/tab-container-element/3.2.0:
+    resolution: {integrity: sha512-to5ZJuywKK3KX53X1ifOcWjvUTQcBGdQ6Qkhm8L97xQ3ovICag1048M3YMpc+QSdr8xWeCBMnLeMnENqotB0Og==}
+    dev: false
+
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -336,6 +390,36 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.14.0
     dev: true
+
+  /@primer/behaviors/1.3.1:
+    resolution: {integrity: sha512-aMRDUQ350lk0FxtL5gJWPFHHOSSzDbJ6uNJVIt8XSqiGe1pxuW5mVVfrEp1uvzZ0pCHkCdm9fycjnfOeMeIrOQ==}
+    dev: false
+
+  /@primer/css/20.7.1:
+    resolution: {integrity: sha512-NcTKs6PZtT7btF8GlYvoRMq8XBJ8TWGA8VBPG+dAYHm/38gx8JwKSiZG0Dt2Ue1AYoV/75Slp/mUPDnFCmbOOQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      '@primer/primitives': 7.10.0
+    dev: false
+
+  /@primer/primitives/7.10.0:
+    resolution: {integrity: sha512-DdLHq21e93R9qDHyRuRpytBLY0Up9IwNWMOUgPNW6lRSng4N4+IdUlLS3Ekbasmxfs8Z8vKS8aezeYovQ5qsxQ==}
+    dev: false
+
+  /@primer/view-components/0.0.115:
+    resolution: {integrity: sha512-Qo6vNE0/UK6azsu9wTpb9AneHpM2FkA/saZ6UB1kvRttD5M0d/xto8sqq6b45QkKukqIlS4MhzyyvLIvC6rI1g==}
+    dependencies:
+      '@github/auto-check-element': 5.2.0
+      '@github/auto-complete-element': 3.3.4
+      '@github/catalyst': 1.6.0
+      '@github/clipboard-copy-element': 1.1.2
+      '@github/details-menu-element': 1.0.13
+      '@github/image-crop-element': 5.0.0
+      '@github/mini-throttle': 2.1.0
+      '@github/relative-time-element': 4.1.2
+      '@github/tab-container-element': 3.2.0
+      '@primer/behaviors': 1.3.1
+    dev: false
 
   /@rometools/cli-darwin-arm64/11.0.0:
     resolution: {integrity: sha512-F3vkdY+s3FLIEnAjSbyHTuIPB88cLpccimW4ecid5I7S6GzGG3iUJI4xT00JhH73K4P/qW20/9r+kH1T9Du8Xg==}

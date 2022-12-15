@@ -1,6 +1,6 @@
 {
   "name": "vscode-markdown-github",
-  "displayName": "Github Markdown",
+  "displayName": "Github Markdown Preview",
   "version": "1.2.0",
   "description": "A GitHub-style VSCode built-in markdown preview plugin.",
   "categories": [
@@ -52,32 +52,74 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-markdown-github.changeTheme",
-        "title": "Github Markdown: Change Preview Theme"
+        "command": "vscode-markdown-github.changeThemeMode",
+        "title": "Github Markdown Preview: Change Theme Mode"
+      },
+      {
+        "command": "vscode-markdown-github.changeThemeLight",
+        "title": "Github Markdown Preview: Change Light Theme"
+      },
+      {
+        "command": "vscode-markdown-github.changeThemeDark",
+        "title": "Github Markdown Preview: Change Dark Theme"
       }
     ],
     "configuration": {
-      "title": "Github Markdown",
+      "title": "Github Markdown Preview",
       "properties": {
-        "vscode-markdown-github.theme": {
+        "vscode-markdown-github.theme.mode": {
           "type": "string",
-          "description": "Color theme for the styling of the Markdown preview.",
+          "description": "Color mode for Markdown preview styles.",
           "enum": [
-            "github-light-default",
-            "github-dark-default",
-            "vscode-theme-auto"
+            "light",
+            "dark",
+            "auto"
           ],
           "enumItemLabels": [
-            "Github Light",
-            "Github Dark",
+            "Light",
+            "Dark",
             "Auto"
           ],
-          "enumDescriptions": [
-            "Always use a GitHub-style light theme.",
-            "Always use a GitHub-style dark theme.",
-            "Always use VSCode's current theme."
+          "default": "light",
+          "order": 0
+        },
+        "vscode-markdown-github.theme.light": {
+          "type": "string",
+          "description": "Light theme for Markdown preview styles",
+          "enum": [
+            "light",
+            "light_colorblind",
+            "light_high_contrast",
+            "light_tritanopia"
           ],
-          "default": "github-light-default"
+          "enumItemLabels": [
+            "Light default",
+            "Light Protanopia & Deuteranopia",
+            "Light high contrast",
+            "Light Tritanopia"
+          ],
+          "default": "light",
+          "order": 1
+        },
+        "vscode-markdown-github.theme.dark": {
+          "type": "string",
+          "description": "Dark theme for Markdown preview styles",
+          "enum": [
+            "dark",
+            "dark_colorblind",
+            "dark_dimmed",
+            "dark_high_contrast",
+            "dark_tritanopia"
+          ],
+          "enumItemLabels": [
+            "Dark default",
+            "Dark Protanopia & Deuteranopia",
+            "Dark dimmed",
+            "Dark high contrast",
+            "Dark Tritanopia"
+          ],
+          "default": "dark",
+          "order": 2
         }
       }
     },
@@ -87,18 +129,12 @@
     ],
     "markdown.previewStyles": [
       "./dist/main.css"
-    ],
-    "menus": {
-      "commandPalette": [
-        {
-          "command": "vscode-markdown-github.changeTheme",
-          "when": "editorLangId == markdown"
-        }
-      ]
-    }
+    ]
   },
   "activationEvents": [
-    "onCommand:vscode-markdown-github.changeTheme"
+    "onCommand:vscode-markdown-github.changeThemeMode",
+    "onCommand:vscode-markdown-github.changeThemeLight",
+    "onCommand:vscode-markdown-github.changeThemeDark"
   ],
   "lint-staged": {
     "*.{ts,tsx,js,cjs}": [
@@ -110,6 +146,9 @@
     "package.json": "pnpm sort-package-json"
   },
   "dependencies": {
+    "@primer/css": "20.7.1",
+    "@primer/primitives": "7.10.0",
+    "@primer/view-components": "0.0.115",
     "highlight.js": "11.7.0",
     "markdown-it-emoji": "2.0.2",
     "markdown-it-footnote": "3.0.3",
