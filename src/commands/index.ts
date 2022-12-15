@@ -1,5 +1,7 @@
-import * as changeTheme from "./changeTheme";
+import * as changeThemeMode from "./changeThemeMode";
+import * as changeThemeLight from "./changeThemeLight";
+import * as changeThemeDark from "./changeThemeDark";
 
-const commands = [changeTheme];
+const commands = [changeThemeMode, changeThemeLight, changeThemeDark];
 
 export default commands;

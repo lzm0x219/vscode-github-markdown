@@ -1,21 +1,5 @@
+@import "@primer/css/color-modes/index.scss";
+@import "@primer/css/base/index.scss";
+@import "@primer/css/markdown/index.scss";
+@import "@primer/css/support/index.scss";
 @import "./reset.scss";
-@import "./markdown-body.scss";
-
-@import "./themes/github-light-default.scss";
-@import "./themes/github-dark-default.scss";
-@import "./themes/vscode-theme-auto.scss";
-
-@import "./features/octicon.scss";
-@import "./features/anchor.scss";
-@import "./features/headings.scss";
-@import "./features/styling-text.scss";
-@import "./features/paragraphs.scss";
-@import "./features/quoting-text.scss";
-@import "./features/quoting-code.scss";
-@import "./features/links.scss";
-@import "./features/images.scss";
-@import "./features/lists.scss";
-@import "./features/table.scss";
-@import "./features/collapsed-section.scss";
-@import "./features/task-lists.scss";
-@import "./features/footnotes.scss";
