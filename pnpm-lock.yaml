@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@primer/css': 20.7.1
+  '@primer/css': 20.8.0
   '@primer/primitives': 7.10.0
   '@primer/view-components': 0.0.116
   '@types/markdown-it': 12.2.3
@@ -31,7 +31,7 @@ specifiers:
   zx: 7.1.1
 
 dependencies:
-  '@primer/css': 20.7.1
+  '@primer/css': 20.8.0
   '@primer/primitives': 7.10.0
   '@primer/view-components': 0.0.116
   highlight.js: 11.7.0
@@ -395,15 +395,31 @@ packages:
     resolution: {integrity: sha512-aMRDUQ350lk0FxtL5gJWPFHHOSSzDbJ6uNJVIt8XSqiGe1pxuW5mVVfrEp1uvzZ0pCHkCdm9fycjnfOeMeIrOQ==}
     dev: false
 
-  /@primer/css/20.7.1:
-    resolution: {integrity: sha512-NcTKs6PZtT7btF8GlYvoRMq8XBJ8TWGA8VBPG+dAYHm/38gx8JwKSiZG0Dt2Ue1AYoV/75Slp/mUPDnFCmbOOQ==}
+  /@primer/css/20.8.0:
+    resolution: {integrity: sha512-ybrROX5Qaurqidl4QlSC7AwZ1fTKODlQQDkncOXzHoFM0xe2aMH4zvGXz79Cz2W1sdJ4kpa8dsGqfkkcXbjalQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@primer/primitives': 7.10.0
+      '@primer/view-components': 0.0.115
     dev: false
 
   /@primer/primitives/7.10.0:
     resolution: {integrity: sha512-DdLHq21e93R9qDHyRuRpytBLY0Up9IwNWMOUgPNW6lRSng4N4+IdUlLS3Ekbasmxfs8Z8vKS8aezeYovQ5qsxQ==}
+    dev: false
+
+  /@primer/view-components/0.0.115:
+    resolution: {integrity: sha512-Qo6vNE0/UK6azsu9wTpb9AneHpM2FkA/saZ6UB1kvRttD5M0d/xto8sqq6b45QkKukqIlS4MhzyyvLIvC6rI1g==}
+    dependencies:
+      '@github/auto-check-element': 5.2.0
+      '@github/auto-complete-element': 3.3.4
+      '@github/catalyst': 1.6.0
+      '@github/clipboard-copy-element': 1.1.2
+      '@github/details-menu-element': 1.0.13
+      '@github/image-crop-element': 5.0.0
+      '@github/mini-throttle': 2.1.0
+      '@github/relative-time-element': 4.1.2
+      '@github/tab-container-element': 3.2.0
+      '@primer/behaviors': 1.3.1
     dev: false
 
   /@primer/view-components/0.0.116:
