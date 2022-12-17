@@ -1,0 +1,19 @@
+[data-color-mode="light"] {
+  @import "highlight.js/scss/github.scss";
+}
+
+[data-color-mode="dark"] {
+  @import "highlight.js/scss/github-dark.scss";
+}
+
+@media (prefers-color-scheme: light) {
+  [data-color-mode="auto"] {
+    @import "highlight.js/scss/github.scss";
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-color-mode="auto"] {
+    @import "highlight.js/scss/github-dark.scss";
+  }
+}
