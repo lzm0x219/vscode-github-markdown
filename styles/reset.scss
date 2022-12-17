@@ -6,10 +6,12 @@ body,
   box-sizing: border-box;
 }
 
-body.showEditorSelection .code-line {
-  position: static;
-  &:hover:before {
-    display: none;
+body.showEditorSelection {
+  .code-line {
+    position: static !important;
+    &:hover:before {
+      display: none !important;
+    }
   }
 }
 
@@ -24,4 +26,34 @@ body.showEditorSelection .code-line {
   box-sizing: border-box;
   padding: 16px 32px 32px;
   overflow-y: auto;
+  > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+.markdown-body {
+  blockquote {
+    background: inherit;
+  }
+
+  code {
+    color: inherit;
+  }
+
+  .task-list-item {
+    list-style: none;
+    .task-list-item-checkbox {
+      font-size: inherit;
+      margin: 0 0.2em 0.25em -1.4em;
+      vertical-align: middle;
+    }
+  }
+
+  .footnote-backref {
+    font-family: monospace;
+  }
 }
