@@ -2,12 +2,12 @@ import { getConfiguration } from "../configuration";
 
 export type ThemeMode = typeof themeMode[number];
 
-export const themeMode = ["light", "dark", "system"] as const;
+export const themeMode = ["light", "dark", "auto"] as const;
 
 export const themeModeAlias: Record<ThemeMode, string> = {
 	light: "Light",
 	dark: "Dark",
-	system: "Sync to the system",
+	auto: "Sync to the system",
 };
 
 export const themeModeSection = "theme.mode";
