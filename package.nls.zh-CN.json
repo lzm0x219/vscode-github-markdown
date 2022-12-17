@@ -1,0 +1,8 @@
+{
+  "command.changeThemeMode.title": "Markdown Github Preview: 更改主题模式",
+  "command.changeThemeLight.title": "Markdown Github Preview: 更改明亮主题",
+  "command.changeThemeDark.title": "Markdown Github Preview: 更改暗黑主题",
+  "configuration.theme.mode.description": "Markdown 预览样式的主题模式",
+  "configuration.theme.light.description": "Markdown 预览样式的明亮主题",
+  "configuration.theme.dark.description": "Markdown 预览样式的暗黑主题"
+}
