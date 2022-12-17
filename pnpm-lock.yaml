@@ -12,7 +12,7 @@ specifiers:
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.16.7
-  esbuild-sass-plugin: 2.4.3
+  esbuild-sass-plugin: 2.4.4
   highlight.js: 11.7.0
   husky: 8.0.2
   is-ci: 3.0.1
@@ -50,7 +50,7 @@ devDependencies:
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.16.7
-  esbuild-sass-plugin: 2.4.3
+  esbuild-sass-plugin: 2.4.4
   husky: 8.0.2
   is-ci: 3.0.1
   lint-staged: 13.1.0
@@ -1306,8 +1306,8 @@ packages:
     dev: true
     optional: true
 
-  /esbuild-sass-plugin/2.4.3:
-    resolution: {integrity: sha512-iEfikpoZGoUd46K2nJ195n+4/75n8xYFL5/LDAaaRkXRxzZuZ9AZS4EdW7hTYQwEMkUiBIASHHouuU8Ioovv9Q==}
+  /esbuild-sass-plugin/2.4.4:
+    resolution: {integrity: sha512-nxyscxQbvKcy12rLOh52zDqk0anOvWIdUcAlvaoCVQcpmR9GkrFbyGLsRNpoEYyB3Rho9Raq+YE6A6ehMDkN0g==}
     dependencies:
       esbuild: 0.15.18
       resolve: 1.22.1
