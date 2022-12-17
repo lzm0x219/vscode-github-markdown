@@ -1,0 +1,8 @@
+{
+  "command.changeThemeMode.title": "Markdown Github Preview: Change Theme Mode",
+  "command.changeThemeLight.title": "Markdown Github Preview: Change Light Theme",
+  "command.changeThemeDark.title": "Markdown Github Preview: Change Dark Theme",
+  "configuration.theme.mode.description": "Color mode for Markdown preview styles",
+  "configuration.theme.light.description": "Light theme for Markdown preview styles",
+  "configuration.theme.dark.description": "Dark theme for Markdown preview styles"
+}

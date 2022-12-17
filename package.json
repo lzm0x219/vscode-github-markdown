@@ -1,6 +1,6 @@
 {
   "name": "vscode-markdown-github",
-  "displayName": "Github Markdown Preview",
+  "displayName": "Markdown Github Preview",
   "version": "1.2.0",
   "description": "A GitHub-style VSCode built-in markdown preview plugin.",
   "categories": [
@@ -53,23 +53,23 @@
     "commands": [
       {
         "command": "vscode-markdown-github.changeThemeMode",
-        "title": "Github Markdown Preview: Change Theme Mode"
+        "title": "%command.changeThemeMode.title%"
       },
       {
         "command": "vscode-markdown-github.changeThemeLight",
-        "title": "Github Markdown Preview: Change Light Theme"
+        "title": "%command.changeThemeLight.title%"
       },
       {
         "command": "vscode-markdown-github.changeThemeDark",
-        "title": "Github Markdown Preview: Change Dark Theme"
+        "title": "%command.changeThemeDark.title%"
       }
     ],
     "configuration": {
-      "title": "Github Markdown Preview",
+      "title": "Markdown Github Preview",
       "properties": {
         "vscode-markdown-github.theme.mode": {
           "type": "string",
-          "description": "Color mode for Markdown preview styles.",
+          "description": "%configuration.theme.mode.description%",
           "enum": [
             "light",
             "dark",
@@ -85,7 +85,7 @@
         },
         "vscode-markdown-github.theme.light": {
           "type": "string",
-          "description": "Light theme for Markdown preview styles",
+          "description": "%configuration.theme.light.description%",
           "enum": [
             "light",
             "light_colorblind",
@@ -103,7 +103,7 @@
         },
         "vscode-markdown-github.theme.dark": {
           "type": "string",
-          "description": "Dark theme for Markdown preview styles",
+          "description": "%configuration.theme.dark.description%",
           "enum": [
             "dark",
             "dark_colorblind",
