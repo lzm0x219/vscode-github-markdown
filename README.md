@@ -29,6 +29,10 @@ Please see the [VSCode Markdown Preview documentation](https://code.visualstudio
 - [Markdown Syntax Reference](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 - [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=lzm0x219/vscode-markdown-github&type=Date)](https://star-history.com/#lzm0x219/vscode-markdown-github&Date)
+
 ## License
 
 [MIT](./LICENSE) © Monet Bird

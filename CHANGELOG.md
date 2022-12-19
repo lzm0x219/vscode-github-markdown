@@ -16,6 +16,24 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > - 🚀 Performance
 > - 📝 Documentation
 
+## [v2.0.0] (2022-12-20)
+
+### ✨ Feature
+
+- Support all themes of Github.
+- Support copying of code blocks.
+- Support localization.
+
+### 💥 Breaking
+
+- Refactored theme configuration. (There are now three options, Theme Mode, Light Theme, and Dark Theme)
+- Deprecated the ability to sync editor themes.
+
+### 🚧 Maintenance
+
+- Update dependency @types/node to v18.11.17.
+- Update dependency esbuild to v0.16.9.
+
 ## [v1.2.0] (2022-12-14)
 
 ### ✨ Feature
