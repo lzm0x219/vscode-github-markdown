@@ -56,4 +56,21 @@ body.showEditorSelection {
   .footnote-backref {
     font-family: monospace;
   }
+
+  .highlight {
+    .zeroclipboard-container {
+      display: none;
+      animation: fade-out 200ms both;
+    }
+    &:hover {
+      .zeroclipboard-container {
+        display: block;
+        animation: fade-in 200ms both;
+      }
+    }
+    .ClipboardButton.ClipboardButton--success {
+      border-color: var(--color-success-emphasis);
+      box-shadow: 0 0 0 0.2em rgb(52 208 88 / 40%);
+    }
+  }
 }

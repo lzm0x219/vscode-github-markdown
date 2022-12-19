@@ -18,6 +18,7 @@
     "outfile",
     "packagejson",
     "predev",
-    "prereleased"
+    "prereleased",
+    "zeroclipboard"
   ]
 }
