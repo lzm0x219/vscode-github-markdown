@@ -19,6 +19,22 @@
 
 Please see the [VSCode Markdown Preview documentation](https://code.visualstudio.com/Docs/languages/markdown#_markdown-preview) for instructions on how to use this extension.
 
+## Theme
+
+The theme is configured in the same way as GitHub's appearance settings. Can be adjusted and modified in the following ways.
+
+### settings page
+
+You can modify the theme by finding the configuration item of the plugin in the settings page.
+
+![UHdso.png](https://i.328888.xyz/2022/12/27/UHdso.png)
+
+### command panel
+
+You can search the plugin name through the control panel to find the corresponding modification command.
+
+![UH5yN.png](https://i.328888.xyz/2022/12/27/UH5yN.png)
+
 ## Roadmap
 
 👉 View the [VSCode Markdown Github Roadmap](https://github.com/users/lzm0x219/projects/14).
