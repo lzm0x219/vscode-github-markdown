@@ -166,7 +166,7 @@
     "del-cli": "5.0.0",
     "esbuild": "0.16.13",
     "esbuild-sass-plugin": "2.4.5",
-    "husky": "8.0.2",
+    "husky": "8.0.3",
     "is-ci": "3.0.1",
     "lint-staged": "13.1.0",
     "prettier": "2.8.1",
