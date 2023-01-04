@@ -16,6 +16,29 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > - 🚀 Performance
 > - 📝 Documentation
 
+## [v2.0.1] (2023-01-04)
+
+### 💎 Improve
+
+- Add img tag path compatibility ([#80](https://github.com/lzm0x219/vscode-markdown-github/pull/80))
+
+### 📦 Dependencies
+
+- Update dependency @vscode/vsce to v2.16.0 ([#70](https://github.com/lzm0x219/vscode-markdown-github/pull/70))
+- Update dependency @types/node to v18.11.18 ([#71](https://github.com/lzm0x219/vscode-markdown-github/pull/71))
+- Update dependency esbuild-sass-plugin to v2.4.5 ([#75](https://github.com/lzm0x219/vscode-markdown-github/pull/75)))
+- Update dependency @primer/view-components to v0.0.117 ([#76](https://github.com/lzm0x219/vscode-markdown-github/pull/76)))
+- Update dependency esbuild to v0.16.13 ([#78](https://github.com/lzm0x219/vscode-markdown-github/pull/78)))
+- Update dependency husky to v8.0.3 ([#79](https://github.com/lzm0x219/vscode-markdown-github/pull/79)))
+
+### 🚧 Maintenance
+
+- Update events registration methods
+
+### 📝 Documentation
+
+- Added description of the preview theme
+
 ## [v2.0.0] (2022-12-20)
 
 ### ✨ Feature
@@ -82,6 +105,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Added full github markdown preview style. 🎉
 
+[v2.0.1]: https://github.com/lzm0x219/vscode-markdown-github/compare/v2.0.0...v2.0.1
+[v2.0.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.2.0...v2.0.0
 [v1.2.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.3...v1.2.0
 [v1.1.3]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.2...v1.1.3
 [v1.1.2]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.1...v1.1.2
