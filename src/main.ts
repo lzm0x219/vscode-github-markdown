@@ -1,15 +1,11 @@
 import vscode from "vscode";
 import commands from "./commands";
-import onRefreshMarkdownPreview from "./events/onRefreshMarkdownPreview";
+import events from "./events";
 import markdownItTheme from "./plugins/markdown-it-theme";
 import markdownItCodeCopy from "./plugins/markdown-it-code-copy";
 
 export function activate(context: vscode.ExtensionContext) {
-	const registerCommands = commands.map(({ command, commandHander }) =>
-		vscode.commands.registerCommand(command, commandHander),
-	);
-
-	context.subscriptions.push(onRefreshMarkdownPreview(), ...registerCommands);
+	context.subscriptions.push(...events, ...commands);
 
 	return {
 		extendMarkdownIt(md: markdownit) {
