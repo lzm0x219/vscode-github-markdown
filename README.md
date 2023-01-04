@@ -27,13 +27,13 @@ The theme is configured in the same way as GitHub's appearance settings. Can be 
 
 You can modify the theme by finding the configuration item of the plugin in the settings page.
 
-![UHdso.png](https://i.328888.xyz/2022/12/27/UHdso.png)
+[![pSF4A2Q.png](https://s1.ax1x.com/2023/01/04/pSF4A2Q.png)](https://imgse.com/i/pSF4A2Q)
 
 ### command panel
 
 You can search the plugin name through the control panel to find the corresponding modification command.
 
-![UH5yN.png](https://i.328888.xyz/2022/12/27/UH5yN.png)
+[![pSF4Evj.png](https://s1.ax1x.com/2023/01/04/pSF4Evj.png)](https://imgse.com/i/pSF4Evj)
 
 ## Roadmap
 
