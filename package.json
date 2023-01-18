@@ -164,7 +164,7 @@
     "@vscode/vsce": "2.16.0",
     "concurrently": "7.6.0",
     "del-cli": "5.0.0",
-    "esbuild": "0.17.2",
+    "esbuild": "0.17.3",
     "esbuild-sass-plugin": "2.4.5",
     "husky": "8.0.3",
     "is-ci": "3.0.1",
