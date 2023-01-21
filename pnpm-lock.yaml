@@ -22,7 +22,7 @@ specifiers:
   markdown-it-github-headings: 2.0.1
   markdown-it-highlightjs: 4.0.1
   markdown-it-task-lists: 2.1.1
-  prettier: 2.8.2
+  prettier: 2.8.3
   prettier-plugin-packagejson: 2.4.0
   rome: 11.0.0
   sort-package-json: 2.1.0
@@ -54,8 +54,8 @@ devDependencies:
   husky: 8.0.3
   is-ci: 3.0.1
   lint-staged: 13.1.0
-  prettier: 2.8.2
-  prettier-plugin-packagejson: 2.4.0_prettier@2.8.2
+  prettier: 2.8.3
+  prettier-plugin-packagejson: 2.4.0_prettier@2.8.3
   rome: 11.0.0
   sort-package-json: 2.1.0
   tsx: 3.12.2
@@ -2361,7 +2361,7 @@ packages:
     dev: true
     optional: true
 
-  /prettier-plugin-packagejson/2.4.0_prettier@2.8.2:
+  /prettier-plugin-packagejson/2.4.0_prettier@2.8.3:
     resolution: {integrity: sha512-NW2xI9w0n251IH1r1QNIf+kVf28rr2p33aOENfrBDOFVfp3FdQ++rKHkU0odYQOlnTtvedAGxasNC+Mk+enxVQ==}
     peerDependencies:
       prettier: '>= 1.16.0'
@@ -2369,13 +2369,13 @@ packages:
       prettier:
         optional: true
     dependencies:
-      prettier: 2.8.2
+      prettier: 2.8.3
       sort-package-json: 2.1.0
       synckit: 0.8.4
     dev: true
 
-  /prettier/2.8.2:
-    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
+  /prettier/2.8.3:
+    resolution: {integrity: sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
