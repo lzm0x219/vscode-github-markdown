@@ -8,7 +8,7 @@ specifiers:
   '@types/node': 18.11.18
   '@types/vscode': 1.41.0
   '@vscode/test-electron': 2.2.2
-  '@vscode/vsce': 2.16.0
+  '@vscode/vsce': 2.17.0
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.17.3
@@ -46,7 +46,7 @@ devDependencies:
   '@types/node': 18.11.18
   '@types/vscode': 1.41.0
   '@vscode/test-electron': 2.2.2
-  '@vscode/vsce': 2.16.0
+  '@vscode/vsce': 2.17.0
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.17.3
@@ -559,8 +559,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vscode/vsce/2.16.0:
-    resolution: {integrity: sha512-BhJ0zO7UxShLFBZM6jwOLt1ZVoqQ4r5Lj/kHNeYp0ICPXhz/erqBSMQnHkRgkjn2L/bh+TYFGkZyguhu/SKsjw==}
+  /@vscode/vsce/2.17.0:
+    resolution: {integrity: sha512-W4HN5MtTVj/mroQU1d82bUEeWM3dUykMFnMYZPtZ6jrMiHN1PUoN3RGcS896N0r2rIq8KpWDtufcQHgK8VfgpA==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
