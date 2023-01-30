@@ -174,7 +174,7 @@
     "rome": "11.0.0",
     "sort-package-json": "2.1.0",
     "tsx": "3.12.2",
-    "typescript": "4.9.4",
+    "typescript": "4.9.5",
     "zx": "7.1.1"
   },
   "engines": {
