@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@primer/css': 20.8.0
   '@primer/primitives': 7.10.0
-  '@primer/view-components': 0.0.119
+  '@primer/view-components': 0.0.120
   '@types/markdown-it': 12.2.3
   '@types/node': 18.11.18
   '@types/vscode': 1.74.0
@@ -33,7 +33,7 @@ specifiers:
 dependencies:
   '@primer/css': 20.8.0
   '@primer/primitives': 7.10.0
-  '@primer/view-components': 0.0.119
+  '@primer/view-components': 0.0.120
   highlight.js: 11.7.0
   markdown-it-emoji: 2.0.2
   markdown-it-footnote: 3.0.3
@@ -434,8 +434,8 @@ packages:
       '@primer/behaviors': 1.3.1
     dev: false
 
-  /@primer/view-components/0.0.119:
-    resolution: {integrity: sha512-ZrnuWyj40aTRLIwWi2qLGkm4tjsUchgDMm1YY/zDgeY2GbVZ7jHXs0yIVsiBYKKrMYpFbe2cKda5LFkWs4PX4g==}
+  /@primer/view-components/0.0.120:
+    resolution: {integrity: sha512-C90cNtB3Zl8B+nLPkztYYMBNTaGxUWLrVroG3a8dIEcpGdEZOhsOPOfeptpyPMolX7DWag/hfzBXBp0i7TawDg==}
     dependencies:
       '@github/auto-check-element': 5.2.0
       '@github/auto-complete-element': 3.3.4
