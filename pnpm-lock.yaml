@@ -7,7 +7,7 @@ specifiers:
   '@types/markdown-it': 12.2.3
   '@types/node': 18.11.18
   '@types/vscode': 1.74.0
-  '@vscode/test-electron': 2.2.2
+  '@vscode/test-electron': 2.2.3
   '@vscode/vsce': 2.17.0
   concurrently: 7.6.0
   del-cli: 5.0.0
@@ -45,7 +45,7 @@ devDependencies:
   '@types/markdown-it': 12.2.3
   '@types/node': 18.11.18
   '@types/vscode': 1.74.0
-  '@vscode/test-electron': 2.2.2
+  '@vscode/test-electron': 2.2.3
   '@vscode/vsce': 2.17.0
   concurrently: 7.6.0
   del-cli: 5.0.0
@@ -547,8 +547,8 @@ packages:
     resolution: {integrity: sha512-Jjakcv8Roqtio6w1gr0D7y6twbhx6gGgFGF5BLwajPpnOIOxFkakFhCq+LmyyeAz7BX6ULrjBOxdKaCDy+4+dQ==}
     dev: true
 
-  /@vscode/test-electron/2.2.2:
-    resolution: {integrity: sha512-s5d2VtMySvff0UgqkJ0BMCr1es+qREE194EAodGIefq518W53ifvv69e80l9e2MrYJEqUUKwukE/w3H9o15YEw==}
+  /@vscode/test-electron/2.2.3:
+    resolution: {integrity: sha512-7DmdGYQTqRNaLHKG3j56buc9DkstriY4aV0S3Zj32u0U9/T0L8vwWAC9QGCh1meu1VXDEla1ze27TkqysHGP0Q==}
     engines: {node: '>=16'}
     dependencies:
       http-proxy-agent: 4.0.1
