@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@primer/css': 20.8.0
+  '@primer/css': 20.8.1
   '@primer/primitives': 7.10.0
   '@primer/view-components': 0.0.120
   '@types/markdown-it': 12.2.3
@@ -31,7 +31,7 @@ specifiers:
   zx: 7.1.1
 
 dependencies:
-  '@primer/css': 20.8.0
+  '@primer/css': 20.8.1
   '@primer/primitives': 7.10.0
   '@primer/view-components': 0.0.120
   highlight.js: 11.7.0
@@ -407,20 +407,20 @@ packages:
     resolution: {integrity: sha512-aMRDUQ350lk0FxtL5gJWPFHHOSSzDbJ6uNJVIt8XSqiGe1pxuW5mVVfrEp1uvzZ0pCHkCdm9fycjnfOeMeIrOQ==}
     dev: false
 
-  /@primer/css/20.8.0:
-    resolution: {integrity: sha512-ybrROX5Qaurqidl4QlSC7AwZ1fTKODlQQDkncOXzHoFM0xe2aMH4zvGXz79Cz2W1sdJ4kpa8dsGqfkkcXbjalQ==}
+  /@primer/css/20.8.1:
+    resolution: {integrity: sha512-V2CdyehHCYLjFqt2+apQD2bQPrvMjmWGv/eA/A69/C1KiJvhlz5zp1sP+WW7l9EHhBkXy4bhFJ/YEML00nbG9g==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@primer/primitives': 7.10.0
-      '@primer/view-components': 0.0.115
+      '@primer/view-components': 0.0.117
     dev: false
 
   /@primer/primitives/7.10.0:
     resolution: {integrity: sha512-DdLHq21e93R9qDHyRuRpytBLY0Up9IwNWMOUgPNW6lRSng4N4+IdUlLS3Ekbasmxfs8Z8vKS8aezeYovQ5qsxQ==}
     dev: false
 
-  /@primer/view-components/0.0.115:
-    resolution: {integrity: sha512-Qo6vNE0/UK6azsu9wTpb9AneHpM2FkA/saZ6UB1kvRttD5M0d/xto8sqq6b45QkKukqIlS4MhzyyvLIvC6rI1g==}
+  /@primer/view-components/0.0.117:
+    resolution: {integrity: sha512-srCp6BeSaCSELxvD6P+xp8/NGtiHoj9iY4y9duI1SS5wdc11JtaCXm5Iq/8SQaFZ9ONaIQnyeAveSuUCE7Jb8A==}
     dependencies:
       '@github/auto-check-element': 5.2.0
       '@github/auto-complete-element': 3.3.4
