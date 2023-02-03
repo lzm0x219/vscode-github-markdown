@@ -6,7 +6,7 @@ specifiers:
   '@primer/view-components': 0.0.120
   '@types/markdown-it': 12.2.3
   '@types/node': 18.11.18
-  '@types/vscode': 1.74.0
+  '@types/vscode': 1.74.1
   '@vscode/test-electron': 2.2.3
   '@vscode/vsce': 2.17.0
   concurrently: 7.6.0
@@ -44,7 +44,7 @@ dependencies:
 devDependencies:
   '@types/markdown-it': 12.2.3
   '@types/node': 18.11.18
-  '@types/vscode': 1.74.0
+  '@types/vscode': 1.74.1
   '@vscode/test-electron': 2.2.3
   '@vscode/vsce': 2.17.0
   concurrently: 7.6.0
@@ -539,8 +539,8 @@ packages:
     resolution: {integrity: sha512-ZREFYlpUmPQJ0esjxoG1fMvB2HNaD3z+mjqdSosZvd3RalncI9NEur73P8ZJz4YQdL64CmV1w0RuqoRUlhQRBw==}
     dev: true
 
-  /@types/vscode/1.74.0:
-    resolution: {integrity: sha512-LyeCIU3jb9d38w0MXFwta9r0Jx23ugujkAxdwLTNCyspdZTKUc43t7ppPbCiPoQ/Ivd/pnDFZrb4hWd45wrsgA==}
+  /@types/vscode/1.74.1:
+    resolution: {integrity: sha512-/4bwu5Lz2tQIhCDfGyEho36jEBHfEGgbuajgFZgRIfsfK/U0vv8diYIvQRiz8cc9tGlzd7m/NJscEJ7gFExJ4g==}
     dev: true
 
   /@types/which/2.0.1:
