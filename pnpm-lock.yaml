@@ -5,7 +5,7 @@ specifiers:
   '@primer/primitives': 7.10.0
   '@primer/view-components': 0.0.121
   '@types/markdown-it': 12.2.3
-  '@types/node': 18.11.19
+  '@types/node': 18.13.0
   '@types/vscode': 1.74.0
   '@vscode/test-electron': 2.2.3
   '@vscode/vsce': 2.17.0
@@ -43,7 +43,7 @@ dependencies:
 
 devDependencies:
   '@types/markdown-it': 12.2.3
-  '@types/node': 18.11.19
+  '@types/node': 18.13.0
   '@types/vscode': 1.74.0
   '@vscode/test-electron': 2.2.3
   '@vscode/vsce': 2.17.0
@@ -505,7 +505,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 18.11.19
+      '@types/node': 18.13.0
     dev: true
 
   /@types/linkify-it/3.0.2:
@@ -527,8 +527,8 @@ packages:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
 
-  /@types/node/18.11.19:
-    resolution: {integrity: sha512-YUgMWAQBWLObABqrvx8qKO1enAvBUdjZOAWQ5grBAkp5LQv45jBvYKZ3oFS9iKRCQyFjqw6iuEa1vmFqtxYLZw==}
+  /@types/node/18.13.0:
+    resolution: {integrity: sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -3112,7 +3112,7 @@ packages:
     dependencies:
       '@types/fs-extra': 9.0.13
       '@types/minimist': 1.2.2
-      '@types/node': 18.11.19
+      '@types/node': 18.13.0
       '@types/ps-tree': 1.1.2
       '@types/which': 2.0.1
       chalk: 5.2.0
