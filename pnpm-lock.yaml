@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@primer/css': 20.8.2
-  '@primer/primitives': 7.10.0
+  '@primer/primitives': 7.11.1
   '@primer/view-components': 0.0.123
   '@types/markdown-it': 12.2.3
   '@types/node': 18.14.0
@@ -32,7 +32,7 @@ specifiers:
 
 dependencies:
   '@primer/css': 20.8.2
-  '@primer/primitives': 7.10.0
+  '@primer/primitives': 7.11.1
   '@primer/view-components': 0.0.123
   highlight.js: 11.7.0
   markdown-it-emoji: 2.0.2
@@ -413,10 +413,6 @@ packages:
     dependencies:
       '@primer/primitives': 7.11.1
       '@primer/view-components': 0.0.120
-    dev: false
-
-  /@primer/primitives/7.10.0:
-    resolution: {integrity: sha512-DdLHq21e93R9qDHyRuRpytBLY0Up9IwNWMOUgPNW6lRSng4N4+IdUlLS3Ekbasmxfs8Z8vKS8aezeYovQ5qsxQ==}
     dev: false
 
   /@primer/primitives/7.11.1:
