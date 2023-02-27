@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@primer/css': 20.8.2
+  '@primer/css': 20.8.3
   '@primer/primitives': 7.11.1
   '@primer/view-components': 0.0.123
   '@types/markdown-it': 12.2.3
@@ -31,7 +31,7 @@ specifiers:
   zx: 7.1.1
 
 dependencies:
-  '@primer/css': 20.8.2
+  '@primer/css': 20.8.3
   '@primer/primitives': 7.11.1
   '@primer/view-components': 0.0.123
   highlight.js: 11.7.0
@@ -407,8 +407,8 @@ packages:
     resolution: {integrity: sha512-aMRDUQ350lk0FxtL5gJWPFHHOSSzDbJ6uNJVIt8XSqiGe1pxuW5mVVfrEp1uvzZ0pCHkCdm9fycjnfOeMeIrOQ==}
     dev: false
 
-  /@primer/css/20.8.2:
-    resolution: {integrity: sha512-MoUIX/9JcAci1jCczFsXyweZpRWbgyGI9j55CCxRBk/AFdWmblCwEMBioXOpBViCrZDNMsACns2i7T4ku47kbQ==}
+  /@primer/css/20.8.3:
+    resolution: {integrity: sha512-jXF6l3Cjks6PkWTKbSkrg2h/pE+w/HVXZCpDkLcZB3P1d1cAaK8LXeVVBVWSjnKWIMfiNzyHcx1CTUtj5T4Ivg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@primer/primitives': 7.11.1
