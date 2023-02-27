@@ -8,7 +8,7 @@ specifiers:
   '@types/node': 18.14.1
   '@types/vscode': 1.74.0
   '@vscode/test-electron': 2.2.3
-  '@vscode/vsce': 2.17.0
+  '@vscode/vsce': 2.18.0
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.17.10
@@ -46,7 +46,7 @@ devDependencies:
   '@types/node': 18.14.1
   '@types/vscode': 1.74.0
   '@vscode/test-electron': 2.2.3
-  '@vscode/vsce': 2.17.0
+  '@vscode/vsce': 2.18.0
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.17.10
@@ -559,8 +559,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vscode/vsce/2.17.0:
-    resolution: {integrity: sha512-W4HN5MtTVj/mroQU1d82bUEeWM3dUykMFnMYZPtZ6jrMiHN1PUoN3RGcS896N0r2rIq8KpWDtufcQHgK8VfgpA==}
+  /@vscode/vsce/2.18.0:
+    resolution: {integrity: sha512-tUA3XoKx5xjoi3EDcngk0VUYMhvfXLhS4s7CntpLPh1qtLYtgSCexTIMUHkCy6MqyozRW98bdW3a2yHPEADRnQ==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
@@ -570,6 +570,7 @@ packages:
       commander: 6.2.1
       glob: 7.2.3
       hosted-git-info: 4.1.0
+      jsonc-parser: 3.2.0
       leven: 3.1.0
       markdown-it: 12.3.2
       mime: 1.6.0
@@ -1827,6 +1828,10 @@ packages:
 
   /json-parse-even-better-errors/2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
+    dev: true
+
+  /jsonc-parser/3.2.0:
+    resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
     dev: true
 
   /jsonfile/6.1.0:
