@@ -12,7 +12,7 @@ specifiers:
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.17.10
-  esbuild-sass-plugin: 2.5.0
+  esbuild-sass-plugin: 2.6.0
   highlight.js: 11.7.0
   husky: 8.0.3
   is-ci: 3.0.1
@@ -50,7 +50,7 @@ devDependencies:
   concurrently: 7.6.0
   del-cli: 5.0.0
   esbuild: 0.17.10
-  esbuild-sass-plugin: 2.5.0_esbuild@0.17.10
+  esbuild-sass-plugin: 2.6.0_esbuild@0.17.10
   husky: 8.0.3
   is-ci: 3.0.1
   lint-staged: 13.1.2
@@ -1278,14 +1278,14 @@ packages:
     dev: true
     optional: true
 
-  /esbuild-sass-plugin/2.5.0_esbuild@0.17.10:
-    resolution: {integrity: sha512-SKWcvZwB+3/3eLhSCscJfb9AEOgL3oYlwOaItnXpXNPVj9Hc1Iwf5Cx4muUd+H+6zKyUwviAtVdRwcUsocUYgA==}
+  /esbuild-sass-plugin/2.6.0_esbuild@0.17.10:
+    resolution: {integrity: sha512-jukzNT8bqMEO/BJ7QG3mpndmtO9pJWTO4Mba5eyCLtXK6+sl9iCy4ReSE9fuoXX6W2QjjCEUaipbGWK+YfTwuQ==}
     peerDependencies:
-      esbuild: ^0.16.17
-      sass: ^1.56.1
+      esbuild: ^0.17.10
+      resolve: ^1.22.1
+      sass: ^1.58.3
     dependencies:
       esbuild: 0.17.10
-      resolve: 1.22.1
     dev: true
 
   /esbuild-sunos-64/0.15.18:
@@ -2270,10 +2270,6 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /path-parse/1.0.7:
-    resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
-    dev: true
-
   /path-type/4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
@@ -2449,15 +2445,6 @@ packages:
   /require-directory/2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
-    dev: true
-
-  /resolve/1.22.1:
-    resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
-    hasBin: true
-    dependencies:
-      is-core-module: 2.11.0
-      path-parse: 1.0.7
-      supports-preserve-symlinks-flag: 1.0.0
     dev: true
 
   /restore-cursor/3.1.0:
@@ -2761,11 +2748,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       has-flag: 4.0.0
-    dev: true
-
-  /supports-preserve-symlinks-flag/1.0.0:
-    resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
-    engines: {node: '>= 0.4'}
     dev: true
 
   /synckit/0.8.5:
