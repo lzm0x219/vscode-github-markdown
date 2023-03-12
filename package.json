@@ -173,7 +173,7 @@
     "prettier-plugin-packagejson": "2.4.3",
     "rome": "11.0.0",
     "sort-package-json": "2.4.1",
-    "tsx": "3.12.3",
+    "tsx": "3.12.4",
     "typescript": "4.9.5",
     "zx": "7.2.0"
   },
