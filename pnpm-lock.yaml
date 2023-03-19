@@ -28,7 +28,7 @@ specifiers:
   sort-package-json: 2.4.1
   tsx: 3.12.4
   typescript: 4.9.5
-  zx: 7.2.0
+  zx: 7.2.1
 
 dependencies:
   '@primer/css': 20.8.3
@@ -60,7 +60,7 @@ devDependencies:
   sort-package-json: 2.4.1
   tsx: 3.12.4
   typescript: 4.9.5
-  zx: 7.2.0
+  zx: 7.2.1
 
 packages:
 
@@ -3001,8 +3001,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zx/7.2.0:
-    resolution: {integrity: sha512-SMuOZ21zFnBxicw+WMtTv3z3eERh6KBtZExAJaL8EAV+Ev/3M1NIAOkrZ8kRfCzD9acv9heUH/WZctTR4vQxBQ==}
+  /zx/7.2.1:
+    resolution: {integrity: sha512-TgKwppaMLMNAXHhlhbBh7rMoOSx3/9qqnkv8frmhVlSomEuWkDijh/BCmYntkoS7ZQyemApAUyEi24jIrrS+hA==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     dependencies:
