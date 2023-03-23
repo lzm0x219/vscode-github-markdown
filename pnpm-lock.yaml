@@ -26,7 +26,7 @@ specifiers:
   prettier-plugin-packagejson: 2.4.3
   rome: 11.0.0
   sort-package-json: 2.4.1
-  tsx: 3.12.5
+  tsx: 3.12.6
   typescript: 5.0.2
   zx: 7.2.1
 
@@ -58,7 +58,7 @@ devDependencies:
   prettier-plugin-packagejson: 2.4.3_prettier@2.8.4
   rome: 11.0.0
   sort-package-json: 2.4.1
-  tsx: 3.12.5
+  tsx: 3.12.6
   typescript: 5.0.2
   zx: 7.2.1
 
@@ -2889,8 +2889,8 @@ packages:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: true
 
-  /tsx/3.12.5:
-    resolution: {integrity: sha512-/TLj30xF1zcN9JkoFCyROtIQUi8cRQG+AFchsg5YkWou3+RXxTZS/ffWB3nCxyZPoBqF2+8ohs07N815dNb1wQ==}
+  /tsx/3.12.6:
+    resolution: {integrity: sha512-q93WgS3lBdHlPgS0h1i+87Pt6n9K/qULIMNYZo07nSeu2z5QE2CellcAZfofVXBo2tQg9av2ZcRMQ2S2i5oadQ==}
     hasBin: true
     dependencies:
       '@esbuild-kit/cjs-loader': 2.4.2
