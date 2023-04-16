@@ -43,8 +43,8 @@ devDependencies:
     specifier: 2.3.0
     version: 2.3.0
   '@vscode/vsce':
-    specifier: 2.18.0
-    version: 2.18.0
+    specifier: 2.19.0
+    version: 2.19.0
   concurrently:
     specifier: 8.0.1
     version: 8.0.1
@@ -587,8 +587,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vscode/vsce@2.18.0:
-    resolution: {integrity: sha512-tUA3XoKx5xjoi3EDcngk0VUYMhvfXLhS4s7CntpLPh1qtLYtgSCexTIMUHkCy6MqyozRW98bdW3a2yHPEADRnQ==}
+  /@vscode/vsce@2.19.0:
+    resolution: {integrity: sha512-dAlILxC5ggOutcvJY24jxz913wimGiUrHaPkk16Gm9/PGFbz1YezWtrXsTKUtJws4fIlpX2UIlVlVESWq8lkfQ==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
@@ -609,7 +609,7 @@ packages:
       tmp: 0.2.1
       typed-rest-client: 1.8.9
       url-join: 4.0.1
-      xml2js: 0.4.23
+      xml2js: 0.5.0
       yauzl: 2.10.0
       yazl: 2.5.1
     optionalDependencies:
@@ -3022,8 +3022,8 @@ packages:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
 
-  /xml2js@0.4.23:
-    resolution: {integrity: sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==}
+  /xml2js@0.5.0:
+    resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
     engines: {node: '>=4.0.0'}
     dependencies:
       sax: 1.2.4
