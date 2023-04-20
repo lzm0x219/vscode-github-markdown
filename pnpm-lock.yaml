@@ -5,8 +5,8 @@ dependencies:
     specifier: 21.0.0
     version: 21.0.0
   '@primer/primitives':
-    specifier: 7.11.5
-    version: 7.11.5
+    specifier: 7.11.6
+    version: 7.11.6
   '@primer/view-components':
     specifier: 0.1.6
     version: 0.1.6
@@ -445,12 +445,12 @@ packages:
     resolution: {integrity: sha512-bIiBv/qKUzYMoy9dDeAM2qOHBj/AX/1obG0Cbwcg2mCFBhfxIGl49AOyMx3EcYNDPO86ZHPFhF91gYUvlguKiQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
-      '@primer/primitives': 7.11.5
+      '@primer/primitives': 7.11.6
       '@primer/view-components': 0.1.6
     dev: false
 
-  /@primer/primitives@7.11.5:
-    resolution: {integrity: sha512-UmFQA0BZ5BIQKrlKg1TOEjDzeeI2NWyeh/5cCvXVOjfLegCXIlHf/xCLl1KCYO4YeegHmC9g5tpPLTlWjtcbaA==}
+  /@primer/primitives@7.11.6:
+    resolution: {integrity: sha512-I4m1WcpMLLHloHX4NPaz00aRe0CsMffL1Vw5rwx7kucKccOa1rWZsibEpcFHJcufBD7wyc1RuMhN3KC4hCpNZA==}
     dependencies:
       markdown-table-ts: 1.0.3
     dev: false
