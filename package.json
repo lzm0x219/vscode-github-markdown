@@ -165,7 +165,7 @@
     "concurrently": "8.0.1",
     "del-cli": "5.0.0",
     "esbuild": "0.17.17",
-    "esbuild-sass-plugin": "2.8.1",
+    "esbuild-sass-plugin": "2.9.0",
     "husky": "8.0.3",
     "is-ci": "3.0.1",
     "lint-staged": "13.2.1",
