@@ -8,8 +8,8 @@ dependencies:
     specifier: 7.11.6
     version: 7.11.6
   '@primer/view-components':
-    specifier: 0.1.6
-    version: 0.1.6
+    specifier: 0.1.7
+    version: 0.1.7
   highlight.js:
     specifier: 11.7.0
     version: 11.7.0
@@ -446,7 +446,7 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@primer/primitives': 7.11.6
-      '@primer/view-components': 0.1.6
+      '@primer/view-components': 0.1.7
     dev: false
 
   /@primer/primitives@7.11.6:
@@ -455,8 +455,8 @@ packages:
       markdown-table-ts: 1.0.3
     dev: false
 
-  /@primer/view-components@0.1.6:
-    resolution: {integrity: sha512-WlK9yPNyBobnIpByxMh1UHAmE6n8Cd5tbsMvLyRVpaRuNZjZyivjAkFaJYFxHZHaGgCgm7v7g6h4yQDR4Z/taA==}
+  /@primer/view-components@0.1.7:
+    resolution: {integrity: sha512-OwN/3OFEoq2OmyTlZnaHKlV/iDswZUa1ax0dL2uMJntfykesLbhMVZ/q00+HjKQaSTfCWFRrEswagryphkP81Q==}
     dependencies:
       '@github/auto-check-element': 5.2.0
       '@github/auto-complete-element': 3.3.4
