@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@primer/css':
-    specifier: 21.0.0
-    version: 21.0.0
+    specifier: 21.0.1
+    version: 21.0.1
   '@primer/primitives':
     specifier: 7.11.7
     version: 7.11.7
@@ -441,8 +441,8 @@ packages:
     resolution: {integrity: sha512-aMRDUQ350lk0FxtL5gJWPFHHOSSzDbJ6uNJVIt8XSqiGe1pxuW5mVVfrEp1uvzZ0pCHkCdm9fycjnfOeMeIrOQ==}
     dev: false
 
-  /@primer/css@21.0.0:
-    resolution: {integrity: sha512-bIiBv/qKUzYMoy9dDeAM2qOHBj/AX/1obG0Cbwcg2mCFBhfxIGl49AOyMx3EcYNDPO86ZHPFhF91gYUvlguKiQ==}
+  /@primer/css@21.0.1:
+    resolution: {integrity: sha512-yHBDYnNQk0W7e3h0Eadh/RCbPl4WEvuO5dwj/qLE/kZodBn7JGhU7xMQKDnj37ck27dS311ngXUuLH42s3wXBw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@primer/primitives': 7.11.7

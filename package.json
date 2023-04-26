@@ -146,7 +146,7 @@
     "package.json": "pnpm sort-package-json"
   },
   "dependencies": {
-    "@primer/css": "21.0.0",
+    "@primer/css": "21.0.1",
     "@primer/primitives": "7.11.7",
     "@primer/view-components": "0.1.7",
     "highlight.js": "11.7.0",
