@@ -27,6 +27,7 @@
   },
   "publisher": "lzm0x219",
   "main": "dist/main.js",
+  "browser": "dist/main.js",
   "scripts": {
     "prebuild": "pnpm clean && pnpm check:typings",
     "build": "concurrently npm:build:* -c 'auto'",
