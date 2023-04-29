@@ -11,8 +11,8 @@ dependencies:
     specifier: 0.1.7
     version: 0.1.7
   highlight.js:
-    specifier: 11.7.0
-    version: 11.7.0
+    specifier: 11.8.0
+    version: 11.8.0
   markdown-it-emoji:
     specifier: 2.0.2
     version: 2.0.2
@@ -1603,8 +1603,8 @@ packages:
       function-bind: 1.1.1
     dev: true
 
-  /highlight.js@11.7.0:
-    resolution: {integrity: sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==}
+  /highlight.js@11.8.0:
+    resolution: {integrity: sha512-MedQhoqVdr0U6SSnWPzfiadUcDHfN/Wzq25AkXiQv9oiOO/sG0S7XkvpFIqWBl9Yq1UYyYOOVORs5UW2XlPyzg==}
     engines: {node: '>=12.0.0'}
     dev: false
 
@@ -1978,7 +1978,7 @@ packages:
   /markdown-it-highlightjs@4.0.1:
     resolution: {integrity: sha512-EPXwFEN6P5nqR3G4KjT20r20xbGYKMMA/360hhSYFmeoGXTE6hsLtJAiB/8ID8slVH4CWHHEL7GX0YenyIstVQ==}
     dependencies:
-      highlight.js: 11.7.0
+      highlight.js: 11.8.0
     dev: false
 
   /markdown-it-task-lists@2.1.1:
