@@ -174,7 +174,7 @@
     "sort-package-json": "2.4.1",
     "tsx": "3.12.7",
     "typescript": "5.0.4",
-    "zx": "7.2.1"
+    "zx": "7.2.2"
   },
   "engines": {
     "vscode": "^1.41.0"
