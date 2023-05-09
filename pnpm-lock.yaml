@@ -34,8 +34,8 @@ devDependencies:
     specifier: 12.2.3
     version: 12.2.3
   '@types/node':
-    specifier: 18.16.5
-    version: 18.16.5
+    specifier: 18.16.6
+    version: 18.16.6
   '@types/vscode':
     specifier: 1.78.0
     version: 1.78.0
@@ -478,13 +478,13 @@ packages:
     resolution: {integrity: sha512-MxObHvNl4A69ofaTRU8DFqvgzzv8s9yRtaPPm5gud9HDNvpB3GPQFvNuTWAI59B9huVGV5jXYJwbCsmBsOGYWA==}
     dependencies:
       '@types/jsonfile': 6.1.1
-      '@types/node': 18.16.5
+      '@types/node': 18.16.6
     dev: true
 
   /@types/jsonfile@6.1.1:
     resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
     dependencies:
-      '@types/node': 18.16.5
+      '@types/node': 18.16.6
     dev: true
 
   /@types/linkify-it@3.0.2:
@@ -506,8 +506,8 @@ packages:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
 
-  /@types/node@18.16.5:
-    resolution: {integrity: sha512-seOA34WMo9KB+UA78qaJoCO20RJzZGVXQ5Sh6FWu0g/hfT44nKXnej3/tCQl7FL97idFpBhisLYCTB50S0EirA==}
+  /@types/node@18.16.6:
+    resolution: {integrity: sha512-N7KINmeB8IN3vRR8dhgHEp+YpWvGFcpDoh5XZ8jB5a00AdFKCKEyyGTOPTddUf4JqU1ZKTVxkOxakDvchNVI2Q==}
     dev: true
 
   /@types/normalize-package-data@2.4.1:
@@ -3043,7 +3043,7 @@ packages:
     dependencies:
       '@types/fs-extra': 11.0.1
       '@types/minimist': 1.2.2
-      '@types/node': 18.16.5
+      '@types/node': 18.16.6
       '@types/ps-tree': 1.1.2
       '@types/which': 3.0.0
       chalk: 5.2.0
