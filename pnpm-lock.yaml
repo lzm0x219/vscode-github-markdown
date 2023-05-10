@@ -5,8 +5,8 @@ dependencies:
     specifier: 21.0.1
     version: 21.0.1
   '@primer/primitives':
-    specifier: 7.11.7
-    version: 7.11.7
+    specifier: 7.11.8
+    version: 7.11.8
   '@primer/view-components':
     specifier: 0.1.8
     version: 0.1.8
@@ -442,14 +442,12 @@ packages:
     resolution: {integrity: sha512-yHBDYnNQk0W7e3h0Eadh/RCbPl4WEvuO5dwj/qLE/kZodBn7JGhU7xMQKDnj37ck27dS311ngXUuLH42s3wXBw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
-      '@primer/primitives': 7.11.7
+      '@primer/primitives': 7.11.8
       '@primer/view-components': 0.1.8
     dev: false
 
-  /@primer/primitives@7.11.7:
-    resolution: {integrity: sha512-8PDEn3yj8oE/9B7o5hwjD0LSy7xz9xZ3gGTPWi/u0MxHZJ/fxERgxnBG21eCLKZ19KjhIb5AsmSQyFbGR5urYQ==}
-    dependencies:
-      markdown-table-ts: 1.0.3
+  /@primer/primitives@7.11.8:
+    resolution: {integrity: sha512-LSR/xRGFz0v1j337hXr1ZqcaY55glkHfDELdT4WEnuhRFLiYKUtWIhkTa858KYbaih5AUvw3wk0PYJeh6O7aDg==}
     dev: false
 
   /@primer/view-components@0.1.8:
@@ -2000,10 +1998,6 @@ packages:
       mdurl: 1.0.1
       uc.micro: 1.0.6
     dev: true
-
-  /markdown-table-ts@1.0.3:
-    resolution: {integrity: sha512-lYrp7FXmBqpmGmsEF92WnSukdgYvLm15FPIODZOx9+3nobkxJxjBYcszqZf5VqTjBtISPSNC7zjU9o3zwpL6AQ==}
-    dev: false
 
   /mdurl@1.0.1:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
