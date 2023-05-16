@@ -5,8 +5,8 @@ dependencies:
     specifier: 21.0.1
     version: 21.0.1
   '@primer/primitives':
-    specifier: 7.11.8
-    version: 7.11.8
+    specifier: 7.11.10
+    version: 7.11.10
   '@primer/view-components':
     specifier: 0.1.9
     version: 0.1.9
@@ -442,12 +442,12 @@ packages:
     resolution: {integrity: sha512-yHBDYnNQk0W7e3h0Eadh/RCbPl4WEvuO5dwj/qLE/kZodBn7JGhU7xMQKDnj37ck27dS311ngXUuLH42s3wXBw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
-      '@primer/primitives': 7.11.8
+      '@primer/primitives': 7.11.10
       '@primer/view-components': 0.1.9
     dev: false
 
-  /@primer/primitives@7.11.8:
-    resolution: {integrity: sha512-LSR/xRGFz0v1j337hXr1ZqcaY55glkHfDELdT4WEnuhRFLiYKUtWIhkTa858KYbaih5AUvw3wk0PYJeh6O7aDg==}
+  /@primer/primitives@7.11.10:
+    resolution: {integrity: sha512-KwChxyp4qbLojZx5Nz8RUElM9K+ObzZWvzkYEu76TC4qEsqb9wW7n78jyov5WhUh5+qj2Qac1iCsPfeTQG5YBw==}
     dev: false
 
   /@primer/view-components@0.1.9:
