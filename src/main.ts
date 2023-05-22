@@ -1,22 +1,20 @@
 import vscode from "vscode";
-import commands from "./commands";
 import markdownItTheme from "./plugins/markdown-it-theme";
 import markdownItCodeCopy from "./plugins/markdown-it-code-copy";
 import markdownItImage from "./plugins/markdown-it-image";
-import { configurationSection } from "./configuration";
+import { changeThemeMode, changeThemeLight, changeThemeDark } from "./commands";
+import { refreshPreview } from "./events";
 
 export function activate(context: vscode.ExtensionContext) {
-  context.subscriptions.push(...commands);
-
+  // register commands
   context.subscriptions.push(
-    // 监听配置变化
-    vscode.workspace.onDidChangeConfiguration((e) => {
-      // 刷新预览
-      if (e.affectsConfiguration(configurationSection)) {
-        vscode.commands.executeCommand("markdown.preview.refresh");
-      }
-    })
+    changeThemeMode,
+    changeThemeLight,
+    changeThemeDark
   );
+
+  // register events
+  context.subscriptions.push(refreshPreview);
 
   return {
     extendMarkdownIt(md: markdownit) {
