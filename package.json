@@ -132,11 +132,6 @@
       "./dist/main.css"
     ]
   },
-  "activationEvents": [
-    "onCommand:vscode-markdown-github.changeThemeMode",
-    "onCommand:vscode-markdown-github.changeThemeLight",
-    "onCommand:vscode-markdown-github.changeThemeDark"
-  ],
   "lint-staged": {
     "*.{ts,tsx,js,cjs}": [
       "prettier --write"
