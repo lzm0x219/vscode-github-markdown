@@ -16,6 +16,24 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > - 🚀 Performance
 > - 📝 Documentation
 
+## [v3.0.0] (2023-05-25)
+
+### ✨ Feature
+
+- Add "Note" and "Warning" support for blockquote.
+
+### 💥 Breaking
+
+- The specified compatible VS Code version is changed to 1.78.0 and above.
+
+### 🧱 Refactor
+
+- Refactored the writing of events and commands.
+
+### 📦 Dependencies
+
+- Updated all project dependency versions.
+
 ## [v2.0.1] (2023-01-04)
 
 ### 💎 Improve
@@ -105,6 +123,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Added full github markdown preview style. 🎉
 
+[v3.0.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v2.0.1...v3.0.0
 [v2.0.1]: https://github.com/lzm0x219/vscode-markdown-github/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.2.0...v2.0.0
 [v1.2.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.3...v1.2.0
