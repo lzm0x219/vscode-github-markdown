@@ -14,6 +14,7 @@
     "highlightjs",
     "hljs",
     "markdownit",
+    "metafile",
     "octicon",
     "outfile",
     "packagejson",
