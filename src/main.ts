@@ -1,9 +1,10 @@
 import vscode from "vscode";
+import { changeThemeMode, changeThemeLight, changeThemeDark } from "./commands";
+import { refreshPreview } from "./events";
 import markdownItTheme from "./plugins/markdown-it-theme";
 import markdownItCodeCopy from "./plugins/markdown-it-code-copy";
 import markdownItImage from "./plugins/markdown-it-image";
-import { changeThemeMode, changeThemeLight, changeThemeDark } from "./commands";
-import { refreshPreview } from "./events";
+import markdownItBlockquote from "./plugins/markdown-it-blockquote";
 
 export function activate(context: vscode.ExtensionContext) {
   // register commands
@@ -21,6 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
       return md
         .use(markdownItTheme)
         .use(markdownItCodeCopy)
+        .use(markdownItBlockquote)
         .use(markdownItImage(context))
         .use(require("markdown-it-emoji"))
         .use(require("markdown-it-github-headings"), {
