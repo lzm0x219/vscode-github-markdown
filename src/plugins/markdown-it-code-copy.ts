@@ -1,25 +1,14 @@
 import type Renderer from "markdown-it/lib/renderer";
 
 export default function markdownItCodeCopy(md: markdownit) {
-	function createRenderRule(originRule: Renderer.RenderRule) {
-		return function (...args: Parameters<Renderer.RenderRule>) {
-			const [tokens, idx] = args;
-			const content = tokens[idx].content.split("").reduce((result, pre) => {
-				switch (pre) {
-					case '"':
-						result += "&quot;";
-						break;
-					case "'":
-						result += "&lt;";
-						break;
-					default:
-						result += pre;
-						break;
-				}
-				return result;
-			}, "");
+  function createRenderRule(originRule: Renderer.RenderRule) {
+    return function (...args: Parameters<Renderer.RenderRule>) {
+      const [tokens, idx] = args;
+      const content = tokens[idx].content
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&lt;");
 
-			return `
+      return `
         <div class="highlight highlight-source-shell notranslate position-relative overflow-auto">
           ${originRule(...args)}
           <div class="zeroclipboard-container position-absolute right-0 top-0">
@@ -34,11 +23,11 @@ export default function markdownItCodeCopy(md: markdownit) {
           </div>
         </div>
       `;
-		};
-	}
+    };
+  }
 
-	md.renderer.rules.code_block = createRenderRule(md.renderer.rules.code_block);
-	md.renderer.rules.fence = createRenderRule(md.renderer.rules.fence);
+  md.renderer.rules.code_block = createRenderRule(md.renderer.rules.code_block);
+  md.renderer.rules.fence = createRenderRule(md.renderer.rules.fence);
 
-	return md;
+  return md;
 }

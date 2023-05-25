@@ -1,16 +1,14 @@
-import { getThemeMode } from "../configuration/themeMode";
-import { getThemeLight } from "../configuration/themeLight";
-import { getThemeDark } from "../configuration/themeDark";
+import configuration from "../configuration";
 
 export default function markdownItTheme(md: markdownit) {
-	const render = md.renderer.render;
+  const render = md.renderer.render;
 
-	md.renderer.render = function (...args) {
-		return `
-      <div class="vscode-markdown-github" data-color-mode="${getThemeMode()}" data-light-theme="${getThemeLight()}" data-dark-theme="${getThemeDark()}">
+  md.renderer.render = function (...args) {
+    return `
+      <div class="vscode-markdown-github" data-color-mode="${configuration.getThemeMode()}" data-light-theme="${configuration.getThemeLight()}" data-dark-theme="${configuration.getThemeDark()}">
         ${render.apply(md.renderer, args)}
       </div>
     `;
-	};
-	return md;
+  };
+  return md;
 }
