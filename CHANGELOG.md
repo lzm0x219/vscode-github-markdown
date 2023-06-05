@@ -16,6 +16,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 > - 🚀 Performance
 > - 📝 Documentation
 
+## [v3.1.0] (2023-06-05)
+
+### ✨ Feature
+
+- Add mermaid diagrams preview.
+
 ## [v3.0.0] (2023-05-25)
 
 ### ✨ Feature
@@ -123,6 +129,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Added full github markdown preview style. 🎉
 
+[v3.1.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v2.0.1...v3.0.0
 [v2.0.1]: https://github.com/lzm0x219/vscode-markdown-github/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.2.0...v2.0.0
