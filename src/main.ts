@@ -1,6 +1,7 @@
 import vscode from "vscode";
 import { changeThemeMode, changeThemeLight, changeThemeDark } from "./commands";
 import { refreshPreview } from "./events";
+import markdownItMermaid from "./plugins/markdown-it-mermaid";
 import markdownItTheme from "./plugins/markdown-it-theme";
 import markdownItCodeCopy from "./plugins/markdown-it-code-copy";
 import markdownItImage from "./plugins/markdown-it-image";
@@ -23,6 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
         .use(markdownItTheme)
         .use(markdownItCodeCopy)
         .use(markdownItBlockquote)
+        .use(markdownItMermaid)
         .use(markdownItImage(context))
         .use(require("markdown-it-emoji"))
         .use(require("markdown-it-github-headings"), {
