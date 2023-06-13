@@ -145,6 +145,7 @@
     "@primer/primitives": "7.11.12",
     "@primer/view-components": "0.1.9",
     "highlight.js": "11.8.0",
+    "is-color": "1.0.2",
     "markdown-it-emoji": "2.0.2",
     "markdown-it-footnote": "3.0.3",
     "markdown-it-github-headings": "2.0.1",
@@ -153,6 +154,7 @@
     "mermaid": "10.2.3"
   },
   "devDependencies": {
+    "@types/is-color": "1.0.0",
     "@types/markdown-it": "12.2.3",
     "@types/node": "18.16.17",
     "@types/vscode": "1.79.0",
