@@ -29,8 +29,6 @@ export default function markdownItBlockquote(md: MarkdownIt) {
       `;
 
       token.children.unshift(customToken);
-
-      console.log(token.children);
     }
     return md.renderer.renderToken(tokens, idx, options);
   };
