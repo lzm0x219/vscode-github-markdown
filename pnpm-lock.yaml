@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@primer/css':
-    specifier: 21.0.2
-    version: 21.0.2
+    specifier: 21.0.3
+    version: 21.0.3
   '@primer/primitives':
     specifier: 7.11.12
     version: 7.11.12
@@ -462,8 +462,8 @@ packages:
     resolution: {integrity: sha512-j6PhkDD1IdL9xrlKbUQ3YEM74B7Fgr1mIZJ6JaYJjM1Mvdutd/nBouM8SnwFZdBBbS+ZRfGhnx3plr833Pvf1Q==}
     dev: false
 
-  /@primer/css@21.0.2:
-    resolution: {integrity: sha512-rIwqua1LgjMTMFx9whghPEHF1B4RdVA6meMu5ByeqLYWmWrCStwk2jZvk9yNSn2MnkJ7zuuo3jTlIX1SVmjF7Q==}
+  /@primer/css@21.0.3:
+    resolution: {integrity: sha512-nxednXoBedJYMlCM+oXMATswz2w3+IvBoptjF6f7zlM+D/nHmJx6U3BPeZSp6PFI3e2E9jJz7vDZqsZbFPhRtw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@primer/primitives': 7.11.12
@@ -507,6 +507,10 @@ packages:
     dependencies:
       '@types/jsonfile': 6.1.1
       '@types/node': 18.16.18
+    dev: true
+
+  /@types/is-color@1.0.0:
+    resolution: {integrity: sha512-1MmzllUjDeP5NS6exxvQ4C2GZTxoSc4rpxyIKyifzEN2UcPVREx9BnMjPTvt29IQJey98Ispvs+YJ67KEFVGjg==}
     dev: true
 
   /@types/is-color@1.0.0:
