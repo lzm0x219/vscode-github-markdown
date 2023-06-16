@@ -12,8 +12,8 @@ dependencies:
     specifier: 7.11.12
     version: 7.11.12
   '@primer/view-components':
-    specifier: 0.1.9
-    version: 0.1.9
+    specifier: 0.2.0
+    version: 0.2.0
   highlight.js:
     specifier: 11.8.0
     version: 11.8.0
@@ -622,6 +622,10 @@ packages:
     resolution: {integrity: sha512-X9gxiwKtN1ZumOoe9KRLpe37nshLtwHm/IJflIxgjanXz/FqKb0DQ7BlWu+iqUn/O0/jWYgkKnTLtsC9JlgwQg==}
     dev: false
 
+  /@oddbird/popover-polyfill@0.2.2:
+    resolution: {integrity: sha512-ko7x+PDZA9bHwA6hSfxjL1IhBP91JukfZq/NAe85u9rT0akFn9RKvSXymX/mS7S2mfNjE+Zw9JdLUPGvPabQAA==}
+    dev: false
+
   /@pkgr/utils@2.4.1:
     resolution: {integrity: sha512-JOqwkgFEyi+OROIyq7l4Jy28h/WwhDnG/cPkXG2Z1iFbubB6jsHW1NDvmyOzTBxHr3yg68YGirmh1JUgMqa+9w==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
@@ -664,6 +668,23 @@ packages:
       '@github/relative-time-element': 4.3.0
       '@github/tab-container-element': 3.2.0
       '@oddbird/popover-polyfill': 0.1.1
+      '@primer/behaviors': 1.3.5
+    dev: false
+
+  /@primer/view-components@0.2.0:
+    resolution: {integrity: sha512-fuTynYVvABMl5+IN8MANeFDrpVaS637UrDLlCyp+oRHrekx71RTV+XmJ72u+Fz6nQhCWqrsT5cHLq/t0/elvZg==}
+    dependencies:
+      '@github/auto-check-element': 5.4.0
+      '@github/auto-complete-element': 3.5.0
+      '@github/catalyst': 1.6.0
+      '@github/clipboard-copy-element': 1.2.1
+      '@github/details-menu-element': 1.0.13
+      '@github/image-crop-element': 5.0.0
+      '@github/include-fragment-element': 6.1.1
+      '@github/mini-throttle': 2.1.0
+      '@github/relative-time-element': 4.3.0
+      '@github/tab-container-element': 3.2.0
+      '@oddbird/popover-polyfill': 0.2.2
       '@primer/behaviors': 1.3.5
     dev: false
 
