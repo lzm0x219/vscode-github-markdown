@@ -95,8 +95,8 @@ devDependencies:
     specifier: 5.1.6
     version: 5.1.6
   zx:
-    specifier: 7.2.2
-    version: 7.2.2
+    specifier: 7.2.3
+    version: 7.2.3
 
 packages:
 
@@ -3902,8 +3902,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zx@7.2.2:
-    resolution: {integrity: sha512-50Gjicd6ijTt7Zcz5fNX+rHrmE0uVqC+X6lYKhf2Cu8wIxDpNIzXwTmzchNdW+JY3LFsRcU43B1lHE4HBMmKgQ==}
+  /zx@7.2.3:
+    resolution: {integrity: sha512-QODu38nLlYXg/B/Gw7ZKiZrvPkEsjPN3LQ5JFXM7h0JvwhEdPNNl+4Ao1y4+o3CLNiDUNcwzQYZ4/Ko7kKzCMA==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     dependencies:
