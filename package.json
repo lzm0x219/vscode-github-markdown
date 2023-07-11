@@ -142,7 +142,7 @@
   },
   "dependencies": {
     "@primer/css": "21.0.7",
-    "@primer/primitives": "7.11.13",
+    "@primer/primitives": "7.11.14",
     "@primer/view-components": "0.3.1",
     "highlight.js": "11.8.0",
     "is-color": "1.0.2",
