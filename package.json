@@ -168,7 +168,7 @@
     "is-ci": "3.0.1",
     "lint-staged": "13.2.3",
     "prettier": "3.0.0",
-    "prettier-plugin-packagejson": "2.4.4",
+    "prettier-plugin-packagejson": "2.4.5",
     "sort-package-json": "2.5.1",
     "tsx": "3.12.7",
     "typescript": "5.1.6",
