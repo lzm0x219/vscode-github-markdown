@@ -151,7 +151,7 @@
     "markdown-it-github-headings": "2.0.1",
     "markdown-it-highlightjs": "4.0.1",
     "markdown-it-task-lists": "2.1.1",
-    "mermaid": "10.2.4"
+    "mermaid": "10.3.0"
   },
   "devDependencies": {
     "@types/is-color": "1.0.0",
