@@ -56,8 +56,8 @@ devDependencies:
     specifier: 2.3.3
     version: 2.3.3
   '@vscode/vsce':
-    specifier: 2.19.0
-    version: 2.19.0
+    specifier: 2.20.0
+    version: 2.20.0
   concurrently:
     specifier: 8.2.0
     version: 8.2.0
@@ -794,8 +794,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vscode/vsce@2.19.0:
-    resolution: {integrity: sha512-dAlILxC5ggOutcvJY24jxz913wimGiUrHaPkk16Gm9/PGFbz1YezWtrXsTKUtJws4fIlpX2UIlVlVESWq8lkfQ==}
+  /@vscode/vsce@2.20.0:
+    resolution: {integrity: sha512-FR8Tq2WgGRi/Py5/9WUFG2DCxdqaHXyuhHXSP8hsNc1FsxNzAkqKqfvOUUGxA7gOytmc9s/000QA7wKVukMDbQ==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
@@ -812,7 +812,7 @@ packages:
       minimatch: 3.1.2
       parse-semver: 1.1.1
       read: 1.0.7
-      semver: 5.7.1
+      semver: 7.5.4
       tmp: 0.2.1
       typed-rest-client: 1.8.9
       url-join: 4.0.1
@@ -2929,7 +2929,7 @@ packages:
     engines: {node: '>=10'}
     requiresBuild: true
     dependencies:
-      semver: 7.5.1
+      semver: 7.5.4
     dev: true
     optional: true
 
@@ -3417,6 +3417,14 @@ packages:
 
   /semver@7.5.1:
     resolution: {integrity: sha512-Wvss5ivl8TMRZXXESstBA4uR5iXgEN/VC5/sOcuXdVLzcdkz4HWetIoRfG5gb5X+ij/G9rw9YoGn3QoQ8OCSpw==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      lru-cache: 6.0.0
+    dev: true
+
+  /semver@7.5.4:
+    resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
