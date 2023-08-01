@@ -158,7 +158,7 @@
     "@types/markdown-it": "12.2.3",
     "@types/node": "18.17.1",
     "@types/vscode": "1.80.0",
-    "@vscode/test-electron": "2.3.3",
+    "@vscode/test-electron": "2.3.4",
     "@vscode/vsce": "2.20.0",
     "concurrently": "8.2.0",
     "del-cli": "5.0.0",
