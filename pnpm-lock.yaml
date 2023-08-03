@@ -50,8 +50,8 @@ devDependencies:
     specifier: 18.17.1
     version: 18.17.1
   '@types/vscode':
-    specifier: 1.80.0
-    version: 1.80.0
+    specifier: 1.81.0
+    version: 1.81.0
   '@vscode/test-electron':
     specifier: 2.3.4
     version: 2.3.4
@@ -774,8 +774,8 @@ packages:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
 
-  /@types/vscode@1.80.0:
-    resolution: {integrity: sha512-qK/CmOdS2o7ry3k6YqU4zD3R2AYlJfbwBoSbKpBoP+GpXNE+0NEgJOli4n0bm0diK5kfBnchgCEj4igQz/44Hg==}
+  /@types/vscode@1.81.0:
+    resolution: {integrity: sha512-YIaCwpT+O2E7WOMq0eCgBEABE++SX3Yl/O02GoMIF2DO3qAtvw7m6BXFYsxnc6XyzwZgh6/s/UG78LSSombl2w==}
     dev: true
 
   /@types/which@3.0.0:
