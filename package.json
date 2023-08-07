@@ -162,7 +162,7 @@
     "@vscode/vsce": "2.20.0",
     "concurrently": "8.2.0",
     "del-cli": "5.0.0",
-    "esbuild": "0.18.17",
+    "esbuild": "0.18.18",
     "esbuild-sass-plugin": "2.10.0",
     "husky": "8.0.3",
     "is-ci": "3.0.1",
