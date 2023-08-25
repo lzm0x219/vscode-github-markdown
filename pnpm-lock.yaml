@@ -36,8 +36,8 @@ dependencies:
     specifier: 2.1.1
     version: 2.1.1
   mermaid:
-    specifier: 10.3.0
-    version: 10.3.0
+    specifier: 10.4.0
+    version: 10.4.0
 
 devDependencies:
   '@types/is-color':
@@ -2643,8 +2643,8 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /mermaid@10.3.0:
-    resolution: {integrity: sha512-H5quxuQjwXC8M1WuuzhAp2TdqGg74t5skfDBrNKJ7dt3z8Wprl5S6h9VJsRhoBUTSs1TMtHEdplLhCqXleZZLw==}
+  /mermaid@10.4.0:
+    resolution: {integrity: sha512-4QCQLp79lvz7UZxow5HUX7uWTPJOaQBVExduo91tliXC7v78i6kssZOPHxLL+Xs30KU72cpPn3g3imw/xm/gaw==}
     dependencies:
       '@braintree/sanitize-url': 6.0.2
       '@types/d3-scale': 4.0.3
