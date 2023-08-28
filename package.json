@@ -167,7 +167,7 @@
     "husky": "8.0.3",
     "is-ci": "3.0.1",
     "lint-staged": "14.0.1",
-    "prettier": "3.0.1",
+    "prettier": "3.0.2",
     "prettier-plugin-packagejson": "2.4.5",
     "sort-package-json": "2.5.1",
     "tsx": "3.12.7",
