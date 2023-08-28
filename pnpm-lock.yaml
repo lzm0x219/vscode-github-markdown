@@ -62,8 +62,8 @@ devDependencies:
     specifier: 8.2.1
     version: 8.2.1
   del-cli:
-    specifier: 5.0.0
-    version: 5.0.0
+    specifier: 5.0.1
+    version: 5.0.1
   esbuild:
     specifier: 0.19.2
     version: 0.19.2
@@ -1611,8 +1611,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /del-cli@5.0.0:
-    resolution: {integrity: sha512-rENFhUaYcjoMODwFhhlON+ogN7DoG+4+GFN+bsA1XeDt4w2OKQnQadFP1thHSAlK9FAtl88qgP66wOV+eFZZiQ==}
+  /del-cli@5.0.1:
+    resolution: {integrity: sha512-hCDHJd0u0jKFqizgInYXZaILsqOIA7Zl6e7M3hJwP+SlwUAgtV/EB22EPF4e2+9VAVnBDQQBE6tDRe+/UuoFhg==}
     engines: {node: '>=14.16'}
     hasBin: true
     dependencies:
