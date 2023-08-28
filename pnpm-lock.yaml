@@ -68,8 +68,8 @@ devDependencies:
     specifier: 0.19.2
     version: 0.19.2
   esbuild-sass-plugin:
-    specifier: 2.10.0
-    version: 2.10.0(esbuild@0.19.2)
+    specifier: 2.13.0
+    version: 2.13.0(esbuild@0.19.2)
   husky:
     specifier: 8.0.3
     version: 8.0.3
@@ -1748,14 +1748,14 @@ packages:
       is-arrayish: 0.2.1
     dev: true
 
-  /esbuild-sass-plugin@2.10.0(esbuild@0.19.2):
-    resolution: {integrity: sha512-STv849QGT8g77RRFmroSt4VBVKjv+dypKcO4aWz8IP4G5JbRH0KC0+B8ODuzlUNu9R5MbkGcev/62RDP/JcZ2Q==}
+  /esbuild-sass-plugin@2.13.0(esbuild@0.19.2):
+    resolution: {integrity: sha512-tpuoCPjcigaG+nKTEmDLBcmt81LADhwa5nGYA6memd56bhf27puRFlbQThvPWjypk51dsfSc30I18s4OdsmDag==}
     peerDependencies:
-      esbuild: ^0.18.0
+      esbuild: ^0.19.1
     dependencies:
       esbuild: 0.19.2
       resolve: 1.22.2
-      sass: 1.63.4
+      sass: 1.66.1
     dev: true
 
   /esbuild@0.17.19:
@@ -3378,8 +3378,8 @@ packages:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
     dev: false
 
-  /sass@1.63.4:
-    resolution: {integrity: sha512-Sx/+weUmK+oiIlI+9sdD0wZHsqpbgQg8wSwSnGBjwb5GwqFhYNwwnI+UWZtLjKvKyFlKkatRK235qQ3mokyPoQ==}
+  /sass@1.66.1:
+    resolution: {integrity: sha512-50c+zTsZOJVgFfTgwwEzkjA3/QACgdNsKueWPyAR0mRINIvLAStVQBbPg14iuqEQ74NPDbXzJARJ/O4SI1zftA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
