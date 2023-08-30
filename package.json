@@ -159,7 +159,7 @@
     "@types/node": "18.17.12",
     "@types/vscode": "1.81.0",
     "@vscode/test-electron": "2.3.4",
-    "@vscode/vsce": "2.20.1",
+    "@vscode/vsce": "2.21.0",
     "concurrently": "8.2.1",
     "del-cli": "5.0.1",
     "esbuild": "0.19.2",
