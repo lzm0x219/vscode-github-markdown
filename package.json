@@ -170,7 +170,7 @@
     "prettier": "3.0.2",
     "prettier-plugin-packagejson": "2.4.5",
     "sort-package-json": "2.5.1",
-    "tsx": "3.12.7",
+    "tsx": "3.12.8",
     "typescript": "5.2.2",
     "zx": "7.2.3"
   },
