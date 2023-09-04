@@ -56,8 +56,8 @@ devDependencies:
     specifier: 2.3.4
     version: 2.3.4
   '@vscode/vsce':
-    specifier: 2.20.1
-    version: 2.20.1
+    specifier: 2.21.0
+    version: 2.21.0
   concurrently:
     specifier: 8.2.1
     version: 8.2.1
@@ -789,8 +789,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vscode/vsce@2.20.1:
-    resolution: {integrity: sha512-ilbvoqvR/1/zseRPBAzYR6aKqSJ+jvda4/BqIwOqTxajpvLtEpK3kMLs77+dJdrlygS+VrP7Yhad8j0ukyD96g==}
+  /@vscode/vsce@2.21.0:
+    resolution: {integrity: sha512-KuxYqScqUY/duJbkj9eE2tN2X/WJoGAy54hHtxT3ZBkM6IzrOg7H7CXGUPBxNlmqku2w/cAjOUSrgIHlzz0mbA==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
