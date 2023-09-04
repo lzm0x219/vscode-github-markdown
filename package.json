@@ -161,7 +161,7 @@
     "@vscode/test-electron": "2.3.4",
     "@vscode/vsce": "2.21.0",
     "concurrently": "8.2.1",
-    "del-cli": "5.0.1",
+    "del-cli": "5.1.0",
     "esbuild": "0.19.2",
     "esbuild-sass-plugin": "2.14.0",
     "husky": "8.0.3",
