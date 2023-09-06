@@ -68,8 +68,8 @@ devDependencies:
     specifier: 0.19.2
     version: 0.19.2
   esbuild-sass-plugin:
-    specifier: 2.14.0
-    version: 2.14.0(esbuild@0.19.2)
+    specifier: 2.15.0
+    version: 2.15.0(esbuild@0.19.2)
   husky:
     specifier: 8.0.3
     version: 8.0.3
@@ -1743,8 +1743,8 @@ packages:
       is-arrayish: 0.2.1
     dev: true
 
-  /esbuild-sass-plugin@2.14.0(esbuild@0.19.2):
-    resolution: {integrity: sha512-aT9SY31xXpxZ9EHw4SomYaSAr/sXmoITY7W2s2yLV61813Jt2fF7xU3L70r7vd6oJ/oV93i0x8t1YWfVzA30HQ==}
+  /esbuild-sass-plugin@2.15.0(esbuild@0.19.2):
+    resolution: {integrity: sha512-T0GCHVfeuGBBgY5k19RbExd7vVuC3lzrK8IZbXOqZftw6N9lTBnZuqKhnhdAJBcu6wek7K/fXJ2zzY6KrcNtAg==}
     peerDependencies:
       esbuild: ^0.19.1
     dependencies:
