@@ -143,7 +143,7 @@
   "dependencies": {
     "@primer/css": "21.0.9",
     "@primer/primitives": "7.12.0",
-    "@primer/view-components": "0.8.0",
+    "@primer/view-components": "0.9.0",
     "highlight.js": "11.8.0",
     "is-color": "1.0.2",
     "markdown-it-emoji": "2.0.2",

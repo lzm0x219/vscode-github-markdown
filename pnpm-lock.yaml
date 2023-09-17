@@ -12,8 +12,8 @@ dependencies:
     specifier: 7.12.0
     version: 7.12.0
   '@primer/view-components':
-    specifier: 0.8.0
-    version: 0.8.0
+    specifier: 0.9.0
+    version: 0.9.0
   highlight.js:
     specifier: 11.8.0
     version: 11.8.0
@@ -666,8 +666,8 @@ packages:
       '@primer/behaviors': 1.3.5
     dev: false
 
-  /@primer/view-components@0.8.0:
-    resolution: {integrity: sha512-4WLpv9ulVQewRQSfBIWu/ISN3yG4MWzoZh0Uf32VfrVZaqkQ8O/ZZa5AoiedILh2fOrLD+K8fPXJwTRvWGd8rw==}
+  /@primer/view-components@0.9.0:
+    resolution: {integrity: sha512-ev3IvvzTpTzxh3BnGpvviSocBAmJXELbAufO2K//xgdfhuvOMe1Mrnf1ntIzB6mSpFELexw9Yi5Z8PC9nqAnCw==}
     dependencies:
       '@github/auto-check-element': 5.4.0
       '@github/auto-complete-element': 3.5.0
