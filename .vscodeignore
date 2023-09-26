@@ -3,7 +3,7 @@
 src/**
 scripts/**
 web/**
-!assets/logo.png
+!resources/logo.png
 .husky/**
 .github/**
 .gitignore
