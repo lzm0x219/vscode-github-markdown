@@ -1,6 +1,6 @@
 {
-  "name": "vscode-markdown-github",
-  "displayName": "Markdown Github Preview",
+  "name": "vscode-github-markdown",
+  "displayName": "Github Markdown",
   "version": "3.1.0",
   "description": "A GitHub-style VSCode built-in markdown preview plugin.",
   "categories": [
@@ -13,17 +13,17 @@
     "markdown style",
     "markdown theme"
   ],
-  "homepage": "https://github.com/lzm0x219/vscode-markdown-github#readme",
+  "homepage": "https://github.com/lzm0x219/vscode-github-markdown#readme",
   "bugs": {
-    "url": "https://github.com/lzm0x219/vscode-markdown-github/issues"
+    "url": "https://github.com/lzm0x219/vscode-github-markdown/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lzm0x219/vscode-markdown-github.git"
+    "url": "git+https://github.com/lzm0x219/vscode-github-markdown.git"
   },
   "license": "MIT",
   "author": {
-    "name": "Monet Bird"
+    "name": "Sam Liu"
   },
   "publisher": "lzm0x219",
   "main": "dist/main.js",
@@ -41,8 +41,6 @@
     "dev:css": "tsx scripts/buildStyles -w",
     "dev:extension": "esbuild src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
     "dev:web": "esbuild web/main.ts --bundle --outfile=dist/web.js --sourcemap --watch",
-    "preinstall": "npx only-allow pnpm -y",
-    "lint": "rome check",
     "package": "pnpm vsce package --no-dependencies",
     "package:pre": "pnpm vsce package --pre-release --no-dependencies",
     "prepare": "is-ci || husky install",
@@ -53,22 +51,22 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-markdown-github.changeThemeMode",
+        "command": "vscode-github-markdown.changeThemeMode",
         "title": "%command.changeThemeMode.title%"
       },
       {
-        "command": "vscode-markdown-github.changeThemeLight",
+        "command": "vscode-github-markdown.changeThemeLight",
         "title": "%command.changeThemeLight.title%"
       },
       {
-        "command": "vscode-markdown-github.changeThemeDark",
+        "command": "vscode-github-markdown.changeThemeDark",
         "title": "%command.changeThemeDark.title%"
       }
     ],
     "configuration": {
-      "title": "Markdown Github Preview",
+      "title": "Github Markdown",
       "properties": {
-        "vscode-markdown-github.theme.mode": {
+        "vscode-github-markdown.theme.mode": {
           "type": "string",
           "description": "%configuration.theme.mode.description%",
           "enum": [
@@ -84,7 +82,7 @@
           "default": "light",
           "order": 0
         },
-        "vscode-markdown-github.theme.light": {
+        "vscode-github-markdown.theme.light": {
           "type": "string",
           "description": "%configuration.theme.light.description%",
           "enum": [
@@ -102,7 +100,7 @@
           "default": "light",
           "order": 1
         },
-        "vscode-markdown-github.theme.dark": {
+        "vscode-github-markdown.theme.dark": {
           "type": "string",
           "description": "%configuration.theme.dark.description%",
           "enum": [
@@ -177,6 +175,6 @@
   "engines": {
     "vscode": "^1.78.0"
   },
-  "icon": "resources/logo.png",
+  "icon": "logo.png",
   "pricing": "Free"
 }

@@ -2,7 +2,7 @@ import vscode from "vscode";
 
 class Configuration {
   private static instance: Configuration | undefined;
-  private configurationSection = "vscode-markdown-github";
+  private configurationSection = "vscode-github-markdown";
   private themeModeSection = "theme.mode";
   private themeLightSection = "theme.light";
   private themeDarkSection = "theme.dark";
@@ -69,7 +69,7 @@ class Configuration {
 
   public getConfiguration() {
     const configuration = vscode.workspace.getConfiguration(
-      this.configurationSection
+      this.configurationSection,
     );
 
     const theme = configuration.get("theme");

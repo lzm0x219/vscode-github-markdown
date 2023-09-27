@@ -1,6 +1,6 @@
 # Change Log
 
-All notable changes to the "vscode-markdown-github" extension will be documented in this file.
+All notable changes to the "vscode-github-markdown" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
@@ -44,16 +44,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### 💎 Improve
 
-- Add img tag path compatibility ([#80](https://github.com/lzm0x219/vscode-markdown-github/pull/80))
+- Add img tag path compatibility ([#80](https://github.com/lzm0x219/vscode-github-markdown/pull/80))
 
 ### 📦 Dependencies
 
-- Update dependency @vscode/vsce to v2.16.0 ([#70](https://github.com/lzm0x219/vscode-markdown-github/pull/70))
-- Update dependency @types/node to v18.11.18 ([#71](https://github.com/lzm0x219/vscode-markdown-github/pull/71))
-- Update dependency esbuild-sass-plugin to v2.4.5 ([#75](https://github.com/lzm0x219/vscode-markdown-github/pull/75)))
-- Update dependency @primer/view-components to v0.0.117 ([#76](https://github.com/lzm0x219/vscode-markdown-github/pull/76)))
-- Update dependency esbuild to v0.16.13 ([#78](https://github.com/lzm0x219/vscode-markdown-github/pull/78)))
-- Update dependency husky to v8.0.3 ([#79](https://github.com/lzm0x219/vscode-markdown-github/pull/79)))
+- Update dependency @vscode/vsce to v2.16.0 ([#70](https://github.com/lzm0x219/vscode-github-markdown/pull/70))
+- Update dependency @types/node to v18.11.18 ([#71](https://github.com/lzm0x219/vscode-github-markdown/pull/71))
+- Update dependency esbuild-sass-plugin to v2.4.5 ([#75](https://github.com/lzm0x219/vscode-github-markdown/pull/75)))
+- Update dependency @primer/view-components to v0.0.117 ([#76](https://github.com/lzm0x219/vscode-github-markdown/pull/76)))
+- Update dependency esbuild to v0.16.13 ([#78](https://github.com/lzm0x219/vscode-github-markdown/pull/78)))
+- Update dependency husky to v8.0.3 ([#79](https://github.com/lzm0x219/vscode-github-markdown/pull/79)))
 
 ### 🚧 Maintenance
 
@@ -129,13 +129,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Added full github markdown preview style. 🎉
 
-[v3.1.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v3.0.0...v3.1.0
-[v3.0.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v2.0.1...v3.0.0
-[v2.0.1]: https://github.com/lzm0x219/vscode-markdown-github/compare/v2.0.0...v2.0.1
-[v2.0.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.2.0...v2.0.0
-[v1.2.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.3...v1.2.0
-[v1.1.3]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.2...v1.1.3
-[v1.1.2]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.1...v1.1.2
-[v1.1.1]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.1.0...v1.1.1
-[v1.1.0]: https://github.com/lzm0x219/vscode-markdown-github/compare/v1.0.0...v1.1.0
-[v1.0.0]: https://github.com/lzm0x219/vscode-markdown-github/releases/tag/v1.0.0
+[v3.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.0.0...v3.1.0
+[v3.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v2.0.1...v3.0.0
+[v2.0.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v2.0.0...v2.0.1
+[v2.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v1.2.0...v2.0.0
+[v1.2.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v1.1.3...v1.2.0
+[v1.1.3]: https://github.com/lzm0x219/vscode-github-markdown/compare/v1.1.2...v1.1.3
+[v1.1.2]: https://github.com/lzm0x219/vscode-github-markdown/compare/v1.1.1...v1.1.2
+[v1.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v1.1.0...v1.1.1
+[v1.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v1.0.0...v1.1.0
+[v1.0.0]: https://github.com/lzm0x219/vscode-github-markdown/releases/tag/v1.0.0

@@ -5,7 +5,7 @@ export default function markdownItTheme(md: markdownit) {
 
   md.renderer.render = function (...args) {
     return `
-      <div class="vscode-markdown-github" data-color-mode="${configuration.getThemeMode()}" data-light-theme="${configuration.getThemeLight()}" data-dark-theme="${configuration.getThemeDark()}">
+      <div class="vscode-github-markdown" data-color-mode="${configuration.getThemeMode()}" data-light-theme="${configuration.getThemeLight()}" data-dark-theme="${configuration.getThemeDark()}">
         ${render.apply(md.renderer, args)}
       </div>
     `;
