@@ -17,32 +17,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2.4.0
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: latest
-          run_install: false
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          bun-version: latest
       - name: Install dependencies
-        run: pnpm install
-      # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
-      # - name: Publish pre-release version
-      #   if: success() && github.event.type == 'published'
-      #   run: pnpm release:pre
-      #   env:
-      #     VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: bun install
       - name: Publish official version
         if: success()
-        run: pnpm release
+        run: bunx release
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
