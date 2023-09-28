@@ -1,17 +1,17 @@
+# Project Config Folders
 .vscode/**
 .vscode-test/**
-src/**
-scripts/**
-web/**
 .husky/**
 .github/**
-.gitignore
-.yarnrc
+
+# SourceCode Folders
+src/**
+
+# Project config files
 .editorconfig
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
-pnpm-lock.yaml
-prettier.config.cjs
+.prettierrc
+.gitignore
+tsconfig.json
+
+# Lock files
+bun.lockb
