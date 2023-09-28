@@ -2,6 +2,30 @@
 
 The GitHub Markdown extension gives you the same look and editing experience as the official theme.
 
+## Feature
+
+### Preview
+
+Perfectly replicates the official preview style.
+
+### Theme
+
+Support official multiple color schemes.
+
+### Enhance
+
+Support official color-model preview effect.
+
+Support official code copy effect.
+
+Support official multi-type blockquote effects.
+
+Support using absolute paths for images.
+
+## Extension Commands
+
+`GitHub Markdown: TODO`
+
 ## Related Information
 
 - [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
