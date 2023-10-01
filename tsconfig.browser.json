@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "es2022"],
-    "paths": {},
-    "tsBuildInfoFile": "tsconfig.browser.tsbuildinfo"
-  },
-  "include": ["src/extension.preview.ts"]
-}

@@ -34,14 +34,12 @@ const targetOptions: Record<Target, BuildOptions> = {
     outfile: "dist/extension.js",
     platform: "node",
     target: ["es2022", "node18.15"],
-    tsconfig: "tsconfig.json",
   },
   webworker: {
     entryPoints: ["src/extension.ts"],
     outfile: "dist/extension.browser.js",
     platform: "browser",
     target: ["es2022", "chrome114"],
-    tsconfig: "tsconfig.webworker.json",
     plugins: [
       nodeModulesPolyfillPlugin({
         globals: {
@@ -55,7 +53,6 @@ const targetOptions: Record<Target, BuildOptions> = {
     outfile: "dist/extension.preview.js",
     platform: "browser",
     target: ["es2022", "chrome114"],
-    tsconfig: "tsconfig.browser.json",
   },
 };
 
@@ -63,25 +60,23 @@ async function compileExtension(target: Target, watch: boolean) {
   const targetOption = targetOptions[target];
 
   const options: BuildOptions = {
-    bundle: true,
     entryPoints: targetOption.entryPoints,
     alias: targetOption.alias,
+    outfile: targetOption.outfile,
+    platform: targetOption.platform,
+    target: targetOption.target,
+    plugins: targetOption.plugins,
     external: ["vscode"],
-    format: "esm",
     keepNames: true,
     legalComments: "none",
     metafile: true,
     minify: !watch,
-    outfile: targetOption.outfile,
-    platform: targetOption.platform,
     sourcemap: watch,
-    target: targetOption.target,
     treeShaking: true,
-    tsconfig: targetOption.tsconfig,
     color: true,
     logLevel: "info",
-    plugins: targetOption.plugins,
     packages: "external",
+    bundle: true,
   };
   const result = watch
     ? await esbuildWatch(options)
