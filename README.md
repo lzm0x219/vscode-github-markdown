@@ -2,7 +2,7 @@
 
 The GitHub Markdown extension gives you the same look and editing experience as the official theme.
 
-## Feature
+<!-- ## Feature
 
 ### Preview
 
@@ -20,7 +20,7 @@ Support official code copy effect.
 
 Support official multi-type blockquote effects.
 
-Support using absolute paths for images.
+Support using absolute paths for images. -->
 
 ## Extension Commands
 
