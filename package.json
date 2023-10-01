@@ -60,19 +60,20 @@
             "system"
           ],
           "enumItemLabels": [
-            "%configuration.theme.mode.enum.single.label%",
-            "%configuration.theme.mode.enum.system.label%"
+            "%configuration.theme.mode.enum.label.single%",
+            "%configuration.theme.mode.enum.label.system%"
           ],
           "enumDescriptions": [
-            "%configuration.theme.mode.enum.single.description%",
-            "%configuration.theme.mode.enum.system.description%"
+            "%configuration.theme.mode.single.enum.description%",
+            "%configuration.theme.mode.system.enum.description%"
           ],
-          "default": 1,
+          "default": "system",
           "order": 0
         },
-        "vscode-github-markdown.theme.single": {
+        "vscode-github-markdown.theme.singleMode": {
           "type": "string",
-          "description": "%configuration.theme.single.description%",
+          "description": "%configuration.theme.mode.single.description%",
+          "default": "light",
           "enum": [
             "light",
             "light_colorblind",
@@ -94,9 +95,61 @@
             "Dark dimmed",
             "Dark high contrast",
             "Dark Tritanopia"
-          ],
+          ]
+        },
+        "vscode-github-markdown.theme.systemMode.dayTheme": {
+          "type": "string",
+          "description": "%configuration.theme.mode.system.day.description%",
           "default": "light",
-          "order": 1
+          "enum": [
+            "light",
+            "light_colorblind",
+            "light_high_contrast",
+            "light_tritanopia",
+            "dark",
+            "dark_colorblind",
+            "dark_dimmed",
+            "dark_high_contrast",
+            "dark_tritanopia"
+          ],
+          "enumItemLabels": [
+            "Light default",
+            "Light Protanopia & Deuteranopia",
+            "Light high contrast",
+            "Light Tritanopia",
+            "Dark default",
+            "Dark Protanopia & Deuteranopia",
+            "Dark dimmed",
+            "Dark high contrast",
+            "Dark Tritanopia"
+          ]
+        },
+        "vscode-github-markdown.theme.systemMode.nightTheme": {
+          "type": "string",
+          "description": "%configuration.theme.mode.system.night.description%",
+          "default": "dark",
+          "enum": [
+            "light",
+            "light_colorblind",
+            "light_high_contrast",
+            "light_tritanopia",
+            "dark",
+            "dark_colorblind",
+            "dark_dimmed",
+            "dark_high_contrast",
+            "dark_tritanopia"
+          ],
+          "enumItemLabels": [
+            "Light default",
+            "Light Protanopia & Deuteranopia",
+            "Light high contrast",
+            "Light Tritanopia",
+            "Dark default",
+            "Dark Protanopia & Deuteranopia",
+            "Dark dimmed",
+            "Dark high contrast",
+            "Dark Tritanopia"
+          ]
         }
       }
     },
