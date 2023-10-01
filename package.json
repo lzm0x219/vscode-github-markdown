@@ -36,7 +36,7 @@
     "prepare": "is-ci || husky install",
     "release": "vsce publish --no-dependencies",
     "release:pre": "vsce publish --pre-release --no-dependencies",
-    "vscode:prepublish": "bunx build"
+    "vscode:prepublish": "bun run build"
   },
   "contributes": {
     "commands": [
