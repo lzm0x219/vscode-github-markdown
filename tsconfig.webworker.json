@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+    "lib": ["dom", "dom.iterable", "es2022"],
+    "paths": {},
+    "tsBuildInfoFile": "tsconfig.webworker.tsbuildinfo"
   },
   "include": ["src/**/*"],
   "exclude": ["src/extension.preview.ts"]

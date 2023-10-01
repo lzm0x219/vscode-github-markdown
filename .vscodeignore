@@ -15,3 +15,5 @@ tsconfig.json
 
 # Lock files
 bun.lockb
+
+esbuild.ts

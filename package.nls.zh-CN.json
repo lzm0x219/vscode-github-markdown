@@ -1,8 +1,9 @@
 {
-  "command.changeThemeMode.title": "Markdown Github Preview: 更改主题模式",
-  "command.changeThemeLight.title": "Markdown Github Preview: 更改明亮主题",
-  "command.changeThemeDark.title": "Markdown Github Preview: 更改暗黑主题",
-  "configuration.theme.mode.description": "Markdown 预览样式的主题模式",
-  "configuration.theme.light.description": "Markdown 预览样式的明亮主题",
-  "configuration.theme.dark.description": "Markdown 预览样式的暗黑主题"
+  "command.theme.mode.title": "GitHub Markdown: 更改主题模式",
+  "configuration.theme.mode.description": "选择单一主题，或与您的系统同步，自动在白天和黑夜主题之间切换",
+  "configuration.theme.mode.enum.single.label": "单一主题",
+  "configuration.theme.mode.enum.system.label": "跟随系统",
+  "configuration.theme.mode.enum.single.description": "使用您选择的主题",
+  "configuration.theme.mode.enum.system.description": "使用您的系统激活设置的主题",
+  "configuration.theme.single.description": "单一主题模式下使用的主题"
 }

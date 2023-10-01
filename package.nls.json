@@ -1,8 +1,9 @@
 {
-  "command.changeThemeMode.title": "Markdown Github Preview: Change Theme Mode",
-  "command.changeThemeLight.title": "Markdown Github Preview: Change Light Theme",
-  "command.changeThemeDark.title": "Markdown Github Preview: Change Dark Theme",
-  "configuration.theme.mode.description": "Color mode for Markdown preview styles",
-  "configuration.theme.light.description": "Light theme for Markdown preview styles",
-  "configuration.theme.dark.description": "Dark theme for Markdown preview styles"
+  "command.theme.mode.title": "GitHub Markdown: Color Mode",
+  "configuration.theme.mode.description": "Select a single theme, or sync with your system and automatically switch between day and night themes",
+  "configuration.theme.mode.enum.single.label": "Single theme",
+  "configuration.theme.mode.enum.system.label": "Sync with system",
+  "configuration.theme.mode.enum.single.description": "Use your selected theme",
+  "configuration.theme.mode.enum.system.description": "Match your system active settings",
+  "configuration.theme.single.description": "The theme used in single theme mode"
 }

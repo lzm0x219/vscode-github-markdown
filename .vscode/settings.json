@@ -16,11 +16,15 @@
     "hljs",
     "markdownit",
     "metafile",
+    "nosources",
     "octicon",
+    "outdir",
     "outfile",
     "packagejson",
     "predev",
     "prereleased",
+    "tsbuildinfo",
     "zeroclipboard"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
