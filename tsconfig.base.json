@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "target": "ES2022",
+
+    "moduleResolution": "Node",
+    "moduleDetection": "force",
+
+    "allowJs": true,
+    "esModuleInterop": true,
+
+    // best practices
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "composite": true,
+    "downlevelIteration": true,
+    "sourceMap": true
+  }
+}
