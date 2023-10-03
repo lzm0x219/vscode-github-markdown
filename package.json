@@ -178,7 +178,7 @@
     "@vscode/vsce": "2.21.1",
     "esbuild": "0.19.4",
     "esbuild-plugins-node-modules-polyfill": "1.6.1",
-    "esbuild-sass-plugin": "2.15.0",
+    "esbuild-sass-plugin": "2.16.0",
     "husky": "8.0.3",
     "is-ci": "3.0.1",
     "lint-staged": "14.0.1",
