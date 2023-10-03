@@ -1,9 +1,10 @@
 import vscode from "vscode";
+import markdownItGitHubTheme from "./markdown/markdown-it-github-theme";
 
 export function activate(context: vscode.ExtensionContext) {
   return {
     extendMarkdownIt(md: markdownit) {
-      return md;
+      return md.use(markdownItGitHubTheme);
     },
   };
 }

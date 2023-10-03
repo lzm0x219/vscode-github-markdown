@@ -27,13 +27,14 @@
   },
   "publisher": "lzm0x219",
   "main": "./dist/extension.js",
-  "browser": "./dist/extension.browser.js",
+  "browser": "./dist/extension.web.js",
   "scripts": {
-    "build": "tsx bin/build.ts",
-    "dev": "tsx bin/build.ts --watch",
+    "build": "webpack --mode production",
+    "dev": "webpack --watch",
     "package": "vsce package --no-dependencies",
     "package:pre": "vsce package --pre-release --no-dependencies",
     "prepare": "is-ci || husky install",
+    "preview:web": "vscode-test-web --extensionDevelopmentPath=. .",
     "release": "vsce publish --no-dependencies",
     "release:pre": "vsce publish --pre-release --no-dependencies",
     "vscode:prepublish": "bun run build"
@@ -174,20 +175,19 @@
     "@types/markdown-it": "13.0.2",
     "@types/node": "20.8.0",
     "@types/vscode": "1.82.0",
+    "@types/webpack": "5.28.3",
     "@vscode/test-web": "0.0.46",
     "@vscode/vsce": "2.21.1",
-    "esbuild": "0.19.4",
-    "esbuild-plugins-node-modules-polyfill": "1.6.1",
-    "esbuild-sass-plugin": "2.15.0",
     "husky": "8.0.3",
     "is-ci": "3.0.1",
     "lint-staged": "14.0.1",
     "prettier": "3.0.3",
     "prettier-plugin-packagejson": "2.4.6",
+    "process": "0.11.10",
     "sort-package-json": "2.6.0",
-    "tsx": "3.13.0",
     "typescript": "5.2.2",
-    "zx": "7.2.3"
+    "webpack": "5.88.2",
+    "webpack-cli": "5.1.4"
   },
   "engines": {
     "vscode": "^1.82.0"

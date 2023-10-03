@@ -105,6 +105,7 @@ dist
 
 # VSCode files
 .vscode-test/
+.vscode-test-web/
 *.vsix
 
 # MacOS files
