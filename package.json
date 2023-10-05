@@ -29,8 +29,19 @@
   "main": "./dist/extension.js",
   "browser": "./dist/extension.web.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack --watch",
+    "prebuild": "pnpm clean && tsc",
+    "build": "concurrently npm:build:* -c 'auto' --timings",
+    "build:node": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --platform=node --analyze --minify",
+    "build:script": "esbuild src/extension.preview.ts --bundle --outfile=dist/extension.preview.js --platform=browser --analyze --minify",
+    "build:style": "tsx ./build.ts --target=style --minify",
+    "build:web": "esbuild src/extension.ts --bundle --outfile=dist/extension.web.js --inject:src/extension.shim.ts --external:vscode --format=cjs --platform=browser --analyze --minify",
+    "clean": "npx rimraf dist",
+    "predev": "npm run clean",
+    "dev": "concurrently npm:dev:* -c 'auto' --timings",
+    "dev:node": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --sourcemap --watch --platform=node --analyze",
+    "dev:script": "esbuild src/extension.preview.ts --bundle --outfile=dist/extension.preview.js --sourcemap --watch --platform=browser --analyze",
+    "dev:style": "tsx ./build.ts --target=style --watch",
+    "dev:web": "esbuild src/extension.ts --bundle --outfile=dist/extension.web.js --inject:src/extension.shim.ts --external:vscode --format=cjs --sourcemap --watch --platform=browser --analyze",
     "package": "vsce package --no-dependencies",
     "package:pre": "vsce package --pre-release --no-dependencies",
     "prepare": "is-ci || husky install",
@@ -170,27 +181,33 @@
     "!(*pnpm-lock).yaml": "prettier --write",
     "package.json": "pnpm sort-package-json"
   },
+  "dependencies": {
+    "@primer/primitives": "7.14.1"
+  },
   "devDependencies": {
     "@types/is-color": "1.0.1",
     "@types/markdown-it": "13.0.2",
     "@types/node": "20.8.0",
     "@types/vscode": "1.82.0",
-    "@types/webpack": "5.28.3",
     "@vscode/test-web": "0.0.46",
     "@vscode/vsce": "2.21.1",
+    "concurrently": "8.2.1",
+    "esbuild": "0.19.4",
+    "esbuild-sass-plugin": "2.16.0",
     "husky": "8.0.3",
     "is-ci": "3.0.1",
     "lint-staged": "14.0.1",
     "prettier": "3.0.3",
     "prettier-plugin-packagejson": "2.4.6",
     "process": "0.11.10",
+    "rimraf": "5.0.5",
     "sort-package-json": "2.6.0",
+    "tsx": "3.13.0",
     "typescript": "5.2.2",
-    "webpack": "5.88.2",
-    "webpack-cli": "5.1.4"
+    "zx": "7.2.3"
   },
   "engines": {
-    "vscode": "^1.82.0"
+    "vscode": "^1.83.0"
   },
   "icon": "resources/logo.png",
   "pricing": "Free"

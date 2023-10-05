@@ -1,3 +1,23 @@
 {
-  "extends": "./tsconfig.base.json"
+  "compilerOptions": {
+    "baseUrl": ".",
+
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "target": "ES2022",
+
+    "moduleResolution": "Node",
+    "moduleDetection": "force",
+
+    "allowJs": true,
+    "esModuleInterop": true,
+
+    // best practices
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "downlevelIteration": true,
+    "noEmit": true
+  },
+  "include": ["src"]
 }
