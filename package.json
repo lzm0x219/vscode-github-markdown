@@ -185,7 +185,7 @@
     "@primer/primitives": "7.15.0"
   },
   "devDependencies": {
-    "@types/is-color": "1.0.1",
+    "@types/is-color": "1.0.2",
     "@types/markdown-it": "13.0.2",
     "@types/node": "20.8.6",
     "@types/vscode": "1.83.0",
