@@ -1,0 +1,85 @@
+.markdown-body {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: $spacer-4;
+    margin-bottom: $spacer-3;
+    font-weight: $font-weight-bold;
+    line-height: $lh-condensed;
+
+    .octicon-link {
+      color: var(--fgColor-default, var(--color-fg-default));
+      vertical-align: middle;
+      visibility: hidden;
+    }
+
+    &:hover .anchor {
+      text-decoration: none;
+
+      .octicon-link {
+        visibility: visible;
+      }
+    }
+
+    tt,
+    code {
+      padding: 0 0.2em;
+      font-size: inherit;
+    }
+  }
+
+  h1 {
+    padding-bottom: 0.3em;
+    font-size: 2em;
+    border-bottom: $border-width $border-style
+      var(--borderColor-muted, var(--color-border-muted));
+  }
+
+  h2 {
+    padding-bottom: 0.3em;
+    font-size: 1.5em;
+    border-bottom: $border-width $border-style
+      var(--borderColor-muted, var(--color-border-muted));
+  }
+
+  h3 {
+    font-size: 1.25em;
+  }
+
+  h4 {
+    font-size: 1em;
+  }
+
+  h5 {
+    font-size: 0.875em;
+  }
+
+  h6 {
+    font-size: 0.85em;
+    color: var(--fgColor-muted, var(--color-fg-muted));
+  }
+
+  summary {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      display: inline-block;
+
+      .anchor {
+        margin-left: -40px;
+      }
+    }
+
+    h1,
+    h2 {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+}

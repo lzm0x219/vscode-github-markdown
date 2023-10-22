@@ -31,14 +31,14 @@
   "scripts": {
     "prebuild": "pnpm clean && tsc",
     "build": "concurrently npm:build:* -c 'auto' --timings",
-    "build:node": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --platform=node --analyze --minify",
+    "build:node": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --analyze --minify",
     "build:script": "esbuild src/extension.preview.ts --bundle --outfile=dist/extension.preview.js --platform=browser --analyze --minify",
     "build:style": "tsx ./build.ts --target=style --minify",
     "build:web": "esbuild src/extension.ts --bundle --outfile=dist/extension.web.js --inject:src/extension.shim.ts --external:vscode --format=cjs --platform=browser --analyze --minify",
     "clean": "npx rimraf dist",
     "predev": "npm run clean",
     "dev": "concurrently npm:dev:* -c 'auto' --timings",
-    "dev:node": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --sourcemap --watch --platform=node --analyze",
+    "dev:node": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --sourcemap --watch --platform=node --analyze",
     "dev:script": "esbuild src/extension.preview.ts --bundle --outfile=dist/extension.preview.js --sourcemap --watch --platform=browser --analyze",
     "dev:style": "tsx ./build.ts --target=style --watch",
     "dev:web": "esbuild src/extension.ts --bundle --outfile=dist/extension.web.js --inject:src/extension.shim.ts --external:vscode --format=cjs --sourcemap --watch --platform=browser --analyze",
@@ -59,6 +59,14 @@
       {
         "command": "vscode-github-markdown.theme.mode.single",
         "title": "%command.theme.mode.single.title%"
+      },
+      {
+        "command": "vscode-github-markdown.theme.mode.system.day",
+        "title": "%command.theme.mode.system.day.title%"
+      },
+      {
+        "command": "vscode-github-markdown.theme.mode.system.night",
+        "title": "%command.theme.mode.system.night.title%"
       }
     ],
     "configuration": {
@@ -82,7 +90,7 @@
           "default": "system",
           "order": 0
         },
-        "vscode-github-markdown.theme.singleMode": {
+        "vscode-github-markdown.theme.single": {
           "type": "string",
           "description": "%configuration.theme.mode.single.description%",
           "default": "light",
@@ -109,7 +117,7 @@
             "Dark Tritanopia"
           ]
         },
-        "vscode-github-markdown.theme.systemMode.dayTheme": {
+        "vscode-github-markdown.theme.system.day": {
           "type": "string",
           "description": "%configuration.theme.mode.system.day.description%",
           "default": "light",
@@ -136,7 +144,7 @@
             "Dark Tritanopia"
           ]
         },
-        "vscode-github-markdown.theme.systemMode.nightTheme": {
+        "vscode-github-markdown.theme.system.night": {
           "type": "string",
           "description": "%configuration.theme.mode.system.night.description%",
           "default": "dark",

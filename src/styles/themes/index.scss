@@ -1,0 +1,35 @@
+@import "./light.scss";
+@import "./light_colorblind.scss";
+@import "./light_high_contrast.scss";
+@import "./light_tritanopia.scss";
+@import "./dark.scss";
+@import "./dark_dimmed.scss";
+@import "./dark_high_contrast.scss";
+@import "./dark_colorblind.scss";
+@import "./dark_tritanopia.scss";
+
+// color-scheme
+@include color-mode(light) {
+  color-scheme: light;
+}
+
+@include color-mode(dark) {
+  color-scheme: dark;
+}
+
+[data-color-mode] {
+  color: var(--fgColor-default, var(--color-fg-default));
+  background-color: var(--bgColor-default, var(--color-canvas-default));
+}
+
+// Windows High Contrast mode
+
+// Improves focus state for various components when Windows High Contrast mode is enabled
+@media (forced-colors: active) {
+  body {
+    --color-accent-emphasis: Highlight;
+    --color-fg-on-emphasis: LinkText;
+    --fgColor-onEmphasis: LinkText;
+    --fgColor-accent: Highlight;
+  }
+}

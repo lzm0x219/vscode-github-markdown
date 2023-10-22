@@ -1,5 +1,8 @@
 {
-  "command.theme.mode.title": "GitHub Markdown: Color Mode",
+  "command.theme.mode.title": "GitHub Markdown: Change Theme Mode",
+  "command.theme.mode.single.title": "GitHub Markdown: Change Single Theme",
+  "command.theme.mode.system.day.title": "GitHub Markdown: Change Day Theme",
+  "command.theme.mode.system.night.title": "GitHub Markdown: Change Night Theme",
   "configuration.theme.mode.description": "Select a single theme, or sync with your system and automatically switch between day and night themes",
   "configuration.theme.mode.enum.label.single": "Single theme",
   "configuration.theme.mode.enum.label.system": "Sync with system",
