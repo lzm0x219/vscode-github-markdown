@@ -1,7 +1,7 @@
 import vscode from "vscode";
+import { ThemeMode } from "./constants";
 
 export type Theme = (typeof Configuration.themes)[number];
-export type ThemeMode = "single" | "system";
 
 export default class Configuration {
   static section = "vscode-github-markdown";
@@ -31,7 +31,10 @@ export default class Configuration {
   ] as const;
 
   static getThemeMode() {
-    return this.configuration.get<ThemeMode>(this.themeModeSection);
+    return (
+      this.configuration.get<ThemeMode>(this.themeModeSection) ||
+      ThemeMode.System
+    );
   }
 
   static async setThemeMode(mode: ThemeMode) {
@@ -39,7 +42,7 @@ export default class Configuration {
   }
 
   static getThemeSingle() {
-    return this.configuration.get<Theme>(this.themeSingleSection);
+    return this.configuration.get<Theme>(this.themeSingleSection) || "light";
   }
 
   static async setThemeSingle(theme: Theme) {

@@ -1,0 +1,36 @@
+html,
+body,
+.markdown-body {
+  padding: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body.showEditorSelection {
+  .code-line {
+    position: static !important;
+    &:hover:before {
+      display: none !important;
+    }
+  }
+}
+
+.vscode-body {
+  .scrollBeyondLastLine {
+    margin-bottom: 0;
+  }
+}
+
+.vscode-github-markdown {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 32px;
+  overflow-y: auto;
+  > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+}
