@@ -70,11 +70,11 @@
   }
 
   li > p {
-    margin-top: $spacer-3;
+    margin-top: 16px;
   }
 
   li + li {
-    margin-top: $em-spacer-3;
+    margin-top: 0.25em;
   }
 
   dl {
@@ -82,15 +82,15 @@
 
     dt {
       padding: 0;
-      margin-top: $spacer-3;
+      margin-top: 16px;
       font-size: 1em;
       font-style: italic;
       font-weight: $font-weight-bold;
     }
 
     dd {
-      padding: 0 $spacer-3;
-      margin-bottom: $spacer-3;
+      padding: 0 16px;
+      margin-bottom: 16px;
     }
   }
 }

@@ -1,0 +1,52 @@
+.markdown-body {
+  [data-footnote-ref] {
+    &::before {
+      content: "[";
+    }
+
+    &::after {
+      content: "]";
+    }
+  }
+
+  .footnotes {
+    font-size: $h6-size;
+    color: var(--fgColor-muted, var(--color-fg-muted));
+    border-top: $border;
+
+    ol {
+      padding-left: 16px;
+
+      ul {
+        display: inline-block;
+        padding-left: 16px;
+        margin-top: 16px;
+      }
+    }
+
+    li {
+      position: relative;
+    }
+
+    li:target::before {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      bottom: -8px;
+      left: -24px;
+      pointer-events: none;
+      content: "";
+      border: 2px $border-style
+        var(--borderColor-accent-emphasis, var(--color-accent-emphasis));
+      border-radius: $border-radius;
+    }
+
+    li:target {
+      color: var(--fgColor-default, var(--color-fg-default));
+    }
+
+    .data-footnote-backref g-emoji {
+      font-family: monospace;
+    }
+  }
+}
