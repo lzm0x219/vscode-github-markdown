@@ -193,7 +193,7 @@
     "@primer/primitives": "7.15.0"
   },
   "devDependencies": {
-    "@types/is-color": "1.0.2",
+    "@types/is-color": "1.0.3",
     "@types/markdown-it": "13.0.5",
     "@types/node": "20.8.10",
     "@types/vscode": "1.84.0",
