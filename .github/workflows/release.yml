@@ -13,15 +13,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: "npm"
+          node-version: 20
+          cache: "pnpm"
       - name: Install dependencies
-        run: npm i
+        run: pnpm i
       - name: Publish official version
         if: success()
-        run: npm run release
+        run: pnpm release
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
