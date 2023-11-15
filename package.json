@@ -215,7 +215,7 @@
     "zx": "7.2.3"
   },
   "engines": {
-    "vscode": "^1.83.0"
+    "vscode": "^2023.0.0"
   },
   "icon": "resources/logo.png",
   "pricing": "Free"
