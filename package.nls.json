@@ -4,11 +4,7 @@
   "command.theme.mode.system.day.title": "GitHub Markdown: Change Day Theme",
   "command.theme.mode.system.night.title": "GitHub Markdown: Change Night Theme",
   "configuration.theme.mode.description": "Select a single theme, or sync with your system and automatically switch between day and night themes",
-  "configuration.theme.mode.enum.label.single": "Single theme",
-  "configuration.theme.mode.enum.label.system": "Sync with system",
-  "configuration.theme.mode.single.enum.description": "Use your selected theme",
-  "configuration.theme.mode.single.description": "The theme used in single theme mode",
-  "configuration.theme.mode.system.enum.description": "Match your system active settings",
-  "configuration.theme.mode.system.day.description": "This theme will be active when your system is set to “light mode”",
-  "configuration.theme.mode.system.night.description": "This theme will be active when your system is set to “dark mode”"
+  "configuration.theme.mode.enum.day.label": "Day",
+  "configuration.theme.mode.enum.night.label": "Night",
+  "configuration.theme.mode.enum.auto.label": "Auto"
 }

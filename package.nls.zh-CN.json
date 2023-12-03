@@ -4,11 +4,7 @@
   "command.theme.mode.system.day.title": "GitHub Markdown: 更改白天模式的主题",
   "command.theme.mode.system.night.title": "GitHub Markdown: 更改黑夜模式的主题",
   "configuration.theme.mode.description": "选择单一主题，或与您的系统同步，自动在白天和黑夜主题之间切换",
-  "configuration.theme.mode.enum.label.single": "单一主题",
-  "configuration.theme.mode.enum.label.system": "跟随系统",
-  "configuration.theme.mode.single.enum.description": "使用您选择的主题",
-  "configuration.theme.mode.single.description": "单一主题模式下使用的主题",
-  "configuration.theme.mode.system.enum.description": "使用您的系统激活设置的主题",
-  "configuration.theme.mode.system.day.description": "此主题将在白天模式下激活",
-  "configuration.theme.mode.system.night.description": "此主题将在黑夜模式下激活"
+  "configuration.theme.mode.enum.day.label": "白天",
+  "configuration.theme.mode.enum.night.label": "黑夜",
+  "configuration.theme.mode.enum.auto.label": "跟随系统"
 }
