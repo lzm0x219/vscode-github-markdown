@@ -201,7 +201,7 @@
     "@vscode/vsce": "2.22.0",
     "concurrently": "8.2.2",
     "esbuild": "0.19.10",
-    "esbuild-sass-plugin": "2.16.0",
+    "esbuild-sass-plugin": "2.16.1",
     "husky": "8.0.3",
     "is-ci": "3.0.1",
     "lint-staged": "15.2.0",
