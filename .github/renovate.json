@@ -2,5 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
   "labels": ["dependencies"],
-  "assignees": []
+  "assignees": ["lzm0x219"],
+  "autoApprove": true,
+  "automerge": true,
+  "automergeStrategy": "squash",
+  "ignoreTests": true
 }
