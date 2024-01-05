@@ -50,8 +50,8 @@ devDependencies:
     specifier: 3.1.1
     version: 3.1.1
   prettier-plugin-packagejson:
-    specifier: 2.4.8
-    version: 2.4.8(prettier@3.1.1)
+    specifier: 2.4.9
+    version: 2.4.9(prettier@3.1.1)
   process:
     specifier: 0.11.10
     version: 0.11.10
@@ -2175,8 +2175,8 @@ packages:
     dev: true
     optional: true
 
-  /prettier-plugin-packagejson@2.4.8(prettier@3.1.1):
-    resolution: {integrity: sha512-ZK37c6pRUKeUIpQWNEdMgNUiGSG5BTfeeAIA01mRjVGTfWxxVzM55Cs+LaHyweFJbEgkgCNsqMA3LGEAjfOPtA==}
+  /prettier-plugin-packagejson@2.4.9(prettier@3.1.1):
+    resolution: {integrity: sha512-b3Q7agXVqxK3UpYEJr0xLD51SxriYXESWUCjmxOBUGqnPFZOg9jZGZ+Ptzq252I6OqzXN2rj1tJIFq6KOGLLJw==}
     peerDependencies:
       prettier: '>= 1.16.0'
     peerDependenciesMeta:
@@ -2185,7 +2185,7 @@ packages:
     dependencies:
       prettier: 3.1.1
       sort-package-json: 2.6.0
-      synckit: 0.8.8
+      synckit: 0.9.0
     dev: true
 
   /prettier@3.1.1:
@@ -2651,8 +2651,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /synckit@0.8.8:
-    resolution: {integrity: sha512-HwOKAP7Wc5aRGYdKH+dw0PRRpbO841v2DENBtjnR5HFWoiNByAl7vrx3p0G/rCyYXQsrxqtX48TImFtPcIHSpQ==}
+  /synckit@0.9.0:
+    resolution: {integrity: sha512-7RnqIMq572L8PeEzKeBINYEJDDxpcH8JEgLwUqBd3TkofhFRbkq4QLR0u+36avGAhCRbk2nnmjcW9SE531hPDg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     dependencies:
       '@pkgr/core': 0.1.0
