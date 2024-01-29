@@ -202,7 +202,7 @@
     "concurrently": "8.2.2",
     "esbuild": "0.20.0",
     "esbuild-sass-plugin": "2.16.1",
-    "husky": "9.0.6",
+    "husky": "9.0.7",
     "is-ci": "3.0.1",
     "lint-staged": "15.2.0",
     "prettier": "3.2.4",
