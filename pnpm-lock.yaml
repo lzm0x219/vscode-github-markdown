@@ -17,8 +17,8 @@ devDependencies:
     specifier: 13.0.7
     version: 13.0.7
   '@types/node':
-    specifier: 20.11.11
-    version: 20.11.11
+    specifier: 20.11.13
+    version: 20.11.13
   '@types/vscode':
     specifier: 1.85.0
     version: 1.85.0
@@ -579,7 +579,7 @@ packages:
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 20.11.11
+      '@types/node': 20.11.13
     dev: true
 
   /@types/is-color@1.0.3:
@@ -589,7 +589,7 @@ packages:
   /@types/jsonfile@6.1.4:
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
     dependencies:
-      '@types/node': 20.11.11
+      '@types/node': 20.11.13
     dev: true
 
   /@types/linkify-it@3.0.5:
@@ -617,8 +617,8 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@20.11.11:
-    resolution: {integrity: sha512-PlJCXfb57Jrman0H1BxO2+Q7qwih2Mwk7T6Gvixj+SK4mqs4RWOGMMoP6p/LFa3UrP2CZOO6ai6otd7J/TB6Ug==}
+  /@types/node@20.11.13:
+    resolution: {integrity: sha512-5G4zQwdiQBSWYTDAH1ctw2eidqdhMJaNsiIDKHFr55ihz5Trl2qqR8fdrT732yPBho5gkNxXm67OxWFBqX9aPg==}
     dependencies:
       undici-types: 5.26.5
     dev: true
