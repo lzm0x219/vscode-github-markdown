@@ -196,7 +196,7 @@
     "@types/is-color": "1.0.3",
     "@types/markdown-it": "13.0.7",
     "@types/node": "20.11.15",
-    "@types/vscode": "1.85.0",
+    "@types/vscode": "1.86.0",
     "@vscode/test-web": "0.0.51",
     "@vscode/vsce": "2.23.0",
     "concurrently": "8.2.2",
