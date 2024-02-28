@@ -20,8 +20,8 @@ devDependencies:
     specifier: 20.11.22
     version: 20.11.22
   '@types/vscode':
-    specifier: 1.86.0
-    version: 1.86.0
+    specifier: 1.87.0
+    version: 1.87.0
   '@vscode/test-web':
     specifier: 0.0.52
     version: 0.0.52
@@ -627,8 +627,8 @@ packages:
     resolution: {integrity: sha512-3LU5a3EZYI1/HvvOkQmmVGrdXopwKXpr3K5cxlZ0zRiP0QzW7IH0o1z4UDI7KdnyQnpPfYHXOOqflEXIl23LFw==}
     dev: true
 
-  /@types/vscode@1.86.0:
-    resolution: {integrity: sha512-DnIXf2ftWv+9LWOB5OJeIeaLigLHF7fdXF6atfc7X5g2w/wVZBgk0amP7b+ub5xAuW1q7qP5YcFvOcit/DtyCQ==}
+  /@types/vscode@1.87.0:
+    resolution: {integrity: sha512-y3yYJV2esWr8LNjp3VNbSMWG7Y43jC8pCldG8YwiHGAQbsymkkMMt0aDT1xZIOFM2eFcNiUc+dJMx1+Z0UT8fg==}
     dev: true
 
   /@types/which@3.0.2:
