@@ -35,8 +35,8 @@ devDependencies:
     specifier: 0.20.1
     version: 0.20.1
   esbuild-sass-plugin:
-    specifier: 3.1.0
-    version: 3.1.0(esbuild@0.20.1)(sass-embedded@1.71.1)
+    specifier: 3.2.0
+    version: 3.2.0(esbuild@0.20.1)(sass-embedded@1.71.1)
   husky:
     specifier: 9.0.11
     version: 9.0.11
@@ -1295,8 +1295,8 @@ packages:
     engines: {node: '>=0.12'}
     dev: true
 
-  /esbuild-sass-plugin@3.1.0(esbuild@0.20.1)(sass-embedded@1.71.1):
-    resolution: {integrity: sha512-LX/PhMuA7KskPDT8yB10/o3C3fTKVWEzcfzGnGH0wqjZm3FEtm4d6dCxUn+252kuWZAgFOGzGOnBv1FpzClJrA==}
+  /esbuild-sass-plugin@3.2.0(esbuild@0.20.1)(sass-embedded@1.71.1):
+    resolution: {integrity: sha512-a+e7rYx4sDHgtKWN2n6/7lH5fgfvJaT6AMHmFhBKZy2ZTSN91X5q12l+DNVYJ8cWViEjJNWEd7k7UVcCg/2S/Q==}
     peerDependencies:
       esbuild: ^0.20.1
       sass-embedded: ^1.71.1
