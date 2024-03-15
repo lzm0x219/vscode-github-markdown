@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@primer/primitives':
-    specifier: 7.15.10
-    version: 7.15.10
+    specifier: 7.15.12
+    version: 7.15.12
 
 devDependencies:
   '@types/is-color':
@@ -571,8 +571,8 @@ packages:
       playwright-core: 1.41.2
     dev: true
 
-  /@primer/primitives@7.15.10:
-    resolution: {integrity: sha512-KuV06s08iYIqCc+HkcO9W8U1yQ4du/d/O610KIGNNNTvnCv9TAoJfPwj9B8bLI5R8tT7s+IjCD/eEp6ffdECLA==}
+  /@primer/primitives@7.15.12:
+    resolution: {integrity: sha512-ujAsbRB5Xw6rrxizbTgv1bxpraZ091stPMsO6pqGxzc+zIyhrojpGVBuCKJ+RYkpbKK7T4bZzgOT/KyWBAFwwg==}
     dev: false
 
   /@types/fs-extra@11.0.4:
