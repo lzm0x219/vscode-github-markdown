@@ -68,8 +68,8 @@ devDependencies:
     specifier: 5.4.4
     version: 5.4.4
   zx:
-    specifier: 8.0.0
-    version: 8.0.0
+    specifier: 8.0.1
+    version: 8.0.1
 
 packages:
 
@@ -3284,8 +3284,8 @@ packages:
     engines: {node: '>= 4.0.0'}
     dev: true
 
-  /zx@8.0.0:
-    resolution: {integrity: sha512-td4Irxh+i+O8waolUHZyHLSMFALMBWTNVKBk1q5NsvP1vxRqj9JJRGPh6YjKZUTbZZ8uGD1mQLyU9mDr40wR6w==}
+  /zx@8.0.1:
+    resolution: {integrity: sha512-Y+ITW1GQjADk7qgrbhnukMgoNsJmlyx53cUQ6/6NXU+BMBdCbTc6flTOHUctmzKvPjTmdwaddzJY/dbLie9sQg==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     optionalDependencies:
