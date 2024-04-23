@@ -190,7 +190,7 @@
     "package.json": "pnpm sort-package-json"
   },
   "dependencies": {
-    "@primer/primitives": "7.17.1"
+    "@primer/primitives": "8.0.0"
   },
   "devDependencies": {
     "@types/is-color": "1.0.3",
