@@ -195,7 +195,7 @@
   "devDependencies": {
     "@types/is-color": "1.0.3",
     "@types/markdown-it": "14.0.1",
-    "@types/node": "20.12.7",
+    "@types/node": "20.12.8",
     "@types/vscode": "1.88.0",
     "@vscode/test-web": "0.0.54",
     "@vscode/vsce": "2.26.0",
