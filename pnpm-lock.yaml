@@ -28,8 +28,8 @@ importers:
         specifier: 0.0.54
         version: 0.0.54
       '@vscode/vsce':
-        specifier: 2.26.0
-        version: 2.26.0
+        specifier: 2.26.1
+        version: 2.26.1
       concurrently:
         specifier: 8.2.2
         version: 8.2.2
@@ -336,8 +336,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  '@vscode/vsce@2.26.0':
-    resolution: {integrity: sha512-v54ltgMzUG8lGY0kAgaOlry57xse1RlWzes9FotfGEx+Fr05KeR8rZicQzEMDmi9QnOgVWHuiEq+xA2HWkAz+Q==}
+  '@vscode/vsce@2.26.1':
+    resolution: {integrity: sha512-QOG6Ht7V93nhwcBxPWcG33UK0qDGEoJdg0xtVeaTN27W6PGdMJUJGTPhB/sNHUIFKwvwzv/zMAHvDgMNXbcwlA==}
     engines: {node: '>= 16'}
     hasBin: true
 
@@ -2110,7 +2110,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vscode/vsce@2.26.0':
+  '@vscode/vsce@2.26.1':
     dependencies:
       '@azure/identity': 4.1.0
       azure-devops-node-api: 12.5.0
