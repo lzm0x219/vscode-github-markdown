@@ -70,8 +70,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       zx:
-        specifier: 8.1.0
-        version: 8.1.0
+        specifier: 8.1.1
+        version: 8.1.1
 
 packages:
 
@@ -2013,8 +2013,8 @@ packages:
     resolution: {integrity: sha512-RXRJzMiK6U2ye0BlGGZnmpwJDPgakn6aNQ0A7gHRbD4I0uvK4TW6UqkK1V0pp9jskjJBAXd3dRrbzWkqJ+6cxA==}
     engines: {node: '>= 4.0.0'}
 
-  zx@8.1.0:
-    resolution: {integrity: sha512-2BCoOK6JTWikAkwPCV2dFr+1ou29WoY+6XltLu+Ou9dvxrqm/p+HuHCgBtMRMIVFexQzUSGfB5VbYeY8XmGBPQ==}
+  zx@8.1.1:
+    resolution: {integrity: sha512-JYAyM06wK+KLy07MkipBTghtd3zsYBxTH44Fh3p932ntDKdT5jxziEK51siPG+rqT+MWV1yK9mCM1/CB92PV7Q==}
     engines: {node: '>= 12.17.0'}
     hasBin: true
 
@@ -3973,7 +3973,7 @@ snapshots:
 
   ylru@1.3.2: {}
 
-  zx@8.1.0:
+  zx@8.1.1:
     optionalDependencies:
       '@types/fs-extra': 11.0.4
       '@types/node': 20.12.12
