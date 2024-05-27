@@ -212,7 +212,7 @@
     "sort-package-json": "2.10.0",
     "tsx": "4.11.0",
     "typescript": "5.4.5",
-    "zx": "8.1.1"
+    "zx": "8.1.2"
   },
   "engines": {
     "vscode": "^1.83.0"
