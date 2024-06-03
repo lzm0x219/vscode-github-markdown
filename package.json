@@ -210,7 +210,7 @@
     "process": "0.11.10",
     "rimraf": "5.0.7",
     "sort-package-json": "2.10.0",
-    "tsx": "4.11.0",
+    "tsx": "4.11.2",
     "typescript": "5.4.5",
     "zx": "8.1.2"
   },
