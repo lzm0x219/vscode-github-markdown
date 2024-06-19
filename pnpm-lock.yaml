@@ -19,8 +19,8 @@ importers:
         specifier: 14.1.1
         version: 14.1.1
       '@types/node':
-        specifier: 20.14.5
-        version: 20.14.5
+        specifier: 20.14.6
+        version: 20.14.6
       '@types/vscode':
         specifier: 1.90.0
         version: 1.90.0
@@ -325,8 +325,8 @@ packages:
   '@types/mdurl@2.0.0':
     resolution: {integrity: sha512-RGdgjQUZba5p6QEFAVx2OGb8rQDL/cPRG7GiedRzMcJ1tYnUANBncjbSB1NRGwbvjcPeikRABz2nshyPk1bhWg==}
 
-  '@types/node@20.14.5':
-    resolution: {integrity: sha512-aoRR+fJkZT2l0aGOJhuA8frnCSoNX6W7U2mpNq63+BxBIj5BQFt8rHy627kijCmm63ijdSdwvGgpUsU6MBsZZA==}
+  '@types/node@20.14.6':
+    resolution: {integrity: sha512-JbA0XIJPL1IiNnU7PFxDXyfAwcwVVrOoqyzzyQTyMeVhBzkJVMSkC1LlVsRQ2lpqiY4n6Bb9oCS6lzDKVQxbZw==}
 
   '@types/vscode@1.90.0':
     resolution: {integrity: sha512-oT+ZJL7qHS9Z8bs0+WKf/kQ27qWYR3trsXpq46YDjFqBsMLG4ygGGjPaJ2tyrH0wJzjOEmDyg9PDJBBhWg9pkQ==}
@@ -2121,14 +2121,14 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 20.14.5
+      '@types/node': 20.14.6
     optional: true
 
   '@types/is-color@1.0.3': {}
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 20.14.5
+      '@types/node': 20.14.6
     optional: true
 
   '@types/linkify-it@5.0.0': {}
@@ -2140,7 +2140,7 @@ snapshots:
 
   '@types/mdurl@2.0.0': {}
 
-  '@types/node@20.14.5':
+  '@types/node@20.14.6':
     dependencies:
       undici-types: 5.26.5
 
@@ -3803,4 +3803,4 @@ snapshots:
   zx@8.1.2:
     optionalDependencies:
       '@types/fs-extra': 11.0.4
-      '@types/node': 20.14.5
+      '@types/node': 20.14.6
