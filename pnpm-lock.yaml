@@ -28,8 +28,8 @@ importers:
         specifier: 0.0.56
         version: 0.0.56
       '@vscode/vsce':
-        specifier: 2.29.0
-        version: 2.29.0
+        specifier: 2.30.0
+        version: 2.30.0
       concurrently:
         specifier: 8.2.2
         version: 8.2.2
@@ -528,8 +528,8 @@ packages:
   '@vscode/vsce-sign@2.0.3':
     resolution: {integrity: sha512-NYktTVXYIjJ41CTfImuWLYSw2UoZwYYFk7VcVYTjTZnD7NnuaM3DizaFZfuRG5YMRT/oZa1t1d4bwzrBALR3VQ==}
 
-  '@vscode/vsce@2.29.0':
-    resolution: {integrity: sha512-63+aEO8SpjE6qKiIh2Cqy/P9zC7+USElGwpEdkyPp89xIBDBr5IqeNS3zkD3mp3wZqbvHIpJsCCNu74WQirYCg==}
+  '@vscode/vsce@2.30.0':
+    resolution: {integrity: sha512-MBYpXdCY1SCdc2u/y11kmJuSODKFyZRpeRTQq5p4rSg05QSjSy5pz6h/BGLNdSahgXfKRBATEkjAcJFdJuDz8Q==}
     engines: {node: '>= 16'}
     hasBin: true
 
@@ -2458,7 +2458,7 @@ snapshots:
       '@vscode/vsce-sign-win32-arm64': 2.0.1
       '@vscode/vsce-sign-win32-x64': 2.0.1
 
-  '@vscode/vsce@2.29.0':
+  '@vscode/vsce@2.30.0':
     dependencies:
       '@azure/identity': 4.1.0
       '@vscode/vsce-sign': 2.0.3
