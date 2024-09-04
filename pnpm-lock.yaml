@@ -25,8 +25,8 @@ importers:
         specifier: 1.92.0
         version: 1.92.0
       '@vscode/test-web':
-        specifier: 0.0.57
-        version: 0.0.57
+        specifier: 0.0.58
+        version: 0.0.58
       '@vscode/vsce':
         specifier: 3.0.0
         version: 3.0.0
@@ -337,8 +337,8 @@ packages:
   '@types/vscode@1.92.0':
     resolution: {integrity: sha512-DcZoCj17RXlzB4XJ7IfKdPTcTGDLYvTOcTNkvtjXWF+K2TlKzHHkBEXNWQRpBIXixNEUgx39cQeTFunY0E2msw==}
 
-  '@vscode/test-web@0.0.57':
-    resolution: {integrity: sha512-jlvUdvEZEhbmd+YZ7u4mzC6K7mVnwBmZkP2tv4SAiXXYRYLfdLZ2DnYrnNzQv3zFki5IKXGWSlBMNPj35iP+bw==}
+  '@vscode/test-web@0.0.58':
+    resolution: {integrity: sha512-txxUHzjfL1UAJrHtvfKPyfKSf3QjdGJD452qg2ZOjPzlzb+7AmCMUsHdewjQ9ZSr+xmaSc47+DG5F3AvTusYCQ==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -2144,7 +2144,7 @@ snapshots:
 
   '@types/vscode@1.92.0': {}
 
-  '@vscode/test-web@0.0.57':
+  '@vscode/test-web@0.0.58':
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.0.0
