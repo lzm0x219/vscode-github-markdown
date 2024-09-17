@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@primer/primitives':
-        specifier: 9.1.1
-        version: 9.1.1
+        specifier: 9.1.2
+        version: 9.1.2
     devDependencies:
       '@types/is-color':
         specifier: 1.0.3
@@ -311,8 +311,8 @@ packages:
     peerDependencies:
       prettier: '*'
 
-  '@primer/primitives@9.1.1':
-    resolution: {integrity: sha512-c8PjLIG+houvCRg9bKza3gj/VoM2QZcN7TqYRa4dl5ZYd1A+BOSvAenjGhVVK23ws8uZSVPYDuvdQk1PO1jm1A==}
+  '@primer/primitives@9.1.2':
+    resolution: {integrity: sha512-KecRJpUdIf14J3gVpoyMMJeQD6Sh5kcHk93N5bYch4XGB0GOZP3ypxz+NByMjr/2HHPsRfCCO5EEgNjmeWYUGQ==}
 
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
@@ -2106,7 +2106,7 @@ snapshots:
       make-synchronized: 0.2.9
       prettier: 3.3.3
 
-  '@primer/primitives@9.1.1':
+  '@primer/primitives@9.1.2':
     dependencies:
       '@prettier/sync': 0.5.2(prettier@3.3.3)
       prettier: 3.3.3
