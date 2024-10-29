@@ -19,8 +19,8 @@ importers:
         specifier: 14.1.2
         version: 14.1.2
       '@types/node':
-        specifier: 20.17.2
-        version: 20.17.2
+        specifier: 22.8.2
+        version: 22.8.2
       '@types/vscode':
         specifier: 1.94.0
         version: 1.94.0
@@ -476,8 +476,8 @@ packages:
   '@types/mdurl@2.0.0':
     resolution: {integrity: sha512-RGdgjQUZba5p6QEFAVx2OGb8rQDL/cPRG7GiedRzMcJ1tYnUANBncjbSB1NRGwbvjcPeikRABz2nshyPk1bhWg==}
 
-  '@types/node@20.17.2':
-    resolution: {integrity: sha512-OOHK4sjXqkL7yQ7VEEHcf6+0jSvKjWqwnaCtY7AKD/VLEvRHMsxxu7eI8ErnjxHS8VwmekD4PeVCpu4qZEZSxg==}
+  '@types/node@22.8.2':
+    resolution: {integrity: sha512-NzaRNFV+FZkvK/KLCsNdTvID0SThyrs5SHB6tsD/lajr22FGC73N2QeDPM2wHtVde8mgcXuSsHQkH5cX1pbPLw==}
 
   '@types/vscode@1.94.0':
     resolution: {integrity: sha512-UyQOIUT0pb14XSqJskYnRwD2aG0QrPVefIfrW1djR+/J4KeFQ0i1+hjZoaAmeNf3Z2jleK+R2hv+EboG/m8ruw==}
@@ -1961,8 +1961,8 @@ packages:
   underscore@1.13.6:
     resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
 
-  undici-types@6.19.6:
-    resolution: {integrity: sha512-e/vggGopEfTKSvj4ihnOLTsqhrKRN3LeO6qSN/GxohhuRv8qH9bNQ4B8W7e/vFL+0XTnmHPB4/kegunZGA4Org==}
+  undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
   url-join@4.0.1:
     resolution: {integrity: sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==}
@@ -2335,14 +2335,14 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 20.17.2
+      '@types/node': 22.8.2
     optional: true
 
   '@types/is-color@1.0.3': {}
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 20.17.2
+      '@types/node': 22.8.2
     optional: true
 
   '@types/linkify-it@5.0.0': {}
@@ -2354,9 +2354,9 @@ snapshots:
 
   '@types/mdurl@2.0.0': {}
 
-  '@types/node@20.17.2':
+  '@types/node@22.8.2':
     dependencies:
-      undici-types: 6.19.6
+      undici-types: 6.19.8
 
   '@types/vscode@1.94.0': {}
 
@@ -3945,7 +3945,7 @@ snapshots:
 
   underscore@1.13.6: {}
 
-  undici-types@6.19.6: {}
+  undici-types@6.19.8: {}
 
   url-join@4.0.1: {}
 
@@ -4024,4 +4024,4 @@ snapshots:
   zx@8.1.9:
     optionalDependencies:
       '@types/fs-extra': 11.0.4
-      '@types/node': 20.17.2
+      '@types/node': 22.8.2
