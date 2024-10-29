@@ -22,8 +22,8 @@ importers:
         specifier: 22.8.4
         version: 22.8.4
       '@types/vscode':
-        specifier: 1.94.0
-        version: 1.94.0
+        specifier: 1.95.0
+        version: 1.95.0
       '@vscode/test-web':
         specifier: 0.0.63
         version: 0.0.63
@@ -479,8 +479,8 @@ packages:
   '@types/node@22.8.4':
     resolution: {integrity: sha512-SpNNxkftTJOPk0oN+y2bIqurEXHTA2AOZ3EJDDKeJ5VzkvvORSvmQXGQarcOzWV1ac7DCaPBEdMDxBsM+d8jWw==}
 
-  '@types/vscode@1.94.0':
-    resolution: {integrity: sha512-UyQOIUT0pb14XSqJskYnRwD2aG0QrPVefIfrW1djR+/J4KeFQ0i1+hjZoaAmeNf3Z2jleK+R2hv+EboG/m8ruw==}
+  '@types/vscode@1.95.0':
+    resolution: {integrity: sha512-0LBD8TEiNbet3NvWsmn59zLzOFu/txSlGxnv5yAFHCrhG9WvAnR3IvfHzMOs2aeWqgvNjq9pO99IUw8d3n+unw==}
 
   '@vscode/test-web@0.0.63':
     resolution: {integrity: sha512-FIFfT2gZeEp0d1RnR+IYORS9HZPTtlTNuMLdZpO5c9sAtz5rCHPWsCD5VxnV4U08Slz5GdzgH7pDQspb9Oa8ZQ==}
@@ -2358,7 +2358,7 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
-  '@types/vscode@1.94.0': {}
+  '@types/vscode@1.95.0': {}
 
   '@vscode/test-web@0.0.63':
     dependencies:
