@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@primer/primitives':
-        specifier: 10.0.0
-        version: 10.0.0
+        specifier: 10.1.0
+        version: 10.1.0
     devDependencies:
       '@types/is-color':
         specifier: 1.0.3
@@ -438,8 +438,8 @@ packages:
     resolution: {integrity: sha512-SnDBEmw0h4XpbHcWR8T0LgLj1Cqn8Cvql+Nahot2zBud945z+MYXH3WVPvMI5U37WsWAgw9Cj7pZ6oL7haKrhg==}
     engines: {node: '>=18'}
 
-  '@primer/primitives@10.0.0':
-    resolution: {integrity: sha512-UPoYfG3BwPHRVX+J99tshUjXWcq8L66feofCGQa5g0SNYC7HO2d9TLE/FXsVV3UUXEi24CwhGRyCGCmubdekjw==}
+  '@primer/primitives@10.1.0':
+    resolution: {integrity: sha512-VIXS0jrJu5pHGq0QWTtqYJmXa4rL7PLGcpKn51krMjGnaI6OxX7xVWIKZ5mr1+TAn1/JfwFZzqn8oqpZ3dm3WQ==}
 
   '@rollup/rollup-linux-x64-gnu@4.28.0':
     resolution: {integrity: sha512-Nl4KIzteVEKE9BdAvYoTkW19pa7LR/RBrT6F1dJCV/3pbjwDcaOq+edkP0LXuJ9kflW/xOK414X78r+K84+msw==}
@@ -2275,8 +2275,9 @@ snapshots:
     dependencies:
       playwright-core: 1.49.0
 
-  '@primer/primitives@10.0.0':
+  '@primer/primitives@10.1.0':
     optionalDependencies:
+      '@esbuild/linux-x64': 0.24.0
       '@rollup/rollup-linux-x64-gnu': 4.28.0
 
   '@rollup/rollup-linux-x64-gnu@4.28.0':
