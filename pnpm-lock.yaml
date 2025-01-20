@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@primer/primitives':
-        specifier: 10.3.3
-        version: 10.3.3
+        specifier: 10.3.4
+        version: 10.3.4
     devDependencies:
       '@types/is-color':
         specifier: 1.0.3
@@ -444,8 +444,8 @@ packages:
     resolution: {integrity: sha512-SnDBEmw0h4XpbHcWR8T0LgLj1Cqn8Cvql+Nahot2zBud945z+MYXH3WVPvMI5U37WsWAgw9Cj7pZ6oL7haKrhg==}
     engines: {node: '>=18'}
 
-  '@primer/primitives@10.3.3':
-    resolution: {integrity: sha512-EEiHX0PSE3GuUlTGCgL6LMfc2CotpMyrCCfcyIIE9YtK+enJnGhT5g7QirkXcGLQmQ71KPuuXxKbPLUHRHBsgw==}
+  '@primer/primitives@10.3.4':
+    resolution: {integrity: sha512-f4tudg+MFpU4sH73Ha9wFOBwyN2b2WI7BkqMThqRIWQ/LFUturYkgt78YByJ6PJw8ZY0poPiefvBCdduyd20vA==}
 
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
@@ -2267,7 +2267,7 @@ snapshots:
     dependencies:
       playwright-core: 1.49.0
 
-  '@primer/primitives@10.3.3': {}
+  '@primer/primitives@10.3.4': {}
 
   '@types/fs-extra@11.0.4':
     dependencies:
