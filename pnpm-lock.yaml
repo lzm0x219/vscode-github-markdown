@@ -70,8 +70,8 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
       zx:
-        specifier: 8.3.2
-        version: 8.3.2
+        specifier: 8.4.0
+        version: 8.4.0
 
 packages:
 
@@ -303,14 +303,8 @@ packages:
   '@primer/primitives@10.4.0':
     resolution: {integrity: sha512-cRgzqT4IU3GW4v8g2L3nWRcj5QcgzLfWfARUmIVO97WMvE8mRMjLLAx1rQz8fTP4YOeysMxkOV1C1mGq7GUFYQ==}
 
-  '@types/fs-extra@11.0.4':
-    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
-
   '@types/is-color@1.0.3':
     resolution: {integrity: sha512-DZcwCsExq71JEOU4MmCY7VE9QpftM0cWtSANIef9gcWY1RHsdRr5s8EHEhLo5LHSJNFDOeFh503je5Td3JmVvA==}
-
-  '@types/jsonfile@6.1.4':
-    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
 
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
@@ -1872,8 +1866,8 @@ packages:
     resolution: {integrity: sha512-RXRJzMiK6U2ye0BlGGZnmpwJDPgakn6aNQ0A7gHRbD4I0uvK4TW6UqkK1V0pp9jskjJBAXd3dRrbzWkqJ+6cxA==}
     engines: {node: '>= 4.0.0'}
 
-  zx@8.3.2:
-    resolution: {integrity: sha512-qjTunv1NClO05jDaUjrNZfpqC9yvNCchge/bzOcQevsh1aM5qE3TG6MY24kuQKlOWx+7vNuhqO2wa9nQCIGvZA==}
+  zx@8.4.0:
+    resolution: {integrity: sha512-b5+gbUT0akQ5vVuBuHgp0viQx2ZYCuooVD41Z7g47sN0diLsAvB2XteHcp5lec90CNEQ9o7TkXsE3ksaJrZHGw==}
     engines: {node: '>= 12.17.0'}
     hasBin: true
 
@@ -2069,18 +2063,7 @@ snapshots:
 
   '@primer/primitives@10.4.0': {}
 
-  '@types/fs-extra@11.0.4':
-    dependencies:
-      '@types/jsonfile': 6.1.4
-      '@types/node': 22.13.9
-    optional: true
-
   '@types/is-color@1.0.3': {}
-
-  '@types/jsonfile@6.1.4':
-    dependencies:
-      '@types/node': 22.13.9
-    optional: true
 
   '@types/linkify-it@5.0.0': {}
 
@@ -3718,7 +3701,4 @@ snapshots:
 
   ylru@1.3.2: {}
 
-  zx@8.3.2:
-    optionalDependencies:
-      '@types/fs-extra': 11.0.4
-      '@types/node': 22.13.9
+  zx@8.4.0: {}
