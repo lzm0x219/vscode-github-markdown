@@ -200,7 +200,7 @@
     "@vscode/test-web": "0.0.68",
     "@vscode/vsce": "3.3.1",
     "concurrently": "9.1.2",
-    "esbuild": "0.25.1",
+    "esbuild": "0.25.2",
     "esbuild-sass-plugin": "3.3.1",
     "husky": "9.1.7",
     "is-ci": "4.1.0",
