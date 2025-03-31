@@ -28,8 +28,8 @@ importers:
         specifier: 0.0.68
         version: 0.0.68
       '@vscode/vsce':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.3.2
+        version: 3.3.2
       concurrently:
         specifier: 9.1.2
         version: 9.1.2
@@ -374,8 +374,8 @@ packages:
   '@vscode/vsce-sign@2.0.3':
     resolution: {integrity: sha512-NYktTVXYIjJ41CTfImuWLYSw2UoZwYYFk7VcVYTjTZnD7NnuaM3DizaFZfuRG5YMRT/oZa1t1d4bwzrBALR3VQ==}
 
-  '@vscode/vsce@3.3.1':
-    resolution: {integrity: sha512-aZ+0UilLsSidWcY6qjQRmsNgJXfFvE3ihj0u9oNLMejFGBBYORTRua0KHx3kx+RW5pxvza2OepzTpct2OdhTUA==}
+  '@vscode/vsce@3.3.2':
+    resolution: {integrity: sha512-XQ4IhctYalSTMwLnMS8+nUaGbU7v99Qm2sOoGfIEf2QC7jpiLXZZMh7NwArEFsKX4gHTJLx0/GqAUlCdC3gKCw==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -1563,11 +1563,6 @@ packages:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
     hasBin: true
 
-  semver@7.6.0:
-    resolution: {integrity: sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
     engines: {node: '>=10'}
@@ -2141,7 +2136,7 @@ snapshots:
       '@vscode/vsce-sign-win32-arm64': 2.0.1
       '@vscode/vsce-sign-win32-x64': 2.0.1
 
-  '@vscode/vsce@3.3.1':
+  '@vscode/vsce@3.3.2':
     dependencies:
       '@azure/identity': 4.1.0
       '@vscode/vsce-sign': 2.0.3
@@ -3379,10 +3374,6 @@ snapshots:
 
   semver@5.7.2: {}
 
-  semver@7.6.0:
-    dependencies:
-      lru-cache: 6.0.0
-
   semver@7.7.1: {}
 
   set-function-length@1.1.1:
@@ -3441,7 +3432,7 @@ snapshots:
       get-stdin: 9.0.0
       git-hooks-list: 3.1.0
       is-plain-obj: 4.1.0
-      semver: 7.6.0
+      semver: 7.7.1
       sort-object-keys: 1.1.3
       tinyglobby: 0.2.12
 
