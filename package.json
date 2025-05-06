@@ -204,7 +204,7 @@
     "esbuild-sass-plugin": "3.3.1",
     "husky": "9.1.7",
     "is-ci": "4.1.0",
-    "lint-staged": "15.5.1",
+    "lint-staged": "15.5.2",
     "prettier": "3.5.3",
     "prettier-plugin-packagejson": "2.5.11",
     "process": "0.11.10",
