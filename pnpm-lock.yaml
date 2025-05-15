@@ -52,8 +52,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       prettier-plugin-packagejson:
-        specifier: 2.5.12
-        version: 2.5.12(prettier@3.5.3)
+        specifier: 2.5.13
+        version: 2.5.13(prettier@3.5.3)
       process:
         specifier: 0.11.10
         version: 0.11.10
@@ -1298,8 +1298,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  prettier-plugin-packagejson@2.5.12:
-    resolution: {integrity: sha512-IMBkjSNMaMx8QpmYD/5Y7gXn1hRBMY91EF29MotVSI6bT7SCDFZ7bXL9EeumEXn7tjUFYoN8D0fTs0XpxmYg8A==}
+  prettier-plugin-packagejson@2.5.13:
+    resolution: {integrity: sha512-94B/Xy25HwiwSkGUGnwQw3cBw9jg9L5LfKCHpuRMjC8ETPq4oCMa2S4EblV628E0XER9n6v5rH0TQY9cUd10pg==}
     peerDependencies:
       prettier: '>= 1.16.0'
     peerDependenciesMeta:
@@ -1643,8 +1643,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  synckit@0.11.4:
-    resolution: {integrity: sha512-Q/XQKRaJiLiFIBNN+mndW7S/RHxvwzuZS6ZwmRzUBqJBv/5QIKCEwkBC8GBf8EQJKYnaFs0wOZbKTXBPj8L9oQ==}
+  synckit@0.11.5:
+    resolution: {integrity: sha512-frqvfWyDA5VPVdrWfH24uM6SI/O8NLpVbIIJxb8t/a3YGsp4AW9CYgSKC0OaSEfexnp7Y1pVh2Y6IHO8ggGDmA==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
   tar-fs@2.1.1:
@@ -3087,10 +3087,10 @@ snapshots:
       tunnel-agent: 0.6.0
     optional: true
 
-  prettier-plugin-packagejson@2.5.12(prettier@3.5.3):
+  prettier-plugin-packagejson@2.5.13(prettier@3.5.3):
     dependencies:
       sort-package-json: 3.2.1
-      synckit: 0.11.4
+      synckit: 0.11.5
     optionalDependencies:
       prettier: 3.5.3
 
@@ -3408,7 +3408,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  synckit@0.11.4:
+  synckit@0.11.5:
     dependencies:
       '@pkgr/core': 0.2.4
       tslib: 2.8.1
