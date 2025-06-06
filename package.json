@@ -197,7 +197,7 @@
     "@types/markdown-it": "14.1.2",
     "@types/node": "22.15.30",
     "@types/vscode": "1.100.0",
-    "@vscode/test-web": "0.0.69",
+    "@vscode/test-web": "0.0.70",
     "@vscode/vsce": "3.5.0",
     "concurrently": "9.1.2",
     "esbuild": "0.25.5",
