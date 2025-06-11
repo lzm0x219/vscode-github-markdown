@@ -64,8 +64,8 @@ importers:
         specifier: 3.2.1
         version: 3.2.1
       tsx:
-        specifier: 4.20.0
-        version: 4.20.0
+        specifier: 4.20.1
+        version: 4.20.1
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1995,8 +1995,8 @@ packages:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
     engines: {node: '>=0.6.x'}
 
-  tsx@4.20.0:
-    resolution: {integrity: sha512-TsmdeXxcZYiJ2MKV7fdq38na0CKyLRtCeMqTeHMmrVXQ/gf5yTeJohh+sgr7MnMGsjeKXzHzy+TwOOTR1arl+Q==}
+  tsx@4.20.1:
+    resolution: {integrity: sha512-JsFUnMHIE+g8KllOvWTrSOwCKM10xLcsesvUQR61znsbrcwZ4U/QaqdymmvTqG5GMD7k2VFv9UG35C4dRy34Ag==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -4163,7 +4163,7 @@ snapshots:
 
   tsscmp@1.0.6: {}
 
-  tsx@4.20.0:
+  tsx@4.20.1:
     dependencies:
       esbuild: 0.25.5
       get-tsconfig: 4.7.5
