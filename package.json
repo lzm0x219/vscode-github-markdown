@@ -199,7 +199,7 @@
     "@types/vscode": "1.101.0",
     "@vscode/test-web": "0.0.70",
     "@vscode/vsce": "3.5.0",
-    "concurrently": "9.1.2",
+    "concurrently": "9.2.0",
     "esbuild": "0.25.5",
     "esbuild-sass-plugin": "3.3.1",
     "husky": "9.1.7",
