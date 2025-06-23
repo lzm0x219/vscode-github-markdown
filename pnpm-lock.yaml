@@ -49,11 +49,11 @@ importers:
         specifier: 16.1.2
         version: 16.1.2
       prettier:
-        specifier: 3.5.3
-        version: 3.5.3
+        specifier: 3.6.0
+        version: 3.6.0
       prettier-plugin-packagejson:
         specifier: 2.5.15
-        version: 2.5.15(prettier@3.5.3)
+        version: 2.5.15(prettier@3.6.0)
       process:
         specifier: 0.11.10
         version: 0.11.10
@@ -1534,8 +1534,8 @@ packages:
       prettier:
         optional: true
 
-  prettier@3.5.3:
-    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+  prettier@3.6.0:
+    resolution: {integrity: sha512-ujSB9uXHJKzM/2GBuE0hBOUgC77CN3Bnpqa+g80bkv3T3A93wL/xlzDATHhnhkzifz/UE2SNOvmbTz5hSkDlHw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3681,14 +3681,14 @@ snapshots:
       tunnel-agent: 0.6.0
     optional: true
 
-  prettier-plugin-packagejson@2.5.15(prettier@3.5.3):
+  prettier-plugin-packagejson@2.5.15(prettier@3.6.0):
     dependencies:
       sort-package-json: 3.2.1
       synckit: 0.11.8
     optionalDependencies:
-      prettier: 3.5.3
+      prettier: 3.6.0
 
-  prettier@3.5.3: {}
+  prettier@3.6.0: {}
 
   process-nextick-args@2.0.1: {}
 
