@@ -70,8 +70,8 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
       zx:
-        specifier: 8.8.0
-        version: 8.8.0
+        specifier: 8.8.1
+        version: 8.8.1
 
 packages:
 
@@ -2118,8 +2118,8 @@ packages:
   yazl@2.5.1:
     resolution: {integrity: sha512-phENi2PLiHnHb6QBVot+dJnaAZ0xosj7p3fWl+znIjBDlnMI2PsZCJZ306BPTFOaHf5qdDEI8x5qFrSOBN5vrw==}
 
-  zx@8.8.0:
-    resolution: {integrity: sha512-v0VZXgSHusDvTtZROno3Ws8xkE1uNSSwH/yF8Fm+ZwBrYhr+bRNNpsnTJ32eR/t6umc7lAz5WqdP800ugW9zFA==}
+  zx@8.8.1:
+    resolution: {integrity: sha512-qvsKBnvWHstHKCluKPlEgI/D3+mdiQyMoSSeFR8IX/aXzWIas5A297KxKgPJhuPXdrR6ma0Jzx43+GQ/8sqbrw==}
     engines: {node: '>= 12.17.0'}
     hasBin: true
 
@@ -4248,4 +4248,4 @@ snapshots:
     dependencies:
       buffer-crc32: 0.2.13
 
-  zx@8.8.0: {}
+  zx@8.8.1: {}
