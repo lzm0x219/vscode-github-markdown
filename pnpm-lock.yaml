@@ -25,8 +25,8 @@ importers:
         specifier: 1.103.0
         version: 1.103.0
       '@vscode/test-web':
-        specifier: 0.0.72
-        version: 0.0.72
+        specifier: 0.0.73
+        version: 0.0.73
       '@vscode/vsce':
         specifier: 3.6.0
         version: 3.6.0
@@ -328,8 +328,8 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@playwright/browser-chromium@1.54.2':
-    resolution: {integrity: sha512-DqmhKemShLoF3x4LxEnTc0XPlHSedB3grOpokz9nnXkRsdMHIjVjeGz5QyZXWh6wONWNQrLbdD5iU5cb3tRsLg==}
+  '@playwright/browser-chromium@1.55.0':
+    resolution: {integrity: sha512-HxG0+6v8NGLFLYMxrGb4T4DAmKwwx6C0V3uIn/i91tOVqcNnaBBllhpxLEqXCnxjprL3HDDMXsVPjk1/vsCVAw==}
     engines: {node: '>=18'}
 
   '@primer/primitives@11.1.0':
@@ -423,9 +423,9 @@ packages:
   '@types/vscode@1.103.0':
     resolution: {integrity: sha512-o4hanZAQdNfsKecexq9L3eHICd0AAvdbLk6hA60UzGXbGH/q8b/9xv2RgR7vV3ZcHuyKVq7b37IGd/+gM4Tu+Q==}
 
-  '@vscode/test-web@0.0.72':
-    resolution: {integrity: sha512-4Yqr8GSXmx5a5dXMBoL/bv/J7WVJ4H5u63CEhEL4yO5mL9fYpdbSLrB0MFHx0FmvclNzQ7cXQmK1UsCOrqjvvA==}
-    engines: {node: '>=16'}
+  '@vscode/test-web@0.0.73':
+    resolution: {integrity: sha512-xCvUsZi33/asatnFZHOUzrlcfjwqy+I34tjG0pM4LZmDV1jAeczNAyFRZw6VJE+uSAy9N4ncZz/cemdBaU+yZg==}
+    engines: {node: '>=20'}
     hasBin: true
 
   '@vscode/vsce-sign-alpine-arm64@2.0.1':
@@ -1495,13 +1495,13 @@ packages:
     engines: {node: '>=0.10'}
     hasBin: true
 
-  playwright-core@1.54.2:
-    resolution: {integrity: sha512-n5r4HFbMmWsB4twG7tJLDN9gmBUeSPcsBZiWSE4DnYz9mJMAFqr2ID7+eGC9kpEnxExJ1epttwR59LEWCk8mtA==}
+  playwright-core@1.55.0:
+    resolution: {integrity: sha512-GvZs4vU3U5ro2nZpeiwyb0zuFaqb9sUiAJuyrWpcGouD8y9/HLgGbNRjIph7zU9D3hnPaisMl9zG9CgFi/biIg==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.54.2:
-    resolution: {integrity: sha512-Hu/BMoA1NAdRUuulyvQC0pEqZ4vQbGfn8f7wPXcnqQmM+zct9UliKxsIkLNmz/ku7LElUNqmaiv1TG/aL5ACsw==}
+  playwright@1.55.0:
+    resolution: {integrity: sha512-sdCWStblvV1YU909Xqx0DhOjPZE4/5lJsIS84IfN9dAZfcl/CIZ5O8l3o0j7hPMjDvqoTF8ZUcc+i/GL5erstA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -2342,9 +2342,9 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@playwright/browser-chromium@1.54.2':
+  '@playwright/browser-chromium@1.55.0':
     dependencies:
-      playwright-core: 1.54.2
+      playwright-core: 1.55.0
 
   '@primer/primitives@11.1.0': {}
 
@@ -2474,11 +2474,11 @@ snapshots:
 
   '@types/vscode@1.103.0': {}
 
-  '@vscode/test-web@0.0.72':
+  '@vscode/test-web@0.0.73':
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 14.0.0
-      '@playwright/browser-chromium': 1.54.2
+      '@playwright/browser-chromium': 1.55.0
       gunzip-maybe: 1.4.2
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
@@ -2487,7 +2487,7 @@ snapshots:
       koa-mount: 4.2.0
       koa-static: 5.0.0
       minimist: 1.2.8
-      playwright: 1.54.2
+      playwright: 1.55.0
       tar-fs: 3.1.0
       tinyglobby: 0.2.14
       vscode-uri: 3.1.0
@@ -3625,11 +3625,11 @@ snapshots:
 
   pidtree@0.6.0: {}
 
-  playwright-core@1.54.2: {}
+  playwright-core@1.55.0: {}
 
-  playwright@1.54.2:
+  playwright@1.55.0:
     dependencies:
-      playwright-core: 1.54.2
+      playwright-core: 1.55.0
     optionalDependencies:
       fsevents: 2.3.2
 
