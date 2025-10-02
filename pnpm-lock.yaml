@@ -25,8 +25,8 @@ importers:
         specifier: 1.104.0
         version: 1.104.0
       '@vscode/test-web':
-        specifier: 0.0.73
-        version: 0.0.73
+        specifier: 0.0.74
+        version: 0.0.74
       '@vscode/vsce':
         specifier: 3.6.2
         version: 3.6.2
@@ -328,8 +328,8 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@playwright/browser-chromium@1.55.0':
-    resolution: {integrity: sha512-HxG0+6v8NGLFLYMxrGb4T4DAmKwwx6C0V3uIn/i91tOVqcNnaBBllhpxLEqXCnxjprL3HDDMXsVPjk1/vsCVAw==}
+  '@playwright/browser-chromium@1.55.1':
+    resolution: {integrity: sha512-T4Iyhcv38bdOrtCxpjHA6WaQk4EHeud38J+SnLaOoIuGFPK7zNgSqEuilqTGB6xqfcVHYKHWePkXcYFVOux8ew==}
     engines: {node: '>=18'}
 
   '@primer/primitives@11.2.0':
@@ -423,8 +423,8 @@ packages:
   '@types/vscode@1.104.0':
     resolution: {integrity: sha512-0KwoU2rZ2ecsTGFxo4K1+f+AErRsYW0fsp6A0zufzGuhyczc2IoKqYqcwXidKXmy2u8YB2GsYsOtiI9Izx3Tig==}
 
-  '@vscode/test-web@0.0.73':
-    resolution: {integrity: sha512-xCvUsZi33/asatnFZHOUzrlcfjwqy+I34tjG0pM4LZmDV1jAeczNAyFRZw6VJE+uSAy9N4ncZz/cemdBaU+yZg==}
+  '@vscode/test-web@0.0.74':
+    resolution: {integrity: sha512-rXIcru66y56j1RPOhFJYSNs5MAw6yZCFUktqa5tPrxsRel/Lj6vDszq8E47XsVN1NjwsLj8L3FMqwR4/B+0QmA==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -1473,13 +1473,13 @@ packages:
     engines: {node: '>=0.10'}
     hasBin: true
 
-  playwright-core@1.55.0:
-    resolution: {integrity: sha512-GvZs4vU3U5ro2nZpeiwyb0zuFaqb9sUiAJuyrWpcGouD8y9/HLgGbNRjIph7zU9D3hnPaisMl9zG9CgFi/biIg==}
+  playwright-core@1.55.1:
+    resolution: {integrity: sha512-Z6Mh9mkwX+zxSlHqdr5AOcJnfp+xUWLCt9uKV18fhzA8eyxUd8NUWzAjxUh55RZKSYwDGX0cfaySdhZJGMoJ+w==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.55.0:
-    resolution: {integrity: sha512-sdCWStblvV1YU909Xqx0DhOjPZE4/5lJsIS84IfN9dAZfcl/CIZ5O8l3o0j7hPMjDvqoTF8ZUcc+i/GL5erstA==}
+  playwright@1.55.1:
+    resolution: {integrity: sha512-cJW4Xd/G3v5ovXtJJ52MAOclqeac9S/aGGgRzLabuF8TnIb6xHvMzKIa6JmrRzUkeXJgfL1MhukP0NK6l39h3A==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -1905,8 +1905,8 @@ packages:
   tar-fs@2.1.1:
     resolution: {integrity: sha512-V0r2Y9scmbDRLCNex/+hYzvp/zyYjvFbHPNgVTKfQvVrb6guiE/fxP+XblDNR011utopbkex2nM4dHNV6GDsng==}
 
-  tar-fs@3.1.0:
-    resolution: {integrity: sha512-5Mty5y/sOF1YWj1J6GiBodjlDc05CUR8PKXrsnFAiSG0xA+GHeWLovaZPYUDXkH/1iKRf2+M5+OrRgzC7O9b7w==}
+  tar-fs@3.1.1:
+    resolution: {integrity: sha512-LZA0oaPOc2fVo82Txf3gw+AkEd38szODlptMYejQUhndHMLQ9M059uXR+AfS7DNo0NpINvSqDsvyaCrBVkptWg==}
 
   tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
@@ -2316,9 +2316,9 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@playwright/browser-chromium@1.55.0':
+  '@playwright/browser-chromium@1.55.1':
     dependencies:
-      playwright-core: 1.55.0
+      playwright-core: 1.55.1
 
   '@primer/primitives@11.2.0': {}
 
@@ -2448,11 +2448,11 @@ snapshots:
 
   '@types/vscode@1.104.0': {}
 
-  '@vscode/test-web@0.0.73':
+  '@vscode/test-web@0.0.74':
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 14.0.0
-      '@playwright/browser-chromium': 1.55.0
+      '@playwright/browser-chromium': 1.55.1
       gunzip-maybe: 1.4.2
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
@@ -2461,8 +2461,8 @@ snapshots:
       koa-mount: 4.2.0
       koa-static: 5.0.0
       minimist: 1.2.8
-      playwright: 1.55.0
-      tar-fs: 3.1.0
+      playwright: 1.55.1
+      tar-fs: 3.1.1
       tinyglobby: 0.2.14
       vscode-uri: 3.1.0
     transitivePeerDependencies:
@@ -3576,11 +3576,11 @@ snapshots:
 
   pidtree@0.6.0: {}
 
-  playwright-core@1.55.0: {}
+  playwright-core@1.55.1: {}
 
-  playwright@1.55.0:
+  playwright@1.55.1:
     dependencies:
-      playwright-core: 1.55.0
+      playwright-core: 1.55.1
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -4013,7 +4013,7 @@ snapshots:
       tar-stream: 2.2.0
     optional: true
 
-  tar-fs@3.1.0:
+  tar-fs@3.1.1:
     dependencies:
       pump: 3.0.0
       tar-stream: 3.1.6
