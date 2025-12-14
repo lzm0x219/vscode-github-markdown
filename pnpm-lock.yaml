@@ -61,8 +61,8 @@ importers:
         specifier: 6.1.2
         version: 6.1.2
       sort-package-json:
-        specifier: 3.5.2
-        version: 3.5.2
+        specifier: 3.6.0
+        version: 3.6.0
       tsx:
         specifier: 4.21.0
         version: 4.21.0
@@ -1823,8 +1823,8 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  sort-package-json@3.5.2:
-    resolution: {integrity: sha512-v2lwPDHuzAH0NqZbppMReHYe+8wzCeeeeQuHaCEvOREbLG9dKKUnkmpoaRO3YNhFF1KRI4XK535f3lmsusU22g==}
+  sort-package-json@3.6.0:
+    resolution: {integrity: sha512-fyJsPLhWvY7u2KsKPZn1PixbXp+1m7V8NWqU8CvgFRbMEX41Ffw1kD8n0CfJiGoaSfoAvbrqRRl/DcHO8omQOQ==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -3945,7 +3945,7 @@ snapshots:
       sort-object-keys: 2.0.1
       tinyglobby: 0.2.15
 
-  sort-package-json@3.5.2:
+  sort-package-json@3.6.0:
     dependencies:
       detect-indent: 7.0.2
       detect-newline: 4.0.1
