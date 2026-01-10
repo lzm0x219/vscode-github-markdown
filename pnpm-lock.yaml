@@ -22,8 +22,8 @@ importers:
         specifier: 24.10.6
         version: 24.10.6
       '@types/vscode':
-        specifier: 1.108.0
-        version: 1.108.0
+        specifier: 1.108.1
+        version: 1.108.1
       '@vscode/test-web':
         specifier: 0.0.78
         version: 0.0.78
@@ -508,8 +508,8 @@ packages:
   '@types/sarif@2.1.7':
     resolution: {integrity: sha512-kRz0VEkJqWLf1LLVN4pT1cg1Z9wAuvI6L97V3m2f5B76Tg8d413ddvLBPTEHAZJlnn4XSvu0FkZtViCQGVyrXQ==}
 
-  '@types/vscode@1.108.0':
-    resolution: {integrity: sha512-WXEz8iCGrraEf+NB8gvC9ONakihpRYsnw2n8oq2/qAQGB5MrQERlkd2KxjpvlLHPjyu3uBynDZ+DRUe5vsw94g==}
+  '@types/vscode@1.108.1':
+    resolution: {integrity: sha512-DerV0BbSzt87TbrqmZ7lRDIYaMiqvP8tmJTzW2p49ZBVtGUnGAu2RGQd1Wv4XMzEVUpaHbsemVM5nfuQJj7H6w==}
 
   '@vscode/test-web@0.0.78':
     resolution: {integrity: sha512-gj+Y6fT3vhUu2nAJhY+yxj27QU04it7oZdqDwO5uLWi8yzD8B7ZAWby52ODePJrRPMUndNIvleQZr7v3BowkSA==}
@@ -2617,7 +2617,7 @@ snapshots:
 
   '@types/sarif@2.1.7': {}
 
-  '@types/vscode@1.108.0': {}
+  '@types/vscode@1.108.1': {}
 
   '@vscode/test-web@0.0.78':
     dependencies:
