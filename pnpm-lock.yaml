@@ -19,8 +19,8 @@ importers:
         specifier: 14.1.2
         version: 14.1.2
       '@types/node':
-        specifier: 24.10.9
-        version: 24.10.9
+        specifier: 24.10.10
+        version: 24.10.10
       '@types/vscode':
         specifier: 1.108.1
         version: 1.108.1
@@ -501,8 +501,8 @@ packages:
   '@types/mdurl@2.0.0':
     resolution: {integrity: sha512-RGdgjQUZba5p6QEFAVx2OGb8rQDL/cPRG7GiedRzMcJ1tYnUANBncjbSB1NRGwbvjcPeikRABz2nshyPk1bhWg==}
 
-  '@types/node@24.10.9':
-    resolution: {integrity: sha512-ne4A0IpG3+2ETuREInjPNhUGis1SFjv1d5asp8MzEAGtOZeTeHVDOYqOgqfhvseqg/iXty2hjBf1zAOb7RNiNw==}
+  '@types/node@24.10.10':
+    resolution: {integrity: sha512-+0/4J266CBGPUq/ELg7QUHhN25WYjE0wYTPSQJn1xeu8DOlIOPxXxrNGiLmfAWl7HMMgWFWXpt9IDjMWrF5Iow==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -2601,7 +2601,7 @@ snapshots:
 
   '@types/mdurl@2.0.0': {}
 
-  '@types/node@24.10.9':
+  '@types/node@24.10.10':
     dependencies:
       undici-types: 7.16.0
 
