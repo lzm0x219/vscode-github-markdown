@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@primer/primitives':
-        specifier: 11.4.0
-        version: 11.4.0
+        specifier: 11.5.0
+        version: 11.5.0
     devDependencies:
       '@types/is-color':
         specifier: 1.0.3
@@ -426,8 +426,8 @@ packages:
     resolution: {integrity: sha512-L0hO/dvKTjiEyW+ReRdmw1D389qa9XkCCGH58MaSpMdGtHVJzbTsHpAN+fWcAO8Fdc+vTQTZQzjq1uZoEKOGmQ==}
     engines: {node: '>=18'}
 
-  '@primer/primitives@11.4.0':
-    resolution: {integrity: sha512-JIt98Fs0c8vhOw3uNf+sxqmvCdo0VoCZPBRg4frNK/xNpDMZsQh7V0Rp7wiGbr3f1w+4oqv40sfgaftMQTnwXQ==}
+  '@primer/primitives@11.5.0':
+    resolution: {integrity: sha512-vYx9IJeCEZLluZh7Q+sZZXZU8vY2mY9t699AYc7Z2XA6BrVwdcbLbINIS7vjusxb+kQsIK2FshAGJujpV5OMLw==}
 
   '@secretlint/config-creator@10.2.2':
     resolution: {integrity: sha512-BynOBe7Hn3LJjb3CqCHZjeNB09s/vgf0baBaHVw67w7gHF0d25c3ZsZ5+vv8TgwSchRdUCRrbbcq5i2B1fJ2QQ==}
@@ -1610,6 +1610,7 @@ packages:
   prebuild-install@7.1.1:
     resolution: {integrity: sha512-jAXscXWMcCK8GgCoHOfIr0ODh5ai8mj63L2nWrjuAgXE6tDyYGnx4/8o/rCgU+B4JSyZBKbeZqzhtwtC3ovxjw==}
     engines: {node: '>=10'}
+    deprecated: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
     hasBin: true
 
   prettier-plugin-packagejson@3.0.0:
@@ -2506,7 +2507,7 @@ snapshots:
     dependencies:
       playwright-core: 1.58.1
 
-  '@primer/primitives@11.4.0': {}
+  '@primer/primitives@11.5.0': {}
 
   '@secretlint/config-creator@10.2.2':
     dependencies:
