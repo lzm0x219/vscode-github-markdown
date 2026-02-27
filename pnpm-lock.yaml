@@ -25,8 +25,8 @@ importers:
         specifier: 1.109.0
         version: 1.109.0
       '@vscode/test-web':
-        specifier: 0.0.79
-        version: 0.0.79
+        specifier: 0.0.80
+        version: 0.0.80
       '@vscode/vsce':
         specifier: 3.7.1
         version: 3.7.1
@@ -422,8 +422,8 @@ packages:
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
 
-  '@playwright/browser-chromium@1.58.1':
-    resolution: {integrity: sha512-L0hO/dvKTjiEyW+ReRdmw1D389qa9XkCCGH58MaSpMdGtHVJzbTsHpAN+fWcAO8Fdc+vTQTZQzjq1uZoEKOGmQ==}
+  '@playwright/browser-chromium@1.58.2':
+    resolution: {integrity: sha512-/HHFVVP2pzEtqBVOFRoWlDtBoO8bzIWOqS62APdm3OhYbE2+kVUs/ALpkevvAKKfY0DMDVezYN22bDBh77UQ9Q==}
     engines: {node: '>=18'}
 
   '@primer/primitives@11.5.1':
@@ -517,8 +517,8 @@ packages:
   '@types/vscode@1.109.0':
     resolution: {integrity: sha512-0Pf95rnwEIwDbmXGC08r0B4TQhAbsHQ5UyTIgVgoieDe4cOnf92usuR5dEczb6bTKEp7ziZH4TV1TRGPPCExtw==}
 
-  '@vscode/test-web@0.0.79':
-    resolution: {integrity: sha512-vPOW8M9VtRltUk5QjizicWQ+eWk6liSdqJhb0428RAl8UzePGXqaBWLc40pdC9MKTJUtmhnWDC/22YBYgR0jmw==}
+  '@vscode/test-web@0.0.80':
+    resolution: {integrity: sha512-QgsRPp8IuPcdbUdVtqQkFN/sGd+6cr6g0ENEVFOHwJbQqZtJSiZD5w0e6tgmoeq9nBjNqZCq87OO1GkwFHkPyw==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -781,9 +781,9 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  content-disposition@0.5.4:
-    resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
-    engines: {node: '>= 0.6'}
+  content-disposition@1.0.1:
+    resolution: {integrity: sha512-oIXISMynqSqm241k6kcQ5UwttDILMK4BiurCfGEREw6+X9jkkpEe5T9FZaApyLGGOnFuyMWZpdolTXMtvEJ08Q==}
+    engines: {node: '>=18'}
 
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
@@ -1294,7 +1294,6 @@ packages:
   keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
     engines: {node: '>= 0.6'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   keytar@7.9.0:
     resolution: {integrity: sha512-VPD8mtVtm5JNtA2AErl6Chp06JBfy7diFQ7TQQhdpWOl6MrCRB+eRbvAZUsbGQS9kiMq0coJsy0W0vHpDCkWsQ==}
@@ -1317,8 +1316,8 @@ packages:
     resolution: {integrity: sha512-UqyYyH5YEXaJrf9S8E23GoJFQZXkBVJ9zYYMPGz919MSX1KuvAcycIuS0ci150HCoPf4XQVhQ84Qf8xRPWxFaQ==}
     engines: {node: '>= 7.6.0'}
 
-  koa@3.1.1:
-    resolution: {integrity: sha512-KDDuvpfqSK0ZKEO2gCPedNjl5wYpfj+HNiuVRlbhd1A88S3M0ySkdf2V/EJ4NWt5dwh5PXCdcenrKK2IQJAxsg==}
+  koa@3.1.2:
+    resolution: {integrity: sha512-2LOQnFKu3m0VxpE+5sb5+BRTSKrXmNxGgxVRiKwD9s5KQB1zID/FRXhtzeV7RT1L2GVpdEEAfVuclFOMGl1ikA==}
     engines: {node: '>= 18'}
 
   leven@3.1.0:
@@ -1590,13 +1589,13 @@ packages:
     engines: {node: '>=0.10'}
     hasBin: true
 
-  playwright-core@1.58.1:
-    resolution: {integrity: sha512-bcWzOaTxcW+VOOGBCQgnaKToLJ65d6AqfLVKEWvexyS3AS6rbXl+xdpYRMGSRBClPvyj44njOWoxjNdL/H9UNg==}
+  playwright-core@1.58.2:
+    resolution: {integrity: sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.58.1:
-    resolution: {integrity: sha512-+2uTZHxSCcxjvGc5C891LrS1/NlxglGxzrC4seZiVjcYVQfUa87wBL6rTDqzGjuoWNjnBzRqKmF6zRYGMvQUaQ==}
+  playwright@1.58.2:
+    resolution: {integrity: sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -2420,11 +2419,11 @@ snapshots:
     dependencies:
       vary: 1.1.2
 
-  '@koa/router@15.3.0(koa@3.1.1)':
+  '@koa/router@15.3.0(koa@3.1.2)':
     dependencies:
       debug: 4.4.3
       http-errors: 2.0.1
-      koa: 3.1.1
+      koa: 3.1.2
       koa-compose: 4.1.0
       path-to-regexp: 8.3.0
     transitivePeerDependencies:
@@ -2503,9 +2502,9 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.5.1
     optional: true
 
-  '@playwright/browser-chromium@1.58.1':
+  '@playwright/browser-chromium@1.58.2':
     dependencies:
-      playwright-core: 1.58.1
+      playwright-core: 1.58.2
 
   '@primer/primitives@11.5.1': {}
 
@@ -2635,20 +2634,20 @@ snapshots:
 
   '@types/vscode@1.109.0': {}
 
-  '@vscode/test-web@0.0.79':
+  '@vscode/test-web@0.0.80':
     dependencies:
       '@koa/cors': 5.0.0
-      '@koa/router': 15.3.0(koa@3.1.1)
-      '@playwright/browser-chromium': 1.58.1
+      '@koa/router': 15.3.0(koa@3.1.2)
+      '@playwright/browser-chromium': 1.58.2
       gunzip-maybe: 1.4.2
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
-      koa: 3.1.1
+      koa: 3.1.2
       koa-morgan: 1.0.1
       koa-mount: 4.2.0
       koa-static: 5.0.0
       minimist: 1.2.8
-      playwright: 1.58.1
+      playwright: 1.58.2
       tar-fs: 3.1.1
       tinyglobby: 0.2.15
       vscode-uri: 3.1.0
@@ -2947,9 +2946,7 @@ snapshots:
       tree-kill: 1.2.2
       yargs: 17.7.2
 
-  content-disposition@0.5.4:
-    dependencies:
-      safe-buffer: 5.2.1
+  content-disposition@1.0.1: {}
 
   content-type@1.0.5: {}
 
@@ -3500,10 +3497,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  koa@3.1.1:
+  koa@3.1.2:
     dependencies:
       accepts: 1.3.8
-      content-disposition: 0.5.4
+      content-disposition: 1.0.1
       content-type: 1.0.5
       cookies: 0.9.1
       delegates: 1.0.0
@@ -3771,11 +3768,11 @@ snapshots:
 
   pidtree@0.6.0: {}
 
-  playwright-core@1.58.1: {}
+  playwright-core@1.58.2: {}
 
-  playwright@1.58.1:
+  playwright@1.58.2:
     dependencies:
-      playwright-core: 1.58.1
+      playwright-core: 1.58.2
     optionalDependencies:
       fsevents: 2.3.2
 
