@@ -37,8 +37,8 @@ importers:
         specifier: 0.27.3
         version: 0.27.3
       esbuild-sass-plugin:
-        specifier: 3.6.0
-        version: 3.6.0(esbuild@0.27.3)(sass-embedded@1.71.1)
+        specifier: 3.7.0
+        version: 3.7.0(esbuild@0.27.3)(sass-embedded@1.71.1)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -949,11 +949,11 @@ packages:
     resolution: {integrity: sha512-xUtoPkMggbz0MPyPiIWr1Kp4aeWJjDZ6SMvURhimjdZgsRuDplF5/s9hcgGhyXMhs+6vpnuoiZ2kFiu3FMnS8Q==}
     engines: {node: '>=18'}
 
-  esbuild-sass-plugin@3.6.0:
-    resolution: {integrity: sha512-lzPJQSEXcnj5amBPPib5lBjsDNPzvdMnX+1Rf7eha9BIpLSM5Ad2pi+Rqg5CAlWMduCgLntS2hLAqG7v1fxWGw==}
+  esbuild-sass-plugin@3.7.0:
+    resolution: {integrity: sha512-vxNSXFx3/0ZFApKo9036ek2iRfsT+yVO99qIYqa+JaDSuJuId2/N4s1TY+xfK+5LRpAMQkfdBVUTxb/1r2bq1A==}
     peerDependencies:
-      esbuild: '>=0.27.2'
-      sass-embedded: ^1.97.2
+      esbuild: '>=0.27.3'
+      sass-embedded: ^1.97.3
 
   esbuild@0.27.3:
     resolution: {integrity: sha512-8VwMnyGCONIs6cWue2IdpHxHnAjzxnw2Zr7MkVxB2vjmQ2ivqGFb4LEG3SMnv0Gb2F/G/2yA8zUaiL1gywDCCg==}
@@ -1108,10 +1108,6 @@ packages:
 
   has-symbols@1.0.3:
     resolution: {integrity: sha512-l3LCuF6MgDNwTDKkdYGEihYjt5pRPbEg46rtlmnSPlUbgmB8LOIrKJbYYFBSbnPaJexMKtiPO8hmeRjRz2Td+A==}
-    engines: {node: '>= 0.4'}
-
-  hasown@2.0.0:
-    resolution: {integrity: sha512-vUptKVTpIJhcczKBbgnS+RtcuYMB8+oNzPK2/Hp3hanz8JmpATdmmgLgSaadVREkDm+e2giHwY3ZRkyjSIDDFA==}
     engines: {node: '>= 0.4'}
 
   hasown@2.0.2:
@@ -1829,8 +1825,8 @@ packages:
     resolution: {integrity: sha512-nOmqErO1zd1wjvTbDscLZZ3fv5JPeQfaKuo0UCjYm7qPbpQcycp0l3nFZHxovjLjCetJ9IrLOADdznFYKV0f1A==}
     engines: {node: '>=16.0.0'}
 
-  sass@1.97.2:
-    resolution: {integrity: sha512-y5LWb0IlbO4e97Zr7c3mlpabcbBtS+ieiZ9iwDooShpFKWXf62zz5pEPdwrLYm+Bxn1fnbwFGzHuCLSA9tBmrw==}
+  sass@1.97.3:
+    resolution: {integrity: sha512-fDz1zJpd5GycprAbu4Q2PV/RprsRtKC/0z82z0JLgdytmcq0+ujJbJ/09bPGDxCLkKY3Np5cRAOcWiVkLXJURg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -3070,11 +3066,11 @@ snapshots:
 
   environment@1.1.0: {}
 
-  esbuild-sass-plugin@3.6.0(esbuild@0.27.3)(sass-embedded@1.71.1):
+  esbuild-sass-plugin@3.7.0(esbuild@0.27.3)(sass-embedded@1.71.1):
     dependencies:
       esbuild: 0.27.3
       resolve: 1.22.11
-      sass: 1.97.2
+      sass: 1.97.3
       sass-embedded: 1.71.1
 
   esbuild@0.27.3:
@@ -3188,7 +3184,7 @@ snapshots:
       function-bind: 1.1.2
       has-proto: 1.0.1
       has-symbols: 1.0.3
-      hasown: 2.0.0
+      hasown: 2.0.2
 
   get-tsconfig@4.7.5:
     dependencies:
@@ -3251,10 +3247,6 @@ snapshots:
   has-proto@1.0.1: {}
 
   has-symbols@1.0.3: {}
-
-  hasown@2.0.0:
-    dependencies:
-      function-bind: 1.1.2
 
   hasown@2.0.2:
     dependencies:
@@ -3982,7 +3974,7 @@ snapshots:
       sass-embedded-win32-ia32: 1.71.1
       sass-embedded-win32-x64: 1.71.1
 
-  sass@1.97.2:
+  sass@1.97.3:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.4
