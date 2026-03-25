@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@primer/primitives':
-        specifier: 11.5.1
-        version: 11.5.1
+        specifier: 11.6.0
+        version: 11.6.0
     devDependencies:
       '@types/is-color':
         specifier: 1.0.3
@@ -426,8 +426,8 @@ packages:
     resolution: {integrity: sha512-/HHFVVP2pzEtqBVOFRoWlDtBoO8bzIWOqS62APdm3OhYbE2+kVUs/ALpkevvAKKfY0DMDVezYN22bDBh77UQ9Q==}
     engines: {node: '>=18'}
 
-  '@primer/primitives@11.5.1':
-    resolution: {integrity: sha512-NB9uYfJ01FVY6zp+33EoUbJ0paS3JrWY+PqdHPebTvyRtQgL3sX8//3jWqjt3/jL81UMEulJRM2A0hPj0/vFpQ==}
+  '@primer/primitives@11.6.0':
+    resolution: {integrity: sha512-HiWlrszsC5KuxO3O8eciyXMT54JCLSHLJU1++/cnU9ufRVqKhzNmDtXKQwfK6JRqaIFYbBfF5Ze24wHUrY9KZA==}
 
   '@secretlint/config-creator@10.2.2':
     resolution: {integrity: sha512-BynOBe7Hn3LJjb3CqCHZjeNB09s/vgf0baBaHVw67w7gHF0d25c3ZsZ5+vv8TgwSchRdUCRrbbcq5i2B1fJ2QQ==}
@@ -2492,7 +2492,7 @@ snapshots:
     dependencies:
       playwright-core: 1.58.2
 
-  '@primer/primitives@11.5.1': {}
+  '@primer/primitives@11.6.0': {}
 
   '@secretlint/config-creator@10.2.2':
     dependencies:
