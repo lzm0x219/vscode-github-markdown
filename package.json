@@ -198,7 +198,7 @@
     "@types/node": "24.12.2",
     "@types/vscode": "1.116.0",
     "@vscode/test-web": "0.0.80",
-    "@vscode/vsce": "3.7.1",
+    "@vscode/vsce": "3.9.0",
     "concurrently": "9.2.1",
     "esbuild": "0.28.0",
     "esbuild-sass-plugin": "3.7.0",
