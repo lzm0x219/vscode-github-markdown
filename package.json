@@ -36,7 +36,7 @@
     "@tsdown/css": "^0.22.3",
     "@types/markdown-it": "14.1.2",
     "@types/node": "25.9.3",
-    "@types/vscode": "1.74.0",
+    "@types/vscode": "1.125.0",
     "@typescript/native-preview": "7.0.0-dev.20260618.1",
     "@vscode/test-web": "0.0.80",
     "@vscode/vsce": "3.9.2",
