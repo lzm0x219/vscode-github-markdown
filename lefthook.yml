@@ -1,0 +1,17 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: lint
+      glob: "*.{js,ts,cjs,mjs,jsx,tsx}"
+      run: pnpm exec oxlint {staged_files}
+      stage_fixed: true
+
+    - name: format
+      glob: "*"
+      run: pnpm exec oxfmt --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true
+
+    - name: type check
+      glob: "*.{js,ts,cjs,mjs,jsx,tsx}"
+      run: pnpm exec oxlint --type-aware {staged_files}
+      stage_fixed: true

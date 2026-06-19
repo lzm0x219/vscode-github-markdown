@@ -1,0 +1,33 @@
+import { defineConfig } from "tsdown";
+
+export default defineConfig([
+  {
+    entry: {
+      extension: "src/extension.ts"
+    },
+    format: ["cjs"],
+    outExtensions: () => ({
+      js: ".js"
+    }),
+    platform: "node",
+    dts: false,
+    clean: true,
+    deps: {
+      neverBundle: ["vscode"]
+    }
+  },
+  {
+    entry: {
+      "extension.preview": "src/extension.preview.ts"
+    },
+    format: ["iife"],
+    platform: "browser",
+    dts: false,
+    clean: false,
+    globalName: "GitHubMarkdownPreview",
+    outputOptions: {
+      entryFileNames: "[name].js"
+    },
+    copy: ["src/extension.preview.css"]
+  }
+]);

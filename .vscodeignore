@@ -1,0 +1,14 @@
+.editorconfig
+.github/**
+.oxfmtrc.json
+.oxlintrc.json
+.pnpm-store/**
+.vscode/**
+AGENTS.md
+CONTRIBUTING.md
+pnpm-lock.yaml
+pnpm-workspace.yaml
+scripts/**
+src/**
+tsconfig.json
+tsdown.config.mts

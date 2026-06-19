@@ -1,0 +1,174 @@
+{
+  "name": "vscode-github-markdown",
+  "displayName": "Github Markdown Preview",
+  "version": "4.0.0",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "github",
+    "github markdown",
+    "markdown",
+    "markdown style",
+    "markdown theme"
+  ],
+  "homepage": "https://github.com/lzm0x219/vscode-github-markdown#readme",
+  "bugs": {
+    "url": "https://github.com/lzm0x219/vscode-github-markdown/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "ZiMing Liu",
+    "email": "lzm0x219@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lzm0x219/vscode-github-markdown.git"
+  },
+  "publisher": "lzm0x219",
+  "main": "dist/extension.js",
+  "browser": "dist/extension.js",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "node scripts/dev.mjs"
+  },
+  "devDependencies": {
+    "@tsdown/css": "^0.22.3",
+    "@types/markdown-it": "14.1.2",
+    "@types/node": "25.9.3",
+    "@types/vscode": "1.74.0",
+    "@typescript/native-preview": "7.0.0-dev.20260618.1",
+    "@vscode/test-web": "0.0.80",
+    "@vscode/vsce": "3.9.2",
+    "lefthook": "2.1.9",
+    "oxfmt": "0.55.0",
+    "oxlint": "1.70.0",
+    "oxlint-tsgolint": "0.23.0",
+    "publint": "0.3.21",
+    "tsdown": "0.22.3",
+    "typescript": "6.0.3"
+  },
+  "contributes": {
+    "markdown.markdownItPlugins": true,
+    "markdown.previewScripts": [
+      "./dist/extension.preview.js"
+    ],
+    "markdown.previewStyles": [
+      "./dist/extension.preview.css"
+    ],
+    "configuration": {
+      "title": "GitHub Markdown",
+      "properties": {
+        "vscode-github-markdown.theme.mode": {
+          "type": "string",
+          "description": "%configuration.theme.mode.description%",
+          "enum": [
+            "single",
+            "system"
+          ],
+          "enumItemLabels": [
+            "%configuration.theme.mode.enum.label.single%",
+            "%configuration.theme.mode.enum.label.system%"
+          ],
+          "enumDescriptions": [
+            "%configuration.theme.mode.single.enum.description%",
+            "%configuration.theme.mode.system.enum.description%"
+          ],
+          "default": "system",
+          "order": 0
+        },
+        "vscode-github-markdown.theme.single": {
+          "type": "string",
+          "description": "%configuration.theme.mode.single.description%",
+          "default": "light",
+          "enum": [
+            "light",
+            "light_colorblind",
+            "light_high_contrast",
+            "light_tritanopia",
+            "dark",
+            "dark_colorblind",
+            "dark_dimmed",
+            "dark_high_contrast",
+            "dark_tritanopia"
+          ],
+          "enumItemLabels": [
+            "Light default",
+            "Light Protanopia & Deuteranopia",
+            "Light high contrast",
+            "Light Tritanopia",
+            "Dark default",
+            "Dark Protanopia & Deuteranopia",
+            "Dark dimmed",
+            "Dark high contrast",
+            "Dark Tritanopia"
+          ]
+        },
+        "vscode-github-markdown.theme.system.day": {
+          "type": "string",
+          "description": "%configuration.theme.mode.system.day.description%",
+          "default": "light",
+          "enum": [
+            "light",
+            "light_colorblind",
+            "light_high_contrast",
+            "light_tritanopia",
+            "dark",
+            "dark_colorblind",
+            "dark_dimmed",
+            "dark_high_contrast",
+            "dark_tritanopia"
+          ],
+          "enumItemLabels": [
+            "Light default",
+            "Light Protanopia & Deuteranopia",
+            "Light high contrast",
+            "Light Tritanopia",
+            "Dark default",
+            "Dark Protanopia & Deuteranopia",
+            "Dark dimmed",
+            "Dark high contrast",
+            "Dark Tritanopia"
+          ]
+        },
+        "vscode-github-markdown.theme.system.night": {
+          "type": "string",
+          "description": "%configuration.theme.mode.system.night.description%",
+          "default": "dark",
+          "enum": [
+            "light",
+            "light_colorblind",
+            "light_high_contrast",
+            "light_tritanopia",
+            "dark",
+            "dark_colorblind",
+            "dark_dimmed",
+            "dark_high_contrast",
+            "dark_tritanopia"
+          ],
+          "enumItemLabels": [
+            "Light default",
+            "Light Protanopia & Deuteranopia",
+            "Light high contrast",
+            "Light Tritanopia",
+            "Dark default",
+            "Dark Protanopia & Deuteranopia",
+            "Dark dimmed",
+            "Dark high contrast",
+            "Dark Tritanopia"
+          ]
+        }
+      }
+    }
+  },
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
+  "icon": "assets/icon.png",
+  "engines": {
+    "node": ">=22",
+    "vscode": "^1.74.0"
+  },
+  "packageManager": "pnpm@11.8.0+sha512.c1f5e7c4cb241c8f174b743851d82f42b802324afc8b0f116b96adb15aa06664948dde36960a3ba1079ba5b4b29dd0140135b94b5b5f5263592249d68e555f26",
+  "pricing": "Free"
+}
