@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@primer/primitives':
+        specifier: 11.9.0
+        version: 11.9.0
     devDependencies:
       '@types/bun':
         specifier: 1.3.14
@@ -32,7 +36,7 @@ importers:
       lefthook:
         specifier: 2.1.9
         version: 2.1.9
-      lightningcss-cli:
+      lightningcss:
         specifier: 1.32.0
         version: 1.32.0
       markdown-it:
@@ -468,6 +472,9 @@ packages:
   '@playwright/browser-chromium@1.61.0':
     resolution: {integrity: sha512-bBGzN+jow5uQtYRDCnFv5cpyMjUYTF6WnsfRRrDXIwbaGDtdh0JdOPmlKdJH4OK7TbkrZ35cV7jhQ1zELoX5ew==}
     engines: {node: '>=18'}
+
+  '@primer/primitives@11.9.0':
+    resolution: {integrity: sha512-yESOalhd7s7S3unV1V32v3Z0RszXiiz6pzy6hVI9xpdTh1q1Gt8vyDFxRlqIvuwc5ZaO1+gYQTDbjxb4nWBzMw==}
 
   '@publint/pack@0.1.5':
     resolution: {integrity: sha512-edgyN2pP07uXiP4tJs0s8KVmU8M8i60YPbbI0/WDeok1mIJHRXz+CgD8I0nelwDkoCh3EWL/G5kGfbuHjsdbvw==}
@@ -1550,81 +1557,6 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [android]
-
-  lightningcss-cli-android-arm64@1.32.0:
-    resolution: {integrity: sha512-4O3QY+VdgpBZLIq4crcKOEPVAXX0p7zDoykuTVstRtyolg9XU8CntdtbxcMPSC4SkzAuM/W4KsnPAzmv6Jb5LA==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [arm64]
-    os: [android]
-
-  lightningcss-cli-darwin-arm64@1.32.0:
-    resolution: {integrity: sha512-Xx+zeD7bDKJZwbd1N63TJfIUHEtYspf+tqObdnQEJEvZAwmGfA4iEGrkCRT8R57tDRBDSXg3XHMDDvo/cq7gBQ==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [arm64]
-    os: [darwin]
-
-  lightningcss-cli-darwin-x64@1.32.0:
-    resolution: {integrity: sha512-fYWANZ8RJDpI0tBcPQ7oBOYihfXmgDBHR4lZ6d4z7rcRLlZAOeI00mTO0IXAKfSm/UgnatjM4aBuNlLh8L9noA==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [x64]
-    os: [darwin]
-
-  lightningcss-cli-freebsd-x64@1.32.0:
-    resolution: {integrity: sha512-TJm7z1Ghvo9FKAza2KvfkFgH/9rcV1xAhCYQZlLrV0CiuTZ17uzLobBWb9oelGWUG+wTnEs6XEl4h/ve61YySg==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [x64]
-    os: [freebsd]
-
-  lightningcss-cli-linux-arm-gnueabihf@1.32.0:
-    resolution: {integrity: sha512-/jS9L5p3eexs5QJvARiDGxibz1umKJmmtff86fWXl3r7RbEUFrMAD4q1WhAR7DurRFgc1YWld6r0mX1YHEYttA==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [arm]
-    os: [linux]
-
-  lightningcss-cli-linux-arm64-gnu@1.32.0:
-    resolution: {integrity: sha512-PSdjwcRtSrJpsaqnY3ebnCfDOJ5ePi8s/0ItL3CX1b1Eu0iy44xo7MjgES1ZOQ2ntOthPRqaGsbAiVBLbgFLYQ==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
-
-  lightningcss-cli-linux-arm64-musl@1.32.0:
-    resolution: {integrity: sha512-t6DdpXFtEdonZHzRgH8cmqhC2o4tl0KrD33cDBBniJz5TmWS20MJxb4YEr4WqBLksqW8GE399HJo+g8/YVuKcA==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [arm64]
-    os: [linux]
-    libc: [musl]
-
-  lightningcss-cli-linux-x64-gnu@1.32.0:
-    resolution: {integrity: sha512-QMQllbHYkbkQ4N+v8OGExQlGHBc3YZIcKlVkYucQQj66thkFQsRjmv8p5q3iCB0inNsCoSZ8lBspugkU1iPlPg==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [x64]
-    os: [linux]
-    libc: [glibc]
-
-  lightningcss-cli-linux-x64-musl@1.32.0:
-    resolution: {integrity: sha512-dMSWdk4kMAi5f+J1xetxRCDQOvPix2whT0UdjuwP8r/5Xcdl2SQU/c80MQzu1S82kVDEANs1vHVEHp/+26LUnA==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [x64]
-    os: [linux]
-    libc: [musl]
-
-  lightningcss-cli-win32-arm64-msvc@1.32.0:
-    resolution: {integrity: sha512-MJo22OqSp9FLV10nTRDJQhP6zkEBFqBFQe9mnjfCs+G1Ft+QimIPmC+gBqZHFXveOBOsjFLzU72q0FPvRWFmZQ==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [arm64]
-    os: [win32]
-
-  lightningcss-cli-win32-x64-msvc@1.32.0:
-    resolution: {integrity: sha512-nOBHLPeePXZpGR4Ptp+gkOIkr9pxlq2dFmO954ol5zBi/iOKxuD1hUTIQ7aG+ldKIx4eH9jwoTfZ6owUkm1paA==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [x64]
-    os: [win32]
-
-  lightningcss-cli@1.32.0:
-    resolution: {integrity: sha512-IFb/ChmSEbeWU3xeRybR6WFlJXCvfDS84//PUzLrRACgvoWrwRJBmcPS9azSo7LMh5QqEuyKanPBByhKM5z01Q==}
-    engines: {node: '>= 12.0.0'}
-    hasBin: true
 
   lightningcss-darwin-arm64@1.32.0:
     resolution: {integrity: sha512-RzeG9Ju5bag2Bv1/lwlVJvBE3q6TtXskdZLLCyfg5pt+HLz9BqlICO7LZM7VHNTTn/5PRhHFBSjk5lc4cmscPQ==}
@@ -2763,6 +2695,8 @@ snapshots:
     dependencies:
       playwright-core: 1.61.0
 
+  '@primer/primitives@11.9.0': {}
+
   '@publint/pack@0.1.5':
     dependencies:
       tinyexec: 1.2.4
@@ -3852,55 +3786,6 @@ snapshots:
   lightningcss-android-arm64@1.32.0:
     optional: true
 
-  lightningcss-cli-android-arm64@1.32.0:
-    optional: true
-
-  lightningcss-cli-darwin-arm64@1.32.0:
-    optional: true
-
-  lightningcss-cli-darwin-x64@1.32.0:
-    optional: true
-
-  lightningcss-cli-freebsd-x64@1.32.0:
-    optional: true
-
-  lightningcss-cli-linux-arm-gnueabihf@1.32.0:
-    optional: true
-
-  lightningcss-cli-linux-arm64-gnu@1.32.0:
-    optional: true
-
-  lightningcss-cli-linux-arm64-musl@1.32.0:
-    optional: true
-
-  lightningcss-cli-linux-x64-gnu@1.32.0:
-    optional: true
-
-  lightningcss-cli-linux-x64-musl@1.32.0:
-    optional: true
-
-  lightningcss-cli-win32-arm64-msvc@1.32.0:
-    optional: true
-
-  lightningcss-cli-win32-x64-msvc@1.32.0:
-    optional: true
-
-  lightningcss-cli@1.32.0:
-    dependencies:
-      detect-libc: 2.1.2
-    optionalDependencies:
-      lightningcss-cli-android-arm64: 1.32.0
-      lightningcss-cli-darwin-arm64: 1.32.0
-      lightningcss-cli-darwin-x64: 1.32.0
-      lightningcss-cli-freebsd-x64: 1.32.0
-      lightningcss-cli-linux-arm-gnueabihf: 1.32.0
-      lightningcss-cli-linux-arm64-gnu: 1.32.0
-      lightningcss-cli-linux-arm64-musl: 1.32.0
-      lightningcss-cli-linux-x64-gnu: 1.32.0
-      lightningcss-cli-linux-x64-musl: 1.32.0
-      lightningcss-cli-win32-arm64-msvc: 1.32.0
-      lightningcss-cli-win32-x64-msvc: 1.32.0
-
   lightningcss-darwin-arm64@1.32.0:
     optional: true
 
@@ -3946,7 +3831,6 @@ snapshots:
       lightningcss-linux-x64-musl: 1.32.0
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
-    optional: true
 
   lilconfig@3.1.3:
     optional: true
