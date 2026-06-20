@@ -35,6 +35,9 @@ importers:
       lightningcss-cli:
         specifier: 1.32.0
         version: 1.32.0
+      markdown-it:
+        specifier: 14.2.0
+        version: 14.2.0
       oxfmt:
         specifier: 0.55.0
         version: 0.55.0
