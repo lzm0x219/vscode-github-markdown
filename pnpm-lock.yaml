@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@primer/primitives':
-        specifier: 11.9.0
-        version: 11.9.0
     devDependencies:
       '@types/bun':
         specifier: 1.3.14
@@ -33,6 +29,9 @@ importers:
       '@vscode/vsce':
         specifier: 3.9.2
         version: 3.9.2
+      generate-github-markdown-css:
+        specifier: 6.6.0
+        version: 6.6.0
       lefthook:
         specifier: 2.1.9
         version: 2.1.9
@@ -472,9 +471,6 @@ packages:
   '@playwright/browser-chromium@1.61.0':
     resolution: {integrity: sha512-bBGzN+jow5uQtYRDCnFv5cpyMjUYTF6WnsfRRrDXIwbaGDtdh0JdOPmlKdJH4OK7TbkrZ35cV7jhQ1zELoX5ew==}
     engines: {node: '>=18'}
-
-  '@primer/primitives@11.9.0':
-    resolution: {integrity: sha512-yESOalhd7s7S3unV1V32v3Z0RszXiiz6pzy6hVI9xpdTh1q1Gt8vyDFxRlqIvuwc5ZaO1+gYQTDbjxb4nWBzMw==}
 
   '@publint/pack@0.1.5':
     resolution: {integrity: sha512-edgyN2pP07uXiP4tJs0s8KVmU8M8i60YPbbI0/WDeok1mIJHRXz+CgD8I0nelwDkoCh3EWL/G5kGfbuHjsdbvw==}
@@ -1265,6 +1261,11 @@ packages:
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
+  generate-github-markdown-css@6.6.0:
+    resolution: {integrity: sha512-w5mLLHA/EkcYh4flSsfPs/uFZdpEAMZK4dHXgPBFJmf8IOIv++1qPy1KiqwL8/eepB4Oomhf1CsLJS7UMheGoQ==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   get-intrinsic@1.3.0:
     resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
     engines: {node: '>= 0.4'}
@@ -1686,6 +1687,10 @@ packages:
     resolution: {integrity: sha512-aisnrDP4GNe06UcKFnV5bfMNPBUw4jsLGaWwWfnH3v02GnBuXX2MCVn5RbrWo0j3pczUilYblq7fQ7Nw2t5XKw==}
     engines: {node: '>= 0.8'}
 
+  meow@12.1.1:
+    resolution: {integrity: sha512-BhXM0Au22RwUneMPwSCnyhTOizdWoIEPU9sp0Aqa1PnDMR5Wv2FGXYDjuzJEIX+Eo2Rb8xuYe5jrnm5QowQFkw==}
+    engines: {node: '>=16.10'}
+
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
@@ -1749,6 +1754,11 @@ packages:
 
   mute-stream@0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
+
+  nanoid@3.3.13:
+    resolution: {integrity: sha512-sPdqC6ByMVVGvF1ynvvMo0/o+oD1VX7DaHhijt1bFgjvBkHBib4t49GoNDhf2NDta4oeUNlaGbSt5K7qjZ955Q==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
 
   napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
@@ -1928,6 +1938,10 @@ packages:
       yaml:
         optional: true
 
+  postcss@8.5.15:
+    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
+    engines: {node: ^10 || ^12 || >=14}
+
   prebuild-install@7.1.3:
     resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
     engines: {node: '>=10'}
@@ -2099,6 +2113,10 @@ packages:
   slice-ansi@4.0.0:
     resolution: {integrity: sha512-qMCMfhY040cVHT43K9BFygqYbUPFZKHOg7K73mtTWJRb8pyP3fzf4Ixd5SzdEJQ6MRUg/WBnOLxghZtKKurENQ==}
     engines: {node: '>=10'}
+
+  source-map-js@1.2.1:
+    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
+    engines: {node: '>=0.10.0'}
 
   spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
@@ -2695,8 +2713,6 @@ snapshots:
     dependencies:
       playwright-core: 1.61.0
 
-  '@primer/primitives@11.9.0': {}
-
   '@publint/pack@0.1.5':
     dependencies:
       tinyexec: 1.2.4
@@ -2861,12 +2877,14 @@ snapshots:
     dependencies:
       '@textlint/ast-node-types': 15.7.1
 
-  '@tsdown/css@0.22.3(tsdown@0.22.3)':
+  '@tsdown/css@0.22.3(postcss@8.5.15)(tsdown@0.22.3)':
     dependencies:
       lightningcss: 1.32.0
-      postcss-load-config: 6.0.1
+      postcss-load-config: 6.0.1(postcss@8.5.15)
       rolldown: 1.1.1
       tsdown: 0.22.3(@tsdown/css@0.22.3)(@typescript/native-preview@7.0.0-dev.20260618.1)(publint@0.3.21)(typescript@6.0.3)
+    optionalDependencies:
+      postcss: 8.5.15
     transitivePeerDependencies:
       - jiti
       - tsx
@@ -3453,6 +3471,11 @@ snapshots:
 
   function-bind@1.1.2: {}
 
+  generate-github-markdown-css@6.6.0:
+    dependencies:
+      meow: 12.1.1
+      postcss: 8.5.15
+
   get-intrinsic@1.3.0:
     dependencies:
       call-bind-apply-helpers: 1.0.2
@@ -3880,6 +3903,8 @@ snapshots:
 
   media-typer@1.1.0: {}
 
+  meow@12.1.1: {}
+
   merge2@1.4.1: {}
 
   micromatch@4.0.8:
@@ -3932,6 +3957,8 @@ snapshots:
   ms@2.1.3: {}
 
   mute-stream@0.0.8: {}
+
+  nanoid@3.3.13: {}
 
   napi-build-utils@2.0.0:
     optional: true
@@ -4108,10 +4135,18 @@ snapshots:
 
   pluralize@8.0.0: {}
 
-  postcss-load-config@6.0.1:
+  postcss-load-config@6.0.1(postcss@8.5.15):
     dependencies:
       lilconfig: 3.1.3
+    optionalDependencies:
+      postcss: 8.5.15
     optional: true
+
+  postcss@8.5.15:
+    dependencies:
+      nanoid: 3.3.13
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
 
   prebuild-install@7.1.3:
     dependencies:
@@ -4343,6 +4378,8 @@ snapshots:
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
 
+  source-map-js@1.2.1: {}
+
   spdx-correct@3.2.0:
     dependencies:
       spdx-expression-parse: 3.0.1
@@ -4525,7 +4562,7 @@ snapshots:
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
     optionalDependencies:
-      '@tsdown/css': 0.22.3(tsdown@0.22.3)
+      '@tsdown/css': 0.22.3(postcss@8.5.15)(tsdown@0.22.3)
       publint: 0.3.21
       typescript: 6.0.3
     transitivePeerDependencies:
