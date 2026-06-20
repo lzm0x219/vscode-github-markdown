@@ -11,7 +11,7 @@
 <p align="center">
   <img alt="VS Code ^1.74.0" src="https://badges.ws/badge/VS%20Code-%5E1.74.0-007ACC?logo=visualstudiocode&logoColor=white" />
   <img alt="Node.js 22+" src="https://badges.ws/badge/Node.js-22%2B-339933?logo=nodedotjs&logoColor=white" />
-  <img alt="Bun" src="https://badges.ws/badge/Bun-runtime-f9f1e1?logo=bun&logoColor=black" />
+  <img alt="Bun" src="https://badges.ws/badge/Bun-runtime-f9f1e1?logo=bun&logoColor=white" />
   <img alt="Oxc" src="https://badges.ws/badge/Oxc-Linter-32f3e9?logo=oxc&logoColor=white" />
   <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
