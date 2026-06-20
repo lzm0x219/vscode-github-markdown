@@ -85,7 +85,7 @@
 
 **换行符（`.md` 文件中需要特殊处理）：**
 
-双空格换行：  
+双空格换行：
 第二行（上一行末尾有两个空格）
 
 反斜杠换行：\
@@ -528,7 +528,7 @@ A footnote can also have multiple lines[^2].
 [^1]: My reference.
 
 [^2]:
-    To add line breaks within a footnote, add 2 spaces to the end of a line.  
+    To add line breaks within a footnote, add 2 spaces to the end of a line.
     This is a second line.
 
 [^3]: 脚注中可以包含 **粗体**、_斜体_、`代码` 甚至 [链接](https://github.com)。
