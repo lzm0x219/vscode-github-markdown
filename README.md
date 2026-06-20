@@ -11,8 +11,8 @@
 <p align="center">
   <img alt="VS Code ^1.74.0" src="https://badges.ws/badge/VS%20Code-%5E1.74.0-007ACC?logo=visualstudiocode&logoColor=white" />
   <img alt="Node.js 22+" src="https://badges.ws/badge/Node.js-22%2B-339933?logo=nodedotjs&logoColor=white" />
+  <img alt="Bun" src="https://badges.ws/badge/Bun-runtime-f9f1e1?logo=bun&logoColor=black" />
   <img alt="Oxc" src="https://badges.ws/badge/Oxc-Linter-32f3e9?logo=oxc&logoColor=white" />
-  <img alt="Nub" src="https://badges.ws/badge/Nub-toolkit-b33210" />
   <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
 
@@ -32,6 +32,10 @@ This project focuses on two practical outcomes:
 - [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
 - [Markdown Syntax Reference](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 - [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 

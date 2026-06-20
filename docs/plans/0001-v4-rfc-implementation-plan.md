@@ -43,7 +43,7 @@ Draft
 - 主题根容器 `.vscode-github-markdown`
 - `data-color-mode`、`data-light-theme`、`data-dark-theme`
 - 配置变化后的 `markdown.preview.refresh`
-- `scripts/verify-github-markdown.mjs` 覆盖任务列表、脚注、Alerts
+- `scripts/verify-github-markdown.ts` 覆盖任务列表、脚注、Alerts
 
 仍待实施：
 
@@ -69,14 +69,14 @@ Draft
 
 **验证：**
 
-- [ ] `nub scripts/verify-github-markdown.mjs`
-- [ ] `nub run build`
+- [ ] `bun scripts/verify-github-markdown.ts`
+- [ ] `pnpm run build`
 
 **依赖：** 无
 
 **可能涉及文件：**
 
-- `scripts/verify-github-markdown.mjs`
+- `scripts/verify-github-markdown.ts`
 - `src/plugins/markdown-it-github-theme.ts`
 - `src/theme.ts`
 
@@ -94,7 +94,7 @@ Draft
 
 **验证：**
 
-- [ ] `nub run build`
+- [ ] `pnpm run build`
 - [ ] 人工检查 `src/extension.ts`
 
 **依赖：** Task 1.1
@@ -102,7 +102,7 @@ Draft
 **可能涉及文件：**
 
 - `src/extension.ts`
-- `scripts/verify-github-markdown.mjs`
+- `scripts/verify-github-markdown.ts`
 
 **规模：** XS
 
@@ -128,8 +128,8 @@ Draft
 
 **验证：**
 
-- [ ] `nub run build`
-- [ ] `nubx vsce package --no-dependencies`
+- [ ] `pnpm run build`
+- [ ] `pnpm exec vsce package --no-dependencies`
 
 **依赖：** Checkpoint：契约基线
 
@@ -155,7 +155,7 @@ Draft
 
 **验证：**
 
-- [ ] `nub run build`
+- [ ] `pnpm run build`
 - [ ] 手动执行四个命令并确认配置变更
 - [ ] 手动确认 Markdown 预览刷新
 
@@ -181,7 +181,7 @@ Draft
 **验证：**
 
 - [ ] 人工检查中英文 README
-- [ ] `nub run build`
+- [ ] `pnpm run build`
 
 **依赖：** Task 2.2
 
@@ -236,7 +236,7 @@ Draft
 
 **验证：**
 
-- [ ] `nub run build`
+- [ ] `pnpm run build`
 - [ ] 人工对照表格样例
 - [ ] 人工对照代码块样例
 
@@ -271,7 +271,7 @@ Draft
 
 - `docs/checklists/github-compatibility.md`
 - `src/plugins/*`
-- `scripts/verify-github-markdown.mjs`
+- `scripts/verify-github-markdown.ts`
 
 **规模：** Small 或 Medium
 
@@ -297,9 +297,9 @@ Draft
 
 **验证：**
 
-- [ ] `nub run build`
-- [ ] `nub scripts/verify-github-markdown.mjs`
-- [ ] `nubx vsce package --no-dependencies`
+- [ ] `pnpm run build`
+- [ ] `bun scripts/verify-github-markdown.ts`
+- [ ] `pnpm exec vsce package --no-dependencies`
 
 **依赖：** Checkpoint：兼容性收敛
 
@@ -310,7 +310,7 @@ Draft
 - `docs/rfcs/*`
 - `package.json`
 - `src/*`
-- `scripts/verify-github-markdown.mjs`
+- `scripts/verify-github-markdown.ts`
 
 **规模：** Medium
 

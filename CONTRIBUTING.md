@@ -6,25 +6,19 @@ This project aims to make VS Code's Markdown preview match GitHub as closely as 
 
 ## Before You Start
 
-- Use Nub for local script execution
 - Use VS Code `^1.74.0` or newer for local extension development
-
-Install Nub if it is not already available:
-
-```bash
-npm install -g --ignore-scripts=false @nubjs/nub
-```
+- [Bun](https://bun.sh) is required for development scripts (`dev`, `verify`)
 
 Install dependencies:
 
 ```bash
-nub install
+pnpm install
 ```
 
 Build the current extension bundle:
 
 ```bash
-nub run build
+pnpm run build
 ```
 
 ## Project Scope
@@ -60,15 +54,16 @@ Please avoid:
 Run the relevant checks before opening a pull request:
 
 ```bash
-nubx oxlint .
-nubx oxlint --type-aware .
-nubx oxfmt .
+pnpm exec oxlint .
+pnpm exec oxlint --type-aware .
+pnpm exec oxfmt .
+bun scripts/verify-github-markdown.ts
 ```
 
 This repository also uses `lefthook` for pre-commit checks:
 
 ```bash
-nubx lefthook run pre-commit
+pnpm exec lefthook run pre-commit
 ```
 
 ## Documentation
@@ -95,7 +90,5 @@ This repository is still in an early stage. There are currently no `test` or `pa
 
 If your contribution adds those workflows, please also update:
 
-- [`README.md`](./README.md)
-- [`README.zh-CN.md`](./README.zh-CN.md)
 - [`AGENTS.md`](./AGENTS.md)
 - this file

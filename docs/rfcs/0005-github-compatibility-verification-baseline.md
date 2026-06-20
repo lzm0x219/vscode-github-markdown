@@ -18,7 +18,7 @@ Draft
 
 仓库里已经有一条很小但真实存在的验证基础：
 
-- `scripts/verify-github-markdown.mjs`
+- `scripts/verify-github-markdown.ts`（需要 [Bun](https://bun.sh) 运行时）
 
 它当前覆盖了三项已支持能力：
 
@@ -80,7 +80,7 @@ GitHub 兼容性验证统一分为三层：
 
 当前基础：
 
-- `scripts/verify-github-markdown.mjs`
+- `scripts/verify-github-markdown.ts`
 
 #### 预览结构验证
 
@@ -206,7 +206,7 @@ GitHub 兼容性验证统一分为三层：
 
 对于当前仓库，最小起点是：
 
-- `nub scripts/verify-github-markdown.mjs`
+- `bun scripts/verify-github-markdown.ts`
 
 #### 发布前门槛
 
@@ -250,7 +250,7 @@ GitHub 兼容性验证统一分为三层：
 
 基于这份 RFC，当前仓库可以理解为：
 
-- `scripts/verify-github-markdown.mjs` 是最小验证基线的第一步
+- `scripts/verify-github-markdown.ts` 是最小验证基线的第一步
 - 当前已支持能力里，任务列表、脚注、Alerts 已经有基础断言
 - 主题结构、表格、代码块、锚点还需要继续补验证覆盖
 

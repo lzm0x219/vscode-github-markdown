@@ -11,8 +11,8 @@
 <p align="center">
   <img alt="VS Code ^1.74.0" src="https://badges.ws/badge/VS%20Code-%5E1.74.0-007ACC?logo=visualstudiocode&logoColor=white" />
   <img alt="Node.js 22+" src="https://badges.ws/badge/Node.js-22%2B-339933?logo=nodedotjs&logoColor=white" />
+  <img alt="Bun" src="https://badges.ws/badge/Bun-runtime-f9f1e1?logo=bun&logoColor=black" />
   <img alt="Oxc" src="https://badges.ws/badge/Oxc-Linter-32f3e9?logo=oxc&logoColor=white" />
-  <img alt="Nub" src="https://badges.ws/badge/Nub-toolkit-b33210" />
   <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
 
@@ -26,6 +26,10 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 
 - 对齐 GitHub Markdown 的渲染结果、留白和排版细节，而不是另起一套看起来相似但结果不同的主题
 - 尽量让本地预览和 GitHub 上的预期效果保持一致，让文档编写过程更可预期、更省来回验证成本
+
+## 参与贡献
+
+请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解开发环境配置与贡献指南。
 
 ## 许可证
 
