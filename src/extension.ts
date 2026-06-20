@@ -1,6 +1,9 @@
 import vscode from "vscode";
 import type MarkdownIt from "markdown-it";
 import { onMarkdownPreviewRefresh } from "./events";
+import alerts from "./plugins/markdown-it-github-alerts";
+import footnotes from "./plugins/markdown-it-github-footnotes";
+import taskLists from "./plugins/markdown-it-github-task-lists";
 import theme from "./plugins/markdown-it-github-theme";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -8,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   return {
     extendMarkdownIt(md: MarkdownIt): MarkdownIt {
-      return md.use(theme);
+      return md.use(taskLists).use(alerts).use(footnotes).use(theme);
     }
   };
 }
