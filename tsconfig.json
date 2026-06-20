@@ -8,6 +8,7 @@
     "declaration": true,
     "strict": true,
     "noEmit": true,
+    "types": ["bun", "node"],
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,

@@ -11,7 +11,7 @@ export default defineConfig([
     }),
     platform: "node",
     dts: false,
-    clean: true,
+    clean: false,
     deps: {
       neverBundle: ["vscode"]
     }
@@ -27,7 +27,6 @@ export default defineConfig([
     globalName: "GitHubMarkdownPreview",
     outputOptions: {
       entryFileNames: "[name].js"
-    },
-    copy: ["src/extension.preview.css"]
+    }
   }
 ]);
