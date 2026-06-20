@@ -9,7 +9,7 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 - TypeScript
 - VS Code extension API
 - Markdown preview contribution points
-- pnpm
+- Nub
 - oxlint + oxfmt
 - lefthook
 
@@ -24,12 +24,12 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 
 ## Commands
 
-- Install dependencies: `pnpm install`
-- Build: `pnpm build`
-- Dev watch: `pnpm dev`
-- Lint: `pnpm exec oxlint .`
-- Type-aware lint: `pnpm exec oxlint --type-aware .`
-- Format: `pnpm exec oxfmt .`
+- Install dependencies: `nub install`
+- Build: `nub run build`
+- Dev watch: `nub run dev`
+- Lint: `nubx oxlint .`
+- Type-aware lint: `nubx oxlint --type-aware .`
+- Format: `nubx oxfmt .`
 
 There are currently no `test` or `package` scripts in `package.json`. If you add them, keep this file and the README in sync.
 
