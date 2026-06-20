@@ -435,7 +435,7 @@ echo "Hello from bash"
 
 **外部图片：**
 
-![Screenshot of a comment on a GitHub issue showing an image of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg)
+![Screenshot of a comment on a GitHub issue showing an image of an Octocat smiling and raising a tentacle.](https://placehold.co/600x400/0366d6/FFFFFF/png?text=Octocat+Example)
 
 **相对路径图片：**
 
@@ -448,8 +448,8 @@ echo "Hello from bash"
 **`<picture>` 元素：**
 
 <picture>
-  <source srcset="https://via.placeholder.com/800x400?text=WebP" type="image/webp">
-  <img src="https://via.placeholder.com/800x400?text=Fallback" alt="Picture element test">
+  <source srcset="https://placehold.co/800x400/png?text=WebP" type="image/webp">
+  <img src="https://placehold.co/800x400/png?text=Fallback" alt="Picture element test">
 </picture>
 
 ---
