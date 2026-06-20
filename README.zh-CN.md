@@ -11,8 +11,8 @@
 <p align="center">
   <img alt="VS Code ^1.74.0" src="https://badges.ws/badge/VS%20Code-%5E1.74.0-007ACC?logo=visualstudiocode&logoColor=white" />
   <img alt="Node.js 22+" src="https://badges.ws/badge/Node.js-22%2B-339933?logo=nodedotjs&logoColor=white" />
-  <img alt="pnpm 11.8.0" src="https://badges.ws/badge/pnpm-11.8.0-F69220?logo=pnpm&logoColor=white" />
-  <img alt="License MIT" src="https://badges.ws/badge/License-MIT-111111" />
+  <img alt="Nub" src="https://badges.ws/badge/Nub-toolkit-b33210" />
+  <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
 
 ## 为什么做这个项目
