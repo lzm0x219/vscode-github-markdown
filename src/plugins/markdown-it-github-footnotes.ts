@@ -6,10 +6,16 @@ type MarkdownState = {
   env: Record<string, unknown>;
   tokens: MarkdownToken[];
 };
+type FootnoteReference = {
+  label: string;
+  number: number;
+  referenceCount: number;
+};
 
 const footnoteDefinitionPattern = /^\[\^([^\]\n]+)\]:[ \t]*([\s\S]*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
 const footnoteOrderKey = "githubMarkdownFootnoteOrder";
+const footnoteReferencesKey = "githubMarkdownFootnoteReferences";
 
 export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
   md.core.ruler.after("inline", "github-markdown-footnotes", (state) => {
@@ -52,7 +58,7 @@ function collectFootnotes(tokens: MarkdownToken[]): {
           continue;
         }
 
-        definitions.set(rawLabel.trim(), definition);
+        definitions.set(rawLabel.trim(), normalizeFootnoteDefinition(definition));
         index += 2;
         continue;
       }
@@ -76,6 +82,8 @@ function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, 
   }
 
   const numbers = new Map<string, number>();
+  const referenceCounts = new Map<string, number>();
+  const references: FootnoteReference[] = [];
 
   for (const token of state.tokens) {
     if (token.type !== "inline" || !token.children) {
@@ -109,9 +117,15 @@ function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, 
 
         const number = numbers.get(label) ?? numbers.size + 1;
         numbers.set(label, number);
+        const referenceCount = (referenceCounts.get(label) ?? 0) + 1;
+        referenceCounts.set(label, referenceCount);
+        references.push({ label, number, referenceCount });
 
         const htmlToken = new state.Token("html_inline", "", 0);
-        htmlToken.content = `<sup class="footnote-ref"><a href="#user-content-fn-${number}" id="user-content-fnref-${number}" data-footnote-ref aria-describedby="footnote-label">${number}</a></sup>`;
+        htmlToken.content = `<sup class="footnote-ref"><a href="#user-content-fn-${number}" id="${footnoteReferenceId(
+          number,
+          referenceCount
+        )}" data-footnote-ref="" aria-describedby="footnote-label">${number}</a></sup>`;
         nextChildren.push(htmlToken);
 
         lastIndex = matchIndex + fullMatch.length;
@@ -136,6 +150,7 @@ function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, 
   state.env[footnoteOrderKey] = [...numbers.entries()]
     .sort((left, right) => left[1] - right[1])
     .map(([label]) => label);
+  state.env[footnoteReferencesKey] = references;
 }
 
 function appendFootnoteSection(
@@ -147,6 +162,7 @@ function appendFootnoteSection(
   const referencedLabels = Array.isArray(footnoteOrder)
     ? footnoteOrder.filter((label): label is string => typeof label === "string")
     : [];
+  const references = footnoteReferences(state);
   if (referencedLabels.length === 0) {
     return;
   }
@@ -159,8 +175,14 @@ function appendFootnoteSection(
       }
 
       const number = index + 1;
-      const content = md.renderInline(definition, {});
-      return `<li id="user-content-fn-${number}"><p>${content} <a href="#user-content-fnref-${number}" class="footnote-backref" data-footnote-backref aria-label="Back to content">↩</a></p></li>`;
+      const content = renderFootnoteDefinition(definition, md);
+      const backrefs = references
+        .filter((reference) => reference.label === label)
+        .map((reference) => renderBackref(reference.number, reference.referenceCount))
+        .join(" ");
+      return `<li id="user-content-fn-${number}">
+<p dir="auto">${content} ${backrefs}</p>
+</li>`;
     })
     .filter(Boolean)
     .join("");
@@ -171,10 +193,61 @@ function appendFootnoteSection(
 
   const footnotesToken = new state.Token("html_block", "", 0);
   footnotesToken.content =
-    `<section class="footnotes" data-footnotes>\n` +
-    `<h2 class="sr-only" id="footnote-label">Footnotes</h2>\n` +
-    `<ol>\n${items}\n</ol>\n` +
+    `<section data-footnotes="" class="footnotes">\n` +
+    `<h2 id="footnote-label" class="sr-only" dir="auto">Footnotes</h2>\n` +
+    `<ol dir="auto">\n${items}\n</ol>\n` +
     `</section>\n`;
 
   state.tokens.push(footnotesToken);
+}
+
+function normalizeFootnoteDefinition(definition: string): string {
+  return definition
+    .replace(/^\n/, "")
+    .replace(/\n[ \t]{4}/g, "\n")
+    .trim();
+}
+
+function renderFootnoteDefinition(definition: string, md: MarkdownIt): string {
+  const inline = md.parseInline(definition, {})[0];
+  if (!inline?.children) {
+    return "";
+  }
+
+  return md.renderer.renderInline(inline.children, md.options, {});
+}
+
+function footnoteReferences(state: MarkdownState): FootnoteReference[] {
+  const references = state.env[footnoteReferencesKey];
+  if (!Array.isArray(references)) {
+    return [];
+  }
+
+  return references.filter(isFootnoteReference);
+}
+
+function isFootnoteReference(reference: unknown): reference is FootnoteReference {
+  return (
+    typeof reference === "object" &&
+    reference !== null &&
+    "label" in reference &&
+    "number" in reference &&
+    "referenceCount" in reference &&
+    typeof reference.label === "string" &&
+    typeof reference.number === "number" &&
+    typeof reference.referenceCount === "number"
+  );
+}
+
+function renderBackref(number: number, referenceCount: number): string {
+  const suffix = referenceCount === 1 ? "" : `-${referenceCount}`;
+  const marker = referenceCount === 1 ? "" : `<sup>${referenceCount}</sup>`;
+  return `<a href="#${footnoteReferenceId(
+    number,
+    referenceCount
+  )}" data-footnote-backref="" aria-label="Back to reference ${number}${suffix}" class="data-footnote-backref">↩${marker}</a>`;
+}
+
+function footnoteReferenceId(number: number, referenceCount: number): string {
+  return `user-content-fnref-${number}${referenceCount === 1 ? "" : `-${referenceCount}`}`;
 }
