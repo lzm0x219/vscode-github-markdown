@@ -1,1 +1,34 @@
 /* ponytail: manifest already declares a preview stylesheet; keep a real file until GitHub parity styles land. */
+html,
+body,
+.markdown-body {
+  padding: 0;
+  height: 100%;
+  font-size: 16px;
+}
+
+.vscode-github-markdown {
+  padding: 36px;
+  background-color: var(--bgColor-default);
+  color: var(--fgColor-default);
+
+  & a {
+    text-decoration: underline;
+  }
+
+  & blockquote {
+    background-color: inherit;
+    border-radius: 0;
+  }
+
+  & pre,
+  & code {
+    color: inherit;
+    font-family: var(--vscode-editor-font-family);
+  }
+
+  & .data-footnote-backref,
+  & .footnote-ref a {
+    text-decoration: none;
+  }
+}
