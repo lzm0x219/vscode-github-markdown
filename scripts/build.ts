@@ -1,12 +1,17 @@
-import { $ } from "bun";
 import { rm } from "node:fs/promises";
-import { buildCssAndLog, DIST } from "./_shared";
+import { writeGithubCssFiles } from "./css/github-css";
+import { buildPreviewCss } from "./css/preview-css";
+import { paths } from "./shared/paths";
+import { runLocalExecutable } from "./shared/run";
 
-await rm(DIST, { recursive: true, force: true });
+await rm(paths.dist, { recursive: true, force: true });
 
-console.log("bundling TypeScript...");
-await $`pnpm exec tsdown`;
-
-await buildCssAndLog();
+console.log("building extension...");
+await Promise.all([runLocalExecutable("tsdown"), buildCss()]);
 
 console.log("build complete");
+
+async function buildCss(): Promise<void> {
+  await writeGithubCssFiles();
+  await buildPreviewCss();
+}

@@ -1,33 +1,27 @@
 import { spawn } from "bun";
-import { watch } from "node:fs";
-import { buildCssAndLog, SRC_CSS } from "./_shared";
+import { watch, type FSWatcher } from "node:fs";
+import { writeGithubCssFiles } from "./css/github-css";
+import { buildPreviewCss } from "./css/preview-css";
+import { paths, localExecutable } from "./shared/paths";
 
 try {
-  await buildCssAndLog();
+  await writeGithubCssFiles();
+  await buildPreviewCss();
 } catch (error) {
   console.error("[css] initial build failed:", error);
   console.log("[css] watch stays active; save the CSS file to retry");
 }
 
+const cssWatcher = watchCss();
 const tsdownProc = spawn({
-  cmd: ["pnpm", "exec", "tsdown", "--watch"],
+  cmd: [localExecutable("tsdown"), "--watch"],
   stdout: "inherit",
   stderr: "inherit"
 });
 
-let cssBuild = Promise.resolve();
-
-function queueCssBuild(): void {
-  cssBuild = cssBuild.then(buildCssAndLog).catch((error) => {
-    console.error("[css] rebuild failed:", error);
-  });
-}
-
-const cssWatcher = watch(SRC_CSS, queueCssBuild);
-
 let cleanedUp = false;
 
-function cleanup(killTsdown = true): void {
+async function cleanup(killTsdown = true): Promise<void> {
   if (cleanedUp) return;
   cleanedUp = true;
   cssWatcher.close();
@@ -35,15 +29,36 @@ function cleanup(killTsdown = true): void {
 }
 
 process.once("SIGINT", () => {
-  cleanup();
-  process.exit(130);
+  void exit(130);
 });
 
 process.once("SIGTERM", () => {
-  cleanup();
-  process.exit(143);
+  void exit(143);
 });
 
 const exitCode = await tsdownProc.exited;
-cleanup(false);
+await cleanup(false);
 process.exit(exitCode);
+
+async function exit(code: number): Promise<never> {
+  await cleanup();
+  process.exit(code);
+}
+
+function watchCss(): FSWatcher {
+  let cssBuild = Promise.resolve();
+
+  async function runCssBuild(): Promise<void> {
+    try {
+      await buildPreviewCss();
+    } catch (error) {
+      console.error("[css] rebuild failed:", error);
+    }
+  }
+
+  function queueCssBuild(): void {
+    cssBuild = cssBuild.then(runCssBuild);
+  }
+
+  return watch(paths.previewCssSource, queueCssBuild);
+}
