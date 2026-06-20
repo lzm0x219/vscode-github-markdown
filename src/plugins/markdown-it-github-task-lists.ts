@@ -50,8 +50,8 @@ function applyTaskLists(state: MarkdownState) {
     const checked = marker.toLowerCase() === "x";
     const checkboxToken = new state.Token("html_inline", "", 0);
     checkboxToken.content = checked
-      ? '<input class="task-list-item-checkbox" type="checkbox" checked disabled>'
-      : '<input class="task-list-item-checkbox" type="checkbox" disabled>';
+      ? '<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> '
+      : '<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> ';
 
     const inlineChildren = inline.children ? [...inline.children] : [];
     firstChild.content = firstChild.content.slice(match[0].length);
@@ -61,12 +61,23 @@ function applyTaskLists(state: MarkdownState) {
       inline.children = [checkboxToken, ...inlineChildren];
     }
 
-    listItemOpen.attrJoin("class", "task-list-item");
-    paragraphOpen.attrJoin("class", "task-list-item-paragraph");
+    attrJoinOnce(listItemOpen, "class", "task-list-item");
+    attrJoinOnce(paragraphOpen, "class", "task-list-item-paragraph");
 
     const listOpen = findParentListOpen(state.tokens, index, listItemOpen.level - 1);
-    listOpen?.attrJoin("class", "contains-task-list");
+    if (listOpen) {
+      attrJoinOnce(listOpen, "class", "contains-task-list");
+    }
   }
+}
+
+function attrJoinOnce(token: MarkdownToken, name: string, value: string) {
+  const current = token.attrGet(name);
+  if (current?.split(/\s+/).includes(value)) {
+    return;
+  }
+
+  token.attrJoin(name, value);
 }
 
 function findParentListOpen(
