@@ -30,10 +30,9 @@
   "browser": "dist/extension.js",
   "scripts": {
     "build": "tsdown",
-    "dev": "node scripts/dev.mjs"
+    "dev": "nub scripts/dev.mjs"
   },
   "devDependencies": {
-    "@tsdown/css": "^0.22.3",
     "@types/markdown-it": "14.1.2",
     "@types/node": "25.9.3",
     "@types/vscode": "1.74.0",
