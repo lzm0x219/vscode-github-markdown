@@ -6,20 +6,25 @@ This project aims to make VS Code's Markdown preview match GitHub as closely as 
 
 ## Before You Start
 
-- Use Node.js `>= 22`
-- Use pnpm `11.8.0`
+- Use Nub for local script execution
 - Use VS Code `^1.74.0` or newer for local extension development
+
+Install Nub if it is not already available:
+
+```bash
+npm install -g --ignore-scripts=false @nubjs/nub
+```
 
 Install dependencies:
 
 ```bash
-pnpm install
+nub install
 ```
 
 Build the current extension bundle:
 
 ```bash
-pnpm build
+nub run build
 ```
 
 ## Project Scope
@@ -55,15 +60,15 @@ Please avoid:
 Run the relevant checks before opening a pull request:
 
 ```bash
-pnpm exec oxlint .
-pnpm exec oxlint --type-aware .
-pnpm exec oxfmt .
+nubx oxlint .
+nubx oxlint --type-aware .
+nubx oxfmt .
 ```
 
 This repository also uses `lefthook` for pre-commit checks:
 
 ```bash
-pnpm exec lefthook run pre-commit
+nubx lefthook run pre-commit
 ```
 
 ## Documentation
