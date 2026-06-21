@@ -16,18 +16,18 @@ export type Theme =
   | "dark_tritanopia";
 
 export const ThemeLabels: Record<Theme, string> = {
-  light: "Light default",
+  light: "Light",
   light_colorblind: "Light Protanopia & Deuteranopia",
   light_high_contrast: "Light high contrast",
   light_tritanopia: "Light Tritanopia",
-  dark: "Dark default",
+  dark: "Dark",
   dark_colorblind: "Dark Protanopia & Deuteranopia",
   dark_dimmed: "Dark dimmed",
   dark_high_contrast: "Dark high contrast",
   dark_tritanopia: "Dark Tritanopia"
 } as const;
 
-export const ThemeKeys = Object.keys(ThemeLabels) as (keyof typeof ThemeLabels)[];
+export const ThemeKeys = Object.keys(ThemeLabels) as Theme[];
 
 export const ThemeModeLabels: Record<ThemeMode, string> = {
   single: "Single theme",
@@ -86,4 +86,24 @@ export function getThemeColorMode(): ThemeColorMode {
     return theme.includes("light") ? "light" : "dark";
   }
   return "auto";
+}
+
+export function getThemeModeList(): {
+  label: string;
+  value: ThemeMode;
+}[] {
+  return ThemeModeKeys.map((theme) => ({
+    label: ThemeModeLabels[theme],
+    value: theme
+  }));
+}
+
+export function getThemeList(): {
+  label: string;
+  value: Theme;
+}[] {
+  return ThemeKeys.map((theme) => ({
+    label: ThemeLabels[theme],
+    value: theme
+  }));
 }

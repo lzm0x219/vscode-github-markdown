@@ -1,4 +1,4 @@
-/* ponytail: manifest already declares a preview stylesheet; keep a real file until GitHub parity styles land. */
+/* Normal */
 html,
 body,
 .markdown-body {
@@ -12,23 +12,23 @@ body,
   background-color: var(--bgColor-default);
   color: var(--fgColor-default);
 
-  & a {
+  a {
     text-decoration: underline;
   }
 
-  & blockquote {
+  blockquote {
     background-color: inherit;
     border-radius: 0;
   }
 
-  & pre,
-  & code {
+  pre,
+  code {
     color: inherit;
     font-family: var(--vscode-editor-font-family);
   }
 
-  & .data-footnote-backref,
-  & .footnote-ref a {
+  .data-footnote-backref,
+  .footnote-ref a {
     text-decoration: none;
   }
 }

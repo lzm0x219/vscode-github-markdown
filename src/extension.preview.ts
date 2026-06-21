@@ -1,2 +1,2 @@
-// ponytail: manifest already declares a preview script; keep a real entry file until behavior lands.
+// ponytail: VS Code renders Mermaid in the built-in Markdown preview; this extension only adds CSS.
 void 0;
