@@ -21,8 +21,9 @@ Draft
 
 1. `taskLists`
 2. `alerts`
-3. `footnotes`
-4. `theme`
+3. `emoji`
+4. `footnotes`
+5. `theme`
 
 这条链路已经能工作，但如果没有正式契约，后续新增能力时很容易出现这些问题：
 
@@ -74,6 +75,7 @@ Draft
 
 - `markdown-it-github-task-lists`
 - `markdown-it-github-alerts`
+- `markdown-it-github-emoji`
 - `markdown-it-github-footnotes`
 
 #### 渲染包装插件
@@ -99,8 +101,9 @@ Draft
 
 1. `taskLists`
 2. `alerts`
-3. `footnotes`
-4. `theme`
+3. `emoji`
+4. `footnotes`
+5. `theme`
 
 约束：
 
@@ -184,6 +187,8 @@ Draft
   - `.markdown-alert-*`
   - `.markdown-alert-body`
   - `.markdown-alert-title`
+- Emoji 相关 class：
+  - `.emoji`
 - 脚注相关结构与 attribute：
   - `.footnotes`
   - `.footnote-ref`
@@ -227,7 +232,7 @@ Draft
 
 基于这份 RFC，当前实现可以理解为：
 
-- `taskLists`、`alerts`、`footnotes` 是语法增强插件
+- `taskLists`、`alerts`、`emoji`、`footnotes` 是语法增强插件
 - `theme` 是渲染包装插件
 - `theme` 放在链路末尾是合理且应被保持的
 - 当前 `extension -> plugins -> preview` 的总体分层可以继续沿用

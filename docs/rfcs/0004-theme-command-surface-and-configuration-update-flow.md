@@ -59,10 +59,10 @@ Draft
 
 项目应暴露以下四个 VS Code 命令：
 
-1. `vscode-github-markdown.theme.mode`
-2. `vscode-github-markdown.theme.single`
-3. `vscode-github-markdown.theme.system.day`
-4. `vscode-github-markdown.theme.system.night`
+1. `vscode-github-markdown.changeThemeMode`
+2. `vscode-github-markdown.changeThemeSingle`
+3. `vscode-github-markdown.changeThemeSystemDay`
+4. `vscode-github-markdown.changeThemeSystemNight`
 
 它们分别对应四个公开主题配置项：
 
@@ -77,12 +77,12 @@ Draft
 
 每个命令只负责一个配置项：
 
-| 命令                                        | 配置项                                      | 作用                     |
-| ------------------------------------------- | ------------------------------------------- | ------------------------ |
-| `vscode-github-markdown.theme.mode`         | `vscode-github-markdown.theme.mode`         | 修改主题模式             |
-| `vscode-github-markdown.theme.single`       | `vscode-github-markdown.theme.single`       | 修改单主题模式下的主题   |
-| `vscode-github-markdown.theme.system.day`   | `vscode-github-markdown.theme.system.day`   | 修改系统模式下的白天主题 |
-| `vscode-github-markdown.theme.system.night` | `vscode-github-markdown.theme.system.night` | 修改系统模式下的夜间主题 |
+| 命令                                            | 配置项                                      | 作用                     |
+| ----------------------------------------------- | ------------------------------------------- | ------------------------ |
+| `vscode-github-markdown.changeThemeMode`        | `vscode-github-markdown.theme.mode`         | 修改主题模式             |
+| `vscode-github-markdown.changeThemeSingle`      | `vscode-github-markdown.theme.single`       | 修改单主题模式下的主题   |
+| `vscode-github-markdown.changeThemeSystemDay`   | `vscode-github-markdown.theme.system.day`   | 修改系统模式下的白天主题 |
+| `vscode-github-markdown.changeThemeSystemNight` | `vscode-github-markdown.theme.system.night` | 修改系统模式下的夜间主题 |
 
 这样做的目的很简单：
 
@@ -196,15 +196,16 @@ Draft
 - `package.nls.json` 与 `package.nls.zh-CN.json` 已经提供了命令标题基础
 - `src/theme.ts` 已经提供了配置读写函数基础
 - `src/events.ts` 已经提供了配置变化后刷新预览的基础
-- 但真正的命令贡献与命令注册仍然属于待实现项
+- `src/commands.ts` 已经注册了四个主题命令，通过 Quick Pick 交互修改配置
+- `package.json` 已经贡献了四个命令，命令 ID 与本节声明一致
 
 ## 对后续工作的影响
 
 这份 RFC 生效后：
 
-- 实现主题命令时，应优先补 `package.json` 的 `contributes.commands`
-- 运行时应注册四个命令，并映射到现有配置写入函数
-- README 和设置文档可以把“支持通过 VS Code 命令修改主题配置”写成正式能力
+- 主题命令已经在 `package.json` 贡献并注册
+- 命令名与已有本地化标题一致
+- README 和设置文档可以把"支持通过 VS Code 命令修改主题配置"写成正式能力
 - 验证基线 RFC 应覆盖命令修改配置后的预览一致性
 
 ## 开放问题

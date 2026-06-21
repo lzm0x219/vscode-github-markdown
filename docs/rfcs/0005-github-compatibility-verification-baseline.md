@@ -20,11 +20,13 @@ Draft
 
 - `scripts/verify-github-markdown.ts`（需要 [Bun](https://bun.sh) 运行时）
 
-它当前覆盖了三项已支持能力：
+它当前覆盖了以下已支持能力：
 
 - 任务列表
 - 脚注
 - Alerts
+- Emoji 短代码
+- Mermaid 图表 CSS 样式
 
 但目前还缺少一份正式的验证基线文档，来回答这些问题：
 
@@ -114,6 +116,8 @@ GitHub 兼容性验证统一分为三层：
 - 任务列表
 - 脚注
 - Alerts
+- Emoji 短代码
+- Mermaid 图表 CSS 样式
 
 以及应尽快补入的高价值兼容性候选：
 
@@ -140,6 +144,8 @@ GitHub 兼容性验证统一分为三层：
 - 断言 checkbox 结构与 `checked disabled`
 - 脚注断言 `.footnote-ref`、`.footnotes`
 - Alerts 断言 `.markdown-alert-*` 和标题内容
+- Emoji 断言 Unicode emoji 映射、image emoji (`<img class="emoji">`)
+- Mermaid CSS 断言样式变量和暗色主题样式
 
 后续新增插件验证时，应优先沿用这种模式，而不是先上更重的测试系统。
 
@@ -241,6 +247,8 @@ GitHub 兼容性验证统一分为三层：
 | 任务列表               | 插件输出验证        | Exists   | 已有脚本覆盖，后续可继续扩 fixture。              |
 | 脚注                   | 插件输出验证        | Exists   | 已有脚本覆盖，后续可补更多边界样例。              |
 | Alerts                 | 插件输出验证        | Exists   | 已有脚本覆盖。                                    |
+| Emoji 短代码           | 插件输出验证        | Exists   | 已有脚本覆盖 Unicode 与 image emoji。             |
+| Mermaid CSS 样式       | CSS 断言验证        | Exists   | 已有脚本覆盖样式变量与暗色主题样式。              |
 | 主题根容器与主题元数据 | 预览结构验证        | Planned  | 应补 `.vscode-github-markdown` 与 `data-*` 断言。 |
 | 表格视觉对齐           | 人工对照验证        | Planned  | 当前仍需人工对照结论。                            |
 | 代码块视觉对齐         | 人工对照验证        | Planned  | 当前仍需人工对照结论。                            |
@@ -251,7 +259,7 @@ GitHub 兼容性验证统一分为三层：
 基于这份 RFC，当前仓库可以理解为：
 
 - `scripts/verify-github-markdown.ts` 是最小验证基线的第一步
-- 当前已支持能力里，任务列表、脚注、Alerts 已经有基础断言
+- 当前已支持能力里，任务列表、脚注、Alerts、Emoji、Mermaid CSS 已经有基础断言
 - 主题结构、表格、代码块、锚点还需要继续补验证覆盖
 
 ## 对后续工作的影响

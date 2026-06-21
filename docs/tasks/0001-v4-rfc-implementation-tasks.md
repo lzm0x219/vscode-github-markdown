@@ -19,11 +19,11 @@ Active
 ## 当前基线
 
 - Markdown Preview 已接入 `markdown.markdownItPlugins`、`markdown.previewScripts`、`markdown.previewStyles`
-- 任务列表、脚注、Alerts 插件已存在
+- 任务列表、脚注、Alerts、Emoji 插件已存在
 - 主题包装插件已输出 `.vscode-github-markdown` 与主题 `data-*`
 - 主题配置项已存在
-- 主题命令尚未在 manifest 中贡献或在运行时注册
-- 最小验证脚本尚未覆盖主题包装结构
+- 主题命令已在 manifest 中贡献并在运行时注册
+- 最小验证脚本已覆盖任务列表、脚注、Alerts、Emoji、Mermaid CSS
 
 ## Phase 1：固定现有公开契约
 
@@ -92,17 +92,17 @@ Active
 
 ### Task 2.1：贡献四个主题命令
 
-**状态：** Blocked by 契约基线 checkpoint
+**状态：** Done
 
 **目标：** 在 `package.json` 中贡献 RFC 004 定义的四个主题命令，并复用现有英文和中文本地化标题。
 
 **验收标准：**
 
-- [ ] `vscode-github-markdown.theme.mode` 已贡献
-- [ ] `vscode-github-markdown.theme.single` 已贡献
-- [ ] `vscode-github-markdown.theme.system.day` 已贡献
-- [ ] `vscode-github-markdown.theme.system.night` 已贡献
-- [ ] 英文与中文本地化标题可用
+- [x] `vscode-github-markdown.changeThemeMode` 已贡献
+- [x] `vscode-github-markdown.changeThemeSingle` 已贡献
+- [x] `vscode-github-markdown.changeThemeSystemDay` 已贡献
+- [x] `vscode-github-markdown.changeThemeSystemNight` 已贡献
+- [x] 英文与中文本地化标题可用
 
 **验证：**
 
@@ -121,17 +121,17 @@ Active
 
 ### Task 2.2：注册主题命令
 
-**状态：** Blocked by Task 2.1
+**状态：** Done
 
 **目标：** 在扩展激活时注册四个命令。命令只更新 RFC 003 中声明的公开配置项，不维护第二套主题状态。
 
 **验收标准：**
 
-- [ ] 四个命令都通过 `vscode.commands.registerCommand` 注册
-- [ ] 每个命令只写入一个对应配置项
-- [ ] 用户取消选择时不写配置
-- [ ] 命令只允许写入 RFC 003 声明的合法值
-- [ ] 预览刷新继续依赖现有配置变化监听链路
+- [x] 四个命令都通过 `vscode.commands.registerCommand` 注册
+- [x] 每个命令只写入一个对应配置项
+- [x] 用户取消选择时不写配置
+- [x] 命令只允许写入 RFC 003 声明的合法值
+- [x] 预览刷新继续依赖现有配置变化监听链路
 
 **验证：**
 
@@ -176,8 +176,8 @@ Active
 
 ## Checkpoint：主题命令可用
 
-- [ ] 四个命令可在 VS Code 中执行
-- [ ] 主题配置写入后预览刷新
+- [x] 四个命令可在 VS Code 中执行
+- [x] 主题配置写入后预览刷新
 - [ ] README、RFC、实现、验证没有互相抢跑
 
 ## Phase 3：收紧可见 GitHub 兼容性

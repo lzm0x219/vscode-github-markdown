@@ -38,16 +38,16 @@ Draft
 - `markdown.markdownItPlugins`
 - `markdown.previewScripts`
 - `markdown.previewStyles`
-- 任务列表、脚注、Alerts 插件
+- 任务列表、脚注、Alerts、Emoji 插件
 - GitHub 主题配置项
 - 主题根容器 `.vscode-github-markdown`
 - `data-color-mode`、`data-light-theme`、`data-dark-theme`
 - 配置变化后的 `markdown.preview.refresh`
-- `scripts/verify-github-markdown.ts` 覆盖任务列表、脚注、Alerts
+- 四个主题命令已贡献并注册
+- `scripts/verify-github-markdown.ts` 覆盖任务列表、脚注、Alerts、Emoji、Mermaid CSS
 
 仍待实施：
 
-- 主题命令贡献与运行时注册
 - 主题根容器与主题元数据的固定验证
 - 表格与代码块视觉对照
 - 标题锚点行为确认
@@ -114,17 +114,17 @@ Draft
 
 ## Phase 2：实现主题命令面
 
-### Task 2.1：贡献四个主题命令
+### Task 2.1：贡献四个主题命令 ✅
 
-**说明：** 在 `package.json` 中正式贡献 RFC 004 定义的四个主题命令，并复用已有本地化标题。
+**说明：** 在 `package.json` 中正式贡献 RFC 004 定义的四个主题命令，并复用已有本地化标题。已完成。
 
 **验收标准：**
 
-- [ ] `vscode-github-markdown.theme.mode` 已贡献
-- [ ] `vscode-github-markdown.theme.single` 已贡献
-- [ ] `vscode-github-markdown.theme.system.day` 已贡献
-- [ ] `vscode-github-markdown.theme.system.night` 已贡献
-- [ ] 英文与中文本地化文案可用
+- [x] `vscode-github-markdown.changeThemeMode` 已贡献
+- [x] `vscode-github-markdown.changeThemeSingle` 已贡献
+- [x] `vscode-github-markdown.changeThemeSystemDay` 已贡献
+- [x] `vscode-github-markdown.changeThemeSystemNight` 已贡献
+- [x] 英文与中文本地化文案可用
 
 **验证：**
 
@@ -141,17 +141,17 @@ Draft
 
 **规模：** Small
 
-### Task 2.2：注册主题命令
+### Task 2.2：注册主题命令 ✅
 
-**说明：** 在扩展激活时注册四个命令。命令只更新 RFC 003 中声明的四个公开配置项，不维护第二套主题状态。
+**说明：** 在扩展激活时注册四个命令。命令只更新 RFC 003 中声明的四个公开配置项，不维护第二套主题状态。已完成。
 
 **验收标准：**
 
-- [ ] 四个命令都通过 `vscode.commands.registerCommand` 注册
-- [ ] 每个命令只写入一个对应配置项
-- [ ] 用户取消选择时不写配置
-- [ ] 命令只允许写入 RFC 003 声明的合法值
-- [ ] 预览刷新继续依赖现有配置变化监听链路
+- [x] 四个命令都通过 `vscode.commands.registerCommand` 注册
+- [x] 每个命令只写入一个对应配置项
+- [x] 用户取消选择时不写配置
+- [x] 命令只允许写入 RFC 003 声明的合法值
+- [x] 预览刷新继续依赖现有配置变化监听链路
 
 **验证：**
 
@@ -194,8 +194,8 @@ Draft
 
 ## Checkpoint：主题命令可用
 
-- [ ] 四个命令可在 VS Code 中执行
-- [ ] 主题配置写入后预览刷新
+- [x] 四个命令可在 VS Code 中执行
+- [x] 主题配置写入后预览刷新
 - [ ] README、RFC、实现、验证没有互相抢跑
 
 ## Phase 3：收紧可见 GitHub 兼容性
