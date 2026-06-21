@@ -93,6 +93,7 @@ GitHub 与默认预览存在明确差异，且该差异可以只依赖本地 Mar
 - Alerts
 - Emoji 短代码（`:rocket:` 等）
 - Mermaid 图表 CSS 样式
+- 图片绝对路径重写（`/path` → `./path`，适配 webview 预览）
 - GitHub 主题模式与主题配置
 - GitHub 主题相关的预览容器元数据注入
 
@@ -125,26 +126,27 @@ GitHub 与默认预览存在明确差异，且该差异可以只依赖本地 Mar
 
 ## 能力矩阵
 
-| 能力                          | 分类              | 当前状态    | 说明                                                      |
-| ----------------------------- | ----------------- | ----------- | --------------------------------------------------------- |
-| 基础 Markdown 渲染            | `built-in`        | Reuse       | 直接复用 VS Code 内置预览能力。                           |
-| 标题 / 段落 / 列表基础结构    | `built-in`        | Reuse       | 默认不重复实现，只在 GitHub 差异明显时补样式或局部行为。  |
-| 任务列表                      | `extension-owned` | Implemented | 当前已有专门插件处理。                                    |
-| 脚注                          | `extension-owned` | Implemented | 当前已有专门插件处理。                                    |
-| Alerts                        | `extension-owned` | Implemented | 当前已有专门插件处理。                                    |
-| Emoji 短代码                  | `extension-owned` | Implemented | 当前已有专门插件处理，覆盖 Unicode emoji 与 image emoji。 |
-| Mermaid 图表 CSS 样式         | `extension-owned` | Implemented | 为 VS Code 内置 Mermaid 预览补齐默认主题样式。            |
-| GitHub 主题模式与主题配置     | `extension-owned` | Implemented | 当前已有配置模型与主题相关元数据注入。                    |
-| 通过 VS Code 命令修改主题配置 | `extension-owned` | Implemented | 四个主题命令已贡献并注册，通过 Quick Pick 交互。          |
-| 表格基础解析                  | `built-in`        | Reuse       | 当前默认依赖 VS Code 内置能力。                           |
-| 表格视觉对齐                  | `extension-owned` | Planned     | 属于 GitHub 一致性优化，而不是额外功能。                  |
-| 代码块基础解析                | `built-in`        | Reuse       | 当前默认依赖内置能力。                                    |
-| 代码块视觉对齐                | `extension-owned` | Planned     | 包括间距、边框、配色等 GitHub 风格细节。                  |
-| 标题锚点行为                  | `extension-owned` | Planned     | 是否需要补齐，以验证结论为准。                            |
-| `@mentions`                   | `out-of-scope`    | Rejected    | 依赖 GitHub 在线上下文。                                  |
-| Issue / PR 引用               | `out-of-scope`    | Rejected    | 依赖仓库上下文与在线解析。                                |
-| 仓库上下文自动链接            | `out-of-scope`    | Rejected    | 本地离线无法可靠确定。                                    |
-| 资源上传                      | `out-of-scope`    | Rejected    | 超出当前项目目标。                                        |
+| 能力                          | 分类              | 当前状态    | 说明                                                              |
+| ----------------------------- | ----------------- | ----------- | ----------------------------------------------------------------- |
+| 基础 Markdown 渲染            | `built-in`        | Reuse       | 直接复用 VS Code 内置预览能力。                                   |
+| 标题 / 段落 / 列表基础结构    | `built-in`        | Reuse       | 默认不重复实现，只在 GitHub 差异明显时补样式或局部行为。          |
+| 任务列表                      | `extension-owned` | Implemented | 当前已有专门插件处理。                                            |
+| 脚注                          | `extension-owned` | Implemented | 当前已有专门插件处理。                                            |
+| Alerts                        | `extension-owned` | Implemented | 当前已有专门插件处理。                                            |
+| Emoji 短代码                  | `extension-owned` | Implemented | 当前已有专门插件处理，覆盖 Unicode emoji 与 image emoji。         |
+| Mermaid 图表 CSS 样式         | `extension-owned` | Implemented | 为 VS Code 内置 Mermaid 预览补齐默认主题样式。                    |
+| 图片绝对路径重写              | `extension-owned` | Implemented | 将 `/path` 转为 `./path`，使绝对路径图片可在 webview 中正常显示。 |
+| GitHub 主题模式与主题配置     | `extension-owned` | Implemented | 当前已有配置模型与主题相关元数据注入。                            |
+| 通过 VS Code 命令修改主题配置 | `extension-owned` | Implemented | 四个主题命令已贡献并注册，通过 Quick Pick 交互。                  |
+| 表格基础解析                  | `built-in`        | Reuse       | 当前默认依赖 VS Code 内置能力。                                   |
+| 表格视觉对齐                  | `extension-owned` | Planned     | 属于 GitHub 一致性优化，而不是额外功能。                          |
+| 代码块基础解析                | `built-in`        | Reuse       | 当前默认依赖内置能力。                                            |
+| 代码块视觉对齐                | `extension-owned` | Planned     | 包括间距、边框、配色等 GitHub 风格细节。                          |
+| 标题锚点行为                  | `extension-owned` | Planned     | 是否需要补齐，以验证结论为准。                                    |
+| `@mentions`                   | `out-of-scope`    | Rejected    | 依赖 GitHub 在线上下文。                                          |
+| Issue / PR 引用               | `out-of-scope`    | Rejected    | 依赖仓库上下文与在线解析。                                        |
+| 仓库上下文自动链接            | `out-of-scope`    | Rejected    | 本地离线无法可靠确定。                                            |
+| 资源上传                      | `out-of-scope`    | Rejected    | 超出当前项目目标。                                                |
 
 ## 纳入规则
 

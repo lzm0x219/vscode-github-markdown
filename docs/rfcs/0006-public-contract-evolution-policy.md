@@ -67,7 +67,10 @@ Draft
 - `vscode-github-markdown.theme.single`
 - `vscode-github-markdown.theme.system.day`
 - `vscode-github-markdown.theme.system.night`
-- 已规划的主题命令名
+- `vscode-github-markdown.changeThemeMode`
+- `vscode-github-markdown.changeThemeSingle`
+- `vscode-github-markdown.changeThemeSystemDay`
+- `vscode-github-markdown.changeThemeSystemNight`
 - `.vscode-github-markdown`
 - `data-color-mode`
 - `data-light-theme`
@@ -76,6 +79,10 @@ Draft
   - 任务列表
   - 脚注
   - Alerts
+  - Emoji 短代码
+  - Mermaid 图表 CSS 样式
+  - GitHub 主题系统（9 套主题、两种模式）
+  - 通过 VS Code 命令切换主题
 
 这些内容不能再被当作“随便改的内部实现”处理。
 

@@ -33,6 +33,7 @@
   - Alerts
   - Emoji 短代码（`:rocket:` 等）
   - Mermaid 图表 CSS 样式
+  - 图片绝对路径重写（webview 适配）
 
 ## v4 范围
 

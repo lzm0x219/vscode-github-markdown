@@ -101,6 +101,8 @@ flowchart LR
 
 任务列表、Alerts、Emoji 短代码、脚注、主题容器注入，都属于这一层的典型职责。
 
+`markdown-it-github-image-url` 属于渲染修正：在所有语义和主题处理完成后，将图片路径从绝对路径（`/path`）重写为相对路径（`./path`），使项目内绝对路径图片可在 webview 中正常加载。
+
 ### 4. 预览呈现层
 
 **核心文件：** `src/extension.preview.css`、`src/extension.preview.ts`

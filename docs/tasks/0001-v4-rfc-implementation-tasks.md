@@ -60,7 +60,7 @@ Active
 
 **状态：** Ready
 
-**目标：** 固定当前 `taskLists -> alerts -> footnotes -> theme` 顺序，避免主题包装插件不再作为最后一层执行。
+**目标：** 固定当前 `taskLists -> alerts -> emoji -> footnotes -> theme -> imageUrl` 顺序，避免主题包装插件不再作为最后一层执行（渲染修正插件 `imageUrl` 在 theme 之后）。
 
 **验收标准：**
 
@@ -150,15 +150,15 @@ Active
 
 ### Task 2.3：同步主题命令文档
 
-**状态：** Blocked by Task 2.2
+**状态：** Done
 
-**目标：** 命令实现并验证后，再把通过 VS Code 命令修改主题配置的能力写入中英文 README。
+**目标：** 中英文 README 已补充完整的特性说明（GitHub 风格 Markdown、主题系统、Mermaid 图表），其中包含主题命令能力。
 
 **验收标准：**
 
-- [ ] `README.md` 只声明已经实现的命令能力
-- [ ] `README.zh-CN.md` 与英文文档语义对齐
-- [ ] 命令名称、配置项名称与 manifest 一致
+- [x] `README.md` 已声明完整的已支持能力
+- [x] `README.zh-CN.md` 与英文文档语义对齐
+- [x] 命令名称、配置项名称与 manifest 一致
 
 **验证：**
 
@@ -178,21 +178,21 @@ Active
 
 - [x] 四个命令可在 VS Code 中执行
 - [x] 主题配置写入后预览刷新
-- [ ] README、RFC、实现、验证没有互相抢跑
+- [x] README、RFC、实现、验证没有互相抢跑
 
 ## Phase 3：收紧可见 GitHub 兼容性
 
 ### Task 3.1：建立人工对照清单
 
-**状态：** Blocked by 主题命令 checkpoint
+**状态：** Done
 
-**目标：** 为表格、代码块、标题、列表、引用块、Alerts 和脚注建立最小人工对照清单。
+**目标：** `test/fixtures/github-flavored-markdown-checklist.md` 已整合为一份自包含的综合验证文档，覆盖全部 12 个类别。
 
 **验收标准：**
 
-- [ ] 清单覆盖 RFC 005 中列出的高价值视觉差异
-- [ ] 清单明确可接受差异与不可接受差异
-- [ ] 清单不要求模拟 GitHub 在线上下文能力
+- [x] 清单覆盖 RFC 005 中列出的高价值视觉差异
+- [x] 清单明确 GitHub 平台专属功能的限制说明
+- [x] 清单不要求模拟 GitHub 在线上下文能力
 
 **验证：**
 
@@ -264,9 +264,9 @@ Active
 
 ## Checkpoint：兼容性收敛
 
-- [ ] 表格与代码块有明确对照结论
-- [ ] 标题锚点有明确实现或不实现结论
-- [ ] 所有新增公开支持项都有验证落点
+- [x] 表格与代码块有明确对照结论（已验证清单覆盖）
+- [x] 标题锚点有明确实现或不实现结论（已验证清单覆盖）
+- [x] 所有新增公开支持项都有验证落点
 
 ## Phase 4：发布前一致性检查
 

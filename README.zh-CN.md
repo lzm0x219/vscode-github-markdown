@@ -28,6 +28,39 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 - 尽量让本地预览和 GitHub 上的预期效果保持一致，让文档编写过程更可预期、更省来回验证成本
 - 为 VS Code 内置的 fenced `mermaid` 图表预览补齐 Mermaid 默认主题配色、间距与尺寸样式
 
+## 特性
+
+### GitHub 风格 Markdown
+
+- **任务列表** — `- [x]` 和 `- [ ]` 渲染为可点击复选框，行为和结构与 GitHub 一致。
+- **脚注** — `[^1]` 引用自动编号、自动回跳链接，并在文末生成脚注区域。
+- **Alerts** — `[!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 五种提示框，附带正确的图标和样式。
+- **Emoji 短代码** — `:rocket:`、`:+1:`、`:tada:` 等数千个短代码，同时支持 Unicode emoji 和 GitHub 自定义图片 emoji。
+- **图片路径重写** — 绝对路径图片（`/path/to/img`）自动重写为相对路径（`./path/to/img`），让项目本地图片在 VS Code webview 预览中正常显示。
+
+### GitHub 主题
+
+内置 9 套 GitHub 主题，覆盖亮色、暗色、柔和暗色、高对比度和色觉辅助变体：
+
+| 亮色                            | 暗色                           |
+| ------------------------------- | ------------------------------ |
+| Light                           | Dark                           |
+| Light Protanopia & Deuteranopia | Dark Protanopia & Deuteranopia |
+| Light high contrast             | Dark high contrast             |
+| Light Tritanopia                | Dark dimmed                    |
+|                                 | Dark Tritanopia                |
+
+两种主题模式：
+
+- **单主题** — 始终使用一个固定主题。
+- **跟随系统** — 根据操作系统的日间/夜间设置自动切换，日间和夜间可分别选择不同主题。
+
+随时通过 VS Code 命令（Quick Pick）切换主题，无需打开设置面板。
+
+### Mermaid 图表
+
+为 VS Code 内置的 Mermaid 预览补齐默认主题配色、间距与尺寸样式，让图表与预览整体风格一致，而非格格不入的半成品。
+
 ## 参与贡献
 
 请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解开发环境配置与贡献指南。
