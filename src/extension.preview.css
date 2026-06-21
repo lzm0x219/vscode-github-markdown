@@ -1,13 +1,32 @@
 /* Normal */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 html,
 body,
 .markdown-body {
   padding: 0;
-  height: 100%;
   font-size: 16px;
+  background-color: var(--bgColor-default);
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.vscode-body.scrollBeyondLastLine {
+  margin-bottom: 0;
 }
 
 .vscode-github-markdown {
+  overflow: visible !important;
+  margin: 0 auto;
+  width: 100% !important;
+  height: 100%;
   padding: 36px;
   background-color: var(--bgColor-default);
   color: var(--fgColor-default);
