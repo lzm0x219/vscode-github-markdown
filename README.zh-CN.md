@@ -26,6 +26,7 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 
 - 对齐 GitHub Markdown 的渲染结果、留白和排版细节，而不是另起一套看起来相似但结果不同的主题
 - 尽量让本地预览和 GitHub 上的预期效果保持一致，让文档编写过程更可预期、更省来回验证成本
+- 为 VS Code 内置的 fenced `mermaid` 图表预览补齐 Mermaid 默认主题配色、间距与尺寸样式
 
 ## 参与贡献
 

@@ -26,6 +26,7 @@ This project focuses on two practical outcomes:
 
 - Align the rendering, spacing, and visual details of GitHub Markdown instead of inventing a separate lookalike theme
 - Keep local preview and expected GitHub output as close as possible so documentation work needs less trial and error
+- Style VS Code's built-in fenced `mermaid` diagram preview with Mermaid default theme colors, spacing, and sizing
 
 ## Related Information
 
