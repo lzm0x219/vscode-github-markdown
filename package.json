@@ -30,7 +30,8 @@
   "browser": "dist/extension.js",
   "scripts": {
     "build": "bun scripts/build.ts",
-    "dev": "bun scripts/dev.ts"
+    "dev": "bun scripts/dev.ts",
+    "update:emoji": "bun scripts/update-github-emoji.ts"
   },
   "devDependencies": {
     "@types/bun": "1.3.14",
