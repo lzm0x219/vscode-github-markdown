@@ -13,3 +13,4 @@ src/**
 tsconfig.json
 tsdown.config.mts
 docs/**
+types/**
