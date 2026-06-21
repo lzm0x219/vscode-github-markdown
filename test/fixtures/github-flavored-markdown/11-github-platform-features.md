@@ -185,38 +185,20 @@ quadrantChart
 ### 10. Requirement Diagram（需求图）
 
 ```mermaid
-requirementDiagram
-    requirement 用户登录 {
-        id: REQ-001
-        text: 用户可以使用邮箱和密码登录
-        risk: low
-        verifymethod: test
-    }
-    requirement 密码加密 {
-        id: REQ-002
-        text: 密码必须使用 bcrypt 加密存储
-        risk: high
-        verifymethod: inspection
-    }
-    requirement 会话管理 {
-        id: REQ-003
-        text: 登录后生成 JWT token
-        risk: medium
-        verifymethod: test
+  requirementDiagram
+
+    requirement test_req {
+    id: 1
+    text: the test text.
+    risk: high
+    verifymethod: test
     }
 
-    element 登录模块 {
-        type: module
-    }
-    element 认证服务 {
-        type: module
+    element test_entity {
+    type: simulation
     }
 
-    用户登录 - contains -> 密码加密
-    用户登录 - contains -> 会话管理
-    登录模块 - satisfies -> 用户登录
-    认证服务 - satisfies -> 密码加密
-    认证服务 - satisfies -> 会话管理
+    test_entity - satisfies -> test_req
 ```
 
 ### 11. Git Graph（Git 图）
@@ -291,57 +273,42 @@ timeline
 ### 15. Sankey（桑基图）
 
 ```mermaid
-sankey-beta
+sankey
 
-%% 用户流量分布
-首页,商品列表 : 45.0
-首页,搜索结果 : 30.0
-首页,直接离开 : 25.0
-商品列表,商品详情 : 35.0
-商品列表,返回首页 : 10.0
-搜索结果,商品详情 : 22.0
-搜索结果,返回首页 : 8.0
-商品详情,加入购物车 : 32.0
-商品详情,离开 : 25.0
-加入购物车,下单 : 20.0
-加入购物车,离开 : 12.0
-下单,支付成功 : 15.0
-下单,支付失败 : 5.0
+%% source,target,value
+Electricity grid,Over generation / exports,104.453
+Electricity grid,Heating and cooling - homes,113.726
+Electricity grid,H2 conversion,27.14
 ```
 
 ### 16. XY Chart（XY 图）
 
 ```mermaid
-xychart-beta
-    title "月度销售额（万元）"
-    x-axis [一月, 二月, 三月, 四月, 五月, 六月]
-    y-axis "销售额" 0 --> 100
-    bar [45, 52, 38, 65, 72, 88]
-    line [45, 52, 38, 65, 72, 88]
+xychart
+    title "Sales Revenue"
+    x-axis [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
+    y-axis "Revenue (in $)" 4000 --> 11000
+    bar [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
+    line [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
 ```
 
 ### 17. Block Diagram（框图）
 
 ```mermaid
-block-beta
-    columns 1
-    block:App[应用层]
-        columns 3
-        Web["Web 前端"] API["API 网关"] Mobile["移动端"]
-    end
-    space
-    block:Service[服务层]
-        columns 2
-        Auth["认证服务"] Biz["业务服务"]
-    end
-    space
-    block:Data[数据层]
-        columns 2
-        DB[("主数据库")] Cache[("缓存")]
-    end
-
-    App --> Service
-    Service --> Data
+block
+columns 1
+  db(("DB"))
+  blockArrowId6<["&nbsp;&nbsp;&nbsp;"]>(down)
+  block:ID
+    A
+    B["A wide one in the middle"]
+    C
+  end
+  space
+  D
+  ID --> D
+  C --> D
+  style B fill:#969,stroke:#333,stroke-width:4px
 ```
 
 ### 18. Packet（网络数据包图 — 仅限文字渲染）
