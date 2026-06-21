@@ -1,6 +1,7 @@
 import MarkdownIt from "markdown-it";
 import assert from "node:assert/strict";
 import githubAlerts from "../../src/plugins/markdown-it-github-alerts";
+import githubEmoji from "../../src/plugins/markdown-it-github-emoji";
 import githubFootnotes from "../../src/plugins/markdown-it-github-footnotes";
 import githubTaskLists from "../../src/plugins/markdown-it-github-task-lists";
 
@@ -8,6 +9,7 @@ export function verifyGithubMarkdownPlugins(): void {
   const md = new MarkdownIt({ html: true })
     .use(githubTaskLists)
     .use(githubAlerts)
+    .use(githubEmoji)
     .use(githubFootnotes);
 
   const taskListHtml = md.render(
@@ -51,6 +53,16 @@ export function verifyGithubMarkdownPlugins(): void {
     /<div class="markdown-alert markdown-alert-note" dir="auto">\n<p class="markdown-alert-title" dir="auto"><svg data-component="Octicon" class="octicon octicon-info mr-2"[^>]*>.*<\/svg>Note<\/p><p dir="auto">Useful information that users should know, even when skimming content\.<\/p>\n<\/div>/s
   );
   assert.doesNotMatch(alertHtml, /<blockquote|markdown-alert-body/);
+
+  const emojiHtml = md.render("Ship it :rocket: :+1: :warning: :shipit: :artist: :unknown:\n");
+  assert.match(emojiHtml, /Ship it 🚀 👍 ⚠️ <img class="emoji"/);
+  assert.match(emojiHtml, /alt=":shipit:"/);
+  assert.match(
+    emojiHtml,
+    /src="https:\/\/github.githubassets.com\/images\/icons\/emoji\/shipit\.png/
+  );
+  assert.match(emojiHtml, /alt=":artist:"/);
+  assert.match(emojiHtml, /:unknown:/);
 }
 
 function markdownItRenderWrapper(md: MarkdownIt): MarkdownIt {
