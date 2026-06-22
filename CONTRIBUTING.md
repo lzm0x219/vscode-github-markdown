@@ -58,6 +58,7 @@ pnpm exec oxlint .
 pnpm exec oxlint --type-aware .
 pnpm exec oxfmt .
 pnpm run test
+pnpm run package
 bun scripts/verify-github-markdown.ts
 ```
 
@@ -84,12 +85,3 @@ When possible:
 - Include a short explanation of why the change is needed
 - Mention any compatibility impact, especially if it affects VS Code version support
 - Note any checks you ran, or say clearly if you did not run them
-
-## Current Limitations
-
-This repository is still in an early stage. There are currently no `package` scripts in `package.json`.
-
-If your contribution adds those workflows, please also update:
-
-- [`AGENTS.md`](./AGENTS.md)
-- this file
