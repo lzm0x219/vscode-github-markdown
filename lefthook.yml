@@ -10,3 +10,7 @@ pre-commit:
       glob: "*"
       run: pnpm oxfmt --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
+
+    - name: test
+      glob: "*.{js,ts,cjs,mjs,jsx,tsx}"
+      run: pnpm run test
