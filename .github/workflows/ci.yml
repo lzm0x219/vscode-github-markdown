@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec oxlint .
+
+      - name: Format check
+        run: pnpm exec oxfmt --check .
+
+      - name: Lint (type-aware)
+        run: pnpm exec oxlint --type-aware .
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build
