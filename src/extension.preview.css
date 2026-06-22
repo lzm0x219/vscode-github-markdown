@@ -11,15 +11,12 @@ body,
   background-color: var(--bgColor-default);
   width: 100%;
   min-height: 100%;
-  overflow-x: hidden;
   box-sizing: border-box;
   overflow-y: auto;
 }
 
 .vscode-github-markdown {
-  overflow: visible !important;
   margin: 0 auto;
-  width: 100% !important;
   height: 100%;
   padding: 36px;
   background-color: var(--bgColor-default);
