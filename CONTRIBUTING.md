@@ -57,6 +57,7 @@ Run the relevant checks before opening a pull request:
 pnpm exec oxlint .
 pnpm exec oxlint --type-aware .
 pnpm exec oxfmt .
+pnpm run test
 bun scripts/verify-github-markdown.ts
 ```
 
@@ -86,7 +87,7 @@ When possible:
 
 ## Current Limitations
 
-This repository is still in an early stage. There are currently no `test` or `package` scripts in `package.json`.
+This repository is still in an early stage. There are currently no `package` scripts in `package.json`.
 
 If your contribution adds those workflows, please also update:
 

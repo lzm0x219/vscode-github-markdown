@@ -33,7 +33,8 @@
     "build": "bun scripts/build.ts",
     "dev": "bun scripts/dev.ts",
     "update:emoji": "bun scripts/update-github-emoji.ts",
-    "i18n-export": "npx @vscode/l10n-dev export --outDir ./l10n ./src"
+    "i18n-export": "npx @vscode/l10n-dev export --outDir ./l10n ./src",
+    "test": "vitest"
   },
   "devDependencies": {
     "@types/bun": "1.3.14",
@@ -52,7 +53,8 @@
     "oxlint-tsgolint": "0.23.0",
     "publint": "0.3.21",
     "tsdown": "0.22.3",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "4.1.9"
   },
   "l10n": "./l10n",
   "contributes": {
