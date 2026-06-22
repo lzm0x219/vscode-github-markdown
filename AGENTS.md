@@ -31,6 +31,7 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 - Verify GitHub Markdown: `bun scripts/verify-github-markdown.ts`
 - Test: `pnpm run test`
 - Test watch: `pnpm run test:watch`
+- Test coverage: `pnpm run test:coverage`
 - Package: `pnpm run package`
 - Lint: `pnpm exec oxlint .`
 - Type-aware lint: `pnpm exec oxlint --type-aware .`
