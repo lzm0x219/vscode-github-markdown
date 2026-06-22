@@ -1,6 +1,7 @@
 {
   "displayName": "Github Markdown Preview",
   "description": "Make VS Code Markdown Preview match GitHub as closely as possible.",
+
   "command.changeThemeMode.title": "GitHub Markdown: Change Theme Mode",
   "command.changeSingleTheme.title": "GitHub Markdown: Change Single Theme",
   "command.changeLightTheme.title": "GitHub Markdown: Change Day Theme",
@@ -10,9 +11,9 @@
   "configuration.theme.mode.single.enum.description": "GitHub will use your selected theme",
   "configuration.theme.mode.system.enum.description": "GitHub theme will match your system active settings",
 
-  "configuration.singleTheme.description": "The theme used in single theme mode",
-  "configuration.lightTheme.description": "This theme will be active when your system is set to “light mode”",
-  "configuration.darkTheme.description": "This theme will be active when your system is set to “dark mode”",
+  "configuration.theme.single.description": "The theme used in single theme mode",
+  "configuration.theme.light.description": "This theme will be active when your system is set to “light mode”",
+  "configuration.theme.dark.description": "This theme will be active when your system is set to “dark mode”",
 
   "configuration.theme.light.enum.description": "GitHub's standard light theme with full color contrast and brightness.",
   "configuration.theme.light_colorblind.enum.description": "For people who may find it difficult to distinguish between reds and greens.",
