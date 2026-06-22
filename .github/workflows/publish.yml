@@ -1,0 +1,62 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      discussions: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec oxlint .
+
+      - name: Format check
+        run: pnpm exec oxfmt --check .
+
+      - name: Type-aware lint
+        run: pnpm exec oxlint --type-aware .
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Package
+        run: pnpm run package
+
+      - name: Publish to VS Code Marketplace
+        if: success()
+        run: pnpm exec vsce publish --pat ${{ secrets.VSCE_PAT }}
+
+      - name: Generate Changelog
+        run: pnpm run release:note
+
+      - name: Create GitHub Release
+        if: success()
+        uses: softprops/action-gh-release@v3
+        with:
+          files: "*.vsix"
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
+          repository: lzm0x219/vscode-github-markdown
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}

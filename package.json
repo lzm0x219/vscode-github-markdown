@@ -37,7 +37,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "package": "pnpm run i18n-export && pnpm run build && vsce package"
+    "package": "pnpm run i18n-export && pnpm run build && vsce package",
+    "release:note": "bun scripts/extract-release-notes.ts"
   },
   "devDependencies": {
     "@types/bun": "1.3.14",
