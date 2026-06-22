@@ -12,6 +12,7 @@ export default defineConfig([
     platform: "node",
     dts: false,
     clean: false,
+    publint: true,
     deps: {
       neverBundle: ["vscode"]
     }
@@ -24,6 +25,7 @@ export default defineConfig([
     platform: "browser",
     dts: false,
     clean: false,
+    publint: true,
     globalName: "GitHubMarkdownPreview",
     outputOptions: {
       entryFileNames: "[name].js"
