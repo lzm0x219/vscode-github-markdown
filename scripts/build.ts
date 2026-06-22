@@ -7,7 +7,8 @@ import { runLocalExecutable } from "./shared/run";
 await rm(paths.dist, { recursive: true, force: true });
 
 console.log("building extension...");
-await Promise.all([runLocalExecutable("tsdown"), buildCss()]);
+
+await Promise.all([runLocalExecutable("tsdown", ["--minify"]), buildCss()]);
 
 console.log("build complete");
 
