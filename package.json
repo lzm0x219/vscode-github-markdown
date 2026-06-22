@@ -188,47 +188,11 @@
       {
         "title": "Mermaid",
         "properties": {
-          "githubMarkdown.mermaid.lightTheme": {
-            "type": "string",
-            "enum": [
-              "vscode",
-              "base",
-              "forest",
-              "dark",
-              "default",
-              "neutral"
-            ],
-            "enumDescriptions": [
-              "%configuration.mermaid.theme.vscode.description%",
-              "%configuration.mermaid.theme.base.description%",
-              "%configuration.mermaid.theme.forest.description%",
-              "%configuration.mermaid.theme.dark.description%",
-              "%configuration.mermaid.theme.default.description%",
-              "%configuration.mermaid.theme.neutral.description%"
-            ],
-            "default": "vscode",
-            "description": "%configuration.mermaid.lightModeTheme.description%"
-          },
-          "githubMarkdown.mermaid.darkTheme": {
-            "type": "string",
-            "enum": [
-              "vscode",
-              "base",
-              "forest",
-              "dark",
-              "default",
-              "neutral"
-            ],
-            "enumDescriptions": [
-              "%configuration.mermaid.theme.vscode.description%",
-              "%configuration.mermaid.theme.base.description%",
-              "%configuration.mermaid.theme.forest.description%",
-              "%configuration.mermaid.theme.dark.description%",
-              "%configuration.mermaid.theme.default.description%",
-              "%configuration.mermaid.theme.neutral.description%"
-            ],
-            "default": "vscode",
-            "description": "%configuration.mermaid.darkModeTheme.description%"
+          "githubMarkdown.mermaid.syncTheme": {
+            "order": 0,
+            "type": "boolean",
+            "default": true,
+            "description": "%configuration.mermaid.syncTheme.description%"
           }
         }
       }

@@ -1,9 +1,13 @@
 import vscode from "vscode";
-import { section } from "./theme";
+import { section } from "./configuration";
+import { syncCurrentMermaidTheme } from "./integrations/mermaid";
 
 export const onMarkdownPreviewRefresh: vscode.Disposable =
-  vscode.workspace.onDidChangeConfiguration((e) => {
-    if (e.affectsConfiguration(section.namespace)) {
-      vscode.commands.executeCommand("markdown.preview.refresh");
+  vscode.workspace.onDidChangeConfiguration(async (e) => {
+    if (!e.affectsConfiguration(section.namespace)) {
+      return;
     }
+
+    await syncCurrentMermaidTheme();
+    vscode.commands.executeCommand("markdown.preview.refresh");
   });

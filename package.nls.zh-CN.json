@@ -32,6 +32,7 @@
   "configuration.mermaid.theme.dark.description": "针对深色背景优化的主题。",
   "configuration.mermaid.theme.default.description": "默认 Mermaid 主题，提供均衡的颜色和对比度。",
   "configuration.mermaid.theme.neutral.description": "适用于无障碍和打印场景的中性色主题。",
-  "configuration.mermaid.lightModeTheme.description": "当 GitHub Markdown 使用浅色主题时应用的 Mermaid 主题。",
-  "configuration.mermaid.darkModeTheme.description": "当 GitHub Markdown 使用深色主题时应用的 Mermaid 主题。"
+  "configuration.mermaid.syncTheme.description": "允许 GitHub Markdown 自动管理 Mermaid 主题。",
+  "configuration.mermaid.lightTheme.description": "GitHub Markdown 处于浅色模式时使用的 Mermaid 主题。仅在启用 Mermaid 主题同步后生效。",
+  "configuration.mermaid.darkTheme.description": "GitHub Markdown 处于深色模式时使用的 Mermaid 主题。仅在启用 Mermaid 主题同步后生效。"
 }

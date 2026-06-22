@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import { getConfiguration } from "./configuration";
 
 export type ThemeMode = "single" | "system";
 
@@ -37,16 +37,11 @@ export const ThemeModeLabels: Record<ThemeMode, string> = {
 export const ThemeModeKeys = Object.keys(ThemeModeLabels) as (keyof typeof ThemeModeLabels)[];
 
 export const section = {
-  namespace: "githubMarkdown",
   mode: "theme.mode",
   single: "theme.single",
   light: "theme.light",
   dark: "theme.dark"
 } as const;
-
-function getConfiguration(): vscode.WorkspaceConfiguration {
-  return vscode.workspace.getConfiguration(section.namespace);
-}
 
 export function getThemeMode(): ThemeMode {
   return getConfiguration().get(section.mode, "system");
@@ -102,6 +97,13 @@ export function getCurrentDarkTheme(): Theme {
     return singleTheme.includes("dark") ? getSingleTheme() : getDarkTheme();
   }
   return getDarkTheme();
+}
+
+export function getCurrentSystemTheme(): Theme {
+  const now = new Date();
+  const hour = now.getHours();
+  const isDay = hour >= 6 && hour < 18;
+  return isDay ? getLightTheme() : getDarkTheme();
 }
 
 export function getThemeModeList(): {

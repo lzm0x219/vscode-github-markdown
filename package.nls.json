@@ -31,6 +31,7 @@
   "configuration.mermaid.theme.dark.description": "A dark theme optimized for viewing on dark backgrounds.",
   "configuration.mermaid.theme.default.description": "The default Mermaid theme with balanced colors and contrast.",
   "configuration.mermaid.theme.neutral.description": "A neutral theme designed for accessibility and print-friendly output.",
-  "configuration.mermaid.lightModeTheme.description": "The Mermaid theme to use when GitHub Markdown is displaying a light theme.",
-  "configuration.mermaid.darkModeTheme.description": "The Mermaid theme to use when GitHub Markdown is displaying a dark theme."
+  "configuration.mermaid.syncTheme.description": "Synchronize Mermaid theme with GitHub Markdown theme.",
+  "configuration.mermaid.lightTheme.description": "Mermaid theme used in light mode. Only applies when theme synchronization is enabled.",
+  "configuration.mermaid.darkTheme.description": "Mermaid theme used in dark mode. Only applies when theme synchronization is enabled."
 }
