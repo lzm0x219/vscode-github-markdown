@@ -1,5 +1,5 @@
 import type MarkdownIt from "markdown-it";
-import { getThemeColorMode, getThemeSystemDay, getThemeSystemNight } from "../theme";
+import { getThemeColorMode, getCurrentLightTheme, getCurrentDarkTheme } from "../theme";
 
 export default function markdownItGitHubTheme(md: MarkdownIt): MarkdownIt {
   const render = md.renderer.render.bind(md.renderer);
@@ -9,8 +9,8 @@ export default function markdownItGitHubTheme(md: MarkdownIt): MarkdownIt {
       <div
         class="vscode-github-markdown"
         data-color-mode="${getThemeColorMode()}"
-        data-light-theme="${getThemeSystemDay()}"
-        data-dark-theme="${getThemeSystemNight()}"
+        data-light-theme="${getCurrentLightTheme()}"
+        data-dark-theme="${getCurrentDarkTheme()}"
       >
         ${render.apply(md.renderer, args)}
       </div>

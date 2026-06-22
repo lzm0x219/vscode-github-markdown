@@ -60,9 +60,9 @@ Draft
 项目应暴露以下四个 VS Code 命令：
 
 1. `vscode-github-markdown.changeThemeMode`
-2. `vscode-github-markdown.changeThemeSingle`
-3. `vscode-github-markdown.changeThemeSystemDay`
-4. `vscode-github-markdown.changeThemeSystemNight`
+2. `vscode-github-markdown.changeSingleTheme`
+3. `vscode-github-markdown.changeLightTheme`
+4. `vscode-github-markdown.changeDarkTheme`
 
 它们分别对应四个公开主题配置项：
 
@@ -77,12 +77,12 @@ Draft
 
 每个命令只负责一个配置项：
 
-| 命令                                            | 配置项                                      | 作用                     |
-| ----------------------------------------------- | ------------------------------------------- | ------------------------ |
-| `vscode-github-markdown.changeThemeMode`        | `vscode-github-markdown.theme.mode`         | 修改主题模式             |
-| `vscode-github-markdown.changeThemeSingle`      | `vscode-github-markdown.theme.single`       | 修改单主题模式下的主题   |
-| `vscode-github-markdown.changeThemeSystemDay`   | `vscode-github-markdown.theme.system.day`   | 修改系统模式下的白天主题 |
-| `vscode-github-markdown.changeThemeSystemNight` | `vscode-github-markdown.theme.system.night` | 修改系统模式下的夜间主题 |
+| 命令                                       | 配置项                                      | 作用                     |
+| ------------------------------------------ | ------------------------------------------- | ------------------------ |
+| `vscode-github-markdown.changeThemeMode`   | `vscode-github-markdown.theme.mode`         | 修改主题模式             |
+| `vscode-github-markdown.changeSingleTheme` | `vscode-github-markdown.theme.single`       | 修改单主题模式下的主题   |
+| `vscode-github-markdown.changeLightTheme`  | `vscode-github-markdown.theme.system.day`   | 修改系统模式下的白天主题 |
+| `vscode-github-markdown.changeDarkTheme`   | `vscode-github-markdown.theme.system.night` | 修改系统模式下的夜间主题 |
 
 这样做的目的很简单：
 

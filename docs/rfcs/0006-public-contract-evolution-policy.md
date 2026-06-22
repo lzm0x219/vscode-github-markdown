@@ -68,9 +68,9 @@ Draft
 - `vscode-github-markdown.theme.system.day`
 - `vscode-github-markdown.theme.system.night`
 - `vscode-github-markdown.changeThemeMode`
-- `vscode-github-markdown.changeThemeSingle`
-- `vscode-github-markdown.changeThemeSystemDay`
-- `vscode-github-markdown.changeThemeSystemNight`
+- `vscode-github-markdown.changeSingleTheme`
+- `vscode-github-markdown.changeLightTheme`
+- `vscode-github-markdown.changeDarkTheme`
 - `.vscode-github-markdown`
 - `data-color-mode`
 - `data-light-theme`

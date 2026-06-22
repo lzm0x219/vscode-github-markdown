@@ -37,11 +37,11 @@ export const ThemeModeLabels: Record<ThemeMode, string> = {
 export const ThemeModeKeys = Object.keys(ThemeModeLabels) as (keyof typeof ThemeModeLabels)[];
 
 export const section = {
-  namespace: "vscode-github-markdown",
-  themeModeSection: "theme.mode",
-  themeSingleSection: "theme.single",
-  themeSystemDaySection: "theme.system.day",
-  themeSystemNightSection: "theme.system.night"
+  namespace: "githubMarkdown",
+  mode: "theme.mode",
+  single: "theme.single",
+  light: "theme.light",
+  dark: "theme.dark"
 } as const;
 
 function getConfiguration(): vscode.WorkspaceConfiguration {
@@ -49,43 +49,59 @@ function getConfiguration(): vscode.WorkspaceConfiguration {
 }
 
 export function getThemeMode(): ThemeMode {
-  return getConfiguration().get(section.themeModeSection, "system");
+  return getConfiguration().get(section.mode, "system");
 }
 
 export async function setThemeMode(mode: ThemeMode): Promise<void> {
-  await getConfiguration().update(section.themeModeSection, mode, true);
+  await getConfiguration().update(section.mode, mode, true);
 }
 
-export function getThemeSingle(): Theme {
-  return getConfiguration().get<Theme>(section.themeSingleSection, "light");
+export function getSingleTheme(): Theme {
+  return getConfiguration().get<Theme>(section.single, "light");
 }
 
-export async function setThemeSingle(theme: Theme): Promise<void> {
-  await getConfiguration().update(section.themeSingleSection, theme, true);
+export async function setSingleTheme(theme: Theme): Promise<void> {
+  await getConfiguration().update(section.single, theme, true);
 }
 
-export function getThemeSystemDay(): Theme {
-  return getConfiguration().get<Theme>(section.themeSystemDaySection, "light");
+export function getLightTheme(): Theme {
+  return getConfiguration().get<Theme>(section.light, "light");
 }
 
-export async function setThemeSystemDay(theme: Theme): Promise<void> {
-  await getConfiguration().update(section.themeSystemDaySection, theme, true);
+export async function setLightTheme(theme: Theme): Promise<void> {
+  await getConfiguration().update(section.light, theme, true);
 }
 
-export function getThemeSystemNight(): Theme {
-  return getConfiguration().get<Theme>(section.themeSystemNightSection, "dark");
+export function getDarkTheme(): Theme {
+  return getConfiguration().get<Theme>(section.dark, "dark");
 }
 
-export async function setThemeSystemNight(theme: Theme): Promise<void> {
-  await getConfiguration().update(section.themeSystemNightSection, theme, true);
+export async function setDarkTheme(theme: Theme): Promise<void> {
+  await getConfiguration().update(section.dark, theme, true);
 }
 
 export function getThemeColorMode(): ThemeColorMode {
-  const [mode, theme] = [getThemeMode(), getThemeSingle()];
+  const [mode, theme] = [getThemeMode(), getSingleTheme()];
   if (mode === "single") {
     return theme.includes("light") ? "light" : "dark";
   }
   return "auto";
+}
+
+export function getCurrentLightTheme(): Theme {
+  const [themeMode, singleTheme] = [getThemeMode(), getSingleTheme()];
+  if (themeMode === "single") {
+    return singleTheme.includes("light") ? getSingleTheme() : getLightTheme();
+  }
+  return getLightTheme();
+}
+
+export function getCurrentDarkTheme(): Theme {
+  const [themeMode, singleTheme] = [getThemeMode(), getSingleTheme()];
+  if (themeMode === "single") {
+    return singleTheme.includes("dark") ? getSingleTheme() : getDarkTheme();
+  }
+  return getDarkTheme();
 }
 
 export function getThemeModeList(): {

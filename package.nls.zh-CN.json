@@ -1,14 +1,37 @@
 {
-  "command.theme.mode.title": "GitHub Markdown: 更改主题模式",
-  "command.theme.mode.single.title": "GitHub Markdown: 更改单一主题",
-  "command.theme.mode.system.day.title": "GitHub Markdown: 更改白天模式的主题",
-  "command.theme.mode.system.night.title": "GitHub Markdown: 更改黑夜模式的主题",
-  "configuration.theme.mode.description": "选择单一主题，或与您的系统同步，自动在白天和黑夜主题之间切换",
-  "configuration.theme.mode.enum.label.single": "单一主题",
-  "configuration.theme.mode.enum.label.system": "跟随系统",
-  "configuration.theme.mode.single.enum.description": "使用您选择的主题",
-  "configuration.theme.mode.single.description": "单一主题模式下使用的主题",
-  "configuration.theme.mode.system.enum.description": "使用您的系统激活设置的主题",
-  "configuration.theme.mode.system.day.description": "此主题将在白天模式下激活",
-  "configuration.theme.mode.system.night.description": "此主题将在黑夜模式下激活"
+  "displayName": "GitHub Markdown 预览",
+  "description": "让 VS Code Markdown 预览尽可能与 GitHub 保持一致。",
+
+  "command.changeThemeMode.title": "GitHub Markdown: 更改主题模式",
+  "command.changeSingleTheme.title": "GitHub Markdown: 更改单一主题",
+  "command.changeLightTheme.title": "GitHub Markdown: 更改日间主题",
+  "command.changeDarkTheme.title": "GitHub Markdown: 更改夜间主题",
+
+  "configuration.theme.mode.description": "选择固定主题，或与系统同步并根据系统的日间/夜间模式自动切换主题",
+  "configuration.theme.mode.single.enum.description": "GitHub Markdown 将始终使用所选主题",
+  "configuration.theme.mode.system.enum.description": "GitHub Markdown 主题将根据系统当前设置自动切换",
+
+  "configuration.theme.single.description": "固定主题模式下使用的主题",
+  "configuration.theme.light.description": "当系统处于浅色模式时使用此主题",
+  "configuration.theme.dark.description": "当系统处于深色模式时使用此主题",
+
+  "configuration.theme.light.enum.description": "GitHub 标准浅色主题，提供完整的色彩对比度和亮度。",
+  "configuration.theme.light_colorblind.enum.description": "适用于难以区分红色和绿色的用户。",
+  "configuration.theme.light_high_contrast.enum.description": "适用于需要更高界面对比度的用户。",
+  "configuration.theme.light_tritanopia.enum.description": "适用于难以区分蓝色与绿色，以及黄色与紫色的用户。",
+
+  "configuration.theme.dark.enum.description": "GitHub 标准深色主题，在深色背景上提供完整的色彩对比度和亮度。",
+  "configuration.theme.dark_colorblind.enum.description": "适用于难以区分红色和绿色的用户，并采用深色背景。",
+  "configuration.theme.dark_dimmed.enum.description": "降低对比度的深色主题，在低光环境下提供更舒适的阅读体验。",
+  "configuration.theme.dark_high_contrast.enum.description": "适用于需要更高界面对比度的用户，并采用深色背景。",
+  "configuration.theme.dark_tritanopia.enum.description": "适用于难以区分蓝色与绿色，以及黄色与紫色的用户，并采用深色背景。",
+
+  "configuration.mermaid.theme.vscode.description": "自动匹配当前 VS Code 颜色主题。",
+  "configuration.mermaid.theme.base.description": "用于创建自定义 Mermaid 主题的基础主题。",
+  "configuration.mermaid.theme.forest.description": "以自然绿色色调为灵感的主题。",
+  "configuration.mermaid.theme.dark.description": "针对深色背景优化的主题。",
+  "configuration.mermaid.theme.default.description": "默认 Mermaid 主题，提供均衡的颜色和对比度。",
+  "configuration.mermaid.theme.neutral.description": "适用于无障碍和打印场景的中性色主题。",
+  "configuration.mermaid.lightModeTheme.description": "当 GitHub Markdown 使用浅色主题时应用的 Mermaid 主题。",
+  "configuration.mermaid.darkModeTheme.description": "当 GitHub Markdown 使用深色主题时应用的 Mermaid 主题。"
 }

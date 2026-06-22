@@ -1,6 +1,13 @@
 {
   "Select a theme mode": "选择主题模式",
-  "Select a theme": "选择一个主题",
-  "Select a theme for day": "选择一个白天主题",
-  "Select a theme for night": "选择一个夜晚主题"
+  "Theme mode changed to {0}": "主题模式已切换为 {0}",
+
+  "Select a theme": "选择主题",
+  "Single theme changed to {0}.": "固定主题已切换为 {0}。",
+
+  "Select a theme for day": "选择日间主题",
+  "Day theme changed to {0}.": "日间主题已切换为 {0}。",
+
+  "Select a theme for night": "选择夜间主题",
+  "Night theme changed to {0}.": "夜间主题已切换为 {0}。"
 }

@@ -1,7 +1,8 @@
 {
   "name": "vscode-github-markdown",
-  "displayName": "Github Markdown Preview",
+  "displayName": "%displayName%",
   "version": "4.0.0",
+  "description": "%description%",
   "categories": [
     "Other"
   ],
@@ -65,125 +66,173 @@
     "commands": [
       {
         "command": "vscode-github-markdown.changeThemeMode",
-        "title": "%command.theme.mode.title%"
+        "title": "%command.changeThemeMode.title%"
       },
       {
-        "command": "vscode-github-markdown.changeThemeSingle",
-        "title": "%command.theme.mode.single.title%"
+        "command": "vscode-github-markdown.changeSingleTheme",
+        "title": "%command.changeSingleTheme.title%"
       },
       {
-        "command": "vscode-github-markdown.changeThemeSystemDay",
-        "title": "%command.theme.mode.system.day.title%"
+        "command": "vscode-github-markdown.changeLightTheme",
+        "title": "%command.changeLightTheme.title%"
       },
       {
-        "command": "vscode-github-markdown.changeThemeSystemNight",
-        "title": "%command.theme.mode.system.night.title%"
+        "command": "vscode-github-markdown.changeDarkTheme",
+        "title": "%command.changeDarkTheme.title%"
       }
     ],
-    "configuration": {
-      "title": "GitHub Markdown",
-      "properties": {
-        "vscode-github-markdown.theme.mode": {
-          "type": "string",
-          "description": "%configuration.theme.mode.description%",
-          "enum": [
-            "single",
-            "system"
-          ],
-          "enumItemLabels": [
-            "%configuration.theme.mode.enum.label.single%",
-            "%configuration.theme.mode.enum.label.system%"
-          ],
-          "enumDescriptions": [
-            "%configuration.theme.mode.single.enum.description%",
-            "%configuration.theme.mode.system.enum.description%"
-          ],
-          "default": "system",
-          "order": 0
-        },
-        "vscode-github-markdown.theme.single": {
-          "type": "string",
-          "description": "%configuration.theme.mode.single.description%",
-          "default": "light",
-          "enum": [
-            "light",
-            "light_colorblind",
-            "light_high_contrast",
-            "light_tritanopia",
-            "dark",
-            "dark_colorblind",
-            "dark_dimmed",
-            "dark_high_contrast",
-            "dark_tritanopia"
-          ],
-          "enumItemLabels": [
-            "Light",
-            "Light Protanopia & Deuteranopia",
-            "Light high contrast",
-            "Light Tritanopia",
-            "Dark",
-            "Dark Protanopia & Deuteranopia",
-            "Dark dimmed",
-            "Dark high contrast",
-            "Dark Tritanopia"
-          ]
-        },
-        "vscode-github-markdown.theme.system.day": {
-          "type": "string",
-          "description": "%configuration.theme.mode.system.day.description%",
-          "default": "light",
-          "enum": [
-            "light",
-            "light_colorblind",
-            "light_high_contrast",
-            "light_tritanopia",
-            "dark",
-            "dark_colorblind",
-            "dark_dimmed",
-            "dark_high_contrast",
-            "dark_tritanopia"
-          ],
-          "enumItemLabels": [
-            "Light",
-            "Light Protanopia & Deuteranopia",
-            "Light high contrast",
-            "Light Tritanopia",
-            "Dark",
-            "Dark Protanopia & Deuteranopia",
-            "Dark dimmed",
-            "Dark high contrast",
-            "Dark Tritanopia"
-          ]
-        },
-        "vscode-github-markdown.theme.system.night": {
-          "type": "string",
-          "description": "%configuration.theme.mode.system.night.description%",
-          "default": "dark",
-          "enum": [
-            "light",
-            "light_colorblind",
-            "light_high_contrast",
-            "light_tritanopia",
-            "dark",
-            "dark_colorblind",
-            "dark_dimmed",
-            "dark_high_contrast",
-            "dark_tritanopia"
-          ],
-          "enumItemLabels": [
-            "Light",
-            "Light Protanopia & Deuteranopia",
-            "Light high contrast",
-            "Light Tritanopia",
-            "Dark",
-            "Dark Protanopia & Deuteranopia",
-            "Dark dimmed",
-            "Dark high contrast",
-            "Dark Tritanopia"
-          ]
+    "configuration": [
+      {
+        "title": "Markdown",
+        "properties": {
+          "githubMarkdown.theme.mode": {
+            "order": 0,
+            "type": "string",
+            "description": "%configuration.theme.mode.description%",
+            "enum": [
+              "single",
+              "system"
+            ],
+            "enumDescriptions": [
+              "%configuration.theme.mode.single.enum.description%",
+              "%configuration.theme.mode.system.enum.description%"
+            ],
+            "default": "system"
+          },
+          "githubMarkdown.theme.single": {
+            "order": 1,
+            "type": "string",
+            "description": "%configuration.theme.single.description%",
+            "default": "light",
+            "enum": [
+              "light",
+              "light_colorblind",
+              "light_high_contrast",
+              "light_tritanopia",
+              "dark",
+              "dark_colorblind",
+              "dark_dimmed",
+              "dark_high_contrast",
+              "dark_tritanopia"
+            ],
+            "enumDescriptions": [
+              "%configuration.theme.light.enum.description%",
+              "%configuration.theme.light_colorblind.enum.description%",
+              "%configuration.theme.light_high_contrast.enum.description%",
+              "%configuration.theme.light_tritanopia.enum.description%",
+              "%configuration.theme.dark.enum.description%",
+              "%configuration.theme.dark_colorblind.enum.description%",
+              "%configuration.theme.dark_dimmed.enum.description%",
+              "%configuration.theme.dark_high_contrast.enum.description%",
+              "%configuration.theme.dark_tritanopia.enum.description%"
+            ]
+          },
+          "githubMarkdown.theme.light": {
+            "order": 2,
+            "type": "string",
+            "description": "%configuration.theme.light.description%",
+            "default": "light",
+            "enum": [
+              "light",
+              "light_colorblind",
+              "light_high_contrast",
+              "light_tritanopia",
+              "dark",
+              "dark_colorblind",
+              "dark_dimmed",
+              "dark_high_contrast",
+              "dark_tritanopia"
+            ],
+            "enumDescriptions": [
+              "%configuration.theme.light.enum.description%",
+              "%configuration.theme.light_colorblind.enum.description%",
+              "%configuration.theme.light_high_contrast.enum.description%",
+              "%configuration.theme.light_tritanopia.enum.description%",
+              "%configuration.theme.dark.enum.description%",
+              "%configuration.theme.dark_colorblind.enum.description%",
+              "%configuration.theme.dark_dimmed.enum.description%",
+              "%configuration.theme.dark_high_contrast.enum.description%",
+              "%configuration.theme.dark_tritanopia.enum.description%"
+            ]
+          },
+          "githubMarkdown.theme.dark": {
+            "order": 3,
+            "type": "string",
+            "description": "%configuration.theme.dark.description%",
+            "default": "dark",
+            "enum": [
+              "light",
+              "light_colorblind",
+              "light_high_contrast",
+              "light_tritanopia",
+              "dark",
+              "dark_colorblind",
+              "dark_dimmed",
+              "dark_high_contrast",
+              "dark_tritanopia"
+            ],
+            "enumDescriptions": [
+              "%configuration.theme.light.enum.description%",
+              "%configuration.theme.light_colorblind.enum.description%",
+              "%configuration.theme.light_high_contrast.enum.description%",
+              "%configuration.theme.light_tritanopia.enum.description%",
+              "%configuration.theme.dark.enum.description%",
+              "%configuration.theme.dark_colorblind.enum.description%",
+              "%configuration.theme.dark_dimmed.enum.description%",
+              "%configuration.theme.dark_high_contrast.enum.description%",
+              "%configuration.theme.dark_tritanopia.enum.description%"
+            ]
+          }
+        }
+      },
+      {
+        "title": "Mermaid",
+        "properties": {
+          "githubMarkdown.mermaid.lightTheme": {
+            "type": "string",
+            "enum": [
+              "vscode",
+              "base",
+              "forest",
+              "dark",
+              "default",
+              "neutral"
+            ],
+            "enumDescriptions": [
+              "%configuration.mermaid.theme.vscode.description%",
+              "%configuration.mermaid.theme.base.description%",
+              "%configuration.mermaid.theme.forest.description%",
+              "%configuration.mermaid.theme.dark.description%",
+              "%configuration.mermaid.theme.default.description%",
+              "%configuration.mermaid.theme.neutral.description%"
+            ],
+            "default": "vscode",
+            "description": "%configuration.mermaid.lightModeTheme.description%"
+          },
+          "githubMarkdown.mermaid.darkTheme": {
+            "type": "string",
+            "enum": [
+              "vscode",
+              "base",
+              "forest",
+              "dark",
+              "default",
+              "neutral"
+            ],
+            "enumDescriptions": [
+              "%configuration.mermaid.theme.vscode.description%",
+              "%configuration.mermaid.theme.base.description%",
+              "%configuration.mermaid.theme.forest.description%",
+              "%configuration.mermaid.theme.dark.description%",
+              "%configuration.mermaid.theme.default.description%",
+              "%configuration.mermaid.theme.neutral.description%"
+            ],
+            "default": "vscode",
+            "description": "%configuration.mermaid.darkModeTheme.description%"
+          }
         }
       }
-    }
+    ]
   },
   "activationEvents": [],
   "icon": "assets/icon.png",

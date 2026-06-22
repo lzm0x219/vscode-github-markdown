@@ -1,15 +1,36 @@
 {
-  "command.theme.mode.title": "GitHub Markdown: Change Theme Mode",
-  "command.theme.mode.single.title": "GitHub Markdown: Change Single Theme",
-  "command.theme.mode.system.day.title": "GitHub Markdown: Change Day Theme",
-  "command.theme.mode.system.night.title": "GitHub Markdown: Change Night Theme",
+  "displayName": "Github Markdown Preview",
+  "description": "Make VS Code Markdown Preview match GitHub as closely as possible.",
+  "command.changeThemeMode.title": "GitHub Markdown: Change Theme Mode",
+  "command.changeSingleTheme.title": "GitHub Markdown: Change Single Theme",
+  "command.changeLightTheme.title": "GitHub Markdown: Change Day Theme",
+  "command.changeDarkTheme.title": "GitHub Markdown: Change Night Theme",
 
   "configuration.theme.mode.description": "Select a single theme, or sync with your system and automatically switch between day and night themes",
-  "configuration.theme.mode.enum.label.single": "Single theme",
-  "configuration.theme.mode.enum.label.system": "Sync with system",
-  "configuration.theme.mode.single.enum.description": "Use your selected theme",
-  "configuration.theme.mode.single.description": "The theme used in single theme mode",
-  "configuration.theme.mode.system.enum.description": "Match your system active settings",
-  "configuration.theme.mode.system.day.description": "This theme will be active when your system is set to “light mode”",
-  "configuration.theme.mode.system.night.description": "This theme will be active when your system is set to “dark mode”"
+  "configuration.theme.mode.single.enum.description": "GitHub will use your selected theme",
+  "configuration.theme.mode.system.enum.description": "GitHub theme will match your system active settings",
+
+  "configuration.singleTheme.description": "The theme used in single theme mode",
+  "configuration.lightTheme.description": "This theme will be active when your system is set to “light mode”",
+  "configuration.darkTheme.description": "This theme will be active when your system is set to “dark mode”",
+
+  "configuration.theme.light.enum.description": "GitHub's standard light theme with full color contrast and brightness.",
+  "configuration.theme.light_colorblind.enum.description": "For people who may find it difficult to distinguish between reds and greens.",
+  "configuration.theme.light_high_contrast.enum.description": "For people who need higher contrast between interface elements.",
+  "configuration.theme.light_tritanopia.enum.description": "For people who find it difficult to distinguish between blues and greens, as well as yellows and purples.",
+
+  "configuration.theme.dark.enum.description": "GitHub's standard dark theme with full color contrast and brightness on a dark background.",
+  "configuration.theme.dark_colorblind.enum.description": "For people who may find it difficult to distinguish between reds and greens, with a dark background.",
+  "configuration.theme.dark_dimmed.enum.description": "A dark theme with reduced contrast for comfortable viewing in low-light environments.",
+  "configuration.theme.dark_high_contrast.enum.description": "For people who need higher contrast between interface elements, with a dark background.",
+  "configuration.theme.dark_tritanopia.enum.description": "For people who find it difficult to distinguish between blues and greens, as well as yellows and purples, with a dark background.",
+
+  "configuration.mermaid.theme.vscode.description": "Automatically match the current VS Code color theme.",
+  "configuration.mermaid.theme.base.description": "The base theme used for creating custom Mermaid themes.",
+  "configuration.mermaid.theme.forest.description": "A theme inspired by natural green tones.",
+  "configuration.mermaid.theme.dark.description": "A dark theme optimized for viewing on dark backgrounds.",
+  "configuration.mermaid.theme.default.description": "The default Mermaid theme with balanced colors and contrast.",
+  "configuration.mermaid.theme.neutral.description": "A neutral theme designed for accessibility and print-friendly output.",
+  "configuration.mermaid.lightModeTheme.description": "The Mermaid theme to use when GitHub Markdown is displaying a light theme.",
+  "configuration.mermaid.darkModeTheme.description": "The Mermaid theme to use when GitHub Markdown is displaying a dark theme."
 }

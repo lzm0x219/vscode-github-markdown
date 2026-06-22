@@ -99,9 +99,9 @@ Active
 **验收标准：**
 
 - [x] `vscode-github-markdown.changeThemeMode` 已贡献
-- [x] `vscode-github-markdown.changeThemeSingle` 已贡献
-- [x] `vscode-github-markdown.changeThemeSystemDay` 已贡献
-- [x] `vscode-github-markdown.changeThemeSystemNight` 已贡献
+- [x] `vscode-github-markdown.changeSingleTheme` 已贡献
+- [x] `vscode-github-markdown.changeLightTheme` 已贡献
+- [x] `vscode-github-markdown.changeDarkTheme` 已贡献
 - [x] 英文与中文本地化标题可用
 
 **验证：**

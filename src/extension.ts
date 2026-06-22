@@ -1,11 +1,6 @@
 import vscode from "vscode";
 import type MarkdownIt from "markdown-it";
-import {
-  changeThemeMode,
-  changeThemeSystemDay,
-  changeThemeSystemNight,
-  changeThemeSingle
-} from "./commands";
+import { changeThemeMode, changeLightTheme, changeDarkTheme, changeSingleTheme } from "./commands";
 import { onMarkdownPreviewRefresh } from "./events";
 import alerts from "./plugins/markdown-it-github-alerts";
 import emoji from "./plugins/markdown-it-github-emoji";
@@ -16,12 +11,7 @@ import theme from "./plugins/markdown-it-github-theme";
 
 export function activate(context: vscode.ExtensionContext) {
   // register commands
-  context.subscriptions.push(
-    changeThemeMode,
-    changeThemeSingle,
-    changeThemeSystemDay,
-    changeThemeSystemNight
-  );
+  context.subscriptions.push(changeThemeMode, changeSingleTheme, changeLightTheme, changeDarkTheme);
 
   // register events
   context.subscriptions.push(onMarkdownPreviewRefresh);
