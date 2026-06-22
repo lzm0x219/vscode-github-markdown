@@ -27,6 +27,7 @@
     "url": "git+https://github.com/lzm0x219/vscode-github-markdown.git"
   },
   "publisher": "lzm0x219",
+  "sideEffects": false,
   "main": "dist/extension.js",
   "browser": "dist/extension.js",
   "scripts": {
