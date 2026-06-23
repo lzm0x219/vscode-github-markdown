@@ -1,4 +1,5 @@
 {
+  "Failed to change theme. See output for details.": "Failed to change theme. See output for details.",
   "Select a theme mode": "Select a theme mode",
   "Theme mode changed to {0}": "Theme mode changed to {0}",
   "Select a theme": "Select a theme",
@@ -6,5 +7,9 @@
   "Select a theme for day": "Select a theme for day",
   "Day theme changed to {0}.": "Day theme changed to {0}.",
   "Select a theme for night": "Select a theme for night",
-  "Night theme changed to {0}.": "Night theme changed to {0}."
+  "Night theme changed to {0}.": "Night theme changed to {0}.",
+  "Completed task": "Completed task",
+  "Incomplete task": "Incomplete task",
+  "Footnotes": "Footnotes",
+  "Back to reference {0}{1}": "Back to reference {0}{1}"
 }
