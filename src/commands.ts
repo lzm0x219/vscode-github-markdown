@@ -12,70 +12,69 @@ import {
   getDarkTheme
 } from "./theme";
 
-export const changeThemeMode: vscode.Disposable = vscode.commands.registerCommand(
+function createThemeCommand<T extends string>(
+  commandId: string,
+  getList: () => { label: string; value: T }[],
+  getCurrent: () => T,
+  setCurrent: (value: T) => Promise<void>,
+  placeholder: string,
+  successMessage: (label: string) => string
+): vscode.Disposable {
+  return vscode.commands.registerCommand(commandId, async () => {
+    const result = await vscode.window.showQuickPick(getList(), {
+      placeHolder: placeholder
+    });
+
+    if (!result) {
+      return;
+    }
+
+    if (result.value === getCurrent()) {
+      return;
+    }
+
+    try {
+      await setCurrent(result.value);
+      vscode.window.showInformationMessage(successMessage(result.label));
+    } catch (error) {
+      console.error(`[github-markdown] Failed to update theme: ${commandId}`, error);
+      vscode.window.showErrorMessage(l10n.t("Failed to change theme. See output for details."));
+    }
+  });
+}
+
+export const changeThemeMode: vscode.Disposable = createThemeCommand(
   "vscode-github-markdown.changeThemeMode",
-  async () => {
-    const result = await vscode.window.showQuickPick(getThemeModeList(), {
-      placeHolder: l10n.t("Select a theme mode")
-    });
-
-    if (result) {
-      if (result.value === getThemeMode()) {
-        return;
-      }
-      await setThemeMode(result.value);
-      vscode.window.showInformationMessage(l10n.t("Theme mode changed to {0}", result.label));
-    }
-  }
+  getThemeModeList,
+  getThemeMode,
+  setThemeMode,
+  l10n.t("Select a theme mode"),
+  (label) => l10n.t("Theme mode changed to {0}", label)
 );
 
-export const changeSingleTheme: vscode.Disposable = vscode.commands.registerCommand(
+export const changeSingleTheme: vscode.Disposable = createThemeCommand(
   "vscode-github-markdown.changeSingleTheme",
-  async () => {
-    const result = await vscode.window.showQuickPick(getThemeList(), {
-      placeHolder: l10n.t("Select a theme")
-    });
-
-    if (result) {
-      if (result.value === getSingleTheme()) {
-        return;
-      }
-      await setSingleTheme(result.value);
-      vscode.window.showInformationMessage(l10n.t("Single theme changed to {0}.", result.label));
-    }
-  }
+  getThemeList,
+  getSingleTheme,
+  setSingleTheme,
+  l10n.t("Select a theme"),
+  (label) => l10n.t("Single theme changed to {0}.", label)
 );
 
-export const changeLightTheme: vscode.Disposable = vscode.commands.registerCommand(
+export const changeLightTheme: vscode.Disposable = createThemeCommand(
   "vscode-github-markdown.changeLightTheme",
-  async () => {
-    const result = await vscode.window.showQuickPick(getThemeList(), {
-      placeHolder: l10n.t("Select a theme for day")
-    });
-
-    if (result) {
-      if (result.value === getLightTheme()) {
-        return;
-      }
-      await setLightTheme(result.value);
-      vscode.window.showInformationMessage(l10n.t("Day theme changed to {0}.", result.label));
-    }
-  }
+  getThemeList,
+  getLightTheme,
+  setLightTheme,
+  l10n.t("Select a theme for day"),
+  (label) => l10n.t("Day theme changed to {0}.", label)
 );
 
-export const changeDarkTheme: vscode.Disposable = vscode.commands.registerCommand(
+export const changeDarkTheme: vscode.Disposable = createThemeCommand(
   "vscode-github-markdown.changeDarkTheme",
-  async () => {
-    const result = await vscode.window.showQuickPick(getThemeList(), {
-      placeHolder: l10n.t("Select a theme for night")
-    });
-
-    if (result) {
-      if (result.value === getDarkTheme()) {
-        return;
-      }
-      await setDarkTheme(result.value);
-      vscode.window.showInformationMessage(l10n.t("Night theme changed to {0}.", result.label));
-    }
-  }
+  getThemeList,
+  getDarkTheme,
+  setDarkTheme,
+  l10n.t("Select a theme for night"),
+  (label) => l10n.t("Night theme changed to {0}.", label)
 );

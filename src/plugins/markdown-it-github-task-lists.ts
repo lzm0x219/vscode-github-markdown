@@ -1,10 +1,6 @@
+import { l10n } from "vscode";
 import type MarkdownIt from "markdown-it";
-
-type MarkdownToken = ReturnType<MarkdownIt["parse"]>[number];
-type MarkdownState = {
-  Token: new (...args: unknown[]) => MarkdownToken;
-  tokens: MarkdownToken[];
-};
+import type { MarkdownToken, MarkdownState } from "./shared";
 
 const taskListMarkerPattern = /^[ \t]*\[( |x|X)\][ \t]*/;
 
@@ -50,8 +46,8 @@ function applyTaskLists(state: MarkdownState) {
     const checked = marker.toLowerCase() === "x";
     const checkboxToken = new state.Token("html_inline", "", 0);
     checkboxToken.content = checked
-      ? '<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> '
-      : '<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> ';
+      ? `<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="${l10n.t("Completed task")}" checked=""> `
+      : `<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="${l10n.t("Incomplete task")}"> `;
 
     const inlineChildren = inline.children ? [...inline.children] : [];
     firstChild.content = firstChild.content.slice(match[0].length);

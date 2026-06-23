@@ -1,10 +1,5 @@
 import type MarkdownIt from "markdown-it";
-
-type MarkdownToken = ReturnType<MarkdownIt["parse"]>[number];
-type MarkdownState = {
-  Token: new (...args: unknown[]) => MarkdownToken;
-  tokens: MarkdownToken[];
-};
+import type { MarkdownToken, MarkdownState } from "./shared";
 
 const alertTitles = {
   note: "Note",

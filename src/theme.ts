@@ -15,7 +15,21 @@ export type Theme =
   | "dark_high_contrast"
   | "dark_tritanopia";
 
-export const ThemeLabels: Record<Theme, string> = {
+export const DAY_START_HOUR = 6;
+export const NIGHT_START_HOUR = 18;
+
+const lightThemeNames: Set<Theme> = new Set([
+  "light",
+  "light_colorblind",
+  "light_high_contrast",
+  "light_tritanopia"
+]);
+
+export function isLightTheme(theme: Theme): boolean {
+  return lightThemeNames.has(theme);
+}
+
+const themeLabelKeys: Record<Theme, string> = {
   light: "Light",
   light_colorblind: "Light Protanopia & Deuteranopia",
   light_high_contrast: "Light high contrast",
@@ -27,14 +41,14 @@ export const ThemeLabels: Record<Theme, string> = {
   dark_tritanopia: "Dark Tritanopia"
 } as const;
 
-export const ThemeKeys = Object.keys(ThemeLabels) as Theme[];
+export const ThemeKeys = Object.keys(themeLabelKeys) as Theme[];
 
-export const ThemeModeLabels: Record<ThemeMode, string> = {
+const themeModeLabelKeys: Record<ThemeMode, string> = {
   single: "Single theme",
   system: "Sync with system"
 } as const;
 
-export const ThemeModeKeys = Object.keys(ThemeModeLabels) as (keyof typeof ThemeModeLabels)[];
+export const ThemeModeKeys = Object.keys(themeModeLabelKeys) as (keyof typeof themeModeLabelKeys)[];
 
 export const section = {
   mode: "theme.mode",
@@ -78,31 +92,32 @@ export async function setDarkTheme(theme: Theme): Promise<void> {
 export function getThemeColorMode(): ThemeColorMode {
   const [mode, theme] = [getThemeMode(), getSingleTheme()];
   if (mode === "single") {
-    return theme.includes("light") ? "light" : "dark";
+    return isLightTheme(theme) ? "light" : "dark";
   }
   return "auto";
 }
 
 export function getCurrentLightTheme(): Theme {
-  const [themeMode, singleTheme] = [getThemeMode(), getSingleTheme()];
+  const themeMode = getThemeMode();
+  const singleTheme = getSingleTheme();
   if (themeMode === "single") {
-    return singleTheme.includes("light") ? getSingleTheme() : getLightTheme();
+    return isLightTheme(singleTheme) ? singleTheme : getLightTheme();
   }
   return getLightTheme();
 }
 
 export function getCurrentDarkTheme(): Theme {
-  const [themeMode, singleTheme] = [getThemeMode(), getSingleTheme()];
+  const themeMode = getThemeMode();
+  const singleTheme = getSingleTheme();
   if (themeMode === "single") {
-    return singleTheme.includes("dark") ? getSingleTheme() : getDarkTheme();
+    return isLightTheme(singleTheme) ? getDarkTheme() : singleTheme;
   }
   return getDarkTheme();
 }
 
 export function getCurrentSystemTheme(): Theme {
-  const now = new Date();
-  const hour = now.getHours();
-  const isDay = hour >= 6 && hour < 18;
+  const hour = new Date().getHours();
+  const isDay = hour >= DAY_START_HOUR && hour < NIGHT_START_HOUR;
   return isDay ? getLightTheme() : getDarkTheme();
 }
 
@@ -110,9 +125,9 @@ export function getThemeModeList(): {
   label: string;
   value: ThemeMode;
 }[] {
-  return ThemeModeKeys.map((theme) => ({
-    label: ThemeModeLabels[theme],
-    value: theme
+  return ThemeModeKeys.map((mode) => ({
+    label: themeModeLabelKeys[mode],
+    value: mode
   }));
 }
 
@@ -121,7 +136,7 @@ export function getThemeList(): {
   value: Theme;
 }[] {
   return ThemeKeys.map((theme) => ({
-    label: ThemeLabels[theme],
+    label: themeLabelKeys[theme],
     value: theme
   }));
 }

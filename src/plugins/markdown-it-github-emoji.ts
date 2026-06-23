@@ -1,13 +1,9 @@
 import type MarkdownIt from "markdown-it";
+import type { MarkdownToken, MarkdownState } from "./shared";
 import { githubImageEmojiByAlias, githubUnicodeEmojiByAlias } from "../generated/github-emojis";
 
-type MarkdownToken = ReturnType<MarkdownIt["parse"]>[number];
-type MarkdownState = {
-  Token: new (...args: unknown[]) => MarkdownToken;
-  tokens: MarkdownToken[];
-};
-
 const shortcodePattern = /:([+\-\w]+):/g;
+const EMOJI_IMAGE_SIZE = "20";
 
 export default function markdownItGitHubEmoji(md: MarkdownIt): MarkdownIt {
   md.core.ruler.after("inline", "github-markdown-emoji", (state) => {
@@ -88,7 +84,7 @@ function emojiToken(name: string, state: MarkdownState, md: MarkdownIt): Markdow
   const token = new state.Token("html_inline", "", 0);
   const alt = md.utils.escapeHtml(`:${name}:`);
   const src = md.utils.escapeHtml(imageUrl);
-  token.content = `<img class="emoji" alt="${alt}" src="${src}" height="20" width="20">`;
+  token.content = `<img class="emoji" alt="${alt}" src="${src}" height="${EMOJI_IMAGE_SIZE}" width="${EMOJI_IMAGE_SIZE}">`;
   return token;
 }
 

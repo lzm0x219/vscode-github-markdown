@@ -1,11 +1,7 @@
+import { l10n } from "vscode";
 import type MarkdownIt from "markdown-it";
+import type { MarkdownToken, MarkdownState } from "./shared";
 
-type MarkdownToken = ReturnType<MarkdownIt["parse"]>[number];
-type MarkdownState = {
-  Token: new (...args: unknown[]) => MarkdownToken;
-  env: Record<string, unknown>;
-  tokens: MarkdownToken[];
-};
 type FootnoteReference = {
   label: string;
   number: number;
@@ -194,7 +190,7 @@ function appendFootnoteSection(
   const footnotesToken = new state.Token("html_block", "", 0);
   footnotesToken.content =
     `<section data-footnotes="" class="footnotes">\n` +
-    `<h2 id="footnote-label" class="sr-only" dir="auto">Footnotes</h2>\n` +
+    `<h2 id="footnote-label" class="sr-only" dir="auto">${l10n.t("Footnotes")}</h2>\n` +
     `<ol dir="auto">\n${items}\n</ol>\n` +
     `</section>\n`;
 
@@ -245,7 +241,7 @@ function renderBackref(number: number, referenceCount: number): string {
   return `<a href="#${footnoteReferenceId(
     number,
     referenceCount
-  )}" data-footnote-backref="" aria-label="Back to reference ${number}${suffix}" class="data-footnote-backref">↩${marker}</a>`;
+  )}" data-footnote-backref="" aria-label="${l10n.t("Back to reference {0}{1}", number, suffix)}" class="data-footnote-backref">↩${marker}</a>`;
 }
 
 function footnoteReferenceId(number: number, referenceCount: number): string {
