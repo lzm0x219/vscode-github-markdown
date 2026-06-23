@@ -13,13 +13,15 @@ import theme from "./plugins/markdown-it-github-theme";
 export async function activate(context: vscode.ExtensionContext): Promise<{
   extendMarkdownIt(md: MarkdownIt): MarkdownIt;
 }> {
-  // register commands
   context.subscriptions.push(changeThemeMode, changeSingleTheme, changeLightTheme, changeDarkTheme);
 
-  // register events
   context.subscriptions.push(onMarkdownPreviewRefresh);
 
-  await syncCurrentMermaidTheme();
+  try {
+    await syncCurrentMermaidTheme();
+  } catch (error) {
+    console.error("[github-markdown] Failed to sync Mermaid theme on activation:", error);
+  }
 
   return {
     extendMarkdownIt(md: MarkdownIt): MarkdownIt {

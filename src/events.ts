@@ -8,6 +8,15 @@ export const onMarkdownPreviewRefresh: vscode.Disposable =
       return;
     }
 
-    await syncCurrentMermaidTheme();
-    vscode.commands.executeCommand("markdown.preview.refresh");
+    try {
+      await syncCurrentMermaidTheme();
+    } catch (error) {
+      console.error("[github-markdown] Failed to sync Mermaid theme:", error);
+    }
+
+    try {
+      await vscode.commands.executeCommand("markdown.preview.refresh");
+    } catch (error) {
+      console.error("[github-markdown] Failed to refresh preview:", error);
+    }
   });
