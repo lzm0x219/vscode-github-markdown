@@ -17,7 +17,7 @@ body,
 
 .vscode-github-markdown {
   margin: 0 auto;
-  height: 100%;
+  height: calc(100vh - 36px * 2);
   padding: 36px;
   background-color: var(--bgColor-default);
   color: var(--fgColor-default);
