@@ -17,6 +17,13 @@ vi.mock("vscode", () => ({
         update: async () => {}
       })
     }
+  },
+  l10n: {
+    t: (key: string, ...args: (string | number)[]) => {
+      return args.length > 0
+        ? key.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
+        : key;
+    }
   }
 }));
 

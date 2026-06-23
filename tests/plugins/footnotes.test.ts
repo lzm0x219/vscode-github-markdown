@@ -1,5 +1,25 @@
 import MarkdownIt from "markdown-it";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("vscode", () => ({
+  default: {
+    l10n: {
+      t: (key: string, ...args: (string | number)[]) => {
+        return args.length > 0
+          ? key.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
+          : key;
+      }
+    }
+  },
+  l10n: {
+    t: (key: string, ...args: (string | number)[]) => {
+      return args.length > 0
+        ? key.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
+        : key;
+    }
+  }
+}));
+
 import githubFootnotes from "../../src/plugins/markdown-it-github-footnotes";
 
 describe("markdown-it-github-footnotes", () => {

@@ -1,5 +1,17 @@
 import MarkdownIt from "markdown-it";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("vscode", () => ({
+  default: {
+    l10n: {
+      t: (key: string) => key
+    }
+  },
+  l10n: {
+    t: (key: string) => key
+  }
+}));
+
 import githubTaskLists from "../../src/plugins/markdown-it-github-task-lists";
 
 describe("markdown-it-github-task-lists", () => {
