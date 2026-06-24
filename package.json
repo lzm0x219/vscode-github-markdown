@@ -38,7 +38,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "package": "nub run i18n-export && nub run build && nubx vsce package",
+    "package": "nubx vsce package",
     "release:note": "nub scripts/extract-release-notes.ts"
   },
   "devDependencies": {
