@@ -50,6 +50,9 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Verify publisher access
+        run: nubx vsce verify-pat lzm0x219 --azure-credential
+
       - name: Publish to VS Code Marketplace
         if: success()
         run: nubx vsce publish --azure-credential
