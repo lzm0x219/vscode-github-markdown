@@ -16,7 +16,7 @@ export default defineConfig([
     clean: false,
     publint: true,
     deps: {
-      neverBundle: ["vscode", "markdown-it"]
+      neverBundle: ["vscode"]
     },
     plugins: [
       visualizer({
