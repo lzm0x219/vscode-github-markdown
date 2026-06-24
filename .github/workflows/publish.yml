@@ -19,6 +19,8 @@ jobs:
 
       - uses: nubjs/setup-nub@v0
 
+      - run: nub pm shim
+
       - run: pnpm install --frozen-lockfile
 
       - name: Lint
