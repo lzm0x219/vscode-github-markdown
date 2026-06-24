@@ -3,14 +3,14 @@ pre-commit:
   jobs:
     - name: lint
       glob: "*.{js,ts,cjs,mjs,jsx,tsx}"
-      run: pnpm oxlint --fix {staged_files}
+      run: nubx oxlint --fix {staged_files}
       stage_fixed: true
 
     - name: format
       glob: "*"
-      run: pnpm oxfmt --no-error-on-unmatched-pattern {staged_files}
+      run: nubx oxfmt --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
 
     - name: test
       glob: "*.{js,ts,cjs,mjs,jsx,tsx}"
-      run: pnpm run test
+      run: nub run test
