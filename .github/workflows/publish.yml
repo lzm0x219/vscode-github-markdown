@@ -17,34 +17,27 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: pnpm
-
-      - uses: oven-sh/setup-bun@v2
+      - uses: nubjs/setup-nub@v0
 
       - run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm exec oxlint .
+        run: nubx oxlint .
 
       - name: Format check
-        run: pnpm exec oxfmt --check .
+        run: nubx oxfmt --check .
 
       - name: Type-aware lint
-        run: pnpm exec oxlint --type-aware .
+        run: nubx oxlint --type-aware .
 
       - name: Test
-        run: pnpm run test
+        run: nub run test
 
       - name: Build
-        run: pnpm run build
+        run: nub run build
 
       - name: Package
-        run: pnpm run package
+        run: nub run package
 
       - name: Login to Azure with Microsoft Entra ID
         uses: azure/login@v3
@@ -55,10 +48,10 @@ jobs:
 
       - name: Publish to VS Code Marketplace
         if: success()
-        run: pnpm exec vsce publish --azure-credential
+        run: nubx vsce publish --azure-credential
 
       - name: Generate Changelog
-        run: pnpm run release:note
+        run: nub run release:note
 
       - name: Create GitHub Release
         if: success()
