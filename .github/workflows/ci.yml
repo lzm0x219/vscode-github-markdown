@@ -13,9 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: nubjs/setup-nub@v0
+      - uses: pnpm/action-setup@v6
 
-      - run: nub pm shim
+      - uses: nubjs/setup-nub@v0
 
       - run: pnpm install --frozen-lockfile
 
