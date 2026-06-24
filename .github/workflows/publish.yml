@@ -6,13 +6,15 @@ on:
       - "v*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+  discussions: write
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      discussions: write
-      id-token: write
+    environment: release
 
     steps:
       - uses: actions/checkout@v7
