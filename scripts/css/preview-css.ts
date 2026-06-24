@@ -2,6 +2,7 @@ import { bundleAsync } from "lightningcss";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, isAbsolute, resolve } from "node:path";
+import { gzipSync } from "node:zlib";
 import { paths } from "../shared/paths";
 import { formatKilobytes } from "../shared/run";
 import { githubCssImportBlock } from "./github-css";
@@ -46,8 +47,8 @@ function resolveCssImport(specifier: string, fromFile: string): string {
 }
 
 async function logCssSize(file: string): Promise<void> {
-  const bytes = await Bun.file(file).bytes();
-  const gzippedBytes = Bun.gzipSync(bytes).byteLength;
+  const bytes = await readFile(file);
+  const gzippedBytes = gzipSync(bytes).byteLength;
   console.log(
     `[css] ${file} ${formatKilobytes(bytes.byteLength)} | gzip ${formatKilobytes(gzippedBytes)}`
   );

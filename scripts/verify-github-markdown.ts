@@ -1,9 +1,24 @@
-import { verifyGithubMarkdownPlugins } from "./verify/github-markdown";
+import { registerHooks } from "node:module";
+
+registerHooks({
+  resolve(specifier, _context, nextResolve) {
+    if (specifier === "vscode") {
+      return {
+        shortCircuit: true,
+        url: "data:text/javascript,export const l10n={t:(message)=>message};"
+      };
+    }
+
+    return nextResolve(specifier);
+  }
+});
+
+const { verifyGithubMarkdownPlugins } = await import("./verify/github-markdown");
 
 verifyGithubMarkdownPlugins();
 
 console.log(
-  "Verified GitHub Markdown task lists, footnotes, alerts, emoji, and built-in Mermaid styling."
+  "Verified GitHub Markdown task lists, footnotes, alerts, emoji, and Mermaid dependency guards."
 );
 console.log("");
 console.log(

@@ -1,4 +1,4 @@
-import { spawn } from "bun";
+import { spawn } from "node:child_process";
 import { watch, type FSWatcher } from "node:fs";
 import { writeGithubCssFiles } from "./css/github-css";
 import { buildPreviewCss } from "./css/preview-css";
@@ -13,10 +13,8 @@ try {
 }
 
 const cssWatcher = watchCss();
-const tsdownProc = spawn({
-  cmd: [localExecutable("tsdown"), "--watch"],
-  stdout: "inherit",
-  stderr: "inherit"
+const tsdownProc = spawn(localExecutable("tsdown"), ["--watch"], {
+  stdio: "inherit"
 });
 
 let cleanedUp = false;
@@ -36,9 +34,12 @@ process.once("SIGTERM", () => {
   void exit(143);
 });
 
-const exitCode = await tsdownProc.exited;
+const exitCode = await new Promise<number | null>((resolve, reject) => {
+  tsdownProc.on("error", reject);
+  tsdownProc.on("exit", resolve);
+});
 await cleanup(false);
-process.exit(exitCode);
+process.exit(exitCode ?? 1);
 
 async function exit(code: number): Promise<never> {
   await cleanup();

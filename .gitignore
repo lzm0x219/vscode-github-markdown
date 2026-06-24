@@ -43,3 +43,4 @@ build/
 .moon/docker
 
 .pnpm-store
+.cache/

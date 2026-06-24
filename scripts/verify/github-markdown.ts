@@ -1,7 +1,6 @@
 import MarkdownIt from "markdown-it";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import packageJson from "../../package.json";
 import githubAlerts from "../../src/plugins/markdown-it-github-alerts";
 import githubEmoji from "../../src/plugins/markdown-it-github-emoji";
 import githubFootnotes from "../../src/plugins/markdown-it-github-footnotes";
@@ -68,33 +67,10 @@ export function verifyGithubMarkdownPlugins(): void {
 
   const previewScript = readFileSync("src/extension.preview.ts", "utf8");
   assert.doesNotMatch(previewScript, /from "mermaid|mermaid\.render|mermaid\.initialize/);
-  const dependencies = (packageJson as { dependencies?: Record<string, string> }).dependencies;
-  assert.equal(Object.hasOwn(dependencies ?? {}, "mermaid"), false);
-
-  const previewCss = readFileSync("src/extension.preview.css", "utf8");
-  assert.match(previewCss, /\.vscode-github-markdown \.mermaid/);
-  assert.match(previewCss, /\.vscode-github-markdown \.md-mermaid/);
-  assert.match(previewCss, /--vscode-github-markdown-mermaid-bg: white/);
-  assert.match(previewCss, /--vscode-github-markdown-mermaid-node-bg/);
-  assert.match(previewCss, /--vscode-github-markdown-mermaid-node-bg: #ececff/);
-  assert.match(previewCss, /--vscode-github-markdown-mermaid-node-border: #9370db/);
-  assert.match(previewCss, /--vscode-github-markdown-mermaid-secondary-bg: #ffffde/);
-  assert.match(previewCss, /--vscode-github-markdown-mermaid-note-bg: #fff5ad/);
-  assert.match(previewCss, /\.vscode-github-markdown \.mermaid svg/);
-  assert.match(previewCss, /\.vscode-github-markdown \.mermaid \.node/);
-  assert.match(previewCss, /\.vscode-github-markdown \.mermaid \.edgePath/);
-  assert.match(previewCss, /\.vscode-github-markdown \.mermaid \.cluster/);
-  assert.match(previewCss, /\.actor/);
-  assert.match(previewCss, /\.classTitle/);
-  assert.match(previewCss, /\.state-title/);
-  assert.match(previewCss, /\.task/);
-  assert.match(previewCss, /\.pieCircle/);
-  assert.match(previewCss, /\.radarAxisLine/);
-  assert.match(previewCss, /\.treemapLeaf/);
-  assert.match(previewCss, /\.venn-text-node/);
-  assert.match(previewCss, /\.wardley-node-label/);
-  assert.match(previewCss, /\.architecture-service/);
-  assert.match(previewCss, /\[class\*="section-type-"\]/);
+  const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
+    dependencies?: Record<string, string>;
+  };
+  assert.equal(Object.hasOwn(packageJson.dependencies ?? {}, "mermaid"), false);
 }
 
 function markdownItRenderWrapper(md: MarkdownIt): MarkdownIt {

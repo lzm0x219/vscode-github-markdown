@@ -1,4 +1,6 @@
 import { defineConfig } from "tsdown";
+import isInCi from "is-in-ci";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig([
   {
@@ -14,8 +16,16 @@ export default defineConfig([
     clean: false,
     publint: true,
     deps: {
-      neverBundle: ["vscode"]
-    }
+      neverBundle: ["vscode", "markdown-it"]
+    },
+    plugins: [
+      visualizer({
+        open: !isInCi,
+        filename: ".cache/stats.html",
+        gzipSize: true,
+        brotliSize: true
+      })
+    ]
   },
   {
     entry: {

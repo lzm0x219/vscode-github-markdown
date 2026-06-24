@@ -1,4 +1,4 @@
-import { $ } from "bun";
+import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
 const sourceUrl = "https://api.github.com/emojis";
@@ -7,8 +7,10 @@ const emojiVariationSequencesUrl =
   "https://unicode.org/Public/17.0.0/ucd/emoji/emoji-variation-sequences.txt";
 const outputPath = "src/generated/github-emojis.ts";
 
-const data =
-  await $`curl -fsSL -H "Accept: application/vnd.github+json" -H "User-Agent: vscode-github-markdown" ${sourceUrl}`.json();
+const data = await fetchText(sourceUrl, {
+  Accept: "application/vnd.github+json",
+  "User-Agent": "vscode-github-markdown"
+}).then(JSON.parse);
 if (!isEmojiMap(data)) {
   throw new TypeError("GitHub emoji response must be an object of alias-to-url strings");
 }
@@ -36,16 +38,25 @@ for (const [name, url] of entries) {
 }
 
 const generated =
-  `// Generated from ${sourceUrl}. Run \`bun scripts/update-github-emoji.ts\` to refresh.\n` +
+  `// Generated from ${sourceUrl}. Run \`nub scripts/update-github-emoji.ts\` to refresh.\n` +
   `${formatConstMap("githubUnicodeEmojiByAlias", unicodeEntries)}\n\n` +
   `${formatConstMap("githubImageEmojiByAlias", imageEntries)}\n`;
 
-await $`mkdir -p ${dirname(outputPath)}`;
-await $`cat < ${new Response(generated)} | tee ${outputPath}`.quiet();
+await mkdir(dirname(outputPath), { recursive: true });
+await writeFile(outputPath, generated, "utf8");
 
 console.log(
   `Wrote ${unicodeEntries.length} Unicode emoji aliases and ${imageEntries.length} image emoji aliases to ${outputPath}`
 );
+
+async function fetchText(url: string, headers?: Record<string, string>): Promise<string> {
+  const response = await fetch(url, { headers: new Headers(headers) });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+  }
+
+  return response.text();
+}
 
 function isEmojiMap(value: unknown): value is Record<string, string> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -66,7 +77,7 @@ function formatConstMap(name: string, entries: [string, string][]): string {
 }
 
 async function fetchEmojiStyleCodepoints(): Promise<Set<number>> {
-  const text = await $`curl -fsSL ${emojiVariationSequencesUrl}`.text();
+  const text = await fetchText(emojiVariationSequencesUrl);
   const codepoints = new Set<number>();
 
   for (const line of text.split("\n")) {
@@ -88,7 +99,7 @@ async function fetchEmojiStyleCodepoints(): Promise<Set<number>> {
 }
 
 async function fetchEmojiDataCodepoints(property: string): Promise<Set<number>> {
-  const text = await $`curl -fsSL ${emojiDataUrl}`.text();
+  const text = await fetchText(emojiDataUrl);
   const codepoints = new Set<number>();
 
   for (const line of text.split("\n")) {
