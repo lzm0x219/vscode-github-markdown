@@ -2,7 +2,7 @@
   <a href="./README.md">English</a>
 </p>
 
-<h1 align="center">GitHub Markdown Preview</h1>
+<h1 align="center">GitHub Flavored Markdown</h1>
 
 <p align="center">
   让 VS Code 的 Markdown Preview 尽可能与 GitHub 保持一致。

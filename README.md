@@ -2,7 +2,7 @@
   <a href="./README.zh-CN.md">简体中文</a>
 </p>
 
-<h1 align="center">GitHub Markdown Preview</h1>
+<h1 align="center">GitHub Flavored Markdown</h1>
 
 <p align="center">
   Make VS Code Markdown Preview match GitHub as closely as possible.
