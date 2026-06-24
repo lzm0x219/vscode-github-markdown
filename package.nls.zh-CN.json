@@ -1,5 +1,5 @@
 {
-  "displayName": "GitHub Markdown 预览 Next",
+  "displayName": "GitHub Flavored Markdown",
   "description": "让 VS Code Markdown 预览尽可能与 GitHub 保持一致。",
 
   "command.changeThemeMode.title": "GitHub Markdown: 更改主题模式",
