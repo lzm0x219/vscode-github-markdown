@@ -21,3 +21,4 @@ tsconfig.json
 types/**
 *.config.ts
 docs/**
+node_modules/**
