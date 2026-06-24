@@ -24,7 +24,7 @@ importers:
         specifier: 7.0.0-dev.20260618.1
         version: 7.0.0-dev.20260618.1
       '@vitest/coverage-v8':
-        specifier: ^4.1.9
+        specifier: 4.1.9
         version: 4.1.9(vitest@4.1.9)
       '@vscode/vsce':
         specifier: 3.9.2
