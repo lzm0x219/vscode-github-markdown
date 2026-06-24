@@ -47,7 +47,7 @@
     "@types/node": "25.9.3",
     "@types/vscode": "1.74.0",
     "@typescript/native-preview": "7.0.0-dev.20260618.1",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/coverage-v8": "4.1.9",
     "@vscode/vsce": "3.9.2",
     "generate-github-markdown-css": "6.6.0",
     "lefthook": "2.1.9",
