@@ -10,8 +10,7 @@
 
 <p align="center">
   <img alt="VS Code ^1.74.0" src="https://badges.ws/badge/VS%20Code-%5E1.74.0-007ACC?logo=visualstudiocode&logoColor=white" />
-  <img alt="Node.js 22+" src="https://badges.ws/badge/Node.js-22%2B-339933?logo=nodedotjs&logoColor=white" />
-  <img alt="Bun" src="https://badges.ws/badge/Bun-runtime-f9f1e1?logo=bun&logoColor=white" />
+  <img alt="Nub" src="https://badges.ws/badge/Nub-toolkit-f9f1e1" />
   <img alt="Oxc" src="https://badges.ws/badge/Oxc-Linter-32f3e9?logo=oxc&logoColor=white" />
   <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
@@ -26,17 +25,17 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 
 - 对齐 GitHub Markdown 的渲染结果、留白和排版细节，而不是另起一套看起来相似但结果不同的主题
 - 尽量让本地预览和 GitHub 上的预期效果保持一致，让文档编写过程更可预期、更省来回验证成本
-- 为 VS Code 内置的 fenced `mermaid` 图表预览补齐 Mermaid 默认主题配色、间距与尺寸样式
+- 启用 Mermaid 主题同步时，让 `markdown-mermaid` 图表跟随匹配的亮色或暗色主题
 
 ## 特性
 
 ### GitHub 风格 Markdown
 
-- **任务列表** — `- [x]` 和 `- [ ]` 渲染为可点击复选框，行为和结构与 GitHub 一致。
+- **任务列表** — `- [x]` 和 `- [ ]` 渲染为 GitHub 风格的禁用复选框。
 - **脚注** — `[^1]` 引用自动编号、自动回跳链接，并在文末生成脚注区域。
 - **Alerts** — `[!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 五种提示框，附带正确的图标和样式。
 - **Emoji 短代码** — `:rocket:`、`:+1:`、`:tada:` 等数千个短代码，同时支持 Unicode emoji 和 GitHub 自定义图片 emoji。
-- **图片路径重写** — 绝对路径图片（`/path/to/img`）自动重写为相对路径（`./path/to/img`），让项目本地图片在 VS Code webview 预览中正常显示。
+- **HTML 图片路径重写** — HTML `<img>` 标签中的绝对路径（`/path/to/img`）会重写为相对路径（`./path/to/img`），让项目本地图片在 VS Code webview 预览中正常显示。
 
 ### GitHub 主题
 
@@ -53,13 +52,13 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 两种主题模式：
 
 - **单主题** — 始终使用一个固定主题。
-- **跟随系统** — 根据操作系统的日间/夜间设置自动切换，日间和夜间可分别选择不同主题。
+- **跟随系统** — 跟随预览环境的亮色/暗色配色，并可分别选择亮色和暗色主题。
 
 随时通过 VS Code 命令（Quick Pick）切换主题，无需打开设置面板。
 
 ### Mermaid 图表
 
-为 VS Code 内置的 Mermaid 预览补齐默认主题配色、间距与尺寸样式，让图表与预览整体风格一致，而非格格不入的半成品。
+启用 `githubMarkdown.mermaid.syncTheme` 后，扩展会更新 `markdown-mermaid` 的亮色/暗色主题设置，使 Mermaid 图表与当前 GitHub Markdown 主题保持匹配。扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
 
 ## 参与贡献
 

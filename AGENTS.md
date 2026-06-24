@@ -9,8 +9,7 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 - TypeScript
 - VS Code extension API
 - Markdown preview contribution points
-- pnpm
-- Bun
+- Nub
 - oxlint + oxfmt
 - lefthook
 
@@ -26,16 +25,16 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 ## Commands
 
 - Install dependencies: `pnpm install`
-- Build: `pnpm run build`
-- Dev watch: `pnpm run dev`
-- Verify GitHub Markdown: `bun scripts/verify-github-markdown.ts`
-- Test: `pnpm run test`
-- Test watch: `pnpm run test:watch`
-- Test coverage: `pnpm run test:coverage`
-- Package: `pnpm run package`
-- Lint: `pnpm exec oxlint .`
-- Type-aware lint: `pnpm exec oxlint --type-aware .`
-- Format: `pnpm exec oxfmt .`
+- Build: `nub run build`
+- Dev watch: `nub run dev`
+- Verify GitHub Markdown: `nub scripts/verify-github-markdown.ts`
+- Test: `nub run test`
+- Test watch: `nub run test:watch`
+- Test coverage: `nub run test:coverage`
+- Package: `nub run package`
+- Lint: `nubx oxlint .`
+- Type-aware lint: `nubx oxlint --type-aware .`
+- Format: `nubx oxfmt .`
 
 ## Implementation Rules
 
