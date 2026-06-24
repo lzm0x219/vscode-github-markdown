@@ -6,7 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 ---
 
-## [v4.0.0] — Unreleased
+## [v4.0.0]
 
 v4 is a ground-up rewrite. The extension has been renamed from `vscode-markdown-github` to **vscode-github-markdown** and rebuilt as a chain of focused `markdown-it` plugins that plug into VS Code's built-in Markdown preview pipeline. The theme system now offers 9 GitHub themes with preview light/dark switching, and the entire build toolchain has been modernized.
 
