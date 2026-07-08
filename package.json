@@ -60,7 +60,7 @@
     "publint": "0.3.21",
     "rollup-plugin-visualizer": "7.0.1",
     "tsdown": "0.22.3",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "4.1.10"
   },
   "l10n": "./l10n",
