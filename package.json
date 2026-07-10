@@ -45,7 +45,7 @@
     "@types/markdown-it": "14.1.2",
     "@types/node": "25.9.3",
     "@types/vscode": "1.74.0",
-    "@typescript/native-preview": "7.0.0-dev.20260618.1",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "@vitest/coverage-v8": "4.1.10",
     "@vscode/l10n-dev": "0.0.35",
     "@vscode/vsce": "3.9.2",
