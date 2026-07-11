@@ -8,9 +8,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 ## [Unreleased]
 
+### ✨ Feature
+
+- Add an accessibility setting for showing or hiding link underlines in Markdown text blocks, enabled by default to match GitHub.
+
 ### 💎 Improve
 
 - Rename the extension's display name to **GitHub Flavored Markdown** across the manifest, localization files, and documentation.
+- Align GitHub emoji wrappers and custom image metadata, consecutive footnote definitions, code typography, and footnote link decoration with GitHub rendering.
 
 ### 🧱 Refactor
 
@@ -18,6 +23,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 ### 🚧 Maintenance
 
+- Add strict pixel-level Markdown parity baselines, local regression checks, weekly GitHub renderer drift detection, and CI diff artifacts.
 - Add a mise-managed development toolchain with Node.js 24 and pnpm 11.
 - Provision the project toolchain through mise in CI and publishing workflows.
 - Upgrade to TypeScript 7 and simplify the compiler configuration for the current build pipeline.

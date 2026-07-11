@@ -26,6 +26,8 @@
   "configuration.theme.dark_high_contrast.enum.description": "适用于需要更高界面对比度的用户，并采用深色背景。",
   "configuration.theme.dark_tritanopia.enum.description": "适用于难以区分蓝色与绿色，以及黄色与紫色的用户，并采用深色背景。",
 
+  "configuration.accessibility.linkUnderlines.description": "显示文本块中链接的下划线，与 GitHub 的默认无障碍设置保持一致。",
+
   "configuration.mermaid.theme.vscode.description": "自动匹配当前 VS Code 颜色主题。",
   "configuration.mermaid.theme.base.description": "用于创建自定义 Mermaid 主题的基础主题。",
   "configuration.mermaid.theme.forest.description": "以自然绿色色调为灵感的主题。",

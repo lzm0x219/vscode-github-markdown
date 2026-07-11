@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "17 3 * * 1"
 
 jobs:
   check:
@@ -19,6 +21,15 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Cache Chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Lint
         run: nubx oxlint .
 
@@ -30,6 +41,23 @@ jobs:
 
       - name: Test
         run: nub run test
+
+      - name: Verify Markdown parity baseline
+        run: pnpm run verify:parity
+
+      - name: Detect GitHub Markdown renderer drift
+        if: github.event_name == 'schedule'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: pnpm run verify:parity:remote
+
+      - name: Upload Markdown parity images
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: markdown-parity-${{ github.run_id }}
+          path: artifacts/parity
+          if-no-files-found: ignore
 
       - name: Build
         run: nub run build

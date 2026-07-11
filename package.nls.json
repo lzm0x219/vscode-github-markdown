@@ -26,6 +26,8 @@
   "configuration.theme.dark_high_contrast.enum.description": "For people who need higher contrast between interface elements, with a dark background.",
   "configuration.theme.dark_tritanopia.enum.description": "For people who find it difficult to distinguish between blues and greens, as well as yellows and purples, with a dark background.",
 
+  "configuration.accessibility.linkUnderlines.description": "Show underlines on links in text blocks, matching GitHub's default accessibility setting.",
+
   "configuration.mermaid.theme.vscode.description": "Automatically match the current VS Code color theme.",
   "configuration.mermaid.theme.base.description": "The base theme used for creating custom Mermaid themes.",
   "configuration.mermaid.theme.forest.description": "A theme inspired by natural green tones.",

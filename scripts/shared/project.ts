@@ -14,6 +14,8 @@ export const project = {
     previewCssOutput: join(root, "dist", "extension.preview.css"),
     previewScriptSource: join(root, "src", "extension.preview.ts"),
     changelog: join(root, "CHANGELOG.md"),
+    parityBaseline: join(root, "tests", "fixtures", "parity-baseline.json"),
+    parityReferenceCss: join(root, "tests", "fixtures", "parity-reference.css"),
     emojiModule: join(root, "src", "generated", "github-emojis.ts")
   },
   urls: {

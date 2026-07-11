@@ -60,6 +60,10 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 
 启用 `githubMarkdown.mermaid.syncTheme` 后，扩展会更新 `markdown-mermaid` 的亮色/暗色主题设置，使 Mermaid 图表与当前 GitHub Markdown 主题保持匹配。扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
 
+### 无障碍
+
+文本块中的链接默认显示下划线，与 GitHub 的默认无障碍设置一致。将 `githubMarkdown.accessibility.linkUnderlines` 设为 `false` 可以隐藏链接下划线；两种模式下的脚注引用与回跳链接都不会显示下划线。
+
 ## 参与贡献
 
 请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解开发环境配置与贡献指南。

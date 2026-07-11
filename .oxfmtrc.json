@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": ["dist", "node_modules", "l10n"],
+  "ignorePatterns": ["dist", "node_modules", "l10n", "tests/fixtures/parity-reference.css"],
   "sortPackageJson": true,
   "sortImports": {
     "newlinesBetween": false,

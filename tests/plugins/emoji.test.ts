@@ -20,9 +20,9 @@ describe("markdown-it-github-emoji", () => {
   it("renders custom image emoji", () => {
     const md = new MarkdownIt().use(githubEmoji);
     const html = md.render(":shipit:");
-    expect(html).toContain('<img class="emoji"');
-    expect(html).toContain('alt=":shipit:"');
-    expect(html).toContain("github.githubassets.com/images/icons/emoji/shipit.png");
+    expect(html).toContain(
+      '<img class="emoji" title=":shipit:" alt=":shipit:" src="https://github.githubassets.com/images/icons/emoji/shipit.png" height="20" width="20" align="absmiddle">'
+    );
   });
 
   it("leaves unknown shortcode as-is", () => {
@@ -49,9 +49,9 @@ describe("markdown-it-github-emoji", () => {
     expect(html).toContain("👎");
   });
 
-  it("renders warning emoji as Unicode", () => {
+  it("uses GitHub's wrapper for warning emoji", () => {
     const md = new MarkdownIt().use(githubEmoji);
     const html = md.render(":warning:");
-    expect(html).toContain("⚠️");
+    expect(html).toContain('<g-emoji class="g-emoji" alias="warning">⚠️</g-emoji>');
   });
 });

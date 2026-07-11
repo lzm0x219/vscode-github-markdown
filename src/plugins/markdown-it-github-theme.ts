@@ -1,4 +1,5 @@
 import type MarkdownIt from "markdown-it";
+import { getLinkUnderlines } from "../accessibility";
 import { getThemeColorMode, getCurrentLightTheme, getCurrentDarkTheme } from "../theme";
 
 export default function markdownItGitHubTheme(md: MarkdownIt): MarkdownIt {
@@ -11,6 +12,7 @@ export default function markdownItGitHubTheme(md: MarkdownIt): MarkdownIt {
         data-color-mode="${getThemeColorMode()}"
         data-light-theme="${getCurrentLightTheme()}"
         data-dark-theme="${getCurrentDarkTheme()}"
+        data-link-underlines="${getLinkUnderlines()}"
       >
         ${render.apply(md.renderer, args)}
       </div>
