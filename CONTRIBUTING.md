@@ -119,3 +119,7 @@ When possible:
 - Include a short explanation of why the change is needed
 - Mention any compatibility impact, especially if it affects VS Code version support
 - Note any checks you ran, or say clearly if you did not run them
+
+Use a [Conventional Commit](https://www.conventionalcommits.org/) title for each pull request so its squash commit can be included in automated release notes. In particular, `fix:` produces a patch release, `feat:` produces a minor release, and a `BREAKING CHANGE:` footer produces a major release.
+
+Release Please maintains the release pull request, version, changelog, tag, and draft GitHub Release. Do not update `CHANGELOG.md` manually for ordinary pull requests. Merging the generated release pull request triggers the Marketplace publishing workflow; the GitHub Release remains a draft until Marketplace publication succeeds.
