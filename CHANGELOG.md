@@ -12,18 +12,24 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 - Rename the extension's display name to **GitHub Flavored Markdown** across the manifest, localization files, and documentation.
 
+### 🧱 Refactor
+
+- Reorganize build, emoji, release, and verification scripts into domain-focused modules with deterministic generation and focused tests.
+
 ### 🚧 Maintenance
 
 - Add a mise-managed development toolchain with Node.js 24 and pnpm 11.
 - Provision the project toolchain through mise in CI and publishing workflows.
 - Upgrade to TypeScript 7 and simplify the compiler configuration for the current build pipeline.
 - Remove the deprecated `@typescript/native-preview` development dependency.
+- Make CSS watch rebuilds recover from initial failures and process rapid changes reliably.
+- Keep the bundle visualizer closed by default and open it only with `--open-visualizer`.
 
 ### 📦 Dependencies
 
 - Update pnpm, markdown-it, tsdown, Vitest, lefthook, oxlint, oxfmt, and related development dependencies.
 
-### 📝 Documentation (v4.0.0)
+### 📝 Documentation
 
 - Document mise setup and usage in the contribution guide.
 
@@ -68,7 +74,7 @@ Manifest & Contribution → Extension Host → Markdown Transform → Preview Pr
 
 Each GitHub behavior is isolated in its own plugin under `src/plugins/`. The configuration surface is deliberately minimal: theme selection and Mermaid sync. Preview styles and scripts are injected through standard VS Code contribution points — no custom rendering pipeline.
 
-### 📦 Dependencies (v4.0.0)
+### 📦 Dependencies
 
 | Area           | Before                               | After                             |
 | -------------- | ------------------------------------ | --------------------------------- |
