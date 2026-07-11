@@ -26,6 +26,10 @@ body,
     text-decoration: underline;
   }
 
+  &[data-link-underlines="false"] a {
+    text-decoration: none;
+  }
+
   blockquote {
     background-color: inherit;
     border-radius: 0;
@@ -34,11 +38,10 @@ body,
   pre,
   code {
     color: inherit;
-    font-family: var(--vscode-editor-font-family);
   }
 
   .data-footnote-backref,
-  .footnote-ref a {
+  [data-footnote-ref] {
     text-decoration: none;
   }
 

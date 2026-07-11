@@ -60,6 +60,10 @@ Switch themes anytime via VS Code commands (Quick Pick) — no need to open sett
 
 When `githubMarkdown.mermaid.syncTheme` is enabled, the extension updates the `markdown-mermaid` light/dark theme settings to match the active GitHub Markdown theme. It does not ship a Mermaid renderer or add a Mermaid dependency.
 
+### Accessibility
+
+Text-block links are underlined by default, matching GitHub's default accessibility setting. Set `githubMarkdown.accessibility.linkUnderlines` to `false` to hide link underlines. Footnote references and back links remain undecorated in either mode.
+
 ## Related Information
 
 - [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)

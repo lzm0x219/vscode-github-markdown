@@ -39,6 +39,17 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain('href="#user-content-fn-2"');
   });
 
+  it("parses consecutive footnote definitions as separate notes", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render(
+      "First[^first]. Second[^second].\n\n[^first]: First note.\n[^second]: Second note."
+    );
+
+    expect(html).toContain('<li id="user-content-fn-1">');
+    expect(html).toContain('<li id="user-content-fn-2">');
+    expect(html).not.toContain("[^second]:");
+  });
+
   it("renders multiple references to same footnote with backrefs", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("First[^1]. Second[^1].\n\n[^1]: Shared ref.");

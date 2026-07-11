@@ -8,7 +8,7 @@ type FootnoteReference = {
   referenceCount: number;
 };
 
-const footnoteDefinitionPattern = /^\[\^([^\]\n]+)\]:[ \t]*([\s\S]*)$/;
+const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
 const footnoteOrderKey = "githubMarkdownFootnoteOrder";
 const footnoteReferencesKey = "githubMarkdownFootnoteReferences";
@@ -46,15 +46,11 @@ function collectFootnotes(tokens: MarkdownToken[]): {
       inline?.type === "inline" &&
       paragraphClose?.type === "paragraph_close"
     ) {
-      const match = inline.content.match(footnoteDefinitionPattern);
-      if (match) {
-        const rawLabel = match[1];
-        const definition = match[2] ?? "";
-        if (!rawLabel) {
-          continue;
+      const parsedDefinitions = parseFootnoteDefinitions(inline.content);
+      if (parsedDefinitions) {
+        for (const [label, definition] of parsedDefinitions) {
+          definitions.set(label, definition);
         }
-
-        definitions.set(rawLabel.trim(), normalizeFootnoteDefinition(definition));
         index += 2;
         continue;
       }
@@ -70,6 +66,31 @@ function collectFootnotes(tokens: MarkdownToken[]): {
     definitions,
     tokens: output
   };
+}
+
+function parseFootnoteDefinitions(content: string): Map<string, string> | undefined {
+  const definitions = new Map<string, string>();
+  let currentLabel: string | undefined;
+  let currentLines: string[] = [];
+
+  const commit = () => {
+    if (!currentLabel) return;
+    definitions.set(currentLabel, normalizeFootnoteDefinition(currentLines.join("\n")));
+  };
+
+  for (const line of content.split("\n")) {
+    const match = line.match(footnoteDefinitionLinePattern);
+    if (match) {
+      commit();
+      currentLabel = match[1]?.trim();
+      currentLines = [match[2] ?? ""];
+      continue;
+    }
+    if (!currentLabel) return undefined;
+    currentLines.push(line);
+  }
+  commit();
+  return definitions.size > 0 ? definitions : undefined;
 }
 
 function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, string>) {

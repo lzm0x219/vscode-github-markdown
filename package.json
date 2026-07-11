@@ -203,6 +203,17 @@
             "description": "%configuration.mermaid.syncTheme.description%"
           }
         }
+      },
+      {
+        "title": "Accessibility",
+        "properties": {
+          "githubMarkdown.accessibility.linkUnderlines": {
+            "order": 0,
+            "type": "boolean",
+            "default": true,
+            "description": "%configuration.accessibility.linkUnderlines.description%"
+          }
+        }
       }
     ]
   },

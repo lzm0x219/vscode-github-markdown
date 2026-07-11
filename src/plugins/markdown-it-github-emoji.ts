@@ -4,6 +4,7 @@ import { githubImageEmojiByAlias, githubUnicodeEmojiByAlias } from "../generated
 
 const shortcodePattern = /:([+\-\w]+):/g;
 const EMOJI_IMAGE_SIZE = "20";
+const wrappedUnicodeEmojiAliases = new Set(["warning"]);
 
 export default function markdownItGitHubEmoji(md: MarkdownIt): MarkdownIt {
   md.core.ruler.after("inline", "github-markdown-emoji", (state) => {
@@ -73,6 +74,11 @@ function emojiTokens(content: string, state: MarkdownState, md: MarkdownIt): Mar
 function emojiToken(name: string, state: MarkdownState, md: MarkdownIt): MarkdownToken | undefined {
   const unicodeEmoji = githubUnicodeEmojiByAlias[name as keyof typeof githubUnicodeEmojiByAlias];
   if (unicodeEmoji) {
+    if (wrappedUnicodeEmojiAliases.has(name)) {
+      const token = new state.Token("html_inline", "", 0);
+      token.content = `<g-emoji class="g-emoji" alias="${md.utils.escapeHtml(name)}">${md.utils.escapeHtml(unicodeEmoji)}</g-emoji>`;
+      return token;
+    }
     return textToken(unicodeEmoji, state);
   }
 
@@ -83,8 +89,8 @@ function emojiToken(name: string, state: MarkdownState, md: MarkdownIt): Markdow
 
   const token = new state.Token("html_inline", "", 0);
   const alt = md.utils.escapeHtml(`:${name}:`);
-  const src = md.utils.escapeHtml(imageUrl);
-  token.content = `<img class="emoji" alt="${alt}" src="${src}" height="${EMOJI_IMAGE_SIZE}" width="${EMOJI_IMAGE_SIZE}">`;
+  const src = md.utils.escapeHtml(imageUrl.replace(/\?v\d+$/, ""));
+  token.content = `<img class="emoji" title="${alt}" alt="${alt}" src="${src}" height="${EMOJI_IMAGE_SIZE}" width="${EMOJI_IMAGE_SIZE}" align="absmiddle">`;
   return token;
 }
 
