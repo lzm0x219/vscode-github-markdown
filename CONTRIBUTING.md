@@ -69,9 +69,32 @@ nubx oxlint .
 nubx oxlint --type-aware .
 nubx oxfmt .
 nub run test
+nub run verify:parity
 nub run package
 nub scripts/verify/index.ts
 ```
+
+## GitHub Markdown Parity Baseline
+
+The visual parity check renders GitHub's committed HTML and CSS reference alongside the current local renderer and extension CSS in one headless Chromium instance. Both sides use the same viewport, theme, device scale, and content crop. It compares the resulting PNG files pixel by pixel, so visually equivalent HTML structures do not create false failures while CSS regressions remain visible.
+
+- `nub run verify:parity` is offline and compares local light/dark screenshots with the committed GitHub-rendered reference.
+- `nub run verify:parity:remote` calls GitHub's Markdown and Contents APIs, renders the current responses, and detects visual upstream drift. CI runs it weekly.
+- GitHub, local, and highlighted diff images plus JSON and Markdown reports are written to `artifacts/parity` and uploaded by CI after a failure.
+- Every baseline records hashes plus the GitHub source kind, repository path/ref, HTML normalization, comparison policy, reference CSS, and rendering configuration. A stale or incomplete baseline fails with instructions to refresh it.
+
+When a local rendering change or upstream GitHub change is intentional, inspect the report and refresh the committed snapshots:
+
+```bash
+nub run update:parity
+nub run verify:parity
+```
+
+When only rendering configuration changes and every complete case input already exists in the verified baseline, `nub run update:parity:offline` can synchronize metadata and reuse HTML by its source-aware input fingerprint. It fails instead of inventing output for a new input.
+
+Set `GITHUB_TOKEN` when refreshing frequently to avoid unauthenticated API rate limits. Cases in `scripts/parity/cases.ts` are intentionally split by feature and theme. Exact cases use zero tolerance. Cases that depend on VS Code or GitHub client-side renderers use explicit non-zero budgets for total pixels, pixel ratio, and the largest connected difference area, so known host differences remain visible without disabling regression detection.
+
+Repository-file baselines default to the committed `main` version. The refresh command resolves the requested ref to an immutable commit SHA, verifies that GitHub's raw file exactly matches the local fixture, and refuses to write a mixed baseline. For fixture changes on a pushed branch, refresh with `GITHUB_MARKDOWN_REF=your-branch nub run update:parity`. Contributors working from a fork should also set `GITHUB_MARKDOWN_REPOSITORY=owner/repository`. The committed baseline records the repository and resolved SHA as provenance, while stable case identity uses the source kind and file path, so verification remains valid after a fork branch is merged or deleted.
 
 This repository also uses `lefthook` for pre-commit checks:
 
