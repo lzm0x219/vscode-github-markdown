@@ -7,14 +7,18 @@ This project aims to make VS Code's Markdown preview match GitHub as closely as 
 ## Before You Start
 
 - Use VS Code `^1.74.0` or newer for local extension development
+- Use [mise](https://mise.jdx.dev/) to install the project-managed Node.js and pnpm versions
 - Use `pnpm` only for dependency installation
 - Use [Nub](https://github.com/nubjs/nub) / `nubx` for project scripts and executable commands (`build`, `dev`, `verify`, lint, format)
 
-Install dependencies with `pnpm`:
+Install the toolchain declared in [`mise.toml`](./mise.toml), then install dependencies:
 
 ```bash
+mise install
 pnpm install
 ```
+
+If mise is not activated in your shell, prefix project commands with `mise exec --`, for example `mise exec -- pnpm install`.
 
 Build the current extension bundle:
 

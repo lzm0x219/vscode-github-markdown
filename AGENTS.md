@@ -22,8 +22,9 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 - [`tsconfig.json`](./tsconfig.json): strict TypeScript config
 - [`lefthook.yml`](./lefthook.yml): pre-commit checks
 
-## Commands
+## Environment and Commands
 
+- Install the project toolchain: `mise install`
 - Install dependencies: `pnpm install`
 - Build: `nub run build`
 - Dev watch: `nub run dev`
