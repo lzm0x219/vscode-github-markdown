@@ -26,6 +26,12 @@ Build the current extension bundle:
 nub run build
 ```
 
+To open the bundle visualizer after a build, pass the explicit option:
+
+```bash
+nub run build -- --open-visualizer
+```
+
 ## Project Scope
 
 Please keep changes tightly aligned with the project goal:

@@ -20,7 +20,10 @@ export default defineConfig([
     },
     plugins: [
       visualizer({
-        open: !isInCi,
+        open:
+          process.env["VISUALIZER_OPEN"] === undefined
+            ? !isInCi
+            : process.env["VISUALIZER_OPEN"] === "true",
         filename: ".cache/stats.html",
         gzipSize: true,
         brotliSize: true

@@ -4,8 +4,11 @@ import { localBinary, waitForChild } from "../shared/process";
 import { project } from "../shared/project";
 import { buildCss, formatCssBuild } from "./css";
 import { createCssBuildRunner } from "./css-runner";
+import { shouldOpenVisualizer } from "./options";
 import { buildPreviewCss } from "./preview-css";
 import { createRebuildQueue } from "./rebuild-queue";
+
+process.env["VISUALIZER_OPEN"] = String(shouldOpenVisualizer(process.argv.slice(2)));
 
 const css = createCssBuildRunner({ buildAll: buildCss, buildPreview: buildPreviewCss });
 try {
