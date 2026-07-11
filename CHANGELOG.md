@@ -1,10 +1,43 @@
 # Changelog
 
-All notable changes to this extension are documented in this file. New release entries are generated from Conventional Commits by Release Please.
+All notable changes to this extension are documented in this file. Release notes are written for people and maintained manually under `[Unreleased]` until publication.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Feature · 💎 Improve · 🧱 Refactor · 🐛 Bugfix · 💥 Breaking · 🚧 Maintenance · 📦 Dependencies · 🚀 Performance · 📝 Documentation
 
 ---
+
+## [Unreleased]
+
+### ✨ Feature
+
+- Add an accessibility setting for showing or hiding link underlines in Markdown text blocks, enabled by default to match GitHub.
+
+### 💎 Improve
+
+- Rename the extension's display name to **GitHub Flavored Markdown** across the manifest, localization files, and documentation.
+- Align GitHub emoji wrappers and custom image metadata, consecutive footnote definitions, code typography, and footnote link decoration with GitHub rendering.
+
+### 🧱 Refactor
+
+- Reorganize build, emoji, release, and verification scripts into domain-focused modules with deterministic generation and focused tests.
+
+### 🚧 Maintenance
+
+- Add strict pixel-level Markdown parity baselines, local regression checks, weekly GitHub renderer drift detection, and CI diff artifacts.
+- Add a mise-managed development toolchain with Node.js 24 and pnpm 11.
+- Provision the project toolchain through mise in CI and publishing workflows.
+- Upgrade to TypeScript 7 and simplify the compiler configuration for the current build pipeline.
+- Remove the deprecated `@typescript/native-preview` development dependency.
+- Make CSS watch rebuilds recover from initial failures and process rapid changes reliably.
+- Keep the bundle visualizer closed by default and open it only with `--open-visualizer`.
+
+### 📦 Dependencies
+
+- Update pnpm, markdown-it, tsdown, Vitest, lefthook, oxlint, oxfmt, and related development dependencies.
+
+### 📝 Documentation
+
+- Document mise setup and usage in the contribution guide.
 
 ## [v4.0.0]
 
@@ -63,4 +96,5 @@ Each GitHub behavior is isolated in its own plugin under `src/plugins/`. The con
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — toolchain setup and contribution guidelines.
 - [`AGENTS.md`](./AGENTS.md) — rules for automated tooling.
 
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...HEAD
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0

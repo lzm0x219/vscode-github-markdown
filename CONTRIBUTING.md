@@ -120,6 +120,8 @@ When possible:
 - Mention any compatibility impact, especially if it affects VS Code version support
 - Note any checks you ran, or say clearly if you did not run them
 
-Use a [Conventional Commit](https://www.conventionalcommits.org/) title for each pull request so its squash commit can be included in automated release notes. In particular, `fix:` produces a patch release, `feat:` produces a minor release, and a `BREAKING CHANGE:` footer produces a major release.
+Use a [Conventional Commit](https://www.conventionalcommits.org/) title for each pull request so Release Please can determine the next version. In particular, `fix:` produces a patch release, `feat:` produces a minor release, and a `BREAKING CHANGE:` footer produces a major release.
 
-Release Please maintains the release pull request, version, changelog, tag, and draft GitHub Release. Do not update `CHANGELOG.md` manually for ordinary pull requests. Merging the generated release pull request triggers the Marketplace publishing workflow; the GitHub Release remains a draft until Marketplace publication succeeds.
+Write user-facing release notes manually under `[Unreleased]` in `CHANGELOG.md`. Describe the effect for extension users instead of copying commit titles or implementation details. Internal maintenance that does not affect users may omit a changelog entry.
+
+Release Please maintains the release pull request, package version, tag, and draft GitHub Release, but does not generate the changelog. Before merging a generated release pull request, promote `[Unreleased]` to the matching version heading (for example, `[v4.1.0]`), add a new empty `[Unreleased]` section, and update the comparison links. The publishing workflow rejects a release without a matching human-authored version section and uses that section as the GitHub Release notes.

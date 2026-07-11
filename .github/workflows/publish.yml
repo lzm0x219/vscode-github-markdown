@@ -70,6 +70,11 @@ jobs:
       - name: Build
         run: nub run build
 
+      - name: Generate release notes
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}/release
+        run: nub run release:note
+
       - name: Package
         run: nub run package
 
@@ -77,7 +82,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vscode-github-markdown-${{ github.ref_name }}
-          path: "*.vsix"
+          path: |
+            *.vsix
+            release-CHANGELOG.txt
           if-no-files-found: error
           retention-days: 14
 
@@ -131,4 +138,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "$GITHUB_REF_NAME" release/*.vsix --clobber
-          gh release edit "$GITHUB_REF_NAME" --draft=false
+          gh release edit "$GITHUB_REF_NAME" --notes-file release/release-CHANGELOG.txt --draft=false
