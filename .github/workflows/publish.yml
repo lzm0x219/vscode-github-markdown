@@ -4,26 +4,53 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
 
-permissions:
-  contents: write
-  discussions: write
-  id-token: write
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  publish:
+  verify:
     runs-on: ubuntu-latest
-    environment: release
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v7
+
+      - name: Verify release version
+        shell: bash
+        run: |
+          package_version="$(node -p "require('./package.json').version")"
+          tag_version="${GITHUB_REF_NAME#v}"
+
+          if [[ "$GITHUB_REF_NAME" != "v$package_version" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package version $package_version"
+            exit 1
+          fi
+
+          if [[ ! "$tag_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME is not a stable semantic version"
+            exit 1
+          fi
 
       - uses: jdx/mise-action@v4
 
       - uses: nubjs/setup-nub@v0
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Audit production dependencies
+        run: pnpm audit --prod --audit-level high
+
+      - name: Cache Chromium
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Lint
         run: nubx oxlint .
@@ -37,11 +64,42 @@ jobs:
       - name: Test
         run: nub run test
 
+      - name: Verify Markdown parity baseline
+        run: pnpm run verify:parity
+
       - name: Build
         run: nub run build
 
       - name: Package
         run: nub run package
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-github-markdown-${{ github.ref_name }}
+          path: "*.vsix"
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: vscode-github-markdown-${{ github.ref_name }}
+          path: release
 
       - name: Login to Azure with Microsoft Entra ID
         uses: azure/login@v3
@@ -50,27 +108,27 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Debug Marketplace Identity
-        run: |
-          az rest \
-            --url https://app.vssps.visualstudio.com/_apis/profile/profiles/me \
-            --resource 499b84ac-1321-427f-aa17-267ca6975798
-
       - name: Verify publisher access
-        run: nubx vsce verify-pat lzm0x219 --azure-credential
+        run: pnpm exec vsce verify-pat lzm0x219 --azure-credential
 
       - name: Publish to VS Code Marketplace
-        if: success()
-        run: nubx vsce publish --azure-credential
+        run: pnpm exec vsce publish --packagePath release/*.vsix --azure-credential --skip-duplicate
 
-      - name: Generate Changelog
-        run: nub run release:note
+  finalize:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-      - name: Create GitHub Release
-        if: success()
-        uses: softprops/action-gh-release@v3
+    steps:
+      - uses: actions/download-artifact@v4
         with:
-          files: "*.vsix"
-          body_path: ${{ github.workspace }}-CHANGELOG.txt
-          repository: lzm0x219/vscode-github-markdown
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+          name: vscode-github-markdown-${{ github.ref_name }}
+          path: release
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$GITHUB_REF_NAME" release/*.vsix --clobber
+          gh release edit "$GITHUB_REF_NAME" --draft=false
