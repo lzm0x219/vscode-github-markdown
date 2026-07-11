@@ -15,13 +15,16 @@
   <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
 
+> [!NOTE]
+> **新增：** 预览一致性现在由严格的浏览器像素级回归测试持续保障。文本块链接也会默认显示与 GitHub 一致的下划线，并支持在设置中关闭。
+
 ## 为什么做这个项目
 
 VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心的，往往是文档发布到 GitHub 之后会呈现成什么样。这个项目的目标不是做一套“类似 GitHub”的 Markdown 主题，而是尽量把 VS Code 里的预览结果和 GitHub 的 Markdown 预览行为与呈现效果对齐。
 
 这样一来，开发者在编写 README、文档页和说明文件时，可以一边编辑，一边直接预览最终预期效果，减少“本地看着没问题，推到 GitHub 才发现版式不对”的来回调整。
 
-这个项目优先解决两件事：
+这个项目优先解决三件事：
 
 - 对齐 GitHub Markdown 的渲染结果、留白和排版细节，而不是另起一套看起来相似但结果不同的主题
 - 尽量让本地预览和 GitHub 上的预期效果保持一致，让文档编写过程更可预期、更省来回验证成本
@@ -36,6 +39,12 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 - **Alerts** — `[!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 五种提示框，附带正确的图标和样式。
 - **Emoji 短代码** — `:rocket:`、`:+1:`、`:tada:` 等数千个短代码，同时支持 Unicode emoji 和 GitHub 自定义图片 emoji。
 - **HTML 图片路径重写** — HTML `<img>` 标签中的绝对路径（`/path/to/img`）会重写为相对路径（`./path/to/img`），让项目本地图片在 VS Code webview 预览中正常显示。
+
+### 经过像素验证的预览一致性
+
+自动化 Chromium 检查会逐像素比较 GitHub 参考渲染和扩展预览。可控 Markdown 用例采用零容差，任何留白、字体、颜色、链接装饰或内容尺寸变化都会触发回归失败。
+
+VS Code 语法高亮，以及 GitHub 为 Mermaid、GeoJSON、STL 和数学公式提供的客户端渲染使用独立差异预算，因为这些视觉结果由宿主应用生成。这些边界仍会持续测量，并在差异超过既定限制时失败。
 
 ### GitHub 主题
 
