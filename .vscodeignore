@@ -10,6 +10,7 @@
 .oxlintrc.json
 .pnpm-store/**
 .pnpm-store
+.release-please-manifest.json
 .vscode/**
 .vscode
 AGENTS.md
@@ -23,6 +24,7 @@ lefthook.yml
 mise.toml
 pnpm-lock.yaml
 pnpm-workspace.yaml
+release-please-config.json
 scripts/**
 src/**
 tsconfig.json
