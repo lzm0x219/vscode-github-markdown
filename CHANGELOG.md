@@ -6,7 +6,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 ---
 
-## [Unreleased]
+## [v4.1.0]
+
+This release focuses on making the local Markdown preview both closer to GitHub and easier to keep that way over time.
+
+- **Closer GitHub rendering:** Adds configurable GitHub-style link underlines, adopts the **GitHub Flavored Markdown** name, and closes gaps in emoji metadata, consecutive footnotes, code typography, and footnote link decoration.
+- **Measurable parity:** Introduces deterministic verification scripts, strict pixel-level regression baselines, and scheduled detection of upstream GitHub renderer changes.
+- **Modern tooling:** Moves development and CI to a mise-managed Node.js 24 and pnpm 11 toolchain, with refreshed TypeScript, linting, formatting, testing, build, and packaging dependencies.
 
 ### ✨ Feature
 
@@ -96,5 +102,5 @@ Each GitHub behavior is isolated in its own plugin under `src/plugins/`. The con
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — toolchain setup and contribution guidelines.
 - [`AGENTS.md`](./AGENTS.md) — rules for automated tooling.
 
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...HEAD
+[v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
