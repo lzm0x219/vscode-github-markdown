@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/markdown-it": "14.1.2",
-    "@types/node": "26.1.1",
+    "@types/node": "24.13.3",
     "@types/vscode": "1.125.0",
     "@vitest/coverage-v8": "4.1.10",
     "@vscode/l10n-dev": "0.0.35",
