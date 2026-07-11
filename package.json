@@ -31,15 +31,15 @@
   "main": "dist/extension.js",
   "browser": "dist/extension.js",
   "scripts": {
-    "build": "nub scripts/build.ts",
-    "dev": "nub scripts/dev.ts",
-    "update:emoji": "nub scripts/update-github-emoji.ts",
+    "build": "nub scripts/build/index.ts",
+    "dev": "nub scripts/build/dev.ts",
+    "update:emoji": "nub scripts/emoji/index.ts",
     "i18n-export": "nubx vscode-l10n-dev export --outDir ./l10n ./src",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "package": "nubx vsce package",
-    "release:note": "nub scripts/extract-release-notes.ts"
+    "release:note": "nub scripts/release/index.ts"
   },
   "devDependencies": {
     "@types/markdown-it": "14.1.2",

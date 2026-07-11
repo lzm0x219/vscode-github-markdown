@@ -36,7 +36,8 @@ dist-ssr
 .claude/worktrees/
 
 artifacts/
-build/
+./build/
+
 
 # moon
 .moon/cache

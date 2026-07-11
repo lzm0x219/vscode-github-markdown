@@ -1,4 +1,4 @@
-// Generated from https://api.github.com/emojis. Run `nub scripts/update-github-emoji.ts` to refresh.
+// Generated from https://api.github.com/emojis. Run `nub run update:emoji` to refresh.
 export const githubUnicodeEmojiByAlias = {
   "-1": "👎",
   "+1": "👍",

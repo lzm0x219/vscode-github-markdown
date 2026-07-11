@@ -28,7 +28,7 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 - Install dependencies: `pnpm install`
 - Build: `nub run build`
 - Dev watch: `nub run dev`
-- Verify GitHub Markdown: `nub scripts/verify-github-markdown.ts`
+- Verify GitHub Markdown: `nub scripts/verify/index.ts`
 - Test: `nub run test`
 - Test watch: `nub run test:watch`
 - Test coverage: `nub run test:coverage`

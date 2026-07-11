@@ -64,7 +64,7 @@ nubx oxlint --type-aware .
 nubx oxfmt .
 nub run test
 nub run package
-nub scripts/verify-github-markdown.ts
+nub scripts/verify/index.ts
 ```
 
 This repository also uses `lefthook` for pre-commit checks:
