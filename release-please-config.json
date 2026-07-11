@@ -8,7 +8,10 @@
       "include-v-in-tag": true,
       "draft": true,
       "force-tag-creation": true,
-      "skip-changelog": true
+      "skip-changelog": true,
+      "pull-request-title-pattern": "chore${scope}: release${component} ${version}",
+      "pull-request-header": "## Release preparation\n\nThis pull request updates the extension version and prepares the next release. User-facing release notes are maintained manually in `CHANGELOG.md`.\n\nBefore merging:\n\n- Confirm `package.json` and the release manifest contain the intended version.\n- Confirm `CHANGELOG.md` contains a matching version section.\n- Review the human-authored release summary.\n- Wait for all required checks to pass.\n\n<details>\n<summary>Automatically detected commits</summary>\n",
+      "pull-request-footer": "\n</details>\n\n> Merging this pull request creates the version tag and starts Marketplace publication."
     }
   }
 }
