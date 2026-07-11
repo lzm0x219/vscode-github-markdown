@@ -41,7 +41,7 @@ v4 is a ground-up rewrite. The extension has been renamed from `vscode-markdown-
 
 Four-layer architecture documented in [`ARCHITECTURE.md`](./ARCHITECTURE.md):
 
-```
+```txt
 Manifest & Contribution → Extension Host → Markdown Transform → Preview Presentation
 ```
 
