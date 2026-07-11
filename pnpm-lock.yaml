@@ -216,9 +216,6 @@ importers:
       '@types/vscode':
         specifier: 1.74.0
         version: 1.74.0
-      '@typescript/native-preview':
-        specifier: 7.0.0-dev.20260618.1
-        version: 7.0.0-dev.20260618.1
       '@vitest/coverage-v8':
         specifier: 4.1.10
         version: 4.1.10(vitest@4.1.10)
@@ -3651,6 +3648,7 @@ snapshots:
       '@typescript/native-preview-linux-x64': 7.0.0-dev.20260618.1
       '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260618.1
       '@typescript/native-preview-win32-x64': 7.0.0-dev.20260618.1
+    optional: true
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     optional: true
