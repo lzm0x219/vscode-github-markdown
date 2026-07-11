@@ -137,5 +137,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload "$GITHUB_REF_NAME" release/*.vsix --clobber
-          gh release edit "$GITHUB_REF_NAME" --notes-file release/release-CHANGELOG.txt --draft=false
+          gh release upload "$GITHUB_REF_NAME" release/*.vsix --clobber --repo "$GITHUB_REPOSITORY"
+          gh release edit "$GITHUB_REF_NAME" --notes-file release/release-CHANGELOG.txt --draft=false --repo "$GITHUB_REPOSITORY"
