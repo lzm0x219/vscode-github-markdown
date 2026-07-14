@@ -15,9 +15,6 @@ export type Theme =
   | "dark_high_contrast"
   | "dark_tritanopia";
 
-export const DAY_START_HOUR = 6;
-export const NIGHT_START_HOUR = 18;
-
 const lightThemeNames: Set<Theme> = new Set([
   "light",
   "light_colorblind",
@@ -113,12 +110,6 @@ export function getCurrentDarkTheme(): Theme {
     return isLightTheme(singleTheme) ? getDarkTheme() : singleTheme;
   }
   return getDarkTheme();
-}
-
-export function getCurrentSystemTheme(): Theme {
-  const hour = new Date().getHours();
-  const isDay = hour >= DAY_START_HOUR && hour < NIGHT_START_HOUR;
-  return isDay ? getLightTheme() : getDarkTheme();
 }
 
 export function getThemeModeList(): {

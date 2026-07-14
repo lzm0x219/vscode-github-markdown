@@ -6,6 +6,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 ---
 
+## [Unreleased]
+
+### 🐛 Bugfix
+
+- Make normal builds and offline parity checks deterministic by consuming the committed GitHub CSS snapshot instead of depending on live GitHub requests.
+- Register commands and preview listeners during extension activation so their lifecycle is owned and disposed by VS Code.
+- Synchronize both `markdown-mermaid` theme slots, preserve existing global values, and restore them when synchronization is disabled.
+
+### 🚧 Maintenance
+
+- Add real extension-host smoke tests for the minimum supported VS Code desktop release, current stable desktop, and stable web host.
+- Remove the empty preview script contribution and keep the runtime compatible with web extensions.
+
+### 📝 Documentation
+
+- Add direct installation and migration guidance, parity screenshots, and an architecture guide covering runtime and verification boundaries.
+
 ## [v4.1.0]
 
 This release focuses on making the local Markdown preview both closer to GitHub and easier to keep that way over time.
@@ -104,3 +121,4 @@ Each GitHub behavior is isolated in its own plugin under `src/plugins/`. The con
 
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...HEAD

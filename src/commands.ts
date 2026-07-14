@@ -43,38 +43,39 @@ function createThemeCommand<T extends string>(
   });
 }
 
-export const changeThemeMode: vscode.Disposable = createThemeCommand(
-  "vscode-github-markdown.changeThemeMode",
-  getThemeModeList,
-  getThemeMode,
-  setThemeMode,
-  l10n.t("Select a theme mode"),
-  (label) => l10n.t("Theme mode changed to {0}", label)
-);
-
-export const changeSingleTheme: vscode.Disposable = createThemeCommand(
-  "vscode-github-markdown.changeSingleTheme",
-  getThemeList,
-  getSingleTheme,
-  setSingleTheme,
-  l10n.t("Select a theme"),
-  (label) => l10n.t("Single theme changed to {0}.", label)
-);
-
-export const changeLightTheme: vscode.Disposable = createThemeCommand(
-  "vscode-github-markdown.changeLightTheme",
-  getThemeList,
-  getLightTheme,
-  setLightTheme,
-  l10n.t("Select a theme for day"),
-  (label) => l10n.t("Day theme changed to {0}.", label)
-);
-
-export const changeDarkTheme: vscode.Disposable = createThemeCommand(
-  "vscode-github-markdown.changeDarkTheme",
-  getThemeList,
-  getDarkTheme,
-  setDarkTheme,
-  l10n.t("Select a theme for night"),
-  (label) => l10n.t("Night theme changed to {0}.", label)
-);
+export function registerThemeCommands(): vscode.Disposable[] {
+  return [
+    createThemeCommand(
+      "vscode-github-markdown.changeThemeMode",
+      getThemeModeList,
+      getThemeMode,
+      setThemeMode,
+      l10n.t("Select a theme mode"),
+      (label) => l10n.t("Theme mode changed to {0}", label)
+    ),
+    createThemeCommand(
+      "vscode-github-markdown.changeSingleTheme",
+      getThemeList,
+      getSingleTheme,
+      setSingleTheme,
+      l10n.t("Select a theme"),
+      (label) => l10n.t("Single theme changed to {0}.", label)
+    ),
+    createThemeCommand(
+      "vscode-github-markdown.changeLightTheme",
+      getThemeList,
+      getLightTheme,
+      setLightTheme,
+      l10n.t("Select a light theme"),
+      (label) => l10n.t("Light theme changed to {0}.", label)
+    ),
+    createThemeCommand(
+      "vscode-github-markdown.changeDarkTheme",
+      getThemeList,
+      getDarkTheme,
+      setDarkTheme,
+      l10n.t("Select a dark theme"),
+      (label) => l10n.t("Dark theme changed to {0}.", label)
+    )
+  ];
+}

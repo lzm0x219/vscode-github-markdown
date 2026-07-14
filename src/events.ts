@@ -1,15 +1,15 @@
 import vscode from "vscode";
 import { section } from "./configuration";
-import { syncCurrentMermaidTheme } from "./integrations/mermaid";
+import { updateMermaidThemeSync } from "./integrations/mermaid";
 
-export const onMarkdownPreviewRefresh: vscode.Disposable =
-  vscode.workspace.onDidChangeConfiguration(async (e) => {
+export function registerMarkdownPreviewEvents(memento: vscode.Memento): vscode.Disposable {
+  return vscode.workspace.onDidChangeConfiguration(async (e) => {
     if (!e.affectsConfiguration(section.namespace)) {
       return;
     }
 
     try {
-      await syncCurrentMermaidTheme();
+      await updateMermaidThemeSync(memento);
     } catch (error) {
       console.error("[github-markdown] Failed to sync Mermaid theme:", error);
     }
@@ -20,3 +20,4 @@ export const onMarkdownPreviewRefresh: vscode.Disposable =
       console.error("[github-markdown] Failed to refresh preview:", error);
     }
   });
+}

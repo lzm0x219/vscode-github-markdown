@@ -7,11 +7,16 @@
     "Other"
   ],
   "keywords": [
+    "gfm",
     "github",
     "github markdown",
     "markdown",
+    "markdown preview",
     "markdown style",
-    "markdown theme"
+    "markdown theme",
+    "readme",
+    "visual studio code",
+    "vscode"
   ],
   "homepage": "https://github.com/lzm0x219/vscode-github-markdown#readme",
   "bugs": {
@@ -40,6 +45,9 @@
     "verify:parity:remote": "nub scripts/parity/index.ts remote",
     "i18n-export": "nubx vscode-l10n-dev export --outDir ./l10n ./src",
     "test": "vitest run",
+    "test:host:build": "nub run build && nubx tsdown --config tests/host/tsdown.config.ts",
+    "test:host:desktop": "nub run test:host:build && nub scripts/host/desktop.ts",
+    "test:host:web": "nub run test:host:build && nubx vscode-test-web --browser chromium --quality stable --extensionDevelopmentPath=. --extensionTestsPath=.cache/host-tests/smoke.js --testRunnerDataDir=.cache/vscode-test-web",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "package": "nubx vsce package",
@@ -52,6 +60,8 @@
     "@types/vscode": "1.74.0",
     "@vitest/coverage-v8": "4.1.10",
     "@vscode/l10n-dev": "0.0.35",
+    "@vscode/test-electron": "3.0.0",
+    "@vscode/test-web": "0.0.81",
     "@vscode/vsce": "3.9.2",
     "generate-github-markdown-css": "6.6.0",
     "is-in-ci": "2.0.0",
@@ -73,9 +83,6 @@
   "l10n": "./l10n",
   "contributes": {
     "markdown.markdownItPlugins": true,
-    "markdown.previewScripts": [
-      "./dist/extension.preview.js"
-    ],
     "markdown.previewStyles": [
       "./dist/extension.preview.css"
     ],

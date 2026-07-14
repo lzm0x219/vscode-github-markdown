@@ -2,7 +2,7 @@
   <a href="./README.md">English</a>
 </p>
 
-<h1 align="center">GitHub Flavored Markdown</h1>
+<h1 align="center">GitHub Flavored Markdown Preview</h1>
 
 <p align="center">
   让 VS Code 的 Markdown Preview 尽可能与 GitHub 保持一致。
@@ -15,8 +15,33 @@
   <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
 
-> [!NOTE]
-> **新增：** 预览一致性现在由严格的浏览器像素级回归测试持续保障。文本块链接也会默认显示与 GitHub 一致的下划线，并支持在设置中关闭。
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown"><strong>从 Visual Studio Marketplace 安装</strong></a>
+</p>
+
+## 快速开始
+
+通过上方 Marketplace 链接安装，或在终端运行：
+
+```shell
+code --install-extension lzm0x219.vscode-github-markdown
+```
+
+打开 Markdown 文件，然后运行 **Markdown: Open Preview to the Side**。扩展会增强 VS Code 内置预览的 GitHub 兼容渲染与样式，不会另建一套预览编辑器。
+
+<table>
+  <tr>
+    <th>GitHub 参考效果</th>
+    <th>VS Code 预览效果</th>
+  </tr>
+  <tr>
+    <td><img alt="GitHub 渲染的 Markdown" src="./assets/parity-github.png" /></td>
+    <td><img alt="VS Code 中渲染的 Markdown" src="./assets/parity-vscode.png" /></td>
+  </tr>
+</table>
+
+> [!IMPORTANT]
+> 正在从 `lzm0x219.vscode-markdown-github` 迁移？新版使用独立的扩展 ID。请先安装 `lzm0x219.vscode-github-markdown`，确认 Markdown 预览符合预期，再卸载旧扩展，避免两者同时修改预览。
 
 ## 为什么做这个项目
 
@@ -67,7 +92,11 @@ VS Code 语法高亮，以及 GitHub 为 Mermaid、GeoJSON、STL 和数学公式
 
 ### Mermaid 图表
 
-启用 `githubMarkdown.mermaid.syncTheme` 后，扩展会更新 `markdown-mermaid` 的亮色/暗色主题设置，使 Mermaid 图表与当前 GitHub Markdown 主题保持匹配。扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
+启用 `githubMarkdown.mermaid.syncTheme` 且已安装 `markdown-mermaid` 时，扩展会同时更新该扩展的亮色和暗色主题设置。跟随系统模式会分别映射所选的 GitHub 亮色与暗色主题；单主题模式会为两种预览配色应用同一个匹配主题。关闭同步后，扩展会恢复此前的 Mermaid 全局设置。本扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
+
+### 桌面端与 Web
+
+扩展运行时代码同时兼容桌面和 Web 扩展宿主。CI 会对最低支持的 VS Code 桌面版本、当前稳定版桌面宿主和稳定版浏览器宿主执行冒烟测试。
 
 ### 无障碍
 

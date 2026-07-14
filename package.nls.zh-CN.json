@@ -1,19 +1,19 @@
 {
-  "displayName": "GitHub Flavored Markdown",
-  "description": "让 VS Code Markdown 预览尽可能与 GitHub 保持一致。",
+  "displayName": "GitHub Flavored Markdown Preview",
+  "description": "在 VS Code 中预览 GitHub Flavored Markdown，并尽可能匹配 GitHub 的渲染和主题。",
 
   "command.changeThemeMode.title": "GitHub Markdown: 更改主题模式",
   "command.changeSingleTheme.title": "GitHub Markdown: 更改单一主题",
-  "command.changeLightTheme.title": "GitHub Markdown: 更改日间主题",
-  "command.changeDarkTheme.title": "GitHub Markdown: 更改夜间主题",
+  "command.changeLightTheme.title": "GitHub Markdown: 更改亮色主题",
+  "command.changeDarkTheme.title": "GitHub Markdown: 更改暗色主题",
 
-  "configuration.theme.mode.description": "选择固定主题，或与系统同步并根据系统的日间/夜间模式自动切换主题",
+  "configuration.theme.mode.description": "选择固定主题，或跟随 Markdown 预览的亮色/暗色模式",
   "configuration.theme.mode.single.enum.description": "GitHub Markdown 将始终使用所选主题",
-  "configuration.theme.mode.system.enum.description": "GitHub Markdown 主题将根据系统当前设置自动切换",
+  "configuration.theme.mode.system.enum.description": "GitHub Markdown 将根据预览配色使用所选的亮色或暗色主题",
 
   "configuration.theme.single.description": "固定主题模式下使用的主题",
-  "configuration.theme.light.description": "当系统处于浅色模式时使用此主题",
-  "configuration.theme.dark.description": "当系统处于深色模式时使用此主题",
+  "configuration.theme.light.description": "Markdown 预览处于亮色模式时使用的主题",
+  "configuration.theme.dark.description": "Markdown 预览处于暗色模式时使用的主题",
 
   "configuration.theme.light.enum.description": "GitHub 标准浅色主题，提供完整的色彩对比度和亮度。",
   "configuration.theme.light_colorblind.enum.description": "适用于难以区分红色和绿色的用户。",
@@ -28,13 +28,5 @@
 
   "configuration.accessibility.linkUnderlines.description": "显示文本块中链接的下划线，与 GitHub 的默认无障碍设置保持一致。",
 
-  "configuration.mermaid.theme.vscode.description": "自动匹配当前 VS Code 颜色主题。",
-  "configuration.mermaid.theme.base.description": "用于创建自定义 Mermaid 主题的基础主题。",
-  "configuration.mermaid.theme.forest.description": "以自然绿色色调为灵感的主题。",
-  "configuration.mermaid.theme.dark.description": "针对深色背景优化的主题。",
-  "configuration.mermaid.theme.default.description": "默认 Mermaid 主题，提供均衡的颜色和对比度。",
-  "configuration.mermaid.theme.neutral.description": "适用于无障碍和打印场景的中性色主题。",
-  "configuration.mermaid.syncTheme.description": "允许 GitHub Markdown 自动管理 Mermaid 主题。",
-  "configuration.mermaid.lightTheme.description": "GitHub Markdown 处于浅色模式时使用的 Mermaid 主题。仅在启用 Mermaid 主题同步后生效。",
-  "configuration.mermaid.darkTheme.description": "GitHub Markdown 处于深色模式时使用的 Mermaid 主题。仅在启用 Mermaid 主题同步后生效。"
+  "configuration.mermaid.syncTheme.description": "将 markdown-mermaid 的亮色和暗色主题与 GitHub Markdown 同步，并在关闭同步时恢复原设置。"
 }

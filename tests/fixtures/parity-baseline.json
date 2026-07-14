@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "generatedAt": "2026-07-11T19:23:35.603Z",
+  "generatedAt": "2026-07-14T19:21:18.034Z",
   "chromiumVersion": "149.0.7827.55",
   "rendererSha256": "39ce05cd40a6b3874bed31b01eb995b9b7442a5737f66691f227e33306599620",
-  "referenceCssSha256": "a4929d4e38130b37c59ba49ee56027b874783d0ed3832d670108ac5091d9b2e2",
+  "referenceCssSha256": "dea7b713f96c2de158406beaedecae58f936455dd0fdc15bd95604cebdb42167",
   "cases": {
     "formatting-light": {
       "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",

@@ -1,7 +1,12 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "playwright";
-import { createGithubCssAssets, githubCssFileNames, type GithubTheme } from "../build/github-css";
+import {
+  generateGithubCssAssets,
+  githubCssFileNames,
+  parityOnlyCssMarker,
+  type GithubTheme
+} from "../build/github-css";
 import { project } from "../shared/project";
 
 export type ScreenshotRequest = {
@@ -107,7 +112,8 @@ export async function captureScreenshots(
 }
 
 export async function createReferenceCss(): Promise<string> {
-  return `${(await createGithubCssAssets()).map(({ content }) => content).join("\n")}\n${githubPageCss}`;
+  const assets = await generateGithubCssAssets();
+  return `${assets.map(({ content }) => content).join("\n")}\n${parityOnlyCssMarker}\n${githubPageCss}`;
 }
 
 export async function readLocalCss(): Promise<string> {

@@ -206,7 +206,7 @@ async function refreshBaseline(): Promise<void> {
 async function syncBaseline(): Promise<void> {
   const [current, referenceCss, browser] = await Promise.all([
     readBaseline(),
-    createReferenceCss(),
+    readFile(project.paths.parityReferenceCss, "utf8"),
     captureScreenshots([])
   ]);
   const htmlByInput = new Map(

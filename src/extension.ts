@@ -1,8 +1,8 @@
 import vscode from "vscode";
 import type MarkdownIt from "markdown-it";
-import { changeThemeMode, changeLightTheme, changeDarkTheme, changeSingleTheme } from "./commands";
-import { onMarkdownPreviewRefresh } from "./events";
-import { syncCurrentMermaidTheme } from "./integrations/mermaid";
+import { registerThemeCommands } from "./commands";
+import { registerMarkdownPreviewEvents } from "./events";
+import { updateMermaidThemeSync } from "./integrations/mermaid";
 import alerts from "./plugins/markdown-it-github-alerts";
 import emoji from "./plugins/markdown-it-github-emoji";
 import footnotes from "./plugins/markdown-it-github-footnotes";
@@ -13,12 +13,11 @@ import theme from "./plugins/markdown-it-github-theme";
 export async function activate(context: vscode.ExtensionContext): Promise<{
   extendMarkdownIt(md: MarkdownIt): MarkdownIt;
 }> {
-  context.subscriptions.push(changeThemeMode, changeSingleTheme, changeLightTheme, changeDarkTheme);
-
-  context.subscriptions.push(onMarkdownPreviewRefresh);
+  context.subscriptions.push(...registerThemeCommands());
+  context.subscriptions.push(registerMarkdownPreviewEvents(context.globalState));
 
   try {
-    await syncCurrentMermaidTheme();
+    await updateMermaidThemeSync(context.globalState);
   } catch (error) {
     console.error("[github-markdown] Failed to sync Mermaid theme on activation:", error);
   }
