@@ -79,7 +79,35 @@ export async function run(): Promise<void> {
     "",
     "```html",
     "<style>fenced-tagfilter-literal</style>",
-    "```"
+    "```",
+    "",
+    "## rtl-host-heading مرحباً بالعالم",
+    "",
+    "rtl-host-paragraph فقرة عربية لاختبار اتجاه النص.",
+    "",
+    "rtl-host-mixed Mixed English العربية 123.",
+    "",
+    "- rtl-host-list-item عنصر عربي",
+    "- rtl-host-mixed-list Mixed item العربية",
+    "",
+    "> [!NOTE]",
+    "> rtl-host-alert تنبيه عربي with English.",
+    "",
+    "rtl-host-footnote-reference العربية.[^rtl]",
+    "",
+    "[^rtl]: rtl-host-footnote-definition ملاحظة هامشية mixed English.",
+    "",
+    "Inline direction code: `rtl-inline-code-direction العربية`.",
+    "",
+    "```text",
+    "rtl-block-code-direction العربية",
+    "```",
+    "",
+    "    rtl-indented-code-direction العربية",
+    "",
+    '<p dir="rtl" data-direction="explicit-rtl">rtl-explicit-direction العربية</p>',
+    "",
+    '<p dir="ltr" data-direction="explicit-ltr">ltr-explicit-direction English</p>'
   ].join("\n");
   const directHtml = api.extendMarkdownIt(new MarkdownIt({ html: true })).render(markdown);
   assertRenderedMarkdown(directHtml, "exported Markdown-it hook");
@@ -87,6 +115,7 @@ export async function run(): Promise<void> {
   const previewHtml = await vscode.commands.executeCommand<string>("markdown.api.render", markdown);
   assertRenderedMarkdown(previewHtml, "VS Code Markdown renderer contribution");
   assertTagfilter(previewHtml);
+  assertDirectionality(previewHtml);
 
   const previewStyles = extension.packageJSON.contributes?.["markdown.previewStyles"] as
     | string[]
@@ -140,6 +169,94 @@ function assertTagfilter(html: string | undefined): void {
     html.includes("<pre><code") && html.includes("fenced-tagfilter-literal"),
     "Fenced code keeps its block and raw tag text"
   );
+}
+
+function assertDirectionality(html: string | undefined): void {
+  assert(html, "VS Code Markdown renderer contribution returns HTML for directionality checks");
+  assert(
+    elementHasDirection(html, "h2", "auto", "rtl-host-heading مرحباً بالعالم"),
+    "RTL headings use automatic direction in final preview HTML"
+  );
+  assert(
+    elementHasDirection(html, "p", "auto", "rtl-host-paragraph فقرة عربية"),
+    "RTL paragraphs use automatic direction in final preview HTML"
+  );
+  assert(
+    elementHasDirection(html, "p", "auto", "rtl-host-mixed Mixed English العربية"),
+    "Mixed-direction paragraphs use automatic direction in final preview HTML"
+  );
+  assert(
+    elementHasDirection(html, "ul", "auto", "rtl-host-list-item عنصر عربي"),
+    "RTL lists use automatic direction in final preview HTML"
+  );
+  assert(
+    elementHasDirection(html, "div", "auto", "rtl-host-alert تنبيه عربي"),
+    "RTL alerts use automatic direction in final preview HTML"
+  );
+  assert(
+    elementHasDirection(html, "p", "auto", "rtl-host-footnote-reference العربية"),
+    "RTL footnote references use automatic direction in final preview HTML"
+  );
+  assert(
+    elementHasDirection(html, "p", "auto", "rtl-host-footnote-definition ملاحظة هامشية"),
+    "RTL footnote definitions use automatic direction in final preview HTML"
+  );
+  assert(
+    elementHasDirection(html, "p", "rtl", "rtl-explicit-direction العربية"),
+    "Explicit RTL direction remains unchanged"
+  );
+  assert(
+    elementHasDirection(html, "p", "ltr", "ltr-explicit-direction English"),
+    "Explicit LTR direction remains unchanged"
+  );
+
+  const inlineCode = html.match(/<code\b([^>]*)>rtl-inline-code-direction العربية<\/code>/);
+  assert(inlineCode && !/\bdir=/.test(inlineCode[1] ?? ""), "Inline code has no direction");
+  assert(
+    codeBlockHasNoDirection(html, "rtl-block-code-direction العربية"),
+    "Fenced code blocks have no direction"
+  );
+  assert(
+    codeBlockHasNoDirection(html, "rtl-indented-code-direction العربية"),
+    "Indented code blocks have no direction"
+  );
+}
+
+function codeBlockHasNoDirection(html: string, marker: string): boolean {
+  const markerIndex = html.indexOf(marker);
+  const preStart = html.lastIndexOf("<pre", markerIndex);
+  const codeStart = html.lastIndexOf("<code", markerIndex);
+  const preAttributes = html.slice(preStart, html.indexOf(">", preStart));
+  const codeAttributes = html.slice(codeStart, html.indexOf(">", codeStart));
+  return (
+    markerIndex >= 0 &&
+    preStart >= 0 &&
+    codeStart >= 0 &&
+    !/\bdir=/.test(preAttributes) &&
+    !/\bdir=/.test(codeAttributes)
+  );
+}
+
+function elementHasDirection(
+  html: string,
+  tag: string,
+  direction: "auto" | "ltr" | "rtl",
+  text: string
+): boolean {
+  let textIndex = html.indexOf(text);
+  while (textIndex >= 0) {
+    const openIndex = html.lastIndexOf(`<${tag}`, textIndex);
+    const openEnd = html.indexOf(">", openIndex);
+    const closeIndex = html.indexOf(`</${tag}>`, openEnd);
+    if (openIndex >= 0 && openEnd < textIndex && closeIndex > textIndex) {
+      const attributes = html.slice(openIndex + tag.length + 1, openEnd);
+      if (/^\s/.test(attributes) && new RegExp(`\\bdir="${direction}"`).test(attributes)) {
+        return true;
+      }
+    }
+    textIndex = html.indexOf(text, textIndex + text.length);
+  }
+  return false;
 }
 
 function assert(value: unknown, message: string): asserts value {

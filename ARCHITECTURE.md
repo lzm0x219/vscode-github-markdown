@@ -21,8 +21,9 @@ VS Code commands ────────────────> src/commands.
 4. alerts
 5. emoji
 6. footnotes
-7. theme metadata
-8. HTML image URL rewriting
+7. automatic text direction
+8. theme metadata
+9. HTML image URL rewriting
 
 Each behavior lives under `src/plugins/`. Plugins transform tokens or renderer rules while the built-in preview remains responsible for document lifecycle, webview security, syntax highlighting, and navigation.
 

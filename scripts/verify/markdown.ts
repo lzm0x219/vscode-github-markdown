@@ -2,6 +2,7 @@ import MarkdownIt from "markdown-it";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import githubAlerts from "../../src/plugins/markdown-it-github-alerts";
+import githubDirectionality from "../../src/plugins/markdown-it-github-directionality";
 import githubEmoji from "../../src/plugins/markdown-it-github-emoji";
 import githubFootnotes from "../../src/plugins/markdown-it-github-footnotes";
 import githubStrikethrough from "../../src/plugins/markdown-it-github-strikethrough";
@@ -16,7 +17,8 @@ export function verifyMarkdownCompatibility(): void {
     .use(githubTaskLists)
     .use(githubAlerts)
     .use(githubEmoji)
-    .use(githubFootnotes);
+    .use(githubFootnotes)
+    .use(githubDirectionality);
 
   verifyTaskLists(markdown);
   verifyFootnotes(markdown);
@@ -24,7 +26,19 @@ export function verifyMarkdownCompatibility(): void {
   verifyEmoji(markdown);
   verifyStrikethrough(markdown);
   verifyTagfilter(markdown);
+  verifyDirectionality(markdown);
   verifyMermaidBoundary();
+}
+
+function verifyDirectionality(markdown: MarkdownIt): void {
+  const html = markdown.render(
+    '# العربية\n\nMixed English العربية.\n\n- عنصر عربي\n\n`code العربية`\n\n```text\nblock العربية\n```\n\n<p dir="rtl">explicit العربية</p>\n'
+  );
+  assert.match(html, /<h1 dir="auto">العربية<\/h1>/, "heading automatic direction");
+  assert.match(html, /<p dir="auto">Mixed English العربية\.<\/p>/, "paragraph direction");
+  assert.match(html, /<ul dir="auto">/, "list automatic direction");
+  assert.doesNotMatch(html, /<(?:pre|code)\b[^>]*\bdir=/, "code direction");
+  assert.match(html, /<p dir="rtl">explicit العربية<\/p>/, "explicit direction");
 }
 
 function verifyTagfilter(markdown: MarkdownIt): void {
@@ -72,7 +86,7 @@ function verifyTaskLists(markdown: MarkdownIt): void {
   const html = markdown.render(
     "- [x] #739\n- [ ] [https://github.com/octo-org/octo-repo/issues/740](https://github.com/octo-org/octo-repo/issues/740)\n"
   );
-  assert.match(html, /<ul class="contains-task-list">\n/, "task list container class");
+  assert.match(html, /<ul class="contains-task-list" dir="auto">\n/, "task list container class");
   assert.doesNotMatch(html, /contains-task-list contains-task-list/, "duplicate task list class");
   assert.match(
     html,

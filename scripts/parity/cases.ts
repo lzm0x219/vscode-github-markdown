@@ -22,6 +22,8 @@ const fixtures = {
     "# Heading\n\n**Bold**, *italic*, ~~Hi~~ Hello, ~there~ world!, and `inline code`.\n\n> A blockquote.\n",
   tagfilter:
     '<strong>Allowed HTML</strong>\n\nFiltered tags: <title data-case="title">title</title> <textarea>textarea</textarea> <style>style</style> <xmp>xmp</xmp> <iframe>iframe</iframe> <noembed>noembed</noembed> <noframes>noframes</noframes> <script>script</script> <plaintext>plaintext</plaintext>.\n',
+  directionality:
+    '# مرحباً بالعالم\n\nفقرة عربية لاختبار اتجاه النص.\n\nMixed English العربية 123.\n\n- عنصر عربي\n- Mixed item العربية\n\n> [!NOTE]\n> تنبيه عربي with English.\n\nFootnote reference العربية.[^1]\n\n[^1]: ملاحظة هامشية mixed English.\n\nInline `code العربية`.\n\n```text\nblock العربية\n```\n\n<p dir="rtl">Explicit RTL العربية</p>\n',
   lists:
     "- [x] Completed task\n- [ ] Pending task\n\n| Feature | Status |\n| --- | --- |\n| Tables | Supported |\n",
   alerts: "> [!NOTE]\n> Useful information.\n\n> [!WARNING]\n> Check this carefully.\n",
@@ -97,6 +99,7 @@ const repository =
 const limits = {
   formatting: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
   tagfilter: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
+  directionality: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
   lists: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
   alerts: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
   emoji: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },

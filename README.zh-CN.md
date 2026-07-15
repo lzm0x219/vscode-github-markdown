@@ -64,6 +64,7 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 - **任务列表** — `- [x]` 和 `- [ ]` 渲染为 GitHub 风格的禁用复选框。
 - **删除线** — `~文本~` 会渲染为 GitHub 风格删除线，同时保留既有的 `~~文本~~` 语法、转义和行内代码行为。
 - **GFM Tagfilter** — `<title>`、`<script>`、`<iframe>` 等原始标签会像 GitHub 一样显示为文本，同时保留受允许 HTML 的渲染行为。
+- **自动文本方向** — 阿拉伯语等从右到左或混排内容会采用与 GitHub 一致的自动方向，同时保持代码和显式方向不变。
 - **脚注** — `[^1]` 引用自动编号、自动回跳链接，并在文末生成脚注区域。
 - **Alerts** — `[!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 五种提示框，附带正确的图标和样式。
 - **Emoji 短代码** — `:rocket:`、`:+1:`、`:tada:` 等数千个短代码，同时支持 Unicode emoji 和 GitHub 自定义图片 emoji。
