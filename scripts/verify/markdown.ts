@@ -4,11 +4,13 @@ import { readFileSync } from "node:fs";
 import githubAlerts from "../../src/plugins/markdown-it-github-alerts";
 import githubEmoji from "../../src/plugins/markdown-it-github-emoji";
 import githubFootnotes from "../../src/plugins/markdown-it-github-footnotes";
+import githubStrikethrough from "../../src/plugins/markdown-it-github-strikethrough";
 import githubTaskLists from "../../src/plugins/markdown-it-github-task-lists";
 import { project } from "../shared/project";
 
 export function verifyMarkdownCompatibility(): void {
   const markdown = new MarkdownIt({ html: true })
+    .use(githubStrikethrough)
     .use(githubTaskLists)
     .use(githubAlerts)
     .use(githubEmoji)
@@ -18,7 +20,24 @@ export function verifyMarkdownCompatibility(): void {
   verifyFootnotes(markdown);
   verifyAlerts(markdown);
   verifyEmoji(markdown);
+  verifyStrikethrough(markdown);
   verifyMermaidBoundary();
+}
+
+function verifyStrikethrough(markdown: MarkdownIt): void {
+  const html = markdown.render(
+    "~~Hi~~ Hello, ~there~ world!\n\n\\~escaped\\~ `~code~` ~~ ~open ~~~not~~~\n"
+  );
+  assert.match(
+    html,
+    /<s>Hi<\/s> Hello, <del>there<\/del> world!/,
+    "single-tilde strikethrough and existing double-tilde markup"
+  );
+  assert.match(
+    html,
+    /~escaped~ <code>~code~<\/code> ~~ ~open ~~~not~~~/,
+    "literal escaped, code-span, empty, unmatched, and long tilde sequences"
+  );
 }
 
 function verifyTaskLists(markdown: MarkdownIt): void {

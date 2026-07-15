@@ -13,5 +13,7 @@ registerHooks({
 const { verifyMarkdownCompatibility } = await import("./markdown");
 verifyMarkdownCompatibility();
 
-console.log("Verified task lists, footnotes, alerts, emoji, and Mermaid dependency boundaries");
+console.log(
+  "Verified task lists, footnotes, alerts, emoji, strikethrough, and Mermaid dependency boundaries"
+);
 console.log("Visual fixture: tests/fixtures/github-flavored-markdown-checklist.md");
