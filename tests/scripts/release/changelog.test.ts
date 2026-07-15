@@ -22,10 +22,11 @@ describe("extractRelease", () => {
     expect(extractRelease(changelog, "2.0.0")).toBe(expected);
   });
 
-  it("preserves Markdown inside the latest section", () => {
-    const changelog = "## [v1.0.0]\n\n### Added\n\n- **GitHub** [alerts](https://example.com).\n";
+  it("preserves the user-facing release structure", () => {
+    const changelog =
+      "## [v1.0.0] - 2026-07-15\n\nPreview behavior is now closer to GitHub, and this update requires a settings change.\n\n### Action required\n\n- **Breaking:** If your settings use `old.setting`, replace it with `new.setting`; the old setting is no longer read.\n\n### Markdown preview\n\n- **GitHub** [alerts](https://example.com) now render consistently.\n";
     expect(extractRelease(changelog, "1.0.0")).toBe(
-      "## What's Changed\n\n### Added\n\n- **GitHub** [alerts](https://example.com)."
+      "## What's Changed\n\nPreview behavior is now closer to GitHub, and this update requires a settings change.\n\n### Action required\n\n- **Breaking:** If your settings use `old.setting`, replace it with `new.setting`; the old setting is no longer read.\n\n### Markdown preview\n\n- **GitHub** [alerts](https://example.com) now render consistently."
     );
   });
 

@@ -19,6 +19,8 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 - [`src/extension.ts`](./src/extension.ts): extension entrypoint
 - [`README.md`](./README.md): default English documentation
 - [`README.zh-CN.md`](./README.zh-CN.md): Simplified Chinese documentation
+- [`CHANGELOG.md`](./CHANGELOG.md): canonical user-facing release record
+- [`docs/CHANGELOG_STYLE_GUIDE.md`](./docs/CHANGELOG_STYLE_GUIDE.md): required changelog content and writing standard
 - [`tsconfig.json`](./tsconfig.json): strict TypeScript config
 - [`lefthook.yml`](./lefthook.yml): pre-commit checks
 
@@ -53,6 +55,9 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 - `README.zh-CN.md` is the Simplified Chinese counterpart.
 - When updating shared project-facing documentation, keep both files aligned unless the change is intentionally language-specific.
 - Do not claim a feature is implemented unless it exists in the current codebase.
+- Follow [`docs/CHANGELOG_STYLE_GUIDE.md`](./docs/CHANGELOG_STYLE_GUIDE.md) for every new `CHANGELOG.md` entry.
+- For every change, evaluate the guide's admission rules. Add eligible changes under `[Unreleased]` and intentionally omit ineligible internal work.
+- Record only user-observable or user-actionable outcomes in the changelog. Omit implementation, testing, tooling, CI, and dependency details unless they materially affect extension users.
 
 ## Versioning Rules
 

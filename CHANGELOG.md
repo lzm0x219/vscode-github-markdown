@@ -1,20 +1,18 @@
 # Changelog
 
-All notable changes to this extension are documented in this file. Release notes are written for people and maintained manually under `[Unreleased]` until publication.
-
-Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Feature · 💎 Improve · 🧱 Refactor · 🐛 Bugfix · 💥 Breaking · 🚧 Maintenance · 📦 Dependencies · 🚀 Performance · 📝 Documentation
+This file records notable changes that people can observe or act on when using the extension. New entries follow the project-owned [`User-Facing Changelog Standard`](./docs/CHANGELOG_STYLE_GUIDE.md) and remain under `[Unreleased]` until publication. Entries released before the standard took effect remain in their original form.
 
 ---
 
 ## [Unreleased]
 
-### 🐛 Bugfix
+### Mermaid
 
-- Keep Mermaid's light and dark appearance aligned with the selected preview themes, and restore the user's previous Mermaid settings when synchronization is disabled.
+- When `markdown-mermaid` is installed and `githubMarkdown.mermaid.syncTheme` is enabled, Mermaid diagrams now stay aligned with the selected preview themes. Turning off synchronization restores your previous Mermaid light and dark theme settings.
 
-### 📝 Documentation
+### Installation and migration
 
-- Add direct installation and migration guidance plus verified rendering comparisons.
+- You can now follow a complete migration path from `lzm0x219.vscode-markdown-github`. [Install the new extension from the Marketplace](https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown) or run `code --install-extension lzm0x219.vscode-github-markdown`, verify the new preview, and then uninstall the previous extension to avoid overlapping preview customizations.
 
 ## [v4.1.0]
 
