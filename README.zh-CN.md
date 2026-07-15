@@ -9,10 +9,10 @@
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown"><img alt="VS Marketplace 版本" src="https://vsmarketplacebadges.dev/version-short/lzm0x219.vscode-github-markdown.svg" /></a>
-  <a href="https://github.com/lzm0x219/vscode-github-markdown/actions/workflows/ci.yml"><img alt="CI 状态" src="https://github.com/lzm0x219/vscode-github-markdown/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
-  <img alt="需要 VS Code 1.74 或更高版本" src="https://img.shields.io/badge/VS%20Code-1.74%2B-007ACC?logo=visualstudiocode&logoColor=white" />
-  <a href="./LICENSE"><img alt="MIT 许可证" src="https://img.shields.io/github/license/lzm0x219/vscode-github-markdown" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown"><img alt="VS Marketplace 版本" src="https://badges.ws/vscode/v/lzm0x219.vscode-github-markdown?icon=visualstudiocode&iconColor=white" /></a>
+  <a href="https://github.com/lzm0x219/vscode-github-markdown/actions/workflows/ci.yml"><img alt="CI 状态" src="https://badges.ws/github/actions/workflow/status/lzm0x219/vscode-github-markdown/ci.yml?branch=main" /></a>
+  <img alt="需要 VS Code 1.74 或更高版本" src="https://badges.ws/badge/VS%20Code-1.74%2B-007ACC?icon=visualstudiocode&iconColor=white" />
+  <a href="./LICENSE"><img alt="MIT 许可证" src="https://badges.ws/badge/License-MIT-3979E1" /></a>
 </p>
 
 <p align="center">
