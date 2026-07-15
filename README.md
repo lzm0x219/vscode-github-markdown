@@ -32,13 +32,15 @@ Open a Markdown file, then run **Markdown: Open Preview to the Side**. The built
 <table>
   <tr>
     <th>GitHub reference</th>
-    <th>VS Code preview</th>
+    <th>Extension renderer</th>
   </tr>
   <tr>
     <td><img alt="Markdown rendered by GitHub" src="./assets/parity-github.png" /></td>
-    <td><img alt="Markdown rendered in VS Code" src="./assets/parity-vscode.png" /></td>
+    <td><img alt="Markdown rendered by the extension pipeline" src="./assets/parity-vscode.png" /></td>
   </tr>
 </table>
+
+These images come from the automated parity harness, which renders the committed GitHub reference and the extension's Markdown/CSS pipeline under identical Chromium conditions. Real VS Code desktop and web hosts are covered separately by smoke tests of the built-in Markdown renderer contribution.
 
 > [!IMPORTANT]
 > Migrating from `lzm0x219.vscode-markdown-github`? This is a separate extension ID. Install `lzm0x219.vscode-github-markdown`, confirm your Markdown preview works as expected, and then uninstall the old extension to avoid overlapping preview customizations.

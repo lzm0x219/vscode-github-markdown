@@ -1,6 +1,7 @@
 import type vscode from "vscode";
 import MarkdownIt from "markdown-it";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createTestMemento } from "./helpers/memento";
 
 const harness = vi.hoisted(() => ({
   commandHandlers: new Map<string, () => Promise<void>>(),
@@ -75,17 +76,10 @@ vi.mock("vscode", () => ({
 import { activate } from "../src/extension";
 
 function createContext(): vscode.ExtensionContext {
-  const values = new Map<string, unknown>();
-  const globalState = {
-    get: <T>(key: string, defaultValue?: T) =>
-      (values.has(key) ? values.get(key) : defaultValue) as T,
-    update: async (key: string, value: unknown) => {
-      if (value === undefined) values.delete(key);
-      else values.set(key, value);
-    },
-    keys: () => [...values.keys()]
-  };
-  return { subscriptions: [], globalState } as unknown as vscode.ExtensionContext;
+  return {
+    subscriptions: [],
+    globalState: createTestMemento()
+  } as unknown as vscode.ExtensionContext;
 }
 
 describe("extension lifecycle", () => {

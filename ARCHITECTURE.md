@@ -28,7 +28,7 @@ Each behavior lives under `src/plugins/`. Plugins transform tokens or renderer r
 
 `src/extension.preview.css` is the authored entrypoint. The build combines it with a committed snapshot of GitHub Markdown styles and nine theme variable sets, then writes `dist/extension.preview.css`.
 
-Normal builds are deliberately offline. `scripts/build/github-css.ts` extracts build assets from `tests/fixtures/parity-reference.css`; only explicit parity refresh and remote-verification workflows contact GitHub. This keeps local builds and pull-request CI independent of GitHub availability and unauthenticated API quotas.
+Normal builds are deliberately offline. `scripts/build/github-css.ts` extracts build assets from `tests/fixtures/parity-reference.css`; within the CSS and parity workflows, only explicit refresh and remote-verification commands contact GitHub. Other maintenance commands, such as emoji metadata updates, may contact GitHub independently. This keeps local builds and pull-request CI independent of GitHub availability and unauthenticated API quotas.
 
 Theme metadata written by `src/plugins/markdown-it-github-theme.ts` selects either one fixed theme or separate light and dark themes through CSS media queries. Runtime code does not infer light or dark mode from the clock.
 
@@ -43,7 +43,7 @@ Before the first update, the original global values are stored in extension glob
 - Unit tests cover plugins, commands, configuration events, Mermaid state restoration, and build/parity helpers.
 - `scripts/verify` checks the complete Markdown transformation and manifest boundaries.
 - Pixel parity renders committed GitHub reference input and local output in the same Chromium process. Exact cases use zero tolerance; host-rendered features use explicit recorded budgets.
-- Desktop host smoke tests run against VS Code 1.74.0 and stable. A browser-host smoke test protects the `browser` entrypoint and the no-Node-runtime constraint.
+- Desktop host smoke tests run against VS Code 1.74.0 and stable. A browser-host smoke test protects the `browser` entrypoint and the no-Node-runtime constraint. These tests activate the extension, render through VS Code's built-in Markdown engine so the `markdown.markdownItPlugins` contribution is exercised, and verify the contributed preview stylesheet exists.
 - Packaging verifies the Marketplace artifact after the code and visual checks pass.
 
 ## Compatibility and Non-goals

@@ -1,5 +1,5 @@
-import type vscode from "vscode";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createTestMemento } from "../helpers/memento";
 
 let markdownConfig: Record<string, string | boolean> = {
   "theme.mode": "system",
@@ -49,19 +49,6 @@ vi.mock("vscode", () => ({
 
 import { updateMermaidThemeSync } from "../../src/integrations/mermaid";
 
-function createMemento(): vscode.Memento {
-  const values = new Map<string, unknown>();
-  return {
-    get: <T>(key: string, defaultValue?: T) =>
-      (values.has(key) ? values.get(key) : defaultValue) as T,
-    update: async (key: string, value: unknown) => {
-      if (value === undefined) values.delete(key);
-      else values.set(key, value);
-    },
-    keys: () => [...values.keys()]
-  };
-}
-
 describe("Mermaid theme synchronization", () => {
   beforeEach(() => {
     updateCalls.length = 0;
@@ -81,7 +68,7 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("configures both Mermaid slots from the system-mode light and dark themes", async () => {
-    const memento = createMemento();
+    const memento = createTestMemento();
     markdownConfig["theme.light"] = "light_high_contrast";
     markdownConfig["theme.dark"] = "dark_tritanopia";
 
@@ -94,7 +81,7 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("configures both Mermaid slots from the fixed theme in single mode", async () => {
-    const memento = createMemento();
+    const memento = createTestMemento();
     markdownConfig["theme.mode"] = "single";
     markdownConfig["theme.single"] = "dark_dimmed";
 
@@ -107,7 +94,7 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("restores the user's global Mermaid settings when synchronization is disabled", async () => {
-    const memento = createMemento();
+    const memento = createTestMemento();
 
     await updateMermaidThemeSync(memento);
     mermaidGlobalConfig["lightModeTheme"] = "base";
@@ -125,7 +112,7 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("does not modify Mermaid settings when synchronization starts disabled", async () => {
-    const memento = createMemento();
+    const memento = createTestMemento();
     markdownConfig["mermaid.syncTheme"] = false;
 
     await updateMermaidThemeSync(memento);
@@ -134,7 +121,7 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("does not modify settings when the Mermaid extension is not installed", async () => {
-    const memento = createMemento();
+    const memento = createTestMemento();
     mermaidExtensionInstalled = false;
 
     await updateMermaidThemeSync(memento);
@@ -143,7 +130,7 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("does not modify settings when the Mermaid extension configuration is unavailable", async () => {
-    const memento = createMemento();
+    const memento = createTestMemento();
     mermaidConfigurationRegistered = false;
 
     await updateMermaidThemeSync(memento);

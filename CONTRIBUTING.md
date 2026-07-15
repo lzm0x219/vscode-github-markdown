@@ -99,7 +99,7 @@ Set `GITHUB_TOKEN` when running networked refresh or remote verification command
 
 ## Extension Host Smoke Tests
 
-The host tests build the extension, launch a real VS Code host, activate the installed development extension, and verify command registration plus representative Markdown output.
+The host tests build the extension, launch a real VS Code host, activate the installed development extension, render representative content through VS Code's built-in Markdown engine, and verify command and preview-style contributions.
 
 ```bash
 # Minimum supported or another explicit desktop version

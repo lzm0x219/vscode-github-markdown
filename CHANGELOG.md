@@ -10,18 +10,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 ### 🐛 Bugfix
 
-- Make normal builds and offline parity checks deterministic by consuming the committed GitHub CSS snapshot instead of depending on live GitHub requests.
-- Register commands and preview listeners during extension activation so their lifecycle is owned and disposed by VS Code.
-- Synchronize both `markdown-mermaid` theme slots, preserve existing global values, and restore them when synchronization is disabled.
-
-### 🚧 Maintenance
-
-- Add real extension-host smoke tests for the minimum supported VS Code desktop release, current stable desktop, and stable web host.
-- Remove the empty preview script contribution and keep the runtime compatible with web extensions.
+- Keep Mermaid's light and dark appearance aligned with the selected preview themes, and restore the user's previous Mermaid settings when synchronization is disabled.
 
 ### 📝 Documentation
 
-- Add direct installation and migration guidance, parity screenshots, and an architecture guide covering runtime and verification boundaries.
+- Add direct installation and migration guidance plus verified rendering comparisons.
 
 ## [v4.1.0]
 

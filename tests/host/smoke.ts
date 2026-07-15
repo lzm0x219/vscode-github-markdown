@@ -19,9 +19,24 @@ export async function run(): Promise<void> {
     "Theme commands are registered after activation"
   );
 
-  const html = api
-    .extendMarkdownIt(new MarkdownIt({ html: true }))
-    .render("- [x] Host smoke test\n\n> [!NOTE]\n> :rocket: Ready.");
+  const markdown = "- [x] Host smoke test\n\n> [!NOTE]\n> :rocket: Ready.";
+  const directHtml = api.extendMarkdownIt(new MarkdownIt({ html: true })).render(markdown);
+  assertRenderedMarkdown(directHtml, "exported Markdown-it hook");
+
+  const previewHtml = await vscode.commands.executeCommand<string>("markdown.api.render", markdown);
+  assertRenderedMarkdown(previewHtml, "VS Code Markdown renderer contribution");
+
+  const previewStyles = extension.packageJSON.contributes?.["markdown.previewStyles"] as
+    | string[]
+    | undefined;
+  assert(previewStyles?.includes("./dist/extension.preview.css"), "Preview style is contributed");
+  await vscode.workspace.fs.stat(
+    vscode.Uri.joinPath(extension.extensionUri, "dist", "extension.preview.css")
+  );
+}
+
+function assertRenderedMarkdown(html: string | undefined, source: string): void {
+  assert(html, `${source} returns HTML`);
   assert(html.includes('class="vscode-github-markdown"'), "Theme wrapper is rendered");
   assert(html.includes("task-list-item-checkbox"), "Task lists are rendered");
   assert(html.includes("markdown-alert-note"), "Alerts are rendered");

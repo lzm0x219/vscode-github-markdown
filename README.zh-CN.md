@@ -32,13 +32,15 @@ code --install-extension lzm0x219.vscode-github-markdown
 <table>
   <tr>
     <th>GitHub 参考效果</th>
-    <th>VS Code 预览效果</th>
+    <th>扩展渲染管线</th>
   </tr>
   <tr>
     <td><img alt="GitHub 渲染的 Markdown" src="./assets/parity-github.png" /></td>
-    <td><img alt="VS Code 中渲染的 Markdown" src="./assets/parity-vscode.png" /></td>
+    <td><img alt="扩展管线渲染的 Markdown" src="./assets/parity-vscode.png" /></td>
   </tr>
 </table>
+
+以上图片来自自动化一致性测试：它会在相同 Chromium 条件下分别渲染已提交的 GitHub 参考内容与扩展的 Markdown/CSS 管线。真实 VS Code 桌面端和 Web 宿主则由针对内置 Markdown 渲染贡献点的独立冒烟测试覆盖。
 
 > [!IMPORTANT]
 > 正在从 `lzm0x219.vscode-markdown-github` 迁移？新版使用独立的扩展 ID。请先安装 `lzm0x219.vscode-github-markdown`，确认 Markdown 预览符合预期，再卸载旧扩展，避免两者同时修改预览。
@@ -101,6 +103,12 @@ VS Code 语法高亮，以及 GitHub 为 Mermaid、GeoJSON、STL 和数学公式
 ### 无障碍
 
 文本块中的链接默认显示下划线，与 GitHub 的默认无障碍设置一致。将 `githubMarkdown.accessibility.linkUnderlines` 设为 `false` 可以隐藏链接下划线；两种模式下的脚注引用与回跳链接都不会显示下划线。
+
+## 相关资料
+
+- [Visual Studio Code 的 Markdown 支持](http://code.visualstudio.com/docs/languages/markdown)
+- [Markdown 语法参考](https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+- [Emoji 速查表](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
 
 ## 参与贡献
 
