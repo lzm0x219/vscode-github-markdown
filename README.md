@@ -9,10 +9,10 @@
 </p>
 
 <p align="center">
-  <img alt="VS Code ^1.74.0" src="https://badges.ws/badge/VS%20Code-%5E1.74.0-007ACC?logo=visualstudiocode&logoColor=white" />
-  <img alt="Nub" src="https://badges.ws/badge/Nub-toolkit-f9f1e1" />
-  <img alt="Oxc" src="https://badges.ws/badge/Oxc-Linter-32f3e9?logo=oxc&logoColor=white" />
-  <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
+  <a href="https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown"><img alt="VS Marketplace version" src="https://vsmarketplacebadges.dev/version-short/lzm0x219.vscode-github-markdown.svg" /></a>
+  <a href="https://github.com/lzm0x219/vscode-github-markdown/actions/workflows/ci.yml"><img alt="CI status" src="https://github.com/lzm0x219/vscode-github-markdown/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
+  <img alt="Requires VS Code 1.74 or later" src="https://img.shields.io/badge/VS%20Code-1.74%2B-007ACC?logo=visualstudiocode&logoColor=white" />
+  <a href="./LICENSE"><img alt="MIT license" src="https://img.shields.io/github/license/lzm0x219/vscode-github-markdown" /></a>
 </p>
 
 <p align="center">
