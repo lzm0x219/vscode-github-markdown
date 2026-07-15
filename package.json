@@ -47,7 +47,7 @@
     "test": "vitest run",
     "test:host:build": "nub run build && nubx tsdown --config tests/host/tsdown.config.ts",
     "test:host:desktop": "nub run test:host:build && nub scripts/host/desktop.ts",
-    "test:host:web": "nub run test:host:build && nubx vscode-test-web --browser chromium --quality stable --extensionDevelopmentPath=. --extensionTestsPath=.cache/host-tests/smoke.js --testRunnerDataDir=.cache/vscode-test-web",
+    "test:host:web": "nub run test:host:build && nubx vscode-test-web --browser chromium --headless --quality stable --extensionDevelopmentPath=. --extensionTestsPath=.cache/host-tests/smoke.js --testRunnerDataDir=.cache/vscode-test-web",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "package": "nubx vsce package",
