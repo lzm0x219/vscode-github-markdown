@@ -19,7 +19,7 @@ export type VisualParityCase = {
 
 const fixtures = {
   formatting:
-    "# Heading\n\n**Bold**, *italic*, ~~deleted~~, and `inline code`.\n\n> A blockquote.\n",
+    "# Heading\n\n**Bold**, *italic*, ~~Hi~~ Hello, ~there~ world!, and `inline code`.\n\n> A blockquote.\n",
   lists:
     "- [x] Completed task\n- [ ] Pending task\n\n| Feature | Status |\n| --- | --- |\n| Tables | Supported |\n",
   alerts: "> [!NOTE]\n> Useful information.\n\n> [!WARNING]\n> Check this carefully.\n",

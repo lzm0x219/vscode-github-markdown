@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Markdown preview
+
+- Text wrapped in single tildes now appears struck through to match GitHub, while double tildes, escapes, code spans, empty or unmatched markers, and longer tilde runs keep their existing behavior.
+
 ## [v4.1.1] - 2026-07-15
 
 v4.1.1 keeps Mermaid diagrams aligned with both preview color schemes and restores your previous Mermaid preferences when synchronization is turned off. It also makes the extension easier to find and its installation, migration, and theme controls clearer.

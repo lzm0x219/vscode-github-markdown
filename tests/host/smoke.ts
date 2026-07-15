@@ -19,7 +19,24 @@ export async function run(): Promise<void> {
     "Theme commands are registered after activation"
   );
 
-  const markdown = "- [x] Host smoke test\n\n> [!NOTE]\n> :rocket: Ready.";
+  const markdown = [
+    "- [x] Host smoke test",
+    "",
+    "> [!NOTE]",
+    "> :rocket: Ready.",
+    "",
+    "~~Hi~~ Hello, ~there~ world!",
+    "",
+    "Escaped: \\~escaped\\~.",
+    "",
+    "Code: `~code~`.",
+    "",
+    "Empty: ~~.",
+    "",
+    "Unmatched: ~open.",
+    "",
+    "Long run: ~~~not~~~."
+  ].join("\n");
   const directHtml = api.extendMarkdownIt(new MarkdownIt({ html: true })).render(markdown);
   assertRenderedMarkdown(directHtml, "exported Markdown-it hook");
 
@@ -41,6 +58,13 @@ function assertRenderedMarkdown(html: string | undefined, source: string): void 
   assert(html.includes("task-list-item-checkbox"), "Task lists are rendered");
   assert(html.includes("markdown-alert-note"), "Alerts are rendered");
   assert(html.includes("🚀"), "Emoji shortcodes are rendered");
+  assert(html.includes("<s>Hi</s>"), "Double-tilde strikethrough keeps its existing markup");
+  assert(html.includes("<del>there</del>"), "Single-tilde strikethrough is rendered");
+  assert(html.includes("Escaped: ~escaped~."), "Escaped tildes remain literal");
+  assert(html.includes("<code>~code~</code>"), "Tildes in code spans remain literal");
+  assert(html.includes("Empty: ~~."), "Empty strikethrough delimiters remain literal");
+  assert(html.includes("Unmatched: ~open."), "Unmatched tildes remain literal");
+  assert(html.includes("Long run: ~~~not~~~."), "Runs longer than two tildes remain literal");
 }
 
 function assert(value: unknown, message: string): asserts value {

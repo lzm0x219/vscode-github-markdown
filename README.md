@@ -62,6 +62,7 @@ This project focuses on three practical outcomes:
 ### GitHub-Flavored Markdown
 
 - **Task Lists** — `- [x]` and `- [ ]` render as GitHub-style disabled checkboxes.
+- **Strikethrough** — `~text~` renders as GitHub-style strikethrough while existing `~~text~~` syntax, escapes, and inline code remain intact.
 - **Footnotes** — `[^1]` references with automatic numbering, backrefs, and a footnotes section at the bottom.
 - **Alerts** — `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]` render with proper icons and styling.
 - **Emoji Shortcodes** — `:rocket:`, `:+1:`, `:tada:` and thousands more, including both Unicode emoji and image-based custom emoji from GitHub.

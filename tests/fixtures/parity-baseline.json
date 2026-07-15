@@ -6,8 +6,8 @@
   "referenceCssSha256": "dea7b713f96c2de158406beaedecae58f936455dd0fdc15bd95604cebdb42167",
   "cases": {
     "formatting-light": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "light",
       "themeName": "light",
       "linkUnderlines": true,
@@ -18,11 +18,11 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "formatting-dark": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "dark",
       "themeName": "dark",
       "linkUnderlines": true,
@@ -33,7 +33,7 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "lists-light": {
       "markdownSha256": "15905b348c41ff6b43e4f077053aca7594c75aa150d52ccd8e07bef846efe06f",
@@ -838,8 +838,8 @@
       "githubHtml": "<div class=\"markdown-heading\" dir=\"auto\"><h1 class=\"heading-element\" dir=\"auto\">十二、HTML 元素</h1><a id=\"user-content-十二html-元素\" class=\"anchor\" aria-label=\"Permalink: 十二、HTML 元素\" href=\"#十二html-元素\"><svg data-component=\"Octicon\" class=\"octicon octicon-link\" viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z\"></path></svg></a></div>\n<blockquote>\n<p dir=\"auto\"><strong>用途：</strong> 在 VS Code 中打开此文件，使用 <code>vscode-github-markdown</code> 预览，与 <a href=\"https://github.com/lzm0x219/vscode-github-markdown/blob/main/test/fixtures/github-flavored-markdown/12-html-elements.md\">GitHub 上的渲染结果</a> 逐项对比。</p>\n<p dir=\"auto\"><strong>索引：</strong> <a href=\"../github-flavored-markdown-checklist.md\">返回总清单</a></p>\n</blockquote>\n<p dir=\"auto\"><strong><code>&lt;kbd&gt;</code> 键盘按键：</strong></p>\n<p dir=\"auto\">按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 复制，按 <kbd>Command</kbd> + <kbd>V</kbd> 粘贴。</p>\n<hr>\n"
     },
     "theme-light_colorblind": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "light",
       "themeName": "light_colorblind",
       "linkUnderlines": true,
@@ -850,11 +850,11 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "theme-light_high_contrast": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "light",
       "themeName": "light_high_contrast",
       "linkUnderlines": true,
@@ -865,11 +865,11 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "theme-light_tritanopia": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "light",
       "themeName": "light_tritanopia",
       "linkUnderlines": true,
@@ -880,11 +880,11 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "theme-dark_colorblind": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "dark",
       "themeName": "dark_colorblind",
       "linkUnderlines": true,
@@ -895,11 +895,11 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "theme-dark_dimmed": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "dark",
       "themeName": "dark_dimmed",
       "linkUnderlines": true,
@@ -910,11 +910,11 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "theme-dark_high_contrast": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "dark",
       "themeName": "dark_high_contrast",
       "linkUnderlines": true,
@@ -925,11 +925,11 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     },
     "theme-dark_tritanopia": {
-      "markdownSha256": "26d9429332e8f08003b2e8a28b161fd4c586bfbf6c9beb556632a8600eedd06b",
-      "inputSha256": "830dd580e5249adc2703474ec1f26bcc3d6ba0c00cc8bee712a6df9c471dd09f",
+      "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
+      "inputSha256": "115f3c7da70ccb9fdb47a3e744b2b772432b81c9141f20dde49796603d71c738",
       "theme": "dark",
       "themeName": "dark_tritanopia",
       "linkUnderlines": true,
@@ -940,7 +940,7 @@
       "localComparison": {
         "kind": "exact"
       },
-      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>deleted</del>, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+      "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
     }
   }
 }

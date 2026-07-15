@@ -15,12 +15,13 @@ VS Code commands ────────────────> src/commands.
 
 `activate` registers every command and configuration listener in the extension context, then returns `extendMarkdownIt`. VS Code calls that hook with its own `markdown-it` instance. The plugin order is intentional:
 
-1. task lists
-2. alerts
-3. emoji
-4. footnotes
-5. theme metadata
-6. HTML image URL rewriting
+1. GitHub-compatible strikethrough
+2. task lists
+3. alerts
+4. emoji
+5. footnotes
+6. theme metadata
+7. HTML image URL rewriting
 
 Each behavior lives under `src/plugins/`. Plugins transform tokens or renderer rules while the built-in preview remains responsible for document lifecycle, webview security, syntax highlighting, and navigation.
 
