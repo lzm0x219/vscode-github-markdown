@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { writeTextIfChanged } from "../shared/files";
 import { project } from "../shared/project";
 import { extractRelease } from "./changelog";
@@ -17,4 +18,4 @@ if (typeof packageJson.version !== "string") {
 }
 
 const releaseNotes = extractRelease(changelog, packageJson.version);
-await writeTextIfChanged(`${workspace}-CHANGELOG.txt`, `${releaseNotes}\n`);
+await writeTextIfChanged(join(workspace, "release-CHANGELOG.txt"), `${releaseNotes}\n`);
