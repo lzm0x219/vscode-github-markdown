@@ -68,3 +68,17 @@ This project is a VS Code extension that makes local Markdown preview match GitH
 
 - Run the relevant lint/format commands for touched files when practical.
 - Keep scope tight. If a task only needs docs or manifest changes, do not expand into runtime refactors.
+
+## Agent 技能
+
+### Issue Tracker
+
+Issue 和 PRD 使用 GitHub Issues 跟踪，详见 `docs/agents/issue-tracker.md`。
+
+### Triage 标签
+
+使用 Matt 技能的标准 Triage 标签，详见 `docs/agents/triage-labels.md`。
+
+### 领域文档
+
+使用单上下文领域文档布局，详见 `docs/agents/domain.md`。
