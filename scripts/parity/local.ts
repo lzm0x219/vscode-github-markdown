@@ -1,5 +1,6 @@
 import MarkdownIt from "markdown-it";
 import alerts from "../../src/plugins/markdown-it-github-alerts";
+import directionality from "../../src/plugins/markdown-it-github-directionality";
 import emoji from "../../src/plugins/markdown-it-github-emoji";
 import footnotes from "../../src/plugins/markdown-it-github-footnotes";
 import imageUrl from "../../src/plugins/markdown-it-github-image-url";
@@ -15,6 +16,7 @@ export function renderLocalMarkdown(markdown: string): string {
     .use(alerts)
     .use(emoji)
     .use(footnotes)
+    .use(directionality)
     .use(imageUrl)
     .render(markdown);
 }

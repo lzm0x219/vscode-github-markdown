@@ -28,6 +28,7 @@ vi.mock("vscode", () => ({
 }));
 
 import alerts from "../../src/plugins/markdown-it-github-alerts";
+import directionality from "../../src/plugins/markdown-it-github-directionality";
 import emoji from "../../src/plugins/markdown-it-github-emoji";
 import footnotes from "../../src/plugins/markdown-it-github-footnotes";
 import imageUrl from "../../src/plugins/markdown-it-github-image-url";
@@ -44,6 +45,7 @@ function createChain(): MarkdownIt {
     .use(alerts)
     .use(emoji)
     .use(footnotes)
+    .use(directionality)
     .use(theme)
     .use(imageUrl);
 }
@@ -102,7 +104,7 @@ describe("plugin chain integration", () => {
     expect(html).toContain('class="vscode-github-markdown"');
     // The theme div opens before the heading and closes at the very end
     const divOpen = html.indexOf("vscode-github-markdown");
-    const h1Pos = html.indexOf("<h1>");
+    const h1Pos = html.indexOf("<h1 ");
     expect(divOpen).toBeLessThan(h1Pos);
   });
 

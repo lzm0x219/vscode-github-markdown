@@ -6,6 +6,7 @@ describe("visual parity cases", () => {
     const features = [
       "formatting",
       "tagfilter",
+      "directionality",
       "lists",
       "alerts",
       "emoji",

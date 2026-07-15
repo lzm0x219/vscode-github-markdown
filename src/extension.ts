@@ -4,6 +4,7 @@ import { registerThemeCommands } from "./commands";
 import { registerMarkdownPreviewEvents } from "./events";
 import { updateMermaidThemeSync } from "./integrations/mermaid";
 import alerts from "./plugins/markdown-it-github-alerts";
+import directionality from "./plugins/markdown-it-github-directionality";
 import emoji from "./plugins/markdown-it-github-emoji";
 import footnotes from "./plugins/markdown-it-github-footnotes";
 import imageUrl from "./plugins/markdown-it-github-image-url";
@@ -33,6 +34,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<{
         .use(alerts)
         .use(emoji)
         .use(footnotes)
+        .use(directionality)
         .use(theme)
         .use(imageUrl);
     }
