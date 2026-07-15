@@ -8,6 +8,7 @@ This file records notable changes that people can observe or act on when using t
 
 ### Markdown preview
 
+- Raw HTML tags covered by GFM tagfilter, such as `<script>` and `<iframe>`, now appear as text in the preview instead of being interpreted as HTML. Other allowed HTML and project-root image paths continue to work.
 - Text wrapped in single tildes now appears struck through to match GitHub, while double tildes, escapes, code spans, empty or unmatched markers, and longer tilde runs keep their existing behavior.
 
 ## [v4.1.1] - 2026-07-15

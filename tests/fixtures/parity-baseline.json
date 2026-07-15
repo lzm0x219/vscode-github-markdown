@@ -941,6 +941,36 @@
         "kind": "exact"
       },
       "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+    },
+    "tagfilter-light": {
+      "markdownSha256": "956247d66a9a8dc4599e0bb60b693415b3c92ef47600063b4c62ba58e17cd2be",
+      "inputSha256": "96d6f4e0fff1072e62570cbc73403617884cf898f65c069073a6f6edea1c1274",
+      "theme": "light",
+      "themeName": "light",
+      "linkUnderlines": true,
+      "reference": {
+        "kind": "markdown-api"
+      },
+      "htmlNormalization": "none",
+      "localComparison": {
+        "kind": "exact"
+      },
+      "githubHtml": "<p dir=\"auto\"><strong>Allowed HTML</strong></p>\n<p dir=\"auto\">Filtered tags: &lt;title data-case=\"title\"&gt;title&lt;/title&gt; &lt;textarea&gt;textarea&lt;/textarea&gt; &lt;style&gt;style&lt;/style&gt; &lt;xmp&gt;xmp&lt;/xmp&gt; &lt;iframe&gt;iframe&lt;/iframe&gt; &lt;noembed&gt;noembed&lt;/noembed&gt; &lt;noframes&gt;noframes&lt;/noframes&gt; &lt;script&gt;script&lt;/script&gt; &lt;plaintext&gt;plaintext&lt;/plaintext&gt;.</p>"
+    },
+    "tagfilter-dark": {
+      "markdownSha256": "956247d66a9a8dc4599e0bb60b693415b3c92ef47600063b4c62ba58e17cd2be",
+      "inputSha256": "96d6f4e0fff1072e62570cbc73403617884cf898f65c069073a6f6edea1c1274",
+      "theme": "dark",
+      "themeName": "dark",
+      "linkUnderlines": true,
+      "reference": {
+        "kind": "markdown-api"
+      },
+      "htmlNormalization": "none",
+      "localComparison": {
+        "kind": "exact"
+      },
+      "githubHtml": "<p dir=\"auto\"><strong>Allowed HTML</strong></p>\n<p dir=\"auto\">Filtered tags: &lt;title data-case=\"title\"&gt;title&lt;/title&gt; &lt;textarea&gt;textarea&lt;/textarea&gt; &lt;style&gt;style&lt;/style&gt; &lt;xmp&gt;xmp&lt;/xmp&gt; &lt;iframe&gt;iframe&lt;/iframe&gt; &lt;noembed&gt;noembed&lt;/noembed&gt; &lt;noframes&gt;noframes&lt;/noframes&gt; &lt;script&gt;script&lt;/script&gt; &lt;plaintext&gt;plaintext&lt;/plaintext&gt;.</p>"
     }
   }
 }

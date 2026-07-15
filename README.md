@@ -63,6 +63,7 @@ This project focuses on three practical outcomes:
 
 - **Task Lists** — `- [x]` and `- [ ]` render as GitHub-style disabled checkboxes.
 - **Strikethrough** — `~text~` renders as GitHub-style strikethrough while existing `~~text~~` syntax, escapes, and inline code remain intact.
+- **GFM Tagfilter** — raw tags such as `<title>`, `<script>`, and `<iframe>` appear as text to match GitHub, while allowed HTML remains rendered.
 - **Footnotes** — `[^1]` references with automatic numbering, backrefs, and a footnotes section at the bottom.
 - **Alerts** — `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]` render with proper icons and styling.
 - **Emoji Shortcodes** — `:rocket:`, `:+1:`, `:tada:` and thousands more, including both Unicode emoji and image-based custom emoji from GitHub.
