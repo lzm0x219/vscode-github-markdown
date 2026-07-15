@@ -76,7 +76,7 @@
     "pngjs": "7.0.0",
     "publint": "0.3.21",
     "rollup-plugin-visualizer": "7.0.1",
-    "tsdown": "0.22.7",
+    "tsdown": "0.22.8",
     "typescript": "7.0.2",
     "vitest": "4.1.10"
   },
