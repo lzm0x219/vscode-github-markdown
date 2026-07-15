@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+## [v4.1.1] - 2026-07-15
+
+v4.1.1 keeps Mermaid diagrams aligned with both preview color schemes and restores your previous Mermaid preferences when synchronization is turned off. It also makes the extension easier to find and its installation, migration, and theme controls clearer.
+
 ### Mermaid
 
 - When `markdown-mermaid` is installed and `githubMarkdown.mermaid.syncTheme` is enabled, Mermaid diagrams now stay aligned with the selected preview themes. Turning off synchronization restores your previous Mermaid light and dark theme settings.
@@ -13,6 +17,14 @@ This file records notable changes that people can observe or act on when using t
 ### Installation and migration
 
 - You can now follow a complete migration path from `lzm0x219.vscode-markdown-github`. [Install the new extension from the Marketplace](https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown) or run `code --install-extension lzm0x219.vscode-github-markdown`, verify the new preview, and then uninstall the previous extension to avoid overlapping preview customizations.
+
+### Extension identity
+
+- The extension now appears as **GitHub Flavored Markdown Preview**, and Marketplace search includes terms such as GFM and Markdown preview so its purpose is easier to recognize.
+
+### Themes and appearance
+
+- Theme commands and settings now use **Light** and **Dark** instead of **Day** and **Night**, and System mode descriptions clarify that it follows the Markdown preview's color scheme.
 
 ## [v4.1.0] - 2026-07-12
 
@@ -65,6 +77,7 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 - v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
 - Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
+[v4.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...HEAD
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.1...HEAD
