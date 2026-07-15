@@ -140,6 +140,10 @@ When possible:
 
 Use a [Conventional Commit](https://www.conventionalcommits.org/) title for each pull request so Release Please can determine the next version. In particular, `fix:` produces a patch release, `feat:` produces a minor release, and a `BREAKING CHANGE:` footer produces a major release.
 
-Write user-facing release notes manually under `[Unreleased]` in `CHANGELOG.md`. Describe the effect for extension users instead of copying commit titles or implementation details. Internal maintenance that does not affect users may omit a changelog entry.
+## Changelog and Releases
 
-Release Please maintains the release pull request, package version, tag, and draft GitHub Release, but does not generate the changelog. Before merging a generated release pull request, promote `[Unreleased]` to the matching version heading (for example, `[v4.1.0]`), add a new empty `[Unreleased]` section, and update the comparison links. The publishing workflow rejects a release without a matching human-authored version section and uses that section as the GitHub Release notes.
+`CHANGELOG.md` is the canonical user-facing release record. Every new entry must follow the [`User-Facing Changelog Standard`](./docs/CHANGELOG_STYLE_GUIDE.md).
+
+Add a change under `[Unreleased]` only when someone using the extension can observe it or must act on it. Describe the resulting behavior, affected context, and any required action. Do not record implementation, testing, tooling, CI, or dependency maintenance unless it materially changes the user experience.
+
+Release Please maintains the release pull request, package version, tag, and draft GitHub Release, but does not generate the changelog. Before merging a generated release pull request, curate `[Unreleased]`, promote it to a dated matching version heading (for example, `[v4.2.0] - 2026-07-15`), add a new empty `[Unreleased]` section, and update the comparison links. The publishing workflow rejects a release without a matching human-authored version section and uses that section as the GitHub Release notes.
