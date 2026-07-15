@@ -71,8 +71,6 @@ jobs:
         run: nub run build
 
       - name: Generate release notes
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}/release
         run: nub run release:note
 
       - name: Package
