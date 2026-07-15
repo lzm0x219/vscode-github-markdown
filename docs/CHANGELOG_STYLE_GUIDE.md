@@ -1,10 +1,10 @@
 # User-Facing Changelog Standard
 
 - Status: Active
-- Version: 1.0
+- Version: 1.1
 - Effective: 2026-07-15
 
-This is the project-owned standard for writing `CHANGELOG.md`. It applies to `[Unreleased]` and every release published after its effective date. Older release entries remain historical records and do not need to be rewritten solely to match this standard.
+This is the project-owned standard for writing `CHANGELOG.md`. It applies to `[Unreleased]` and every published release entry in the file. Historical entries may be curated for clarity, but they must describe only the behavior of the tagged release and must not acquire capabilities added later.
 
 The standard is informed by [Keep a Changelog](https://keepachangelog.com/en/2.0.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html), but its content model is deliberately organized around the experience of people using the extension rather than development activity or commit types.
 

@@ -1,6 +1,6 @@
 # Changelog
 
-This file records notable changes that people can observe or act on when using the extension. New entries follow the project-owned [`User-Facing Changelog Standard`](./docs/CHANGELOG_STYLE_GUIDE.md) and remain under `[Unreleased]` until publication. Entries released before the standard took effect remain in their original form.
+This file records notable changes that people can observe or act on when using the extension. Every entry follows the project-owned [`User-Facing Changelog Standard`](./docs/CHANGELOG_STYLE_GUIDE.md), and upcoming changes remain under `[Unreleased]` until publication.
 
 ---
 
@@ -14,101 +14,56 @@ This file records notable changes that people can observe or act on when using t
 
 - You can now follow a complete migration path from `lzm0x219.vscode-markdown-github`. [Install the new extension from the Marketplace](https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown) or run `code --install-extension lzm0x219.vscode-github-markdown`, verify the new preview, and then uninstall the previous extension to avoid overlapping preview customizations.
 
-## [v4.1.0]
+## [v4.1.0] - 2026-07-12
 
-This release focuses on making the local Markdown preview both closer to GitHub and easier to keep that way over time.
+This release makes links easier to identify and improves the visual consistency of footnotes, emoji, and code with GitHub. Existing settings continue to work, and no migration is required.
 
-- **Closer GitHub rendering:** Adds configurable GitHub-style link underlines, adopts the **GitHub Flavored Markdown** name, and closes gaps in emoji metadata, consecutive footnotes, code typography, and footnote link decoration.
-- **Measurable parity:** Introduces deterministic verification scripts, strict pixel-level regression baselines, and scheduled detection of upstream GitHub renderer changes.
-- **Modern tooling:** Moves development and CI to a mise-managed Node.js 24 and pnpm 11 toolchain, with refreshed TypeScript, linting, formatting, testing, build, and packaging dependencies.
+### Accessibility
 
-### ✨ Feature
+- Links in regular Markdown text are now underlined by default to match GitHub. Set `githubMarkdown.accessibility.linkUnderlines` to `false` to hide them.
+- Footnote references and return links remain without underlines so they keep GitHub's distinct footnote appearance in either link setting.
 
-- Add an accessibility setting for showing or hiding link underlines in Markdown text blocks, enabled by default to match GitHub.
+### Markdown preview
 
-### 💎 Improve
+- Consecutive footnote definitions now remain separate notes with the expected numbering instead of being combined into one definition.
+- GitHub custom image emoji now align vertically with surrounding text and show their shortcode on hover. The `:warning:` shortcode now follows GitHub's emoji markup for more consistent rendering.
+- Code blocks now use the typography supplied by the selected GitHub theme instead of always using the VS Code editor font.
 
-- Rename the extension's display name to **GitHub Flavored Markdown** across the manifest, localization files, and documentation.
-- Align GitHub emoji wrappers and custom image metadata, consecutive footnote definitions, code typography, and footnote link decoration with GitHub rendering.
+### Extension identity
 
-### 🧱 Refactor
+- The extension is now displayed as **GitHub Flavored Markdown** in VS Code and the Marketplace, making its purpose easier to recognize.
 
-- Reorganize build, emoji, release, and verification scripts into domain-focused modules with deterministic generation and focused tests.
+## [v4.0.0] - 2026-06-24
 
-### 🚧 Maintenance
+v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdown-github`; it rebuilds the GitHub-style preview around VS Code's built-in Markdown preview. Existing v3 users must install it separately, and anyone who wants to preserve their v3 theme behavior must migrate those settings manually.
 
-- Add strict pixel-level Markdown parity baselines, local regression checks, weekly GitHub renderer drift detection, and CI diff artifacts.
-- Add a mise-managed development toolchain with Node.js 24 and pnpm 11.
-- Provision the project toolchain through mise in CI and publishing workflows.
-- Upgrade to TypeScript 7 and simplify the compiler configuration for the current build pipeline.
-- Remove the deprecated `@typescript/native-preview` development dependency.
-- Make CSS watch rebuilds recover from initial failures and process rapid changes reliably.
-- Keep the bundle visualizer closed by default and open it only with `--open-visualizer`.
+### Action required
 
-### 📦 Dependencies
+- **Breaking:** If you use `lzm0x219.vscode-markdown-github`, [install `lzm0x219.vscode-github-markdown` separately](https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown); VS Code does not update the previous extension ID in place. Confirm the v4 preview works, then disable or uninstall the previous extension so both extensions do not customize the preview together.
+- **Breaking:** If you want to preserve your v3 theme behavior, migrate `vscode-markdown-github.theme.mode`, `vscode-markdown-github.theme.light`, and `vscode-markdown-github.theme.dark` because v4 does not read them. Map `light` to `githubMarkdown.theme.mode = single` and copy `vscode-markdown-github.theme.light` to `githubMarkdown.theme.single`; map `dark` to `githubMarkdown.theme.mode = single` and copy `vscode-markdown-github.theme.dark` to `githubMarkdown.theme.single`; map `auto` to `githubMarkdown.theme.mode = system`, copy `vscode-markdown-github.theme.light` to `githubMarkdown.theme.light`, and copy `vscode-markdown-github.theme.dark` to `githubMarkdown.theme.dark`.
+- **Breaking:** If you rely on Mermaid diagrams, [install `markdown-mermaid` separately](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid). v4 no longer includes a Mermaid renderer; it only synchronizes the companion extension's theme.
 
-- Update pnpm, markdown-it, tsdown, Vitest, lefthook, oxlint, oxfmt, and related development dependencies.
+### Markdown preview
 
-### 📝 Documentation
+- Task lists render as GitHub-style disabled checkboxes inside VS Code's built-in Markdown preview.
+- GitHub alerts written with `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, or `[!CAUTION]` render with matching icons and colors.
+- Emoji shortcodes such as `:rocket:`, `:+1:`, and `:tada:` render as Unicode or GitHub custom image emoji.
+- Footnote references receive automatic numbering, return links, and a dedicated footnotes section.
+- Project-root paths in HTML `<img>` tags are rewritten for the VS Code webview so local images can load in the preview.
 
-- Document mise setup and usage in the contribution guide.
+### Themes and appearance
 
-## [v4.0.0]
+- Theme selection now uses **Single** mode for one fixed theme or **System** mode for separate light and dark choices across nine GitHub themes.
+- The Command Palette provides separate controls for theme mode, the fixed theme, and the light and dark system themes.
 
-v4 is a ground-up rewrite. The extension has been renamed from `vscode-markdown-github` to **vscode-github-markdown** and rebuilt as a chain of focused `markdown-it` plugins that plug into VS Code's built-in Markdown preview pipeline. The theme system now offers 9 GitHub themes with preview light/dark switching, and the entire build toolchain has been modernized.
+### Mermaid
 
-### 💥 Breaking
+- When `markdown-mermaid` is installed, `githubMarkdown.mermaid.syncTheme` is enabled by default. On activation or after a GitHub Markdown setting changes, v4 updates one of the companion extension's `markdown-mermaid.lightModeTheme` or `markdown-mermaid.darkModeTheme` settings to Mermaid's `default` or `dark` theme.
 
-- **Extension renamed** — `vscode-markdown-github` → `vscode-github-markdown`. This is a new extension; install it separately.
-- **Architecture** — a `markdown-it` plugin chain registered via `markdown.markdownItPlugins` replaces the previous standalone renderer.
-- **VS Code** — minimum version raised to `^1.74.0`.
-- **Node.js** — 22+ for development. Runtime stays web-extension compatible.
-- **Build & lint** — Nub + tsdown replaces webpack/esbuild. oxlint + oxfmt + lefthook replaces eslint.
-- **Theme config** — `mode` (single / system) with per-mode theme selection replaces the old three-option model.
+### Installation and compatibility
 
-### ✨ Feature
-
-**GitHub-Flavored Markdown rendering.** Five `markdown-it` plugins correct VS Code's built-in output to match GitHub:
-
-- **Task Lists** — `- [x]` and `- [ ]` render as GitHub-style disabled checkboxes.
-- **Alerts** — `[!NOTE]` / `[!TIP]` / `[!IMPORTANT]` / `[!WARNING]` / `[!CAUTION]` with proper icons and colors.
-- **Emoji** — `:rocket:` / `:+1:` / `:tada:` and thousands more, plus GitHub custom emoji.
-- **Footnotes** — `[^1]` with automatic numbering, backrefs, and a dedicated section.
-- **HTML image paths** — absolute paths in HTML `<img>` tags (`/path/to/img`) rewritten to relative (`./path/to/img`) for correct webview loading.
-
-**Themes.** 9 built-in themes generated from `generate-github-markdown-css`: Light, Dark, Dark dimmed, Light/Dark high contrast, Light/Dark Protanopia & Deuteranopia, Light/Dark Tritanopia. Two modes — _Single_ (one fixed theme) or _System_ (follows the preview light/dark color scheme). Switch themes anytime via Quick Pick commands (`changeThemeMode`, `changeSingleTheme`, `changeLightTheme`, `changeDarkTheme`).
-
-**Mermaid.** When `githubMarkdown.mermaid.syncTheme` is enabled, the extension maps the active GitHub Markdown theme to the `markdown-mermaid` light/dark theme settings. It does not bundle a Mermaid renderer.
-
-**i18n.** All user-facing strings externalized via `@vscode/l10n`.
-
-**Verification.** `nub scripts/verify-github-markdown.ts` validates the full rendering pipeline against comprehensive GFM test fixtures.
-
-### 🧱 Refactor
-
-Four-layer architecture documented in [`ARCHITECTURE.md`](./ARCHITECTURE.md):
-
-```txt
-Manifest & Contribution → Extension Host → Markdown Transform → Preview Presentation
-```
-
-Each GitHub behavior is isolated in its own plugin under `src/plugins/`. The configuration surface is deliberately minimal: theme selection and Mermaid sync. Preview styles and scripts are injected through standard VS Code contribution points — no custom rendering pipeline.
-
-### 📦 Dependencies
-
-| Area           | Before                               | After                             |
-| -------------- | ------------------------------------ | --------------------------------- |
-| CSS generation | `@primer/css` + `@primer/primitives` | `generate-github-markdown-css`    |
-| Build          | webpack / esbuild                    | `nub` + `tsdown` + `lightningcss` |
-| Lint & format  | eslint                               | `oxlint` + `oxfmt` + `lefthook`   |
-| Dev tooling    | —                                    | `@vscode/vsce` + `publint`        |
-
-### 📝 Documentation
-
-- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — design, layers, constraints, and non-goals.
-- [`README.md`](./README.md) / [`README.zh-CN.md`](./README.zh-CN.md) — features, theme table, and Mermaid sync behavior.
-- [`CONTRIBUTING.md`](./CONTRIBUTING.md) — toolchain setup and contribution guidelines.
-- [`AGENTS.md`](./AGENTS.md) — rules for automated tooling.
+- v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
+- Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
