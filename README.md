@@ -9,10 +9,10 @@
 </p>
 
 <p align="center">
-  <img alt="VS Code ^1.74.0" src="https://badges.ws/badge/VS%20Code-%5E1.74.0-007ACC?logo=visualstudiocode&logoColor=white" />
-  <img alt="Nub" src="https://badges.ws/badge/Nub-toolkit-f9f1e1" />
-  <img alt="Oxc" src="https://badges.ws/badge/Oxc-Linter-32f3e9?logo=oxc&logoColor=white" />
-  <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
+  <a href="https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown"><img alt="VS Marketplace version" src="https://badges.ws/vscode/v/lzm0x219.vscode-github-markdown?label=Marketplace&labelColor=24292F" /></a>
+  <a href="#desktop-and-web"><img alt="Desktop and web extension hosts" src="https://badges.ws/badge/Hosts-Desktop%20%2B%20Web-BC4C00?labelColor=24292F" /></a>
+  <a href="https://github.com/lzm0x219/vscode-github-markdown/actions/workflows/ci.yml"><img alt="CI status" src="https://badges.ws/github/actions/workflow/status/lzm0x219/vscode-github-markdown/ci.yml?branch=main&label=CI&labelColor=24292F" /></a>
+  <a href="./LICENSE"><img alt="MIT license" src="https://badges.ws/badge/License-MIT-8250DF?labelColor=24292F" /></a>
 </p>
 
 <p align="center">
