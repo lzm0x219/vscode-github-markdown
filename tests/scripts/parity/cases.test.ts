@@ -5,6 +5,7 @@ describe("visual parity cases", () => {
   it("covers each visual feature in light and dark mode with zero tolerance", () => {
     const features = [
       "formatting",
+      "tagfilter",
       "lists",
       "alerts",
       "emoji",

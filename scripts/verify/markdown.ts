@@ -5,12 +5,14 @@ import githubAlerts from "../../src/plugins/markdown-it-github-alerts";
 import githubEmoji from "../../src/plugins/markdown-it-github-emoji";
 import githubFootnotes from "../../src/plugins/markdown-it-github-footnotes";
 import githubStrikethrough from "../../src/plugins/markdown-it-github-strikethrough";
+import githubTagfilter from "../../src/plugins/markdown-it-github-tagfilter";
 import githubTaskLists from "../../src/plugins/markdown-it-github-task-lists";
 import { project } from "../shared/project";
 
 export function verifyMarkdownCompatibility(): void {
   const markdown = new MarkdownIt({ html: true })
     .use(githubStrikethrough)
+    .use(githubTagfilter)
     .use(githubTaskLists)
     .use(githubAlerts)
     .use(githubEmoji)
@@ -21,7 +23,33 @@ export function verifyMarkdownCompatibility(): void {
   verifyAlerts(markdown);
   verifyEmoji(markdown);
   verifyStrikethrough(markdown);
+  verifyTagfilter(markdown);
   verifyMermaidBoundary();
+}
+
+function verifyTagfilter(markdown: MarkdownIt): void {
+  const html = markdown.render(
+    "<strong>allowed</strong> <title>title</title> <textarea>textarea</textarea> <style>style</style> <xmp>xmp</xmp> <iframe>iframe</iframe> <noembed>noembed</noembed> <noframes>noframes</noframes> <script>script</script> <plaintext>plaintext</plaintext>\n"
+  );
+  assert.match(html, /<strong>allowed<\/strong>/, "allowed raw HTML");
+  assert.doesNotMatch(
+    html,
+    /<(?:title|textarea|style|xmp|iframe|noembed|noframes|script|plaintext)(?:[\s/>]|$)/i,
+    "disallowed raw HTML tags"
+  );
+  for (const tag of [
+    "title",
+    "textarea",
+    "style",
+    "xmp",
+    "iframe",
+    "noembed",
+    "noframes",
+    "script",
+    "plaintext"
+  ]) {
+    assert.match(html, new RegExp(`&lt;${tag}(?:[\\s/>]|$)`, "i"), `${tag} tagfilter output`);
+  }
 }
 
 function verifyStrikethrough(markdown: MarkdownIt): void {

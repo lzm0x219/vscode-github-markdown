@@ -20,6 +20,8 @@ export type VisualParityCase = {
 const fixtures = {
   formatting:
     "# Heading\n\n**Bold**, *italic*, ~~Hi~~ Hello, ~there~ world!, and `inline code`.\n\n> A blockquote.\n",
+  tagfilter:
+    '<strong>Allowed HTML</strong>\n\nFiltered tags: <title data-case="title">title</title> <textarea>textarea</textarea> <style>style</style> <xmp>xmp</xmp> <iframe>iframe</iframe> <noembed>noembed</noembed> <noframes>noframes</noframes> <script>script</script> <plaintext>plaintext</plaintext>.\n',
   lists:
     "- [x] Completed task\n- [ ] Pending task\n\n| Feature | Status |\n| --- | --- |\n| Tables | Supported |\n",
   alerts: "> [!NOTE]\n> Useful information.\n\n> [!WARNING]\n> Check this carefully.\n",
@@ -94,6 +96,7 @@ const repository =
   process.env["GITHUB_MARKDOWN_REPOSITORY"]?.trim() || "lzm0x219/vscode-github-markdown";
 const limits = {
   formatting: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
+  tagfilter: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
   lists: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
   alerts: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
   emoji: { maxDiffPixelRatio: 0, maxDiffPixels: 0, maxDiffAreaPixels: 0 },
