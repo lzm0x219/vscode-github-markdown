@@ -2,7 +2,7 @@
   <a href="./README.zh-CN.md">简体中文</a>
 </p>
 
-<h1 align="center">GitHub Flavored Markdown</h1>
+<h1 align="center">GitHub Flavored Markdown Preview</h1>
 
 <p align="center">
   Make VS Code Markdown Preview match GitHub as closely as possible.
@@ -15,8 +15,35 @@
   <img alt="License MIT" src="https://badges.ws/badge/License-MIT-3979E1" />
 </p>
 
-> [!NOTE]
-> **New:** Preview parity is now protected by strict pixel-level browser regression tests. Text-block links also follow GitHub's default underline behavior, with a setting to hide the underlines.
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=lzm0x219.vscode-github-markdown"><strong>Install from Visual Studio Marketplace</strong></a>
+</p>
+
+## Quick Start
+
+Install the extension from the Marketplace link above or from a terminal:
+
+```shell
+code --install-extension lzm0x219.vscode-github-markdown
+```
+
+Open a Markdown file, then run **Markdown: Open Preview to the Side**. The built-in VS Code preview gains GitHub-compatible rendering and styling; no separate preview editor is introduced.
+
+<table>
+  <tr>
+    <th>GitHub reference</th>
+    <th>Extension renderer</th>
+  </tr>
+  <tr>
+    <td><img alt="Markdown rendered by GitHub" src="./assets/parity-github.png" /></td>
+    <td><img alt="Markdown rendered by the extension pipeline" src="./assets/parity-vscode.png" /></td>
+  </tr>
+</table>
+
+These images come from the automated parity harness, which renders the committed GitHub reference and the extension's Markdown/CSS pipeline under identical Chromium conditions. Real VS Code desktop and web hosts are covered separately by smoke tests of the built-in Markdown renderer contribution.
+
+> [!IMPORTANT]
+> Migrating from `lzm0x219.vscode-markdown-github`? This is a separate extension ID. Install `lzm0x219.vscode-github-markdown`, confirm your Markdown preview works as expected, and then uninstall the old extension to avoid overlapping preview customizations.
 
 ## Why This Project
 
@@ -67,7 +94,11 @@ Switch themes anytime via VS Code commands (Quick Pick) — no need to open sett
 
 ### Mermaid Diagrams
 
-When `githubMarkdown.mermaid.syncTheme` is enabled, the extension updates the `markdown-mermaid` light/dark theme settings to match the active GitHub Markdown theme. It does not ship a Mermaid renderer or add a Mermaid dependency.
+When `githubMarkdown.mermaid.syncTheme` is enabled and `markdown-mermaid` is installed, the extension updates both of that extension's light and dark theme settings. System mode maps the selected GitHub light and dark themes independently; single mode applies one matching Mermaid theme to both slots. Disabling sync restores the previous global Mermaid values. This extension does not ship a Mermaid renderer or add a Mermaid dependency.
+
+### Desktop and Web
+
+The runtime is compatible with desktop and web extension hosts. CI smoke-tests the minimum supported VS Code desktop version, the current stable desktop host, and the stable browser host.
 
 ### Accessibility
 

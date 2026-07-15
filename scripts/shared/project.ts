@@ -12,7 +12,6 @@ export const project = {
     packageJson: join(root, "package.json"),
     previewCssSource: join(root, "src", "extension.preview.css"),
     previewCssOutput: join(root, "dist", "extension.preview.css"),
-    previewScriptSource: join(root, "src", "extension.preview.ts"),
     changelog: join(root, "CHANGELOG.md"),
     parityBaseline: join(root, "tests", "fixtures", "parity-baseline.json"),
     parityReferenceCss: join(root, "tests", "fixtures", "parity-reference.css"),

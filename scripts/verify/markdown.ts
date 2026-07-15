@@ -68,7 +68,11 @@ function verifyAlerts(markdown: MarkdownIt): void {
 
 function verifyEmoji(markdown: MarkdownIt): void {
   const html = markdown.render("Ship it :rocket: :+1: :warning: :shipit: :artist: :unknown:\n");
-  assert.match(html, /Ship it 🚀 👍 ⚠️ <img class="emoji"/, "Unicode and image emoji");
+  assert.match(
+    html,
+    /Ship it 🚀 👍 <g-emoji class="g-emoji" alias="warning">⚠️<\/g-emoji> <img class="emoji"/,
+    "Unicode and image emoji"
+  );
   assert.match(html, /alt=":shipit:"/, "shipit image emoji");
   assert.match(html, /github\.githubassets\.com\/images\/icons\/emoji\/shipit\.png/, "emoji URL");
   assert.match(html, /alt=":artist:"/, "artist image emoji");
@@ -76,15 +80,15 @@ function verifyEmoji(markdown: MarkdownIt): void {
 }
 
 function verifyMermaidBoundary(): void {
-  const previewScript = readFileSync(project.paths.previewScriptSource, "utf8");
-  assert.doesNotMatch(
-    previewScript,
-    /from "mermaid|mermaid\.render|mermaid\.initialize/,
-    "preview must not bundle Mermaid"
-  );
   const packageJson = JSON.parse(readFileSync(project.paths.packageJson, "utf8")) as {
     dependencies?: Record<string, string>;
+    contributes?: { "markdown.previewScripts"?: string[] };
   };
+  assert.equal(
+    packageJson.contributes?.["markdown.previewScripts"],
+    undefined,
+    "package must not contribute a Mermaid preview runtime"
+  );
   assert.equal(
     Object.hasOwn(packageJson.dependencies ?? {}, "mermaid"),
     false,

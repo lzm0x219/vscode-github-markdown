@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createTestMemento } from "../helpers/memento";
 
-// Config stores
 let markdownConfig: Record<string, string | boolean> = {
   "theme.mode": "system",
   "theme.single": "light",
@@ -9,62 +9,48 @@ let markdownConfig: Record<string, string | boolean> = {
   "mermaid.syncTheme": true
 };
 
-let originMermaidConfig: Record<string, string> = {
-  lightModeTheme: "default",
-  darkModeTheme: "dark"
+let mermaidGlobalConfig: Record<string, string | undefined> = {
+  lightModeTheme: "neutral",
+  darkModeTheme: "forest"
 };
+let mermaidConfigurationRegistered = true;
+let mermaidExtensionInstalled = true;
 
-// Track update calls
-const updateCalls: { key: string; value: string }[] = [];
-
-// VS Code dark theme by default
-let activeColorThemeKind = 2; // vscode.ColorThemeKind.Dark = 2
+const updateCalls: { key: string; value: string | undefined; target: number }[] = [];
 
 vi.mock("vscode", () => ({
   default: {
-    ColorThemeKind: { Light: 1, Dark: 2, HighContrast: 3, HighContrastLight: 4 },
-    window: {
-      get activeColorTheme() {
-        return { kind: activeColorThemeKind };
-      }
+    ConfigurationTarget: { Global: 1 },
+    extensions: {
+      getExtension: () => (mermaidExtensionInstalled ? {} : undefined)
     },
     workspace: {
       getConfiguration: (namespace?: string) => {
         if (namespace === "markdown-mermaid") {
           return {
-            get: (key: string, defaultValue?: unknown) => {
-              return key in originMermaidConfig ? originMermaidConfig[key] : defaultValue;
-            },
-            update: async (key: string, value: string) => {
-              updateCalls.push({ key, value });
+            inspect: (key: string) =>
+              mermaidConfigurationRegistered
+                ? { globalValue: mermaidGlobalConfig[key] }
+                : undefined,
+            update: async (key: string, value: string | undefined, target: number) => {
+              updateCalls.push({ key, value, target });
+              mermaidGlobalConfig[key] = value;
             }
           };
         }
         return {
-          get: (key: string, defaultValue?: unknown) => {
-            return key in markdownConfig ? markdownConfig[key] : defaultValue;
-          },
-          update: async (key: string, value: string) => {
-            updateCalls.push({ key, value });
-          }
+          get: (key: string, defaultValue?: unknown) =>
+            key in markdownConfig ? markdownConfig[key] : defaultValue
         };
       }
-    }
-  },
-  l10n: {
-    t: (key: string, ...args: (string | number)[]) => {
-      return args.length > 0
-        ? key.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
-        : key;
     }
   }
 }));
 
-import { getActiveMermaidSetter, syncCurrentMermaidTheme } from "../../src/integrations/mermaid";
+import { updateMermaidThemeSync } from "../../src/integrations/mermaid";
 
-describe("mermaid integration", () => {
+describe("Mermaid theme synchronization", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     updateCalls.length = 0;
     markdownConfig = {
       "theme.mode": "system",
@@ -73,70 +59,82 @@ describe("mermaid integration", () => {
       "theme.dark": "dark",
       "mermaid.syncTheme": true
     };
-    originMermaidConfig = {
-      lightModeTheme: "default",
-      darkModeTheme: "dark"
+    mermaidGlobalConfig = {
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
     };
-    activeColorThemeKind = 2;
+    mermaidConfigurationRegistered = true;
+    mermaidExtensionInstalled = true;
   });
 
-  describe("getActiveMermaidSetter", () => {
-    it("returns dark setter when VS Code is in dark theme", async () => {
-      activeColorThemeKind = 2; // Dark
-      const setter = getActiveMermaidSetter();
-      await setter("dark");
-      expect(updateCalls).toHaveLength(1);
-      expect(updateCalls[0]).toEqual({ key: "darkModeTheme", value: "dark" });
-    });
+  it("configures both Mermaid slots from the system-mode light and dark themes", async () => {
+    const memento = createTestMemento();
+    markdownConfig["theme.light"] = "light_high_contrast";
+    markdownConfig["theme.dark"] = "dark_tritanopia";
 
-    it("returns light setter when VS Code is in light theme", async () => {
-      activeColorThemeKind = 1; // Light
-      const setter = getActiveMermaidSetter();
-      await setter("default");
-      expect(updateCalls).toHaveLength(1);
-      expect(updateCalls[0]).toEqual({ key: "lightModeTheme", value: "default" });
-    });
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "default", target: 1 },
+      { key: "darkModeTheme", value: "dark", target: 1 }
+    ]);
   });
 
-  describe("syncCurrentMermaidTheme", () => {
-    it("does nothing when syncTheme is disabled", async () => {
-      markdownConfig["mermaid.syncTheme"] = false;
-      await syncCurrentMermaidTheme();
-      expect(updateCalls).toHaveLength(0);
-    });
+  it("configures both Mermaid slots from the fixed theme in single mode", async () => {
+    const memento = createTestMemento();
+    markdownConfig["theme.mode"] = "single";
+    markdownConfig["theme.single"] = "dark_dimmed";
 
-    it("in single mode with light theme, sets mermaid to default", async () => {
-      markdownConfig["theme.mode"] = "single";
-      markdownConfig["theme.single"] = "light_colorblind";
-      await syncCurrentMermaidTheme();
-      expect(updateCalls).toHaveLength(1);
-      expect(updateCalls[0]?.value).toBe("default");
-    });
+    await updateMermaidThemeSync(memento);
 
-    it("in single mode with dark theme, sets mermaid to dark", async () => {
-      markdownConfig["theme.mode"] = "single";
-      markdownConfig["theme.single"] = "dark_dimmed";
-      await syncCurrentMermaidTheme();
-      expect(updateCalls).toHaveLength(1);
-      expect(updateCalls[0]?.value).toBe("dark");
-    });
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "dark", target: 1 },
+      { key: "darkModeTheme", value: "dark", target: 1 }
+    ]);
+  });
 
-    it("in system mode during daytime, sets mermaid to default", async () => {
-      vi.setSystemTime(new Date("2026-06-22T12:00:00"));
-      markdownConfig["theme.mode"] = "system";
-      markdownConfig["theme.light"] = "light_high_contrast";
-      await syncCurrentMermaidTheme();
-      expect(updateCalls).toHaveLength(1);
-      expect(updateCalls[0]?.value).toBe("default");
-    });
+  it("restores the user's global Mermaid settings when synchronization is disabled", async () => {
+    const memento = createTestMemento();
 
-    it("in system mode during nighttime, sets mermaid to dark", async () => {
-      vi.setSystemTime(new Date("2026-06-22T00:00:00"));
-      markdownConfig["theme.mode"] = "system";
-      markdownConfig["theme.dark"] = "dark_tritanopia";
-      await syncCurrentMermaidTheme();
-      expect(updateCalls).toHaveLength(1);
-      expect(updateCalls[0]?.value).toBe("dark");
-    });
+    await updateMermaidThemeSync(memento);
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+    mermaidGlobalConfig["darkModeTheme"] = "vscode";
+    await updateMermaidThemeSync(memento);
+
+    markdownConfig["mermaid.syncTheme"] = false;
+    updateCalls.length = 0;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "neutral", target: 1 },
+      { key: "darkModeTheme", value: "forest", target: 1 }
+    ]);
+  });
+
+  it("does not modify Mermaid settings when synchronization starts disabled", async () => {
+    const memento = createTestMemento();
+    markdownConfig["mermaid.syncTheme"] = false;
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([]);
+  });
+
+  it("does not modify settings when the Mermaid extension is not installed", async () => {
+    const memento = createTestMemento();
+    mermaidExtensionInstalled = false;
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([]);
+  });
+
+  it("does not modify settings when the Mermaid extension configuration is unavailable", async () => {
+    const memento = createTestMemento();
+    mermaidConfigurationRegistered = false;
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([]);
   });
 });

@@ -6,6 +6,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Legend: ✨ Fe
 
 ---
 
+## [Unreleased]
+
+### 🐛 Bugfix
+
+- Keep Mermaid's light and dark appearance aligned with the selected preview themes, and restore the user's previous Mermaid settings when synchronization is disabled.
+
+### 📝 Documentation
+
+- Add direct installation and migration guidance plus verified rendering comparisons.
+
 ## [v4.1.0]
 
 This release focuses on making the local Markdown preview both closer to GitHub and easier to keep that way over time.
@@ -104,3 +114,4 @@ Each GitHub behavior is isolated in its own plugin under `src/plugins/`. The con
 
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...HEAD

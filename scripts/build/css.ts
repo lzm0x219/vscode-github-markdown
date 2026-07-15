@@ -1,11 +1,11 @@
 import { join, relative } from "node:path";
 import { writeTextIfChanged } from "../shared/files";
 import { project } from "../shared/project";
-import { createGithubCssAssets } from "./github-css";
+import { readGithubCssAssets } from "./github-css";
 import { buildPreviewCss, type CssBuildResult } from "./preview-css";
 
 export async function buildCss(): Promise<CssBuildResult> {
-  const assets = await createGithubCssAssets();
+  const assets = await readGithubCssAssets();
   await Promise.all(
     assets.map(({ fileName, content }) =>
       writeTextIfChanged(join(project.paths.dist, fileName), content)

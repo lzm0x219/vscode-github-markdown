@@ -23,7 +23,6 @@ vi.mock("vscode", () => ({
 import {
   getCurrentDarkTheme,
   getCurrentLightTheme,
-  getCurrentSystemTheme,
   getThemeColorMode,
   getThemeList,
   getThemeModeList,
@@ -111,38 +110,6 @@ describe("theme logic", () => {
       configStore["theme.mode"] = "system";
       configStore["theme.dark"] = "dark_tritanopia";
       expect(getCurrentDarkTheme()).toBe("dark_tritanopia");
-    });
-  });
-
-  describe("getCurrentSystemTheme", () => {
-    it("returns light theme during daytime (6 AM)", () => {
-      vi.setSystemTime(new Date("2026-06-22T06:00:00"));
-      configStore["theme.light"] = "light_colorblind";
-      expect(getCurrentSystemTheme()).toBe("light_colorblind");
-    });
-
-    it("returns light theme during daytime (noon)", () => {
-      vi.setSystemTime(new Date("2026-06-22T12:00:00"));
-      configStore["theme.light"] = "light";
-      expect(getCurrentSystemTheme()).toBe("light");
-    });
-
-    it("returns dark theme at night (18:00)", () => {
-      vi.setSystemTime(new Date("2026-06-22T18:00:00"));
-      configStore["theme.dark"] = "dark_dimmed";
-      expect(getCurrentSystemTheme()).toBe("dark_dimmed");
-    });
-
-    it("returns dark theme at midnight", () => {
-      vi.setSystemTime(new Date("2026-06-22T00:00:00"));
-      configStore["theme.dark"] = "dark";
-      expect(getCurrentSystemTheme()).toBe("dark");
-    });
-
-    it("returns light theme at 17:59 (still daytime)", () => {
-      vi.setSystemTime(new Date("2026-06-22T17:59:00"));
-      configStore["theme.light"] = "light_tritanopia";
-      expect(getCurrentSystemTheme()).toBe("light_tritanopia");
     });
   });
 

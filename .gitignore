@@ -45,5 +45,7 @@ artifacts/
 
 .pnpm-store
 .cache/
+.vscode-test/
+.vscode-test-web/
 
 *.vsix

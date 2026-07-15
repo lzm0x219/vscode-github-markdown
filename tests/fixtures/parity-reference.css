@@ -3092,6 +3092,8 @@
 }
 
 
+/* Parity-only GitHub page styles. */
+
   .vscode-github-markdown a { text-decoration: underline; }
   .vscode-github-markdown[data-link-underlines="false"] a { text-decoration: none; }
   .vscode-github-markdown [data-footnote-ref],
