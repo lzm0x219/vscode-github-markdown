@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+## [v4.2.0] - 2026-07-15
+
+v4.2.0 makes raw HTML and strikethrough syntax behave more like GitHub while preserving allowed HTML and literal Markdown syntax.
+
 ### Markdown preview
 
 - Raw HTML tags covered by GFM tagfilter, such as `<script>` and `<iframe>`, now appear as text in the preview instead of being interpreted as HTML. Other allowed HTML and project-root image paths continue to work.
@@ -82,7 +86,8 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 - v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
 - Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
+[v4.2.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.1...v4.2.0
 [v4.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.1...HEAD
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.2.0...HEAD
