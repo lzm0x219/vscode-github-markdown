@@ -28,5 +28,5 @@
 
   "configuration.accessibility.linkUnderlines.description": "Show underlines on links in text blocks, matching GitHub's default accessibility setting.",
 
-  "configuration.mermaid.syncTheme.description": "Synchronize the markdown-mermaid light and dark themes with GitHub Markdown, restoring the previous settings when disabled."
+  "configuration.mermaid.syncTheme.description": "Synchronize the light and dark themes used by VS Code's built-in Mermaid renderer or markdown-mermaid with GitHub Markdown. Disabling synchronization restores previous values without replacing newer Mermaid choices."
 }

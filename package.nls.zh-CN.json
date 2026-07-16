@@ -28,5 +28,5 @@
 
   "configuration.accessibility.linkUnderlines.description": "显示文本块中链接的下划线，与 GitHub 的默认无障碍设置保持一致。",
 
-  "configuration.mermaid.syncTheme.description": "将 markdown-mermaid 的亮色和暗色主题与 GitHub Markdown 同步，并在关闭同步时恢复原设置。"
+  "configuration.mermaid.syncTheme.description": "将 VS Code 内置 Mermaid 渲染器或 markdown-mermaid 使用的亮色和暗色主题与 GitHub Markdown 同步；关闭同步时恢复原值，但不覆盖更新的 Mermaid 选择。"
 }

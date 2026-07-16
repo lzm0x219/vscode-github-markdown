@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Mermaid
+
+- Mermaid theme synchronization now works with VS Code's built-in renderer on 1.121 or later as well as the external `markdown-mermaid` extension. Disabling synchronization or deactivating this extension restores only settings it still owns, preserving newer Mermaid theme choices.
+
 ## [v4.2.0] - 2026-07-15
 
 v4.2.0 makes raw HTML, strikethrough syntax, and bidirectional text behave more like GitHub while preserving allowed HTML, literal Markdown syntax, code direction, and explicit direction settings.

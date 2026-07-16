@@ -55,7 +55,7 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 
 - 对齐 GitHub Markdown 的渲染结果、留白和排版细节，而不是另起一套看起来相似但结果不同的主题
 - 尽量让本地预览和 GitHub 上的预期效果保持一致，让文档编写过程更可预期、更省来回验证成本
-- 启用 Mermaid 主题同步时，让 `markdown-mermaid` 图表跟随匹配的亮色或暗色主题
+- 启用 Mermaid 主题同步时，让 VS Code 内置 Mermaid 渲染器或 `markdown-mermaid` 图表跟随匹配的亮色或暗色主题
 
 ## 特性
 
@@ -97,7 +97,7 @@ VS Code 语法高亮，以及 GitHub 为 Mermaid、GeoJSON、STL 和数学公式
 
 ### Mermaid 图表
 
-启用 `githubMarkdown.mermaid.syncTheme` 且已安装 `markdown-mermaid` 时，扩展会同时更新该扩展的亮色和暗色主题设置。跟随系统模式会分别映射所选的 GitHub 亮色与暗色主题；单主题模式会为两种预览配色应用同一个匹配主题。关闭同步后，扩展会恢复此前的 Mermaid 全局设置。本扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
+在 VS Code 1.121 及以上版本中，Mermaid 主题同步可直接配合内置的 `vscode.mermaid-markdown-features` 扩展；在更早的受支持版本中，请安装外置的 `bierner.markdown-mermaid` 扩展。任一渲染器可用且已启用 `githubMarkdown.mermaid.syncTheme` 时，本扩展会更新它们共用的 `markdown-mermaid` 亮色和暗色主题设置。跟随系统模式会分别映射所选的 GitHub 亮色与暗色主题；单主题模式会为两个槽位应用同一个匹配主题。关闭同步或停用本扩展时，只会恢复仍由本扩展最后写入的值，因此不会覆盖同步期间产生的新 Mermaid 主题选择。本扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
 
 ### 桌面端与 Web
 
