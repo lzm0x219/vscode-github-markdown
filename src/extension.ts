@@ -2,7 +2,7 @@ import vscode from "vscode";
 import type MarkdownIt from "markdown-it";
 import { registerThemeCommands } from "./commands";
 import { registerMarkdownPreviewEvents } from "./events";
-import { updateMermaidThemeSync } from "./integrations/mermaid";
+import { restoreMermaidThemeSync, updateMermaidThemeSync } from "./integrations/mermaid";
 import alerts from "./plugins/markdown-it-github-alerts";
 import directionality from "./plugins/markdown-it-github-directionality";
 import emoji from "./plugins/markdown-it-github-emoji";
@@ -13,9 +13,12 @@ import tagfilter from "./plugins/markdown-it-github-tagfilter";
 import taskLists from "./plugins/markdown-it-github-task-lists";
 import theme from "./plugins/markdown-it-github-theme";
 
+let activeMemento: vscode.Memento | undefined;
+
 export async function activate(context: vscode.ExtensionContext): Promise<{
   extendMarkdownIt(md: MarkdownIt): MarkdownIt;
 }> {
+  activeMemento = context.globalState;
   context.subscriptions.push(...registerThemeCommands());
   context.subscriptions.push(registerMarkdownPreviewEvents(context.globalState));
 
@@ -39,4 +42,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<{
         .use(imageUrl);
     }
   };
+}
+
+export async function deactivate(): Promise<void> {
+  const memento = activeMemento;
+  activeMemento = undefined;
+  if (!memento) {
+    return;
+  }
+
+  try {
+    await restoreMermaidThemeSync(memento);
+  } catch (error) {
+    console.error("[github-markdown] Failed to restore Mermaid theme on deactivation:", error);
+  }
 }

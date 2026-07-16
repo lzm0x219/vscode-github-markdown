@@ -14,7 +14,7 @@ let mermaidGlobalConfig: Record<string, string | undefined> = {
   darkModeTheme: "forest"
 };
 let mermaidConfigurationRegistered = true;
-let mermaidExtensionInstalled = true;
+let mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
 
 const updateCalls: { key: string; value: string | undefined; target: number }[] = [];
 
@@ -22,7 +22,7 @@ vi.mock("vscode", () => ({
   default: {
     ConfigurationTarget: { Global: 1 },
     extensions: {
-      getExtension: () => (mermaidExtensionInstalled ? {} : undefined)
+      getExtension: (id: string) => (mermaidExtensionIds.has(id) ? {} : undefined)
     },
     workspace: {
       getConfiguration: (namespace?: string) => {
@@ -64,7 +64,7 @@ describe("Mermaid theme synchronization", () => {
       darkModeTheme: "forest"
     };
     mermaidConfigurationRegistered = true;
-    mermaidExtensionInstalled = true;
+    mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
   });
 
   it("configures both Mermaid slots from the system-mode light and dark themes", async () => {
@@ -93,6 +93,15 @@ describe("Mermaid theme synchronization", () => {
     ]);
   });
 
+  it("also supports the legacy external Mermaid extension", async () => {
+    const memento = createTestMemento();
+    mermaidExtensionIds = new Set(["bierner.markdown-mermaid"]);
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toHaveLength(2);
+  });
+
   it("restores the user's global Mermaid settings when synchronization is disabled", async () => {
     const memento = createTestMemento();
 
@@ -111,6 +120,23 @@ describe("Mermaid theme synchronization", () => {
     ]);
   });
 
+  it("does not overwrite Mermaid choices made while synchronization was active", async () => {
+    const memento = createTestMemento();
+
+    await updateMermaidThemeSync(memento);
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+
+    markdownConfig["mermaid.syncTheme"] = false;
+    updateCalls.length = 0;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "forest", target: 1 }]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "forest"
+    });
+  });
+
   it("does not modify Mermaid settings when synchronization starts disabled", async () => {
     const memento = createTestMemento();
     markdownConfig["mermaid.syncTheme"] = false;
@@ -122,7 +148,7 @@ describe("Mermaid theme synchronization", () => {
 
   it("does not modify settings when the Mermaid extension is not installed", async () => {
     const memento = createTestMemento();
-    mermaidExtensionInstalled = false;
+    mermaidExtensionIds.clear();
 
     await updateMermaidThemeSync(memento);
 

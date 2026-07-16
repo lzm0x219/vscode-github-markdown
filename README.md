@@ -55,7 +55,7 @@ This project focuses on three practical outcomes:
 
 - Align the rendering, spacing, and visual details of GitHub Markdown instead of inventing a separate lookalike theme
 - Keep local preview and expected GitHub output as close as possible so documentation work needs less trial and error
-- Keep `markdown-mermaid` diagrams on a matching light or dark theme when Mermaid theme sync is enabled
+- Keep diagrams from VS Code's built-in Mermaid renderer or `markdown-mermaid` on a matching light or dark theme when Mermaid theme sync is enabled
 
 ## Features
 
@@ -97,7 +97,7 @@ Switch themes anytime via VS Code commands (Quick Pick) — no need to open sett
 
 ### Mermaid Diagrams
 
-When `githubMarkdown.mermaid.syncTheme` is enabled and `markdown-mermaid` is installed, the extension updates both of that extension's light and dark theme settings. System mode maps the selected GitHub light and dark themes independently; single mode applies one matching Mermaid theme to both slots. Disabling sync restores the previous global Mermaid values. This extension does not ship a Mermaid renderer or add a Mermaid dependency.
+On VS Code 1.121 or later, Mermaid theme sync works with the built-in `vscode.mermaid-markdown-features` extension. On older supported releases, install the external `bierner.markdown-mermaid` extension. When either renderer is available and `githubMarkdown.mermaid.syncTheme` is enabled, this extension updates their shared `markdown-mermaid` light and dark theme settings. System mode maps the selected GitHub light and dark themes independently; single mode applies one matching Mermaid theme to both slots. Disabling sync or deactivating this extension restores only the values it last applied, so newer Mermaid theme choices remain intact. This extension does not ship a Mermaid renderer or add a Mermaid runtime dependency.
 
 ### Desktop and Web
 

@@ -21,7 +21,7 @@ vi.mock("vscode", () => ({
   default: {
     ConfigurationTarget: { Global: 1 },
     extensions: {
-      getExtension: () => ({})
+      getExtension: (id: string) => (id === "vscode.mermaid-markdown-features" ? {} : undefined)
     },
     commands: {
       registerCommand: (id: string, handler: () => Promise<void>) => {
@@ -73,7 +73,7 @@ vi.mock("vscode", () => ({
   }
 }));
 
-import { activate } from "../src/extension";
+import { activate, deactivate } from "../src/extension";
 
 function createContext(): vscode.ExtensionContext {
   return {
@@ -138,6 +138,19 @@ describe("extension lifecycle", () => {
       { key: "darkModeTheme", value: "forest", target: 1 }
     ]);
     expect(harness.executeCalls).toEqual(["markdown.preview.refresh"]);
+  });
+
+  it("restores Mermaid settings when the extension is deactivated", async () => {
+    const context = createContext();
+    await activate(context);
+    harness.mermaidUpdates.length = 0;
+
+    await deactivate();
+
+    expect(harness.mermaidUpdates).toEqual([
+      { key: "lightModeTheme", value: "neutral", target: 1 },
+      { key: "darkModeTheme", value: "forest", target: 1 }
+    ]);
   });
 
   it("updates a theme through a registered command while treating cancellation as a no-op", async () => {
