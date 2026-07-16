@@ -111,10 +111,21 @@ describe("GitHub CSS assets", () => {
     );
   });
 
-  it("renders explicit and automatic color-mode selectors", () => {
+  it("renders explicit and preview-theme color-mode selectors", () => {
     const css = renderThemeCss("dark", "  --color: black;");
     expect(css).toContain('[data-color-mode="light"][data-light-theme="dark"]');
-    expect(css).toContain("@media (prefers-color-scheme: dark)");
-    expect(css).toContain('[data-color-mode="auto"][data-dark-theme="dark"]');
+    expect(css).toContain(
+      'body.vscode-light .vscode-github-markdown[data-color-mode="auto"][data-light-theme="dark"]'
+    );
+    expect(css).toContain(
+      'body.vscode-high-contrast-light .vscode-github-markdown[data-color-mode="auto"][data-light-theme="dark"]'
+    );
+    expect(css).toContain(
+      'body.vscode-dark .vscode-github-markdown[data-color-mode="auto"][data-dark-theme="dark"]'
+    );
+    expect(css).toContain(
+      'body.vscode-high-contrast .vscode-github-markdown[data-color-mode="auto"][data-dark-theme="dark"]'
+    );
+    expect(css).not.toContain("prefers-color-scheme");
   });
 });

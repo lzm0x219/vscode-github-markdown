@@ -147,3 +147,116 @@ body,
     color: var(--color-fg-default);
   }
 }
+
+.vscode-github-markdown[data-color-mode="vscode"] {
+  --bgColor-default: var(--vscode-editor-background);
+  --bgColor-muted: var(--vscode-textBlockQuote-background, var(--vscode-editor-background));
+  --bgColor-neutral-muted: var(
+    --vscode-textCodeBlock-background,
+    var(--vscode-textBlockQuote-background, var(--vscode-editor-background))
+  );
+  --bgColor-attention-muted: var(--vscode-inputValidation-warningBackground, var(--bgColor-muted));
+  --bgColor-danger-muted: var(--vscode-inputValidation-errorBackground, var(--bgColor-muted));
+  --borderColor-default: var(
+    --vscode-textSeparator-foreground,
+    var(--vscode-textBlockQuote-border, var(--vscode-contrastBorder, transparent))
+  );
+  --borderColor-muted: var(--borderColor-default);
+  --borderColor-neutral-muted: var(--borderColor-default);
+  --borderColor-accent-emphasis: var(--vscode-focusBorder);
+  --borderColor-attention-emphasis: var(
+    --vscode-inputValidation-warningBorder,
+    var(--vscode-editorWarning-foreground, var(--borderColor-default))
+  );
+  --borderColor-attention-muted: var(--borderColor-attention-emphasis);
+  --borderColor-danger-emphasis: var(
+    --vscode-inputValidation-errorBorder,
+    var(--vscode-editorError-foreground, var(--borderColor-default))
+  );
+  --borderColor-done-emphasis: var(
+    --vscode-inputValidation-infoBorder,
+    var(--vscode-editorInfo-foreground, var(--borderColor-default))
+  );
+  --borderColor-success-emphasis: var(
+    --vscode-testing-iconPassed,
+    var(--borderColor-accent-emphasis)
+  );
+  --fgColor-default: var(--vscode-editor-foreground);
+  --fgColor-muted: var(--vscode-descriptionForeground, var(--vscode-editor-foreground));
+  --fgColor-accent: var(--vscode-textLink-foreground);
+  --fgColor-attention: var(--vscode-editorWarning-foreground, var(--vscode-editor-foreground));
+  --fgColor-danger: var(--vscode-editorError-foreground, var(--vscode-errorForeground));
+  --fgColor-done: var(--vscode-editorInfo-foreground, var(--vscode-textLink-foreground));
+  --fgColor-success: var(--vscode-testing-iconPassed, var(--vscode-textLink-foreground));
+  --selection-bgColor: var(--vscode-editor-selectionBackground);
+  --focus-outline-color: var(--vscode-focusBorder);
+  --focus-outlineColor: var(--vscode-focusBorder);
+  --color-canvas-subtle: var(--bgColor-neutral-muted);
+  --color-fg-default: var(--fgColor-default);
+  --color-prettylights-syntax-brackethighlighter-angle: var(--fgColor-muted);
+  --color-prettylights-syntax-brackethighlighter-unmatched: var(--fgColor-danger);
+  --color-prettylights-syntax-carriage-return-bg: var(--bgColor-danger-muted);
+  --color-prettylights-syntax-carriage-return-text: var(--fgColor-danger);
+  --color-prettylights-syntax-comment: var(--fgColor-muted);
+  --color-prettylights-syntax-constant: var(
+    --vscode-symbolIcon-constantForeground,
+    var(--fgColor-accent)
+  );
+  --color-prettylights-syntax-constant-other-reference-link: var(--fgColor-accent);
+  --color-prettylights-syntax-entity: var(
+    --vscode-symbolIcon-methodForeground,
+    var(--fgColor-done)
+  );
+  --color-prettylights-syntax-entity-tag: var(
+    --vscode-symbolIcon-classForeground,
+    var(--fgColor-danger)
+  );
+  --color-prettylights-syntax-invalid-illegal-bg: var(--bgColor-danger-muted);
+  --color-prettylights-syntax-invalid-illegal-text: var(--fgColor-danger);
+  --color-prettylights-syntax-keyword: var(
+    --vscode-symbolIcon-keywordForeground,
+    var(--fgColor-accent)
+  );
+  --color-prettylights-syntax-markup-bold: var(--fgColor-default);
+  --color-prettylights-syntax-markup-changed-bg: var(--bgColor-attention-muted);
+  --color-prettylights-syntax-markup-changed-text: var(--fgColor-attention);
+  --color-prettylights-syntax-markup-deleted-bg: var(--bgColor-danger-muted);
+  --color-prettylights-syntax-markup-deleted-text: var(--fgColor-danger);
+  --color-prettylights-syntax-markup-heading: var(--fgColor-done);
+  --color-prettylights-syntax-markup-ignored-bg: var(
+    --vscode-inputValidation-infoBackground,
+    var(--bgColor-muted)
+  );
+  --color-prettylights-syntax-markup-ignored-text: var(--fgColor-done);
+  --color-prettylights-syntax-markup-inserted-bg: var(--bgColor-neutral-muted);
+  --color-prettylights-syntax-markup-inserted-text: var(--fgColor-success);
+  --color-prettylights-syntax-markup-italic: var(--fgColor-default);
+  --color-prettylights-syntax-markup-list: var(--fgColor-attention);
+  --color-prettylights-syntax-meta-diff-range: var(--fgColor-done);
+  --color-prettylights-syntax-storage-modifier-import: var(--fgColor-default);
+  --color-prettylights-syntax-string: var(
+    --vscode-symbolIcon-stringForeground,
+    var(--fgColor-success)
+  );
+  --color-prettylights-syntax-string-regexp: var(--color-prettylights-syntax-string);
+  --color-prettylights-syntax-sublimelinter-gutter-mark: var(--fgColor-muted);
+  --color-prettylights-syntax-variable: var(
+    --vscode-symbolIcon-variableForeground,
+    var(--fgColor-attention)
+  );
+}
+
+body.vscode-high-contrast,
+body.vscode-high-contrast-light {
+  .vscode-github-markdown {
+    --bgColor-default: var(--vscode-editor-background) !important;
+    --fgColor-default: var(--vscode-editor-foreground) !important;
+    --fgColor-accent: var(--vscode-textLink-foreground) !important;
+    --focus-outlineColor: var(--vscode-focusBorder) !important;
+
+    :focus-visible {
+      outline: 2px solid var(--vscode-focusBorder) !important;
+      outline-offset: 2px;
+    }
+  }
+}

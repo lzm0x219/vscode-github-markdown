@@ -162,15 +162,13 @@ export function renderThemeCss(theme: GithubTheme, variables: string): string {
 ${markdownRoot}[data-color-mode="dark"][data-dark-theme="${theme}"] {
 ${variables}
 }`,
-    `@media (prefers-color-scheme: light) {
-  ${markdownRoot}[data-color-mode="auto"][data-light-theme="${theme}"] {
+    `body.vscode-light ${markdownRoot}[data-color-mode="auto"][data-light-theme="${theme}"],
+body.vscode-high-contrast-light ${markdownRoot}[data-color-mode="auto"][data-light-theme="${theme}"] {
 ${indent(variables)}
-  }
 }`,
-    `@media (prefers-color-scheme: dark) {
-  ${markdownRoot}[data-color-mode="auto"][data-dark-theme="${theme}"] {
+    `body.vscode-dark ${markdownRoot}[data-color-mode="auto"][data-dark-theme="${theme}"],
+body.vscode-high-contrast ${markdownRoot}[data-color-mode="auto"][data-dark-theme="${theme}"] {
 ${indent(variables)}
-  }
 }`
   ].join("\n\n");
 }

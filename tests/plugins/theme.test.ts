@@ -30,6 +30,7 @@ import githubTheme from "../../src/plugins/markdown-it-github-theme";
 describe("markdown-it-github-theme", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    config["theme.mode"] = "system";
     config["accessibility.linkUnderlines"] = true;
   });
 
@@ -49,6 +50,13 @@ describe("markdown-it-github-theme", () => {
     const html = new MarkdownIt().use(githubTheme).render("[Link](https://example.com)");
 
     expect(html).toContain('data-link-underlines="false"');
+  });
+
+  it("marks the preview to use VS Code theme colors", () => {
+    config["theme.mode"] = "vscode";
+    const html = new MarkdownIt().use(githubTheme).render("Hello world");
+
+    expect(html).toContain('data-color-mode="vscode"');
   });
 
   it("wraps complex markdown content", () => {

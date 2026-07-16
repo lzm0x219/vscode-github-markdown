@@ -114,11 +114,13 @@
             "description": "%configuration.theme.mode.description%",
             "enum": [
               "single",
-              "system"
+              "system",
+              "vscode"
             ],
             "enumDescriptions": [
               "%configuration.theme.mode.single.enum.description%",
-              "%configuration.theme.mode.system.enum.description%"
+              "%configuration.theme.mode.system.enum.description%",
+              "%configuration.theme.mode.vscode.enum.description%"
             ],
             "default": "system"
           },

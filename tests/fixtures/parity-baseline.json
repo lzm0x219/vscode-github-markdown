@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "generatedAt": "2026-07-14T19:21:18.034Z",
+  "generatedAt": "2026-07-16T16:06:45.274Z",
   "chromiumVersion": "149.0.7827.55",
   "rendererSha256": "39ce05cd40a6b3874bed31b01eb995b9b7442a5737f66691f227e33306599620",
-  "referenceCssSha256": "dea7b713f96c2de158406beaedecae58f936455dd0fdc15bd95604cebdb42167",
+  "referenceCssSha256": "6a768bfb4bd24522a5a41edc4796059bc408f1628ad8608875f8e1cddc8657c0",
   "cases": {
     "formatting-light": {
       "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",
@@ -34,6 +34,66 @@
         "kind": "exact"
       },
       "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
+    },
+    "tagfilter-light": {
+      "markdownSha256": "956247d66a9a8dc4599e0bb60b693415b3c92ef47600063b4c62ba58e17cd2be",
+      "inputSha256": "96d6f4e0fff1072e62570cbc73403617884cf898f65c069073a6f6edea1c1274",
+      "theme": "light",
+      "themeName": "light",
+      "linkUnderlines": true,
+      "reference": {
+        "kind": "markdown-api"
+      },
+      "htmlNormalization": "none",
+      "localComparison": {
+        "kind": "exact"
+      },
+      "githubHtml": "<p dir=\"auto\"><strong>Allowed HTML</strong></p>\n<p dir=\"auto\">Filtered tags: &lt;title data-case=\"title\"&gt;title&lt;/title&gt; &lt;textarea&gt;textarea&lt;/textarea&gt; &lt;style&gt;style&lt;/style&gt; &lt;xmp&gt;xmp&lt;/xmp&gt; &lt;iframe&gt;iframe&lt;/iframe&gt; &lt;noembed&gt;noembed&lt;/noembed&gt; &lt;noframes&gt;noframes&lt;/noframes&gt; &lt;script&gt;script&lt;/script&gt; &lt;plaintext&gt;plaintext&lt;/plaintext&gt;.</p>"
+    },
+    "tagfilter-dark": {
+      "markdownSha256": "956247d66a9a8dc4599e0bb60b693415b3c92ef47600063b4c62ba58e17cd2be",
+      "inputSha256": "96d6f4e0fff1072e62570cbc73403617884cf898f65c069073a6f6edea1c1274",
+      "theme": "dark",
+      "themeName": "dark",
+      "linkUnderlines": true,
+      "reference": {
+        "kind": "markdown-api"
+      },
+      "htmlNormalization": "none",
+      "localComparison": {
+        "kind": "exact"
+      },
+      "githubHtml": "<p dir=\"auto\"><strong>Allowed HTML</strong></p>\n<p dir=\"auto\">Filtered tags: &lt;title data-case=\"title\"&gt;title&lt;/title&gt; &lt;textarea&gt;textarea&lt;/textarea&gt; &lt;style&gt;style&lt;/style&gt; &lt;xmp&gt;xmp&lt;/xmp&gt; &lt;iframe&gt;iframe&lt;/iframe&gt; &lt;noembed&gt;noembed&lt;/noembed&gt; &lt;noframes&gt;noframes&lt;/noframes&gt; &lt;script&gt;script&lt;/script&gt; &lt;plaintext&gt;plaintext&lt;/plaintext&gt;.</p>"
+    },
+    "directionality-light": {
+      "markdownSha256": "6b0bf968ecc0b20e7df9fe6884d77448a2d9292ede51ec66d6006696bfccd410",
+      "inputSha256": "72478a5823ff991e3faa39890806c41e5e883f334c201888abee98834f53cce4",
+      "theme": "light",
+      "themeName": "light",
+      "linkUnderlines": true,
+      "reference": {
+        "kind": "markdown-api"
+      },
+      "htmlNormalization": "none",
+      "localComparison": {
+        "kind": "exact"
+      },
+      "githubHtml": "<h1 dir=\"auto\">مرحباً بالعالم</h1>\n<p dir=\"auto\">فقرة عربية لاختبار اتجاه النص.</p>\n<p dir=\"auto\">Mixed English العربية 123.</p>\n<ul dir=\"auto\">\n<li>عنصر عربي</li>\n<li>Mixed item العربية</li>\n</ul>\n<div class=\"markdown-alert markdown-alert-note\" dir=\"auto\"><p class=\"markdown-alert-title\" dir=\"auto\"><svg data-component=\"Octicon\" class=\"octicon octicon-info mr-2\" viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>Note</p><p dir=\"auto\">تنبيه عربي with English.</p>\n</div>\n<p dir=\"auto\">Footnote reference العربية.<sup><a href=\"#user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\" id=\"user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-ref=\"\" aria-describedby=\"footnote-label\">1</a></sup></p>\n<p dir=\"auto\">Inline <code class=\"notranslate\">code العربية</code>.</p>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">block العربية\n</code></pre>\n<p dir=\"rtl\">Explicit RTL العربية</p>\n<section data-footnotes=\"\" class=\"footnotes\"><h2 id=\"footnote-label\" class=\"sr-only\" dir=\"auto\">Footnotes</h2>\n<ol dir=\"auto\">\n<li id=\"user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\">\n<p dir=\"auto\">ملاحظة هامشية mixed English. <a href=\"#user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-backref=\"\" aria-label=\"Back to reference 1\" class=\"data-footnote-backref\">↩</a></p>\n</li>\n</ol>\n</section>"
+    },
+    "directionality-dark": {
+      "markdownSha256": "6b0bf968ecc0b20e7df9fe6884d77448a2d9292ede51ec66d6006696bfccd410",
+      "inputSha256": "72478a5823ff991e3faa39890806c41e5e883f334c201888abee98834f53cce4",
+      "theme": "dark",
+      "themeName": "dark",
+      "linkUnderlines": true,
+      "reference": {
+        "kind": "markdown-api"
+      },
+      "htmlNormalization": "none",
+      "localComparison": {
+        "kind": "exact"
+      },
+      "githubHtml": "<h1 dir=\"auto\">مرحباً بالعالم</h1>\n<p dir=\"auto\">فقرة عربية لاختبار اتجاه النص.</p>\n<p dir=\"auto\">Mixed English العربية 123.</p>\n<ul dir=\"auto\">\n<li>عنصر عربي</li>\n<li>Mixed item العربية</li>\n</ul>\n<div class=\"markdown-alert markdown-alert-note\" dir=\"auto\"><p class=\"markdown-alert-title\" dir=\"auto\"><svg data-component=\"Octicon\" class=\"octicon octicon-info mr-2\" viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>Note</p><p dir=\"auto\">تنبيه عربي with English.</p>\n</div>\n<p dir=\"auto\">Footnote reference العربية.<sup><a href=\"#user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\" id=\"user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-ref=\"\" aria-describedby=\"footnote-label\">1</a></sup></p>\n<p dir=\"auto\">Inline <code class=\"notranslate\">code العربية</code>.</p>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">block العربية\n</code></pre>\n<p dir=\"rtl\">Explicit RTL العربية</p>\n<section data-footnotes=\"\" class=\"footnotes\"><h2 id=\"footnote-label\" class=\"sr-only\" dir=\"auto\">Footnotes</h2>\n<ol dir=\"auto\">\n<li id=\"user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\">\n<p dir=\"auto\">ملاحظة هامشية mixed English. <a href=\"#user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-backref=\"\" aria-label=\"Back to reference 1\" class=\"data-footnote-backref\">↩</a></p>\n</li>\n</ol>\n</section>"
     },
     "lists-light": {
       "markdownSha256": "15905b348c41ff6b43e4f077053aca7594c75aa150d52ccd8e07bef846efe06f",
@@ -941,66 +1001,6 @@
         "kind": "exact"
       },
       "githubHtml": "<h1 dir=\"auto\">Heading</h1>\n<p dir=\"auto\"><strong>Bold</strong>, <em>italic</em>, <del>Hi</del> Hello, <del>there</del> world!, and <code class=\"notranslate\">inline code</code>.</p>\n<blockquote>\n<p dir=\"auto\">A blockquote.</p>\n</blockquote>"
-    },
-    "tagfilter-light": {
-      "markdownSha256": "956247d66a9a8dc4599e0bb60b693415b3c92ef47600063b4c62ba58e17cd2be",
-      "inputSha256": "96d6f4e0fff1072e62570cbc73403617884cf898f65c069073a6f6edea1c1274",
-      "theme": "light",
-      "themeName": "light",
-      "linkUnderlines": true,
-      "reference": {
-        "kind": "markdown-api"
-      },
-      "htmlNormalization": "none",
-      "localComparison": {
-        "kind": "exact"
-      },
-      "githubHtml": "<p dir=\"auto\"><strong>Allowed HTML</strong></p>\n<p dir=\"auto\">Filtered tags: &lt;title data-case=\"title\"&gt;title&lt;/title&gt; &lt;textarea&gt;textarea&lt;/textarea&gt; &lt;style&gt;style&lt;/style&gt; &lt;xmp&gt;xmp&lt;/xmp&gt; &lt;iframe&gt;iframe&lt;/iframe&gt; &lt;noembed&gt;noembed&lt;/noembed&gt; &lt;noframes&gt;noframes&lt;/noframes&gt; &lt;script&gt;script&lt;/script&gt; &lt;plaintext&gt;plaintext&lt;/plaintext&gt;.</p>"
-    },
-    "tagfilter-dark": {
-      "markdownSha256": "956247d66a9a8dc4599e0bb60b693415b3c92ef47600063b4c62ba58e17cd2be",
-      "inputSha256": "96d6f4e0fff1072e62570cbc73403617884cf898f65c069073a6f6edea1c1274",
-      "theme": "dark",
-      "themeName": "dark",
-      "linkUnderlines": true,
-      "reference": {
-        "kind": "markdown-api"
-      },
-      "htmlNormalization": "none",
-      "localComparison": {
-        "kind": "exact"
-      },
-      "githubHtml": "<p dir=\"auto\"><strong>Allowed HTML</strong></p>\n<p dir=\"auto\">Filtered tags: &lt;title data-case=\"title\"&gt;title&lt;/title&gt; &lt;textarea&gt;textarea&lt;/textarea&gt; &lt;style&gt;style&lt;/style&gt; &lt;xmp&gt;xmp&lt;/xmp&gt; &lt;iframe&gt;iframe&lt;/iframe&gt; &lt;noembed&gt;noembed&lt;/noembed&gt; &lt;noframes&gt;noframes&lt;/noframes&gt; &lt;script&gt;script&lt;/script&gt; &lt;plaintext&gt;plaintext&lt;/plaintext&gt;.</p>"
-    },
-    "directionality-light": {
-      "markdownSha256": "6b0bf968ecc0b20e7df9fe6884d77448a2d9292ede51ec66d6006696bfccd410",
-      "inputSha256": "72478a5823ff991e3faa39890806c41e5e883f334c201888abee98834f53cce4",
-      "theme": "light",
-      "themeName": "light",
-      "linkUnderlines": true,
-      "reference": {
-        "kind": "markdown-api"
-      },
-      "htmlNormalization": "none",
-      "localComparison": {
-        "kind": "exact"
-      },
-      "githubHtml": "<h1 dir=\"auto\">مرحباً بالعالم</h1>\n<p dir=\"auto\">فقرة عربية لاختبار اتجاه النص.</p>\n<p dir=\"auto\">Mixed English العربية 123.</p>\n<ul dir=\"auto\">\n<li>عنصر عربي</li>\n<li>Mixed item العربية</li>\n</ul>\n<div class=\"markdown-alert markdown-alert-note\" dir=\"auto\"><p class=\"markdown-alert-title\" dir=\"auto\"><svg data-component=\"Octicon\" class=\"octicon octicon-info mr-2\" viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>Note</p><p dir=\"auto\">تنبيه عربي with English.</p>\n</div>\n<p dir=\"auto\">Footnote reference العربية.<sup><a href=\"#user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\" id=\"user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-ref=\"\" aria-describedby=\"footnote-label\">1</a></sup></p>\n<p dir=\"auto\">Inline <code class=\"notranslate\">code العربية</code>.</p>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">block العربية\n</code></pre>\n<p dir=\"rtl\">Explicit RTL العربية</p>\n<section data-footnotes=\"\" class=\"footnotes\"><h2 id=\"footnote-label\" class=\"sr-only\" dir=\"auto\">Footnotes</h2>\n<ol dir=\"auto\">\n<li id=\"user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\">\n<p dir=\"auto\">ملاحظة هامشية mixed English. <a href=\"#user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-backref=\"\" aria-label=\"Back to reference 1\" class=\"data-footnote-backref\">↩</a></p>\n</li>\n</ol>\n</section>"
-    },
-    "directionality-dark": {
-      "markdownSha256": "6b0bf968ecc0b20e7df9fe6884d77448a2d9292ede51ec66d6006696bfccd410",
-      "inputSha256": "72478a5823ff991e3faa39890806c41e5e883f334c201888abee98834f53cce4",
-      "theme": "dark",
-      "themeName": "dark",
-      "linkUnderlines": true,
-      "reference": {
-        "kind": "markdown-api"
-      },
-      "htmlNormalization": "none",
-      "localComparison": {
-        "kind": "exact"
-      },
-      "githubHtml": "<h1 dir=\"auto\">مرحباً بالعالم</h1>\n<p dir=\"auto\">فقرة عربية لاختبار اتجاه النص.</p>\n<p dir=\"auto\">Mixed English العربية 123.</p>\n<ul dir=\"auto\">\n<li>عنصر عربي</li>\n<li>Mixed item العربية</li>\n</ul>\n<div class=\"markdown-alert markdown-alert-note\" dir=\"auto\"><p class=\"markdown-alert-title\" dir=\"auto\"><svg data-component=\"Octicon\" class=\"octicon octicon-info mr-2\" viewBox=\"0 0 16 16\" version=\"1.1\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>Note</p><p dir=\"auto\">تنبيه عربي with English.</p>\n</div>\n<p dir=\"auto\">Footnote reference العربية.<sup><a href=\"#user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\" id=\"user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-ref=\"\" aria-describedby=\"footnote-label\">1</a></sup></p>\n<p dir=\"auto\">Inline <code class=\"notranslate\">code العربية</code>.</p>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">block العربية\n</code></pre>\n<p dir=\"rtl\">Explicit RTL العربية</p>\n<section data-footnotes=\"\" class=\"footnotes\"><h2 id=\"footnote-label\" class=\"sr-only\" dir=\"auto\">Footnotes</h2>\n<ol dir=\"auto\">\n<li id=\"user-content-fn-1-84ea154d956fda0471cef122b92a5e4d\">\n<p dir=\"auto\">ملاحظة هامشية mixed English. <a href=\"#user-content-fnref-1-84ea154d956fda0471cef122b92a5e4d\" data-footnote-backref=\"\" aria-label=\"Back to reference 1\" class=\"data-footnote-backref\">↩</a></p>\n</li>\n</ol>\n</section>"
     }
   }
 }

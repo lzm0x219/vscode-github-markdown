@@ -88,16 +88,21 @@ VS Code 语法高亮，以及 GitHub 为 Mermaid、GeoJSON、STL 和数学公式
 | Light Tritanopia                | Dark dimmed                    |
 |                                 | Dark Tritanopia                |
 
-两种主题模式：
+三种主题模式：
 
 - **单主题** — 始终使用一个固定主题。
 - **跟随系统** — 跟随预览环境的亮色/暗色配色，并可分别选择亮色和暗色主题。
+- **VS Code** — 直接使用当前 VS Code 主题配色。
+
+跟随系统模式在桌面端和 Web 端都以 Markdown 预览实际应用的 VS Code 配色主题为准：亮色和高对比度亮色预览使用所选 GitHub 亮色主题，暗色和高对比度暗色预览使用所选 GitHub 暗色主题。手动切换 VS Code 主题会更新预览；切换操作系统外观只有在 VS Code 已配置为检测该变化并切换当前主题时才会间接影响预览。单主题模式忽略所有这些信号，始终保持所选主题。
+
+VS Code 模式保留 GitHub Markdown 的结构和排版，同时从当前 VS Code 主题获取预览的背景、正文、弱化文本、链接、边框、选区、状态、语法和焦点颜色。切换主题后，桌面端与 Web 端预览无需重载即可更新；高对比度预览会使用对应的 VS Code 配色以保持可读性。
 
 随时通过 VS Code 命令（Quick Pick）切换主题，无需打开设置面板。
 
 ### Mermaid 图表
 
-在 VS Code 1.121 及以上版本中，Mermaid 主题同步可直接配合内置的 `vscode.mermaid-markdown-features` 扩展；在更早的受支持版本中，请安装外置的 `bierner.markdown-mermaid` 扩展。任一渲染器可用且已启用 `githubMarkdown.mermaid.syncTheme` 时，本扩展会更新它们共用的 `markdown-mermaid` 亮色和暗色主题设置。跟随系统模式会分别映射所选的 GitHub 亮色与暗色主题；单主题模式会为两个槽位应用同一个匹配主题。关闭同步或停用本扩展时，只会恢复仍由本扩展最后写入的值，因此不会覆盖同步期间产生的新 Mermaid 主题选择。本扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
+在 VS Code 1.121 及以上版本中，Mermaid 主题同步可直接配合内置的 `vscode.mermaid-markdown-features` 扩展；在更早的受支持版本中，请安装外置的 `bierner.markdown-mermaid` 扩展。任一渲染器可用且已启用 `githubMarkdown.mermaid.syncTheme` 时，本扩展会更新它们共用的 `markdown-mermaid` 亮色和暗色主题设置。跟随系统模式会分别映射所选的 GitHub 亮色与暗色主题；单主题模式会为两个槽位应用同一个匹配主题；VS Code 模式会为两个槽位应用 Mermaid 的 `vscode` 主题。关闭同步或停用本扩展时，只会恢复仍由本扩展最后写入的值，因此不会覆盖同步期间产生的新 Mermaid 主题选择。本扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。
 
 ### 桌面端与 Web
 

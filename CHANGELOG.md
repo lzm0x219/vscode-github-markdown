@@ -6,6 +6,11 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Themes and appearance
+
+- System mode now follows the VS Code color theme applied to the Markdown preview on desktop and web, including high-contrast light and dark themes. Operating-system appearance changes affect the preview only when VS Code switches its active theme; Single mode remains fixed, and high-contrast previews keep readable background, text, links, and focus outlines.
+- A new VS Code theme mode keeps GitHub Markdown structure and typography while using the active VS Code theme for preview colors on desktop and web. Mermaid theme synchronization uses Mermaid's matching `vscode` theme in this mode.
+
 ### Mermaid
 
 - Mermaid theme synchronization now works with VS Code's built-in renderer on 1.121 or later as well as the external `markdown-mermaid` extension. Disabling synchronization or deactivating this extension restores only settings it still owns, preserving newer Mermaid theme choices.

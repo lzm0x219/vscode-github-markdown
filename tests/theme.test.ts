@@ -69,6 +69,11 @@ describe("theme logic", () => {
       configStore["theme.mode"] = "system";
       expect(getThemeColorMode()).toBe("auto");
     });
+
+    it('returns "vscode" in VS Code mode', () => {
+      configStore["theme.mode"] = "vscode";
+      expect(getThemeColorMode()).toBe("vscode");
+    });
   });
 
   describe("getCurrentLightTheme", () => {
@@ -116,9 +121,10 @@ describe("theme logic", () => {
   describe("getThemeModeList", () => {
     it("returns mode options", () => {
       const list = getThemeModeList();
-      expect(list).toHaveLength(2);
+      expect(list).toHaveLength(3);
       expect(list[0]).toEqual({ label: "Single theme", value: "single" });
       expect(list[1]).toEqual({ label: "Sync with system", value: "system" });
+      expect(list[2]).toEqual({ label: "VS Code theme", value: "vscode" });
     });
   });
 
