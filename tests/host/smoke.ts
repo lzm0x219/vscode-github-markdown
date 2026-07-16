@@ -120,7 +120,7 @@ export async function run(): Promise<void> {
   // VS Code 1.74 does not apply workbench.colorTheme writes from extension-host tests.
   // Stable desktop and web hosts cover the live light, dark, and high-contrast signals.
   if (!vscode.version.startsWith("1.74.")) {
-    await assertPreviewColorThemeSignals();
+    await assertPreviewColorThemeSignals(markdown);
   }
 
   const previewStyles = extension.packageJSON.contributes?.["markdown.previewStyles"] as
@@ -145,7 +145,9 @@ async function assertVsCodeThemeMode(markdown: string): Promise<void> {
   }
 }
 
-async function assertPreviewColorThemeSignals(): Promise<void> {
+async function assertPreviewColorThemeSignals(markdown: string): Promise<void> {
+  const githubMarkdown = vscode.workspace.getConfiguration("githubMarkdown");
+  const originalGlobalMode = githubMarkdown.inspect<string>("theme.mode")?.globalValue;
   const workbench = vscode.workspace.getConfiguration("workbench");
   const originalGlobalTheme = workbench.inspect<string>("colorTheme")?.globalValue;
   const cases = [
@@ -155,12 +157,23 @@ async function assertPreviewColorThemeSignals(): Promise<void> {
   ] as const;
 
   try {
+    await githubMarkdown.update("theme.mode", "system", vscode.ConfigurationTarget.Global);
     for (const [theme, expectedKind] of cases) {
       await workbench.update("colorTheme", theme, vscode.ConfigurationTarget.Global);
       await waitForColorThemeKind(expectedKind);
+      const html = await vscode.commands.executeCommand<string>("markdown.api.render", markdown);
+      assert(
+        html?.includes('data-color-mode="auto"'),
+        `System mode remains active after switching to ${theme}`
+      );
     }
   } finally {
     await workbench.update("colorTheme", originalGlobalTheme, vscode.ConfigurationTarget.Global);
+    await githubMarkdown.update(
+      "theme.mode",
+      originalGlobalMode,
+      vscode.ConfigurationTarget.Global
+    );
   }
 }
 

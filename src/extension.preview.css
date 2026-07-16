@@ -248,7 +248,8 @@ body,
 
 body.vscode-high-contrast,
 body.vscode-high-contrast-light {
-  .vscode-github-markdown {
+  .vscode-github-markdown[data-color-mode="auto"],
+  .vscode-github-markdown[data-color-mode="vscode"] {
     --bgColor-default: var(--vscode-editor-background) !important;
     --fgColor-default: var(--vscode-editor-foreground) !important;
     --fgColor-accent: var(--vscode-textLink-foreground) !important;
