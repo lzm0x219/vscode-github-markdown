@@ -93,6 +93,18 @@ describe("Mermaid theme synchronization", () => {
     ]);
   });
 
+  it("uses the Mermaid VS Code theme for both slots in VS Code mode", async () => {
+    const memento = createTestMemento();
+    markdownConfig["theme.mode"] = "vscode";
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "vscode", target: 1 },
+      { key: "darkModeTheme", value: "vscode", target: 1 }
+    ]);
+  });
+
   it("also supports the legacy external Mermaid extension", async () => {
     const memento = createTestMemento();
     mermaidExtensionIds = new Set(["bierner.markdown-mermaid"]);

@@ -7,9 +7,10 @@
   "command.changeLightTheme.title": "GitHub Markdown: 更改亮色主题",
   "command.changeDarkTheme.title": "GitHub Markdown: 更改暗色主题",
 
-  "configuration.theme.mode.description": "选择固定主题，或跟随 Markdown 预览的亮色/暗色模式",
+  "configuration.theme.mode.description": "选择固定 GitHub 主题、按预览配色分别使用 GitHub 亮暗主题，或直接使用当前 VS Code 主题配色",
   "configuration.theme.mode.single.enum.description": "GitHub Markdown 将始终使用所选主题",
-  "configuration.theme.mode.system.enum.description": "GitHub Markdown 将根据预览配色使用所选的亮色或暗色主题",
+  "configuration.theme.mode.system.enum.description": "亮色和高对比度亮色预览使用所选亮色主题；暗色和高对比度暗色预览使用所选暗色主题",
+  "configuration.theme.mode.vscode.enum.description": "预览配色和 Mermaid 图表使用当前 VS Code 主题",
 
   "configuration.theme.single.description": "固定主题模式下使用的主题",
   "configuration.theme.light.description": "Markdown 预览处于亮色模式时使用的主题",

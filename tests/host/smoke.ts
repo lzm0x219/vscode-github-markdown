@@ -116,6 +116,12 @@ export async function run(): Promise<void> {
   assertRenderedMarkdown(previewHtml, "VS Code Markdown renderer contribution");
   assertTagfilter(previewHtml);
   assertDirectionality(previewHtml);
+  await assertVsCodeThemeMode(markdown);
+  // VS Code 1.74 does not apply workbench.colorTheme writes from extension-host tests.
+  // Stable desktop and web hosts cover the live light, dark, and high-contrast signals.
+  if (!vscode.version.startsWith("1.74.")) {
+    await assertPreviewColorThemeSignals();
+  }
 
   const previewStyles = extension.packageJSON.contributes?.["markdown.previewStyles"] as
     | string[]
@@ -124,6 +130,61 @@ export async function run(): Promise<void> {
   await vscode.workspace.fs.stat(
     vscode.Uri.joinPath(extension.extensionUri, "dist", "extension.preview.css")
   );
+}
+
+async function assertVsCodeThemeMode(markdown: string): Promise<void> {
+  const configuration = vscode.workspace.getConfiguration("githubMarkdown");
+  const originalGlobalMode = configuration.inspect<string>("theme.mode")?.globalValue;
+
+  try {
+    await configuration.update("theme.mode", "vscode", vscode.ConfigurationTarget.Global);
+    const html = await vscode.commands.executeCommand<string>("markdown.api.render", markdown);
+    assert(html?.includes('data-color-mode="vscode"'), "VS Code theme mode reaches the preview");
+  } finally {
+    await configuration.update("theme.mode", originalGlobalMode, vscode.ConfigurationTarget.Global);
+  }
+}
+
+async function assertPreviewColorThemeSignals(): Promise<void> {
+  const workbench = vscode.workspace.getConfiguration("workbench");
+  const originalGlobalTheme = workbench.inspect<string>("colorTheme")?.globalValue;
+  const cases = [
+    ["Visual Studio Light", vscode.ColorThemeKind.Light],
+    ["Visual Studio Dark", vscode.ColorThemeKind.Dark],
+    ["Default High Contrast", vscode.ColorThemeKind.HighContrast]
+  ] as const;
+
+  try {
+    for (const [theme, expectedKind] of cases) {
+      await workbench.update("colorTheme", theme, vscode.ConfigurationTarget.Global);
+      await waitForColorThemeKind(expectedKind);
+    }
+  } finally {
+    await workbench.update("colorTheme", originalGlobalTheme, vscode.ConfigurationTarget.Global);
+  }
+}
+
+async function waitForColorThemeKind(expectedKind: vscode.ColorThemeKind): Promise<void> {
+  if (vscode.window.activeColorTheme.kind === expectedKind) {
+    return;
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      subscription.dispose();
+      reject(
+        new Error(`Host smoke test failed: active color theme kind did not become ${expectedKind}`)
+      );
+    }, 5000);
+    const subscription = vscode.window.onDidChangeActiveColorTheme((theme) => {
+      if (theme.kind !== expectedKind) {
+        return;
+      }
+      clearTimeout(timeout);
+      subscription.dispose();
+      resolve();
+    });
+  });
 }
 
 function assertRenderedMarkdown(html: string | undefined, source: string): void {

@@ -1,8 +1,8 @@
 import { getConfiguration } from "./configuration";
 
-export type ThemeMode = "single" | "system";
+export type ThemeMode = "single" | "system" | "vscode";
 
-export type ThemeColorMode = "light" | "dark" | "auto";
+export type ThemeColorMode = "light" | "dark" | "auto" | "vscode";
 
 export type Theme =
   | "light"
@@ -42,7 +42,8 @@ export const ThemeKeys = Object.keys(themeLabelKeys) as Theme[];
 
 const themeModeLabelKeys: Record<ThemeMode, string> = {
   single: "Single theme",
-  system: "Sync with system"
+  system: "Sync with system",
+  vscode: "VS Code theme"
 } as const;
 
 export const ThemeModeKeys = Object.keys(themeModeLabelKeys) as (keyof typeof themeModeLabelKeys)[];
@@ -88,6 +89,9 @@ export async function setDarkTheme(theme: Theme): Promise<void> {
 
 export function getThemeColorMode(): ThemeColorMode {
   const [mode, theme] = [getThemeMode(), getSingleTheme()];
+  if (mode === "vscode") {
+    return "vscode";
+  }
   if (mode === "single") {
     return isLightTheme(theme) ? "light" : "dark";
   }

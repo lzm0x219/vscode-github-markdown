@@ -96,7 +96,11 @@ export async function restoreMermaidThemeSync(
 }
 
 function resolveMermaidThemes(): readonly [MermaidTheme, MermaidTheme] {
-  if (getThemeMode() === "single") {
+  const mode = getThemeMode();
+  if (mode === "vscode") {
+    return ["vscode", "vscode"];
+  }
+  if (mode === "single") {
     const theme = resolveMermaidTheme(getSingleTheme());
     return [theme, theme];
   }

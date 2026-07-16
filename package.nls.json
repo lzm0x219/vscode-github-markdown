@@ -7,9 +7,10 @@
   "command.changeLightTheme.title": "GitHub Markdown: Change Light Theme",
   "command.changeDarkTheme.title": "GitHub Markdown: Change Dark Theme",
 
-  "configuration.theme.mode.description": "Select a single theme, or follow the preview's light and dark color scheme",
+  "configuration.theme.mode.description": "Select a fixed GitHub theme, follow the preview color scheme with separate GitHub themes, or use the active VS Code theme colors",
   "configuration.theme.mode.single.enum.description": "GitHub will use your selected theme",
-  "configuration.theme.mode.system.enum.description": "GitHub Markdown will use the selected light or dark theme to match the preview",
+  "configuration.theme.mode.system.enum.description": "Light and high-contrast light previews use the selected light theme; dark and high-contrast dark previews use the selected dark theme",
+  "configuration.theme.mode.vscode.enum.description": "Use the active VS Code theme for preview colors and Mermaid diagrams",
 
   "configuration.theme.single.description": "The theme used in single theme mode",
   "configuration.theme.light.description": "Theme used when the Markdown preview is in light mode",
