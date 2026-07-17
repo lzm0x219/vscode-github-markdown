@@ -89,10 +89,12 @@ async function openFile(page: Page, fileName: string): Promise<void> {
 
 async function runCommand(page: Page, command: string): Promise<void> {
   await page.keyboard.press(`${primaryModifier}+Shift+P`);
-  const input = page.locator(".quick-input-widget input");
+  const input = page.locator(".quick-input-widget input:visible");
   await input.waitFor({ state: "visible" });
   await input.fill(`>${command}`);
-  const result = page.locator(".quick-input-widget .monaco-list-row").filter({ hasText: command });
+  const result = page
+    .locator(".quick-input-widget:visible .monaco-list-row")
+    .filter({ hasText: command });
   await result.first().waitFor({ state: "visible" });
   await result.first().click();
 }
@@ -100,7 +102,7 @@ async function runCommand(page: Page, command: string): Promise<void> {
 async function selectQuickPick(page: Page, command: string, option: string): Promise<void> {
   await runCommand(page, command);
   const result = page
-    .locator(".quick-input-widget .monaco-list-row")
+    .locator(".quick-input-widget:visible .monaco-list-row")
     .getByText(option, { exact: true });
   await result.first().waitFor({ state: "visible" });
   await result.first().click();
