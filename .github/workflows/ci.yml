@@ -74,7 +74,7 @@ jobs:
             vscode: 1.74.0
           - name: desktop-stable
             kind: desktop
-            vscode: stable
+            vscode: 1.129.0
           - name: web-stable
             kind: web
 
@@ -93,6 +93,16 @@ jobs:
           VSCODE_TEST_VERSION: ${{ matrix.vscode }}
         run: xvfb-run -a nub run test:host:desktop
 
+      - name: Desktop final Markdown preview regression
+        if: matrix.name == 'desktop-stable'
+        env:
+          VSCODE_TEST_VERSION: ${{ matrix.vscode }}
+        run: xvfb-run -a nub run test:host:desktop:preview
+
       - name: Web Extension Host smoke test
         if: matrix.kind == 'web'
         run: nub run test:host:web
+
+      - name: Web final Markdown preview regression
+        if: matrix.kind == 'web'
+        run: nub run test:host:web:preview
