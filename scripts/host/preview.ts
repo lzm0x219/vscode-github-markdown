@@ -89,6 +89,7 @@ async function selectColorTheme(
   for (let attempt = 1; attempt <= maxThemeAttempts; attempt += 1) {
     try {
       await selectQuickPick(page, "Preferences: Color Theme", option);
+      await refreshPreview(page);
       return await waitForThemedPreview(
         page,
         expectation,
@@ -107,6 +108,45 @@ async function selectColorTheme(
   const message = lastError instanceof Error ? lastError.message : String(lastError);
   throw new Error(
     `Failed to apply VS Code color theme "${option}" after ${maxThemeAttempts} attempts: ${message}`
+  );
+}
+
+async function refreshPreview(page: Page): Promise<void> {
+  for (const frame of page.frames()) {
+    try {
+      await frame
+        .locator(".mermaid svg")
+        .evaluateAll((svgs) =>
+          svgs.forEach((svg) => svg.setAttribute("data-host-preview-stale", ""))
+        );
+    } catch {
+      // Preview frames can be replaced while marking the current render.
+    }
+  }
+
+  await runCommand(page, "Markdown: Refresh Preview");
+  await page
+    .locator(".quick-input-widget")
+    .waitFor({ state: "hidden", timeout: quickInputTimeoutMs });
+
+  const deadline = Date.now() + themeSettleAttemptTimeoutMs;
+  while (Date.now() < deadline) {
+    let rendered = false;
+    let stale = false;
+    for (const frame of page.frames()) {
+      try {
+        rendered ||= (await frame.locator(".mermaid svg").count()) > 0;
+        stale ||= (await frame.locator(".mermaid svg[data-host-preview-stale]").count()) > 0;
+      } catch {
+        // Preview frames can be replaced while the refresh completes.
+      }
+    }
+    if (rendered && !stale) return;
+    await page.waitForTimeout(100);
+  }
+
+  throw new Error(
+    "Host preview test failed: Mermaid did not rerender after refreshing the preview"
   );
 }
 
@@ -133,11 +173,11 @@ async function runCommand(page: Page, command: string): Promise<void> {
       const visibleQuickInput = page.locator(".quick-input-widget:visible");
       const input = visibleQuickInput.locator("input");
       await input.waitFor({ state: "visible", timeout: quickInputTimeoutMs });
-      await input.fill(`>${command}`);
+      await input.fill(`>${command}`, { timeout: quickInputTimeoutMs });
 
       const result = visibleQuickInput.locator(".monaco-list-row").filter({ hasText: command });
       await result.first().waitFor({ state: "visible", timeout: quickInputTimeoutMs });
-      await result.first().click();
+      await result.first().click({ timeout: quickInputTimeoutMs });
       return;
     } catch (error) {
       lastError = error;
@@ -156,11 +196,13 @@ async function runCommand(page: Page, command: string): Promise<void> {
 
 async function selectQuickPick(page: Page, command: string, option: string): Promise<void> {
   await runCommand(page, command);
-  const result = page
-    .locator(".quick-input-widget:visible .monaco-list-row")
-    .getByText(option, { exact: true });
-  await result.first().waitFor({ state: "visible" });
-  await result.first().click();
+  const quickInput = page.locator(".quick-input-widget:visible");
+  const input = quickInput.locator("input");
+  await input.waitFor({ state: "visible", timeout: quickInputTimeoutMs });
+  await input.fill(option, { timeout: quickInputTimeoutMs });
+  const result = quickInput.locator(".monaco-list-row").getByText(option, { exact: true });
+  await result.first().waitFor({ state: "visible", timeout: quickInputTimeoutMs });
+  await result.first().click({ timeout: quickInputTimeoutMs });
   await page
     .locator(".quick-input-widget")
     .waitFor({ state: "hidden", timeout: quickInputTimeoutMs });
@@ -279,7 +321,41 @@ async function waitForThemedPreview(
     await page.waitForTimeout(100);
   }
 
-  throw new Error(`Host preview test failed: theme did not settle for ${selector}`);
+  const observed = await observedThemeStates(page);
+  throw new Error(
+    `Host preview test failed: theme did not settle for ${selector}; observed ${JSON.stringify(observed)}`
+  );
+}
+
+async function observedThemeStates(page: Page): Promise<unknown[]> {
+  const states: unknown[] = [];
+  for (const frame of page.frames()) {
+    try {
+      const palettes = await frame.locator(".mermaid svg").evaluateAll((svgs) =>
+        svgs.map((svg) => {
+          const node = svg.querySelector<SVGElement>(".node rect, .node polygon, .node path");
+          const label = svg.querySelector<HTMLElement>(".nodeLabel");
+          return {
+            background: getComputedStyle(svg).backgroundColor,
+            nodeFill: node ? getComputedStyle(node).fill : "",
+            textColor: label ? getComputedStyle(label).color : ""
+          };
+        })
+      );
+      const themeStates = await frame.locator(".vscode-github-markdown").evaluateAll((elements) =>
+        elements.map((element) => ({
+          bodyClass: element.ownerDocument.body.className,
+          colorMode: element.getAttribute("data-color-mode"),
+          lightTheme: element.getAttribute("data-light-theme"),
+          darkTheme: element.getAttribute("data-dark-theme")
+        }))
+      );
+      states.push(...themeStates.map((state) => ({ ...state, palettes })));
+    } catch {
+      // Preview frames can be replaced while collecting failure diagnostics.
+    }
+  }
+  return states;
 }
 
 async function readMermaidPalette(preview: Frame): Promise<MermaidPalette> {
