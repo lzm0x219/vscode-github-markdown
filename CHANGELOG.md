@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+## [v4.3.0] - 2026-07-19
+
+v4.3.0 makes GitHub Markdown previews follow VS Code color themes more naturally across desktop and web while preserving readable high-contrast and fixed Single mode behavior. Mermaid diagrams now stay synchronized with both built-in and external renderers.
+
 ### Themes and appearance
 
 - System mode now follows the VS Code color theme applied to the Markdown preview on desktop and web, including high-contrast light and dark themes. Operating-system appearance changes affect the preview only when VS Code switches its active theme; Single mode remains fixed, and high-contrast previews keep readable background, text, links, and focus outlines.
@@ -96,8 +100,9 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 - v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
 - Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
+[v4.3.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.2.0...v4.3.0
 [v4.2.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.1...v4.2.0
 [v4.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.2.0...HEAD
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.3.0...HEAD
