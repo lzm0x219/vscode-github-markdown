@@ -88,13 +88,14 @@ async function openFile(page: Page, fileName: string): Promise<void> {
 }
 
 async function runCommand(page: Page, command: string): Promise<void> {
+  const quickInput = page.locator(".quick-input-widget:visible");
+  // The shortcut toggles an open Quick Input, so wait for the previous picker to close first.
+  await quickInput.waitFor({ state: "hidden" });
   await page.keyboard.press(`${primaryModifier}+Shift+P`);
-  const input = page.locator(".quick-input-widget input:visible");
+  const input = quickInput.locator("input");
   await input.waitFor({ state: "visible" });
   await input.fill(`>${command}`);
-  const result = page
-    .locator(".quick-input-widget:visible .monaco-list-row")
-    .filter({ hasText: command });
+  const result = quickInput.locator(".monaco-list-row").filter({ hasText: command });
   await result.first().waitFor({ state: "visible" });
   await result.first().click();
 }
