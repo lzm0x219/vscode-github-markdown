@@ -2,6 +2,14 @@
   <a href="./README.zh-CN.md">简体中文</a>
 </p>
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/readme-banner-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/readme-banner.png">
+    <img alt="Isometric Markdown source and GitHub preview connected by green contribution blocks" src="./assets/readme-banner.png">
+  </picture>
+</p>
+
 <h1 align="center">GitHub Flavored Markdown Preview</h1>
 
 <p align="center">
