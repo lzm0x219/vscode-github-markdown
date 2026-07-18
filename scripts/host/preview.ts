@@ -1,6 +1,7 @@
-import type { Frame, Page } from "playwright";
+import type { Frame, Locator, Page } from "playwright";
 
-const primaryModifier = process.platform === "darwin" ? "Meta" : "Control";
+const quickInputTimeoutMs = 5_000;
+const maxCommandAttempts = 3;
 
 export async function assertClientRenderedPreview(page: Page): Promise<void> {
   await page.locator(".monaco-workbench").waitFor({ state: "visible", timeout: 30_000 });
@@ -88,16 +89,36 @@ async function openFile(page: Page, fileName: string): Promise<void> {
 }
 
 async function runCommand(page: Page, command: string): Promise<void> {
-  const quickInput = page.locator(".quick-input-widget:visible");
-  // The shortcut toggles an open Quick Input, so wait for the previous picker to close first.
-  await quickInput.waitFor({ state: "hidden" });
-  await page.keyboard.press(`${primaryModifier}+Shift+P`);
-  const input = quickInput.locator("input");
-  await input.waitFor({ state: "visible" });
-  await input.fill(`>${command}`);
-  const result = quickInput.locator(".monaco-list-row").filter({ hasText: command });
-  await result.first().waitFor({ state: "visible" });
-  await result.first().click();
+  const quickInput = page.locator(".quick-input-widget");
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxCommandAttempts; attempt += 1) {
+    try {
+      await closeQuickInput(page, quickInput);
+      await page.locator(".monaco-workbench").press("F1");
+
+      const visibleQuickInput = page.locator(".quick-input-widget:visible");
+      const input = visibleQuickInput.locator("input");
+      await input.waitFor({ state: "visible", timeout: quickInputTimeoutMs });
+      await input.fill(`>${command}`);
+
+      const result = visibleQuickInput.locator(".monaco-list-row").filter({ hasText: command });
+      await result.first().waitFor({ state: "visible", timeout: quickInputTimeoutMs });
+      await result.first().click();
+      return;
+    } catch (error) {
+      lastError = error;
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `[host-preview] command palette attempt ${attempt}/${maxCommandAttempts} failed for "${command}": ${message}`
+      );
+    }
+  }
+
+  const message = lastError instanceof Error ? lastError.message : String(lastError);
+  throw new Error(
+    `Failed to run VS Code command "${command}" after ${maxCommandAttempts} attempts: ${message}`
+  );
 }
 
 async function selectQuickPick(page: Page, command: string, option: string): Promise<void> {
@@ -107,6 +128,16 @@ async function selectQuickPick(page: Page, command: string, option: string): Pro
     .getByText(option, { exact: true });
   await result.first().waitFor({ state: "visible" });
   await result.first().click();
+  await page
+    .locator(".quick-input-widget")
+    .waitFor({ state: "hidden", timeout: quickInputTimeoutMs });
+}
+
+async function closeQuickInput(page: Page, quickInput: Locator): Promise<void> {
+  if (await quickInput.isVisible()) {
+    await page.keyboard.press("Escape");
+  }
+  await quickInput.waitFor({ state: "hidden", timeout: quickInputTimeoutMs });
 }
 
 async function waitForClientRenderedPreview(page: Page): Promise<Frame> {
