@@ -2,6 +2,8 @@ import type { Frame, Locator, Page } from "playwright";
 
 const quickInputTimeoutMs = 5_000;
 const maxCommandAttempts = 3;
+const themeSettleAttemptTimeoutMs = 10_000;
+const maxThemeAttempts = 3;
 
 export async function assertClientRenderedPreview(page: Page): Promise<void> {
   await page.locator(".monaco-workbench").waitFor({ state: "visible", timeout: 30_000 });
@@ -57,16 +59,15 @@ async function assertThemeRendering(page: Page): Promise<void> {
   await selectQuickPick(page, "GitHub Markdown: Change Dark Theme", "Dark Tritanopia");
   await selectQuickPick(page, "GitHub Markdown: Change Theme Mode", "Sync with system");
 
-  await selectQuickPick(page, "Preferences: Color Theme", "Light Modern");
-  const systemLightPalette = await waitForThemedPreview(page, {
+  const systemLightPalette = await selectColorTheme(page, "Light Modern", {
     mode: "auto",
     light: "light_high_contrast",
     dark: "dark_tritanopia",
     body: "vscode-light"
   });
-  await selectQuickPick(page, "Preferences: Color Theme", "Dark Modern");
-  await waitForThemedPreview(
+  await selectColorTheme(
     page,
+    "Dark Modern",
     {
       mode: "auto",
       light: "light_high_contrast",
@@ -74,6 +75,38 @@ async function assertThemeRendering(page: Page): Promise<void> {
       body: "vscode-dark"
     },
     systemLightPalette
+  );
+}
+
+async function selectColorTheme(
+  page: Page,
+  option: string,
+  expectation: ThemeExpectation,
+  previousPalette?: MermaidPalette
+): Promise<MermaidPalette> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxThemeAttempts; attempt += 1) {
+    try {
+      await selectQuickPick(page, "Preferences: Color Theme", option);
+      return await waitForThemedPreview(
+        page,
+        expectation,
+        previousPalette,
+        themeSettleAttemptTimeoutMs
+      );
+    } catch (error) {
+      lastError = error;
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `[host-preview] color theme attempt ${attempt}/${maxThemeAttempts} failed for "${option}": ${message}`
+      );
+    }
+  }
+
+  const message = lastError instanceof Error ? lastError.message : String(lastError);
+  throw new Error(
+    `Failed to apply VS Code color theme "${option}" after ${maxThemeAttempts} attempts: ${message}`
   );
 }
 
@@ -218,9 +251,10 @@ async function assertFinalClientRendering(preview: Frame): Promise<void> {
 async function waitForThemedPreview(
   page: Page,
   expectation: ThemeExpectation,
-  previousPalette?: MermaidPalette
+  previousPalette?: MermaidPalette,
+  timeoutMs = 30_000
 ): Promise<MermaidPalette> {
-  const deadline = Date.now() + 30_000;
+  const deadline = Date.now() + timeoutMs;
   const selector =
     `.vscode-github-markdown[data-color-mode="${expectation.mode}"]` +
     `[data-light-theme="${expectation.light}"]` +
