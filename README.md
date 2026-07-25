@@ -4,9 +4,9 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/readme-banner-dark.jpg">
-    <source media="(prefers-color-scheme: light)" srcset="./assets/readme-banner.jpg">
-    <img alt="Isometric Markdown source and GitHub preview connected by green contribution blocks" src="./assets/readme-banner.jpg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/readme-banner-dark.jpg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/readme-banner.jpg">
+    <img alt="Isometric Markdown source and GitHub preview connected by green contribution blocks" src="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/readme-banner.jpg">
   </picture>
 </p>
 
@@ -43,8 +43,8 @@ Open a Markdown file, then run **Markdown: Open Preview to the Side**. The built
     <th>Extension renderer</th>
   </tr>
   <tr>
-    <td><img alt="Markdown rendered by GitHub" src="./assets/parity-github.png" /></td>
-    <td><img alt="Markdown rendered by the extension pipeline" src="./assets/parity-vscode.png" /></td>
+    <td><img alt="Markdown rendered by GitHub" src="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/parity-github.png" /></td>
+    <td><img alt="Markdown rendered by the extension pipeline" src="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/parity-vscode.png" /></td>
   </tr>
 </table>
 

@@ -20,6 +20,10 @@ ARCHITECTURE.md
 CONTRIBUTING.md
 artifacts/**
 artifacts
+assets/parity-github.png
+assets/parity-vscode.png
+assets/readme-banner-dark.jpg
+assets/readme-banner.jpg
 coverage/**
 coverage
 lefthook.yml
