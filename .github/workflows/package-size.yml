@@ -1,0 +1,94 @@
+name: Package Size
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: package-size-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Package (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: baseline
+            ref: ${{ github.event.pull_request.base.sha }}
+          - name: current
+            ref: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.ref }}
+
+      - uses: jdx/mise-action@v4
+
+      - name: Install nub
+        run: npm install --global @nubjs/nub
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: nub run build
+
+      - name: Package
+        run: nub run package
+
+      - name: Upload VSIX
+        uses: actions/upload-artifact@v7
+        with:
+          name: package-size-${{ matrix.name }}
+          path: "*.vsix"
+          if-no-files-found: error
+          retention-days: 7
+
+  compare:
+    name: Compare
+    needs: package
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: jdx/mise-action@v4
+
+      - name: Install nub
+        run: npm install --global @nubjs/nub
+
+      - name: Download baseline VSIX
+        uses: actions/download-artifact@v8
+        with:
+          name: package-size-baseline
+          path: artifacts/packages/baseline
+
+      - name: Download current VSIX
+        uses: actions/download-artifact@v8
+        with:
+          name: package-size-current
+          path: artifacts/packages/current
+
+      - name: Compare package size and contents
+        run: |
+          nub scripts/package-audit/index.ts \
+            artifacts/packages/baseline/*.vsix \
+            artifacts/packages/current/*.vsix \
+            artifacts/package-size/report.json
+
+      - name: Upload package audit
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: package-size-report
+          path: artifacts/package-size
+          if-no-files-found: error
+          retention-days: 14

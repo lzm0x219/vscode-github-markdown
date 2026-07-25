@@ -4,9 +4,9 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/readme-banner-dark.jpg">
-    <source media="(prefers-color-scheme: light)" srcset="./assets/readme-banner.jpg">
-    <img alt="Markdown 源码与 GitHub 预览通过绿色贡献方块连接的等距插图" src="./assets/readme-banner.jpg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/readme-banner-dark.jpg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/readme-banner.jpg">
+    <img alt="Markdown 源码与 GitHub 预览通过绿色贡献方块连接的等距插图" src="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/readme-banner.jpg">
   </picture>
 </p>
 
@@ -43,8 +43,8 @@ code --install-extension lzm0x219.vscode-github-markdown
     <th>扩展渲染管线</th>
   </tr>
   <tr>
-    <td><img alt="GitHub 渲染的 Markdown" src="./assets/parity-github.png" /></td>
-    <td><img alt="扩展管线渲染的 Markdown" src="./assets/parity-vscode.png" /></td>
+    <td><img alt="GitHub 渲染的 Markdown" src="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/parity-github.png" /></td>
+    <td><img alt="扩展管线渲染的 Markdown" src="https://raw.githubusercontent.com/lzm0x219/vscode-github-markdown/main/assets/parity-vscode.png" /></td>
   </tr>
 </table>
 
