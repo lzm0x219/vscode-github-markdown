@@ -62,7 +62,7 @@
     "@types/vscode": "1.74.0",
     "@vitest/coverage-v8": "4.1.10",
     "@vscode/l10n-dev": "0.0.35",
-    "@vscode/test-electron": "3.0.0",
+    "@vscode/test-electron": "3.1.0",
     "@vscode/test-web": "0.0.81",
     "@vscode/vsce": "3.9.2",
     "generate-github-markdown-css": "6.6.0",
