@@ -11,6 +11,8 @@
 .pnpm-store/**
 .pnpm-store
 .release-please-manifest.json
+.serena/**
+.serena
 .vscode/**
 .vscode
 AGENTS.md
@@ -25,6 +27,7 @@ mise.toml
 pnpm-lock.yaml
 pnpm-workspace.yaml
 release-please-config.json
+release-CHANGELOG.txt
 scripts/**
 src/**
 tsconfig.json

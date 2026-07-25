@@ -127,6 +127,32 @@ jobs:
       - name: Package
         run: nub run package
 
+      - name: Verify VSIX contents and size
+        shell: bash
+        run: |
+          archive="$(find . -maxdepth 1 -type f -name '*.vsix' -print -quit)"
+          if [[ -z "$archive" ]]; then
+            echo "::error::No VSIX archive was produced"
+            exit 1
+          fi
+
+          archive_size="$(stat --format=%s "$archive")"
+          maximum_size=$((512 * 1024))
+          if (( archive_size > maximum_size )); then
+            echo "::error::VSIX size ${archive_size} bytes exceeds the ${maximum_size}-byte budget"
+            exit 1
+          fi
+
+          forbidden_files="$(
+            unzip -Z1 "$archive" |
+              grep -E '^extension/(\.serena/|release-CHANGELOG\.txt$)' || true
+          )"
+          if [[ -n "$forbidden_files" ]]; then
+            echo "::error::VSIX contains forbidden files"
+            echo "$forbidden_files"
+            exit 1
+          fi
+
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v7
         with:
