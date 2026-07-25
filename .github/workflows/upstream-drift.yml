@@ -1,0 +1,96 @@
+name: Upstream drift probe
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+concurrency:
+  group: upstream-drift-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v4
+
+      - uses: nubjs/setup-nub@v0
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Cache Chromium
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Find the latest successful probe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          last_success_at="$(gh run list \
+            --workflow upstream-drift.yml \
+            --status success \
+            --limit 1 \
+            --json createdAt \
+            --jq '.[0].createdAt // ""')"
+          echo "DRIFT_LAST_SUCCESS_AT=${last_success_at}" >> "${GITHUB_ENV}"
+
+      - name: Run independent upstream drift probe
+        id: probe
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DRIFT_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: pnpm run probe:drift
+
+      - name: Warn when successful results are stale
+        if: always() && steps.probe.outputs.freshness != 'fresh'
+        run: echo "::warning::The latest successful upstream drift result is missing or older than 30 hours."
+
+      - name: Create or update the deduplicated drift issue
+        if: always() && steps.probe.outputs.conclusion == 'drift_detected'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: "[Upstream drift] GitHub Markdown parity changed"
+        run: |
+          issue_number="$(gh issue list \
+            --state open \
+            --search "${ISSUE_TITLE} in:title" \
+            --json number,title \
+            --jq 'map(select(.title == env.ISSUE_TITLE))[0].number // ""')"
+          if [[ -n "${issue_number}" ]]; then
+            gh issue comment "${issue_number}" --body-file artifacts/drift/report.md
+          else
+            gh issue create \
+              --title "${ISSUE_TITLE}" \
+              --body-file artifacts/drift/report.md \
+              --label optimize
+          fi
+
+      - name: Upload auditable drift artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: upstream-drift-${{ github.run_id }}
+          path: |
+            artifacts/drift
+            artifacts/parity
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Fail unsuccessful probes
+        if: always() && steps.probe.outcome == 'failure'
+        run: exit 1
