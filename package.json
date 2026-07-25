@@ -40,6 +40,7 @@
     "dev": "nub scripts/build/dev.ts",
     "update:emoji": "nub scripts/emoji/index.ts",
     "update:parity": "nub scripts/parity/index.ts refresh",
+    "update:parity:css-snapshot": "nub scripts/parity/index.ts snapshot",
     "update:parity:offline": "nub scripts/parity/index.ts sync",
     "verify:parity": "nub scripts/parity/index.ts check",
     "verify:parity:remote": "nub scripts/parity/index.ts remote",

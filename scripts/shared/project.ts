@@ -15,6 +15,7 @@ export const project = {
     changelog: join(root, "CHANGELOG.md"),
     parityBaseline: join(root, "tests", "fixtures", "parity-baseline.json"),
     parityReferenceCss: join(root, "tests", "fixtures", "parity-reference.css"),
+    parityReferenceSnapshot: join(root, "tests", "fixtures", "parity-reference.snapshot.json"),
     emojiModule: join(root, "src", "generated", "github-emojis.ts")
   },
   urls: {

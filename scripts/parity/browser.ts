@@ -3,8 +3,10 @@ import { join } from "node:path";
 import { chromium } from "playwright";
 import {
   generateGithubCssAssets,
+  generateGithubCssSnapshot,
   githubCssFileNames,
   parityOnlyCssMarker,
+  type GithubCssSnapshot,
   type GithubTheme
 } from "../build/github-css";
 import { project } from "../shared/project";
@@ -114,6 +116,16 @@ export async function captureScreenshots(
 export async function createReferenceCss(): Promise<string> {
   const assets = await generateGithubCssAssets();
   return `${assets.map(({ content }) => content).join("\n")}\n${parityOnlyCssMarker}\n${githubPageCss}`;
+}
+
+export async function createReferenceCssSnapshot(
+  fixtureCommit: string
+): Promise<{ referenceCss: string; snapshot: GithubCssSnapshot }> {
+  const { assets, snapshot } = await generateGithubCssSnapshot({ fixtureCommit });
+  return {
+    referenceCss: `${assets.map(({ content }) => content).join("\n")}\n${parityOnlyCssMarker}\n${githubPageCss}`,
+    snapshot
+  };
 }
 
 export async function readLocalCss(): Promise<string> {

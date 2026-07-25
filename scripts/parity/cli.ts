@@ -1,5 +1,7 @@
+import { execFile } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { promisify } from "node:util";
 import { buildCss } from "../build/css";
 import { writeTextIfChanged } from "../shared/files";
 import { project } from "../shared/project";
@@ -14,6 +16,7 @@ import {
 import {
   captureScreenshots,
   createReferenceCss,
+  createReferenceCssSnapshot,
   readLocalCss,
   visualRenderConfiguration
 } from "./browser";
@@ -64,10 +67,13 @@ export function evaluateComparison(
 
 export async function runParityCommand(command = process.argv[2] ?? "check"): Promise<void> {
   if (command === "refresh") return refreshBaseline();
+  if (command === "snapshot") return refreshCssSnapshot();
   if (command === "sync") return syncBaseline();
   if (command === "remote") return checkVisualParity("github");
   if (command === "check") return checkVisualParity("local");
-  throw new Error(`Unknown parity command: ${command}. Expected check, remote, refresh, or sync.`);
+  throw new Error(
+    `Unknown parity command: ${command}. Expected check, remote, refresh, snapshot, or sync.`
+  );
 }
 
 async function checkVisualParity(actualSource: "github" | "local"): Promise<void> {
@@ -182,11 +188,13 @@ function normalizeHtml(html: string, normalization: "none" | "syntax-tokens"): s
 
 async function refreshBaseline(): Promise<void> {
   const resolvedCases = await resolveRepositoryReferences(parityCases);
-  const [githubHtml, referenceCss, browser] = await Promise.all([
+  const fixtureCommit = await currentFixtureCommit();
+  const [githubHtml, reference, browser] = await Promise.all([
     renderAllGitHubCases(resolvedCases),
-    createReferenceCss(),
+    createReferenceCssSnapshot(fixtureCommit),
     captureScreenshots([])
   ]);
+  const { referenceCss, snapshot } = reference;
   const baseline = createBaseline(
     resolvedCases,
     githubHtml,
@@ -196,11 +204,48 @@ async function refreshBaseline(): Promise<void> {
       chromiumVersion: browser.chromiumVersion
     }
   );
-  const [baselineResult, cssResult] = await Promise.all([
+  const [baselineResult, cssResult, snapshotResult] = await Promise.all([
     writeTextIfChanged(project.paths.parityBaseline, `${JSON.stringify(baseline, null, 2)}\n`),
-    writeTextIfChanged(project.paths.parityReferenceCss, referenceCss)
+    writeTextIfChanged(project.paths.parityReferenceCss, referenceCss),
+    writeTextIfChanged(
+      project.paths.parityReferenceSnapshot,
+      `${JSON.stringify(snapshot, null, 2)}\n`
+    )
   ]);
-  console.log(`Visual parity baseline ${baselineResult}; reference CSS ${cssResult}`);
+  console.log(
+    `Visual parity baseline ${baselineResult}; reference CSS ${cssResult}; CSS snapshot ${snapshotResult}`
+  );
+}
+
+async function refreshCssSnapshot(): Promise<void> {
+  const fixtureCommit = await currentFixtureCommit();
+  const [baseline, reference] = await Promise.all([
+    readBaseline(),
+    createReferenceCssSnapshot(fixtureCommit)
+  ]);
+  if (baseline.referenceCssSha256 !== sha256(reference.referenceCss)) {
+    throw new Error(
+      "GitHub CSS changed. Install the pinned Playwright Chromium and run update:parity to refresh the visual baseline."
+    );
+  }
+
+  const [cssResult, snapshotResult] = await Promise.all([
+    writeTextIfChanged(project.paths.parityReferenceCss, reference.referenceCss),
+    writeTextIfChanged(
+      project.paths.parityReferenceSnapshot,
+      `${JSON.stringify(reference.snapshot, null, 2)}\n`
+    )
+  ]);
+  console.log(`Reference CSS ${cssResult}; CSS snapshot ${snapshotResult}`);
+}
+
+async function currentFixtureCommit(): Promise<string> {
+  const { stdout } = await promisify(execFile)("git", ["rev-parse", "HEAD"], { cwd: project.root });
+  const commit = stdout.trim();
+  if (!/^[\da-f]{40}$/i.test(commit)) {
+    throw new Error("Unable to resolve the committed parity fixture revision");
+  }
+  return commit;
 }
 
 async function syncBaseline(): Promise<void> {
