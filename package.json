@@ -44,6 +44,7 @@
     "update:parity:offline": "nub scripts/parity/index.ts sync",
     "verify:parity": "nub scripts/parity/index.ts check",
     "verify:parity:remote": "nub scripts/parity/index.ts remote",
+    "verify:parity:report": "nub scripts/parity/index.ts report",
     "probe:drift": "nub scripts/drift/index.ts",
     "i18n-export": "nubx vscode-l10n-dev export --outDir ./l10n ./src",
     "test": "vitest run",
