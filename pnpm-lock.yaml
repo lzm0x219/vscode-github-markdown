@@ -226,8 +226,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35(supports-color@7.2.0)
       '@vscode/test-electron':
-        specifier: 3.0.0
-        version: 3.0.0(supports-color@7.2.0)
+        specifier: 3.1.0
+        version: 3.1.0(supports-color@7.2.0)
       '@vscode/test-web':
         specifier: 0.0.81
         version: 0.0.81(supports-color@7.2.0)
@@ -1188,8 +1188,8 @@ packages:
     resolution: {integrity: sha512-s6uzBXsVDSL69Z85HSqpc5dfKswQkeucY8L00t1TWzGalw7wkLQUKMRwuzqTq+AMwQKrRd7Po14cMoTcd11iDw==}
     hasBin: true
 
-  '@vscode/test-electron@3.0.0':
-    resolution: {integrity: sha512-TY5mC7aAjxSLDXsyjhrG8cJHgc/HLdiE5lvtW7hABYQrY24Qwozzr5UoO3HiuAM4Hzz4b7K/eZlwrCILj94CcA==}
+  '@vscode/test-electron@3.1.0':
+    resolution: {integrity: sha512-CRqv5u+YYoseuNVJ6Tyo4k0sF0mx4qnKMihRB0PjsUF8Dc0WKtCXo6CNL6nWWm5esfFQsQA/pejMj4ZbpJVLTw==}
     engines: {node: '>=22'}
 
   '@vscode/test-web@0.0.81':
@@ -4273,7 +4273,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vscode/test-electron@3.0.0(supports-color@7.2.0)':
+  '@vscode/test-electron@3.1.0(supports-color@7.2.0)':
     dependencies:
       http-proxy-agent: 7.0.2(supports-color@7.2.0)
       https-proxy-agent: 7.0.6(supports-color@7.2.0)
