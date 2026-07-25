@@ -108,6 +108,9 @@ describe("GitHub CSS assets", () => {
     const generator = vi.fn<GithubCssGenerator>(async (options) => {
       if (options.onlyStyles) {
         await globalThis.fetch("https://github.githubassets.com/assets/primer-123abc.css");
+        await globalThis.fetch(
+          "https://github.githubassets.com/assets/primer-react-css.98ad1672d1ed9f02.module.css"
+        );
         return ".vscode-github-markdown { color: inherit; }";
       }
       const theme = String(options.light);
@@ -133,16 +136,22 @@ describe("GitHub CSS assets", () => {
           cache: { freshness: "fresh", ageSeconds: 0 },
           etag: '"css-etag"',
           signals: { mediaRules: 1, dataSelectors: ["data-preview"], classSelectors: ["unknown"] }
+        },
+        {
+          url: "https://github.githubassets.com/assets/primer-react-css.98ad1672d1ed9f02.module.css",
+          cache: { freshness: "fresh", ageSeconds: 0 },
+          etag: '"css-etag"',
+          signals: { mediaRules: 1, dataSelectors: ["data-preview"], classSelectors: ["unknown"] }
         }
       ]);
-      expect(snapshot.assets[0]?.sha256).toMatch(/^[\da-f]{64}$/);
-      expect(snapshot.filtering.excluded).toMatchObject({ mediaRules: 1, dataSelectors: 1 });
+      expect(snapshot.assets.every(({ sha256 }) => /^[\da-f]{64}$/.test(sha256))).toBe(true);
+      expect(snapshot.filtering.excluded).toMatchObject({ mediaRules: 2, dataSelectors: 1 });
     } finally {
       globalThis.fetch = originalFetch;
     }
   });
 
-  it("rejects a new CSS asset-name convention with structured source signals", async () => {
+  it("rejects an unhashed CSS module asset name with structured source signals", async () => {
     const originalFetch = globalThis.fetch;
     globalThis.fetch = vi.fn(
       async () => new Response('@media screen { [data-preview="true"] .unknown { color: red; } }')
@@ -150,7 +159,7 @@ describe("GitHub CSS assets", () => {
     const generator = vi.fn<GithubCssGenerator>(async (options) => {
       if (options.onlyStyles) {
         await globalThis.fetch(
-          "https://github.githubassets.com/assets/primer-react-css.98ad1672d1ed9f02.module.css"
+          "https://github.githubassets.com/assets/primer-react-css.module.css"
         );
         return ".vscode-github-markdown { color: inherit; }";
       }

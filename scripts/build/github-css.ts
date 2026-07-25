@@ -410,7 +410,7 @@ async function captureCachedGitHubCssAssets(
 
 function hasStableGithubCssAssetName(url: string): boolean {
   try {
-    return /\/[-\w]+-\w+\.css$/i.test(new URL(url).pathname);
+    return /\/(?:[-\w]+-\w+|[-\w]+\.[\da-f]{16}\.module)\.css$/i.test(new URL(url).pathname);
   } catch {
     return false;
   }
