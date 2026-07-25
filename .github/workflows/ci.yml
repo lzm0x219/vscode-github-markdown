@@ -90,6 +90,17 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Cache Chromium
+        if: matrix.kind == 'web'
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chromium
+        if: matrix.kind == 'web'
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Desktop Extension Host smoke test
         if: matrix.kind == 'desktop'
         env:
