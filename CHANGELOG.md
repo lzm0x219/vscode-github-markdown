@@ -6,7 +6,9 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
-Upcoming changes strengthen preview reliability as GitHub's styles evolve. They do not change current Markdown rendering, settings, or supported VS Code versions.
+## [v4.4.0] - 2026-07-26
+
+v4.4.0 strengthens preview reliability as GitHub's styles evolve. It does not change current Markdown rendering, settings, or supported VS Code versions.
 
 ### Markdown preview
 
@@ -107,9 +109,10 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 - v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
 - Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
+[v4.4.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.3.0...v4.4.0
 [v4.3.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.2.0...v4.3.0
 [v4.2.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.1...v4.2.0
 [v4.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.3.0...HEAD
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.0...HEAD
