@@ -1,0 +1,40 @@
+{
+  "name": "main release gates",
+  "target": "branch",
+  "enforcement": "active",
+  "bypass_actors": [],
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "required_status_checks": [
+          {
+            "context": "check"
+          },
+          {
+            "context": "Host smoke (desktop-minimum)"
+          },
+          {
+            "context": "Host smoke (desktop-stable)"
+          },
+          {
+            "context": "Host smoke (web-stable)"
+          }
+        ]
+      }
+    }
+  ]
+}

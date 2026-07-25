@@ -4,13 +4,31 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      override_reason:
+        description: Why the fresh upstream parity gate must be overridden
+        required: false
+        type: string
+      override_owner:
+        description: Person accountable for the override
+        required: false
+        type: string
+      override_report_url:
+        description: HTTPS URL to the reviewed parity or incident report
+        required: false
+        type: string
 
 concurrency:
   group: publish-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
+  quality-gate:
+    uses: ./.github/workflows/ci.yml
+
   verify:
+    needs: quality-gate
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -52,6 +70,38 @@ jobs:
 
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
+
+      - name: Prepare release gate audit
+        id: release_gate
+        env:
+          RELEASE_GATE_OVERRIDE_REASON: ${{ inputs.override_reason }}
+          RELEASE_GATE_OVERRIDE_OWNER: ${{ inputs.override_owner }}
+          RELEASE_GATE_OVERRIDE_REPORT_URL: ${{ inputs.override_report_url }}
+        run: nub scripts/release/gate-index.ts prepare
+
+      - name: Verify fresh upstream three-way parity
+        id: upstream_parity
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: pnpm run verify:parity:report
+
+      - name: Enforce fresh upstream parity
+        if: always()
+        env:
+          RELEASE_GATE_PARITY_OUTCOME: ${{ steps.upstream_parity.outcome }}
+        run: nub scripts/release/gate-index.ts enforce
+
+      - name: Upload release gate evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-gate-${{ github.ref_name }}-${{ github.run_id }}
+          path: |
+            artifacts/release-gate
+            artifacts/parity
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Lint
         run: nubx oxlint .
