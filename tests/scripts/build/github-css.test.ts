@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   generateGithubCssAssets,
+  generateGithubCssSnapshot,
   githubCssFileNames,
   githubCssImports,
   readGithubCssAssets,
@@ -88,6 +89,83 @@ describe("GitHub CSS assets", () => {
       const headers = new Headers(fetchMock.mock.calls[0]?.[1]?.headers);
       expect(headers.get("Authorization")).toBe("Bearer test-token");
       expect(globalThis.fetch).toBe(fetchMock);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  it("records source CSS assets, cache freshness, and filter signals during a snapshot refresh", async () => {
+    const originalFetch = globalThis.fetch;
+    const fetchMock = vi.fn<
+      (input: string | URL | Request, init?: RequestInit) => Promise<Response>
+    >(
+      async () =>
+        new Response('@media screen { [data-preview="true"] .unknown { color: red; } }', {
+          headers: { Age: "0", ETag: '"css-etag"' }
+        })
+    );
+    globalThis.fetch = fetchMock as typeof fetch;
+    const generator = vi.fn<GithubCssGenerator>(async (options) => {
+      if (options.onlyStyles) {
+        await globalThis.fetch("https://github.githubassets.com/assets/primer-123abc.css");
+        return ".vscode-github-markdown { color: inherit; }";
+      }
+      const theme = String(options.light);
+      return `:root { --shared: value; }
+.vscode-github-markdown,
+[data-theme="${theme}"] {
+  --color: ${theme};
+}`;
+    });
+
+    try {
+      const { snapshot } = await generateGithubCssSnapshot({
+        fixtureCommit: "a".repeat(40),
+        generator,
+        capturedAt: new Date("2026-07-26T00:00:00.000Z")
+      });
+
+      expect(snapshot.capturedAt).toBe("2026-07-26T00:00:00.000Z");
+      expect(snapshot.fixtureCommit).toBe("a".repeat(40));
+      expect(snapshot.assets).toMatchObject([
+        {
+          url: "https://github.githubassets.com/assets/primer-123abc.css",
+          cache: { freshness: "fresh", ageSeconds: 0 },
+          etag: '"css-etag"',
+          signals: { mediaRules: 1, dataSelectors: ["data-preview"], classSelectors: ["unknown"] }
+        }
+      ]);
+      expect(snapshot.assets[0]?.sha256).toMatch(/^[\da-f]{64}$/);
+      expect(snapshot.filtering.excluded).toMatchObject({ mediaRules: 1, dataSelectors: 1 });
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  it("rejects a new CSS asset-name convention with structured source signals", async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn(
+      async () => new Response('@media screen { [data-preview="true"] .unknown { color: red; } }')
+    ) as typeof fetch;
+    const generator = vi.fn<GithubCssGenerator>(async (options) => {
+      if (options.onlyStyles) {
+        await globalThis.fetch(
+          "https://github.githubassets.com/assets/primer-react-css.98ad1672d1ed9f02.module.css"
+        );
+        return ".vscode-github-markdown { color: inherit; }";
+      }
+      const theme = String(options.light);
+      return `:root { --shared: value; }
+.vscode-github-markdown,
+[data-theme="${theme}"] {
+  --color: ${theme};
+}`;
+    });
+
+    try {
+      await expect(
+        generateGithubCssSnapshot({ fixtureCommit: "a".repeat(40), generator })
+      ).rejects.toThrow(/"category": "unsupported-css-asset-name"/);
     } finally {
       globalThis.fetch = originalFetch;
     }
