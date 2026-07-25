@@ -6,6 +6,13 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+Upcoming changes strengthen preview reliability as GitHub's styles evolve. They do not change current Markdown rendering, settings, or supported VS Code versions.
+
+### Markdown preview
+
+- Extension updates now stop when current GitHub rendering differs from the supported desktop or web preview, preventing an unreviewed mismatch from reaching users.
+- GitHub-side style changes and extension regressions are now identified separately, so compatibility fixes can address the source of a mismatch before publication.
+
 ## [v4.3.0] - 2026-07-19
 
 v4.3.0 makes GitHub Markdown previews follow VS Code color themes more naturally across desktop and web while preserving readable high-contrast and fixed Single mode behavior. Mermaid diagrams now stay synchronized with both built-in and external renderers.
