@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Installation and compatibility
+
+- Extension downloads and updates now use a substantially smaller package while keeping the same light and dark README artwork and Markdown preview behavior.
+
 ## [v4.4.0] - 2026-07-26
 
 v4.4.0 strengthens preview reliability as GitHub's styles evolve. It does not change current Markdown rendering, settings, or supported VS Code versions.

@@ -4,9 +4,9 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/readme-banner-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="./assets/readme-banner.png">
-    <img alt="Isometric Markdown source and GitHub preview connected by green contribution blocks" src="./assets/readme-banner.png">
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/readme-banner-dark.jpg">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/readme-banner.jpg">
+    <img alt="Isometric Markdown source and GitHub preview connected by green contribution blocks" src="./assets/readme-banner.jpg">
   </picture>
 </p>
 
