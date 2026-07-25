@@ -19,7 +19,7 @@ export async function runDriftProbe(): Promise<void> {
       const { snapshot } = await createReferenceCssSnapshot(fixtureCommit);
       return snapshot;
     },
-    verifyRemoteParity: () => runParityCommand("remote")
+    verifyRemoteParity: () => runParityCommand("report")
   });
   const directory = join(project.root, "artifacts", "drift");
   const markdown = renderDriftReport(report);

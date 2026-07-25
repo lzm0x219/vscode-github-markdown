@@ -94,6 +94,15 @@ export async function createDriftReport(options: DriftProbeOptions): Promise<Dri
 
 export function classifyProbeError(stage: ProbeStage, error: unknown): DriftConclusion {
   if (error instanceof GithubCssSnapshotContractError) return "extraction_failure";
+  const threeWayConclusion = threeWayReportConclusion(error);
+  if (
+    threeWayConclusion === "upstream-drift" ||
+    threeWayConclusion === "upstream-drift-with-user-impact"
+  ) {
+    return "drift_detected";
+  }
+  if (threeWayConclusion === "extract-failure") return "extraction_failure";
+  if (threeWayConclusion === "render-failure") return "render_failure";
   const message = errorMessage(error);
   if (/fetch failed|timed out|econn|enotfound|eai_again|aborterror/i.test(message)) {
     return "network_failure";
@@ -191,4 +200,19 @@ function failureDetails(
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function threeWayReportConclusion(error: unknown): string | undefined {
+  if (
+    typeof error !== "object" ||
+    error === null ||
+    !("report" in error) ||
+    typeof error.report !== "object" ||
+    error.report === null ||
+    !("conclusion" in error.report) ||
+    typeof error.report.conclusion !== "string"
+  ) {
+    return undefined;
+  }
+  return error.report.conclusion;
 }

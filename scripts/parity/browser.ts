@@ -18,6 +18,8 @@ export type ScreenshotRequest = {
   theme: "light" | "dark";
   themeName: GithubTheme;
   linkUnderlines: boolean;
+  viewport?: { width: number; height: number };
+  interaction?: "default" | "focus" | "hover";
 };
 
 const viewport = { width: 1024, height: 720 };
@@ -27,18 +29,20 @@ export const visualRenderConfiguration = JSON.stringify({
   javaScriptEnabled: false,
   capture: "markdown-container"
 });
-const commonCss = `
+function commonCss(width: number): string {
+  return `
   :root { --vscode-editor-font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
   html, body { margin: 0; background: transparent; }
   .vscode-github-markdown {
     box-sizing: border-box;
-    width: ${viewport.width}px;
+    width: ${width}px;
     height: auto !important;
     min-height: 0 !important;
     margin: 0 !important;
     padding: 36px !important;
   }
 `;
+}
 const githubPageCss = `
   .vscode-github-markdown a { text-decoration: underline; }
   .vscode-github-markdown[data-link-underlines="false"] a { text-decoration: none; }
@@ -96,12 +100,31 @@ export async function captureScreenshots(
       return route.abort();
     });
     const screenshots: Record<string, Buffer> = {};
-    for (const { id, html, css, theme, themeName, linkUnderlines } of requests) {
+    for (const {
+      id,
+      html,
+      css,
+      theme,
+      themeName,
+      linkUnderlines,
+      viewport: requestViewport = viewport,
+      interaction = "default"
+    } of requests) {
+      await page.setViewportSize(requestViewport);
       await page.emulateMedia({ colorScheme: theme });
-      const safeCss = `${css}\n${commonCss}`.replace(/<\/style/gi, "<\\/style");
+      const safeCss = `${css}\n${commonCss(requestViewport.width)}`.replace(
+        /<\/style/gi,
+        "<\\/style"
+      );
       await page.setContent(
         `<style>${safeCss}</style><main class="vscode-github-markdown" data-color-mode="${theme}" data-light-theme="${theme === "light" ? themeName : "light"}" data-dark-theme="${theme === "dark" ? themeName : "dark"}" data-link-underlines="${linkUnderlines}">${html}</main>`
       );
+      const interactive = page
+        .locator(".vscode-github-markdown")
+        .locator("a, button, input, summary")
+        .first();
+      if (interaction === "focus" && (await interactive.count())) await interactive.focus();
+      if (interaction === "hover" && (await interactive.count())) await interactive.hover();
       screenshots[id] = await page.locator(".vscode-github-markdown").screenshot({
         animations: "disabled"
       });

@@ -87,4 +87,16 @@ describe("upstream drift probe", () => {
   ] as const)("classifies %s as %s", (message, conclusion) => {
     expect(classifyProbeError("compare", new Error(message))).toBe(conclusion);
   });
+
+  it("preserves three-way drift and stage conclusions", () => {
+    const upstream = Object.assign(new Error("Three-way report failed"), {
+      report: { conclusion: "upstream-drift-with-user-impact" }
+    });
+    const extraction = Object.assign(new Error("Three-way report failed"), {
+      report: { conclusion: "extract-failure" }
+    });
+
+    expect(classifyProbeError("compare", upstream)).toBe("drift_detected");
+    expect(classifyProbeError("compare", extraction)).toBe("extraction_failure");
+  });
 });

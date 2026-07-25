@@ -25,6 +25,11 @@ import { renderGitHubMarkdown, renderGitHubRepositoryFile, resolveGitHubRef } fr
 import { stripPlatformWrapperMarkup, stripSyntaxTokenMarkup } from "./html";
 import { renderLocalMarkdown } from "./local";
 import { artifactNames, screenshotKeys } from "./names";
+import {
+  collectThreeWayReport,
+  renderThreeWayReport,
+  ThreeWayParityReportError
+} from "./three-way";
 import { compareScreenshots } from "./visual";
 
 type CaseReport = {
@@ -69,10 +74,11 @@ export async function runParityCommand(command = process.argv[2] ?? "check"): Pr
   if (command === "refresh") return refreshBaseline();
   if (command === "snapshot") return refreshCssSnapshot();
   if (command === "sync") return syncBaseline();
+  if (command === "report") return runThreeWayParityReport();
   if (command === "remote") return checkVisualParity("github");
   if (command === "check") return checkVisualParity("local");
   throw new Error(
-    `Unknown parity command: ${command}. Expected check, remote, refresh, snapshot, or sync.`
+    `Unknown parity command: ${command}. Expected check, remote, report, refresh, snapshot, or sync.`
   );
 }
 
@@ -176,6 +182,46 @@ async function checkVisualParity(actualSource: "github" | "local"): Promise<void
   }
   if (reports.some(({ passed }) => !passed)) {
     throw new Error(`Visual parity exceeded its limits. See ${artifactDirectory}`);
+  }
+}
+
+async function runThreeWayParityReport(): Promise<void> {
+  const artifactDirectory = join(project.root, "artifacts", "parity");
+  await mkdir(artifactDirectory, { recursive: true });
+  const report = await collectThreeWayReport(parityCases, {
+    fetchCurrentGithub: async () =>
+      renderAllGitHubCases(await resolveRepositoryReferences(parityCases)),
+    extractInputs: async () => {
+      await buildCss();
+      const [baseline, committedReferenceCss, currentGithubCss, currentExtensionCss] =
+        await Promise.all([
+          readBaseline(),
+          readFile(project.paths.parityReferenceCss, "utf8"),
+          createReferenceCss(),
+          readLocalCss()
+        ]);
+      validateBaseline(baseline, parityCases, committedReferenceCss, visualRenderConfiguration);
+      return {
+        baseline,
+        committedReferenceCss,
+        currentGithubCss,
+        currentExtensionCss
+      };
+    },
+    render: captureScreenshots,
+    compare: compareScreenshots,
+    writeArtifact: (name, content) => writeFile(join(artifactDirectory, name), content)
+  });
+  await Promise.all([
+    writeFile(
+      join(artifactDirectory, "three-way-report.json"),
+      `${JSON.stringify(report, null, 2)}\n`
+    ),
+    writeFile(join(artifactDirectory, "three-way-report.md"), renderThreeWayReport(report))
+  ]);
+  console.log(`Three-way Markdown parity: ${report.conclusion}`);
+  if (report.conclusion !== "pass") {
+    throw new ThreeWayParityReportError(report, artifactDirectory);
   }
 }
 
