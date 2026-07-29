@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Mermaid
+
+- Mermaid theme synchronization now restores any setting it changed when a partial update fails, preserving your previous light and dark theme choices.
+
 ## [v4.4.1] - 2026-07-26
 
 v4.4.1 makes extension downloads and updates substantially smaller without changing Markdown preview behavior, settings, or supported VS Code versions.
