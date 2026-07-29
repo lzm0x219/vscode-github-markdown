@@ -73,6 +73,18 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain("Line 2.");
   });
 
+  it("keeps indented paragraphs inside the footnote", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render(
+      "Text[^1].\n\n[^1]: First paragraph.\n\n    Second paragraph with **bold**."
+    );
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0];
+
+    expect(footnote).toContain('<p dir="auto">First paragraph.</p>');
+    expect(footnote).toContain('<p dir="auto">Second paragraph with <strong>bold</strong>.');
+    expect(html).not.toContain("<pre><code>Second paragraph");
+  });
+
   it("ignores undefined footnotes in text", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("Text[^undefined].");
