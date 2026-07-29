@@ -14,6 +14,8 @@ This file records notable changes that people can observe or act on when using t
 
 - Multi-paragraph footnotes now keep their indented paragraphs and formatting inside the footnote instead of rendering later blocks in the document body.
 
+- Raw HTML images now rewrite only project-root `src` paths, preserving `data-src` attributes and protocol-relative image URLs.
+
 ## [v4.4.1] - 2026-07-26
 
 v4.4.1 makes extension downloads and updates substantially smaller without changing Markdown preview behavior, settings, or supported VS Code versions.

@@ -26,4 +26,16 @@ describe("markdown-it-github-image-url", () => {
     const html = md.render('<img src="/assets/logo.svg" alt="logo">');
     expect(html).toContain(`src="./assets/logo.svg"`);
   });
+
+  it("rewrites only the src attribute on raw HTML images", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render('<img data-src="/lazy.png" src="/actual.png">');
+    expect(html).toContain('data-src="/lazy.png" src="./actual.png"');
+  });
+
+  it("preserves protocol-relative image URLs", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render('<img src="//cdn.example.com/a.png">');
+    expect(html).toContain('src="//cdn.example.com/a.png"');
+  });
 });
