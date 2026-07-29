@@ -17,6 +17,8 @@ let mermaidConfigurationRegistered = true;
 let mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
 
 const updateCalls: { key: string; value: string | undefined; target: number }[] = [];
+let updateFailures = new Set<string>();
+let updateGates = new Map<string, Promise<void>>();
 
 vi.mock("vscode", () => ({
   default: {
@@ -34,6 +36,13 @@ vi.mock("vscode", () => ({
                 : undefined,
             update: async (key: string, value: string | undefined, target: number) => {
               updateCalls.push({ key, value, target });
+              if (updateFailures.has(key)) {
+                throw new Error(`Failed to update ${key}`);
+              }
+              const updateGate = updateGates.get(key);
+              if (updateGate) {
+                await updateGate;
+              }
               mermaidGlobalConfig[key] = value;
             }
           };
@@ -65,6 +74,8 @@ describe("Mermaid theme synchronization", () => {
     };
     mermaidConfigurationRegistered = true;
     mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
+    updateFailures = new Set();
+    updateGates = new Map();
   });
 
   it("configures both Mermaid slots from the system-mode light and dark themes", async () => {
@@ -145,6 +156,35 @@ describe("Mermaid theme synchronization", () => {
     expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "forest", target: 1 }]);
     expect(mermaidGlobalConfig).toEqual({
       lightModeTheme: "base",
+      darkModeTheme: "forest"
+    });
+  });
+
+  it("restores a setting changed before another theme update fails", async () => {
+    const memento = createTestMemento();
+    let releaseLightUpdate = () => {};
+    updateGates.set(
+      "lightModeTheme",
+      new Promise<void>((resolve) => {
+        releaseLightUpdate = resolve;
+      })
+    );
+    updateFailures.add("darkModeTheme");
+
+    const synchronization = expect(updateMermaidThemeSync(memento)).rejects.toThrow(
+      "Failed to update darkModeTheme"
+    );
+    await vi.waitFor(() => expect(updateCalls).toHaveLength(2));
+    releaseLightUpdate();
+    await synchronization;
+
+    updateFailures.clear();
+    updateGates.clear();
+    markdownConfig["mermaid.syncTheme"] = false;
+    await updateMermaidThemeSync(memento);
+
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
       darkModeTheme: "forest"
     });
   });

@@ -27,8 +27,8 @@ type MermaidThemeSnapshot = {
   light: MermaidTheme | undefined;
   dark: MermaidTheme | undefined;
   applied?: {
-    light: MermaidTheme;
-    dark: MermaidTheme;
+    light?: MermaidTheme;
+    dark?: MermaidTheme;
   };
 };
 
@@ -58,14 +58,26 @@ export async function updateMermaidThemeSync(memento: vscode.Memento): Promise<v
 
   const snapshot = await preserveMermaidThemes(memento, configuration);
   const [light, dark] = resolveMermaidThemes();
-  await Promise.all([
+  const [lightResult, darkResult] = await Promise.allSettled([
     updateMermaidTheme(configuration, originSection.light, light),
     updateMermaidTheme(configuration, originSection.dark, dark)
   ]);
+  const applied = { ...snapshot.applied };
+  if (lightResult.status === "fulfilled") {
+    applied.light = light;
+  }
+  if (darkResult.status === "fulfilled") {
+    applied.dark = dark;
+  }
   await memento.update(snapshotKey, {
     ...snapshot,
-    applied: { light, dark }
+    applied
   } satisfies MermaidThemeSnapshot);
+
+  const failure = [lightResult, darkResult].find((result) => result.status === "rejected");
+  if (failure?.status === "rejected") {
+    throw failure.reason;
+  }
 }
 
 export async function restoreMermaidThemeSync(
@@ -79,13 +91,13 @@ export async function restoreMermaidThemeSync(
 
   const updates: Promise<void>[] = [];
   if (
-    snapshot.applied &&
+    snapshot.applied?.light !== undefined &&
     getGlobalMermaidTheme(configuration, originSection.light) === snapshot.applied.light
   ) {
     updates.push(updateMermaidTheme(configuration, originSection.light, snapshot.light));
   }
   if (
-    snapshot.applied &&
+    snapshot.applied?.dark !== undefined &&
     getGlobalMermaidTheme(configuration, originSection.dark) === snapshot.applied.dark
   ) {
     updates.push(updateMermaidTheme(configuration, originSection.dark, snapshot.dark));
