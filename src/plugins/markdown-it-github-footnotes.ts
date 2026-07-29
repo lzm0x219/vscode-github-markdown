@@ -8,6 +8,10 @@ type FootnoteReference = {
   referenceCount: number;
 };
 
+type FootnoteState = MarkdownState & {
+  src: string;
+};
+
 const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
 const footnoteOrderKey = "githubMarkdownFootnoteOrder";
@@ -15,8 +19,8 @@ const footnoteReferencesKey = "githubMarkdownFootnoteReferences";
 
 export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
   md.core.ruler.after("inline", "github-markdown-footnotes", (state) => {
-    const markdownState = state as unknown as MarkdownState;
-    const footnotes = collectFootnotes(markdownState.tokens);
+    const markdownState = state as unknown as FootnoteState;
+    const footnotes = collectFootnotes(markdownState.tokens, markdownState.src);
     markdownState.tokens = footnotes.tokens;
 
     applyFootnoteReferences(markdownState, footnotes.definitions);
@@ -29,12 +33,16 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
   return md;
 }
 
-function collectFootnotes(tokens: MarkdownToken[]): {
+function collectFootnotes(
+  tokens: MarkdownToken[],
+  source: string
+): {
   definitions: Map<string, string>;
   tokens: MarkdownToken[];
 } {
   const definitions = new Map<string, string>();
   const output: MarkdownToken[] = [];
+  const sourceLines = source.split("\n");
 
   for (let index = 0; index < tokens.length; index += 1) {
     const paragraphOpen = tokens[index];
@@ -48,10 +56,32 @@ function collectFootnotes(tokens: MarkdownToken[]): {
     ) {
       const parsedDefinitions = parseFootnoteDefinitions(inline.content);
       if (parsedDefinitions) {
+        let definitionEnd = paragraphOpen.map?.[1];
+        if (definitionEnd !== undefined) {
+          const continuation = collectFootnoteContinuation(sourceLines, definitionEnd);
+          const lastLabel = [...parsedDefinitions.keys()].pop();
+          if (continuation && lastLabel) {
+            const definition = parsedDefinitions.get(lastLabel) ?? "";
+            parsedDefinitions.set(
+              lastLabel,
+              normalizeFootnoteDefinition(`${definition}\n\n${continuation.markdown}`)
+            );
+            definitionEnd = continuation.endLine;
+          }
+        }
+
         for (const [label, definition] of parsedDefinitions) {
           definitions.set(label, definition);
         }
+
         index += 2;
+        while (definitionEnd !== undefined) {
+          const nextTokenStart = tokens[index + 1]?.map?.[0];
+          if (nextTokenStart === undefined || nextTokenStart >= definitionEnd) {
+            break;
+          }
+          index += 1;
+        }
         continue;
       }
     }
@@ -65,6 +95,41 @@ function collectFootnotes(tokens: MarkdownToken[]): {
   return {
     definitions,
     tokens: output
+  };
+}
+
+function collectFootnoteContinuation(
+  sourceLines: string[],
+  startLine: number
+): { markdown: string; endLine: number } | undefined {
+  const markdownLines: string[] = [];
+  let pendingBlankLines = 0;
+  let lineIndex = startLine;
+
+  for (; lineIndex < sourceLines.length; lineIndex += 1) {
+    const line = sourceLines[lineIndex] ?? "";
+    if (/^[ \t]*$/.test(line)) {
+      pendingBlankLines += 1;
+      continue;
+    }
+
+    const continuation = line.match(/^(?: {4}|\t)(.*)$/);
+    if (!continuation) {
+      break;
+    }
+
+    markdownLines.push(...Array.from({ length: pendingBlankLines }, () => ""));
+    markdownLines.push(continuation[1] ?? "");
+    pendingBlankLines = 0;
+  }
+
+  if (markdownLines.length === 0) {
+    return undefined;
+  }
+
+  return {
+    markdown: markdownLines.join("\n"),
+    endLine: lineIndex
   };
 }
 
@@ -192,13 +257,13 @@ function appendFootnoteSection(
       }
 
       const number = index + 1;
-      const content = renderFootnoteDefinition(definition, md);
       const backrefs = references
         .filter((reference) => reference.label === label)
         .map((reference) => renderBackref(reference.number, reference.referenceCount))
         .join(" ");
+      const content = renderFootnoteDefinition(definition, backrefs, state, md);
       return `<li id="user-content-fn-${number}">
-<p dir="auto">${content} ${backrefs}</p>
+${content}
 </li>`;
     })
     .filter(Boolean)
@@ -225,13 +290,34 @@ function normalizeFootnoteDefinition(definition: string): string {
     .trim();
 }
 
-function renderFootnoteDefinition(definition: string, md: MarkdownIt): string {
-  const inline = md.parseInline(definition, {})[0];
-  if (!inline?.children) {
-    return "";
+function renderFootnoteDefinition(
+  definition: string,
+  backrefs: string,
+  state: MarkdownState,
+  md: MarkdownIt
+): string {
+  const tokens = md.parse(definition, {});
+  let lastInline: MarkdownToken | undefined;
+
+  for (const token of tokens) {
+    if (token.type === "paragraph_open") {
+      token.attrSet("dir", "auto");
+    }
+    if (token.type === "inline" && token.children) {
+      lastInline = token;
+    }
   }
 
-  return md.renderer.renderInline(inline.children, md.options, {});
+  if (lastInline?.children) {
+    const separator = new state.Token("text", "", 0);
+    separator.content = " ";
+    const backref = new state.Token("html_inline", "", 0);
+    backref.content = backrefs;
+    lastInline.children.push(separator, backref);
+  }
+
+  const content = md.renderer.render(tokens, md.options, {}).trimEnd();
+  return lastInline ? content : `${content}\n<p dir="auto">${backrefs}</p>`;
 }
 
 function footnoteReferences(state: MarkdownState): FootnoteReference[] {
