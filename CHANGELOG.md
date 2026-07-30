@@ -8,6 +8,8 @@ This file records notable changes that people can observe or act on when using t
 
 ### Mermaid
 
+- Overlapping theme changes now apply in request order, so the latest GitHub Markdown theme wins and turning off synchronization still restores your previous Mermaid themes.
+
 - Mermaid theme synchronization now restores any setting it changed when a partial update fails, preserving your previous light and dark theme choices.
 
 ### Markdown preview
