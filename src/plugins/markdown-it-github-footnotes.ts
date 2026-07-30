@@ -12,12 +12,17 @@ type FootnoteState = MarkdownState & {
   src: string;
 };
 
+type FragmentRenderer = (tokens: MarkdownToken[]) => string;
+
 const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
 const footnoteOrderKey = "githubMarkdownFootnoteOrder";
 const footnoteReferencesKey = "githubMarkdownFootnoteReferences";
 
 export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
+  const render = md.renderer.render.bind(md.renderer);
+  const renderFragment: FragmentRenderer = (tokens) => render(tokens, md.options, {});
+
   md.core.ruler.after("inline", "github-markdown-footnotes", (state) => {
     const markdownState = state as unknown as FootnoteState;
     const footnotes = collectFootnotes(markdownState.tokens, markdownState.src);
@@ -26,7 +31,7 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
     applyFootnoteReferences(markdownState, footnotes.definitions);
 
     if (footnotes.definitions.size > 0) {
-      appendFootnoteSection(markdownState, footnotes.definitions, md);
+      appendFootnoteSection(markdownState, footnotes.definitions, md, renderFragment);
     }
   });
 
@@ -238,7 +243,8 @@ function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, 
 function appendFootnoteSection(
   state: MarkdownState,
   definitions: Map<string, string>,
-  md: MarkdownIt
+  md: MarkdownIt,
+  renderFragment: FragmentRenderer
 ) {
   const footnoteOrder = state.env[footnoteOrderKey];
   const referencedLabels = Array.isArray(footnoteOrder)
@@ -261,7 +267,7 @@ function appendFootnoteSection(
         .filter((reference) => reference.label === label)
         .map((reference) => renderBackref(reference.number, reference.referenceCount))
         .join(" ");
-      const content = renderFootnoteDefinition(definition, backrefs, state, md);
+      const content = renderFootnoteDefinition(definition, backrefs, state, md, renderFragment);
       return `<li id="user-content-fn-${number}">
 ${content}
 </li>`;
@@ -294,7 +300,8 @@ function renderFootnoteDefinition(
   definition: string,
   backrefs: string,
   state: MarkdownState,
-  md: MarkdownIt
+  md: MarkdownIt,
+  renderFragment: FragmentRenderer
 ): string {
   const tokens = md.parse(definition, {});
   let lastInline: MarkdownToken | undefined;
@@ -316,7 +323,7 @@ function renderFootnoteDefinition(
     lastInline.children.push(separator, backref);
   }
 
-  const content = md.renderer.render(tokens, md.options, {}).trimEnd();
+  const content = renderFragment(tokens).trimEnd();
   return lastInline ? content : `${content}\n<p dir="auto">${backrefs}</p>`;
 }
 
