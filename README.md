@@ -114,7 +114,7 @@ On VS Code 1.121 or later, Mermaid theme sync works with the built-in `vscode.me
 
 ### Desktop and Web
 
-The runtime is compatible with desktop and web extension hosts. CI smoke-tests the minimum supported VS Code desktop version, the current stable desktop host, and the stable browser host.
+The runtime is compatible with desktop and web extension hosts. CI smoke-tests the minimum supported and current stable VS Code desktop hosts. It also checks the final Markdown preview against pinned desktop and browser builds so changes in their bundled renderers remain reproducible.
 
 ### Accessibility
 
