@@ -83,12 +83,26 @@ describe("plugin chain integration", () => {
     expect(html).toContain("Second footnote.");
   });
 
-  it("idempotent: re-rendering same input produces same output", () => {
+  it("produces the same output when one instance renders the same input twice", () => {
     const input =
       "- [x] Task\n\n> [!WARNING]\n> :warning: Danger.\n\nFootnote[^1].\n\n[^1]: Details.";
-    const md1 = createChain();
-    const md2 = createChain();
-    expect(md1.render(input)).toBe(md2.render(input));
+    const md = createChain();
+    const firstRender = md.render(input);
+
+    expect(md.render(input)).toBe(firstRender);
+  });
+
+  it("does not leak render state across different inputs", () => {
+    const input =
+      "- [x] Task\n\n> [!WARNING]\n> :warning: Danger.\n\nFootnote[^1].\n\n[^1]: Details.";
+    const interveningInput =
+      "> [!TIP]\n> A different document.\n\nAnother footnote[^2].\n\n[^2]: Other details.";
+    const md = createChain();
+    const firstRender = md.render(input);
+
+    md.render(interveningInput);
+
+    expect(md.render(input)).toBe(firstRender);
   });
 
   it("wraps final output in theme container", () => {
