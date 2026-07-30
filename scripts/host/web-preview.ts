@@ -18,7 +18,7 @@ const server = await open({
   host: "localhost",
   port,
   quality: "stable",
-  commit: hostVersions.stable.commit,
+  commit: hostVersions.pinnedPreview.webCommit,
   testRunnerDataDir: dataDir
 });
 const browser = await chromium.launch({ headless: true });
