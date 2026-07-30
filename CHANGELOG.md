@@ -14,6 +14,8 @@ This file records notable changes that people can observe or act on when using t
 
 ### Markdown preview
 
+- Footnote labels now match definitions without regard to letter case and keep the first duplicate definition, matching GitHub instead of leaving references unresolved or showing later duplicate text.
+
 - Footnotes now render inside a single theme container, preventing nested preview styles from altering their layout and appearance.
 
 - Footnotes referenced from another footnote now resolve with GitHub-matching numbering and return links instead of appearing as literal Markdown.
