@@ -5,7 +5,7 @@ import { hostVersions } from "./versions";
 
 await runTests({
   browserType: "chromium",
-  commit: hostVersions.stable.commit,
+  commit: hostVersions.pinnedPreview.webCommit,
   extensionDevelopmentPath: project.root,
   extensionTestsPath: join(project.root, ".cache", "host-tests", "smoke.js"),
   headless: true,

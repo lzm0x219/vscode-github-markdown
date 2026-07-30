@@ -11,8 +11,7 @@ export async function assertClientRenderedPreview(page: Page): Promise<void> {
   await openFile(page, "client-rendering.md");
   await runCommand(page, "Markdown: Open Preview to the Side");
 
-  const preview = await waitForClientRenderedPreview(page);
-  await assertFinalClientRendering(preview);
+  await assertFinalClientRendering(page);
   await assertThemeRendering(page);
 }
 
@@ -215,8 +214,10 @@ async function closeQuickInput(page: Page, quickInput: Locator): Promise<void> {
   await quickInput.waitFor({ state: "hidden", timeout: quickInputTimeoutMs });
 }
 
-async function waitForClientRenderedPreview(page: Page): Promise<Frame> {
-  const deadline = Date.now() + 30_000;
+export async function assertFinalClientRendering(page: Page, timeoutMs = 30_000): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  let lastError: unknown;
+
   while (Date.now() < deadline) {
     for (const frame of page.frames()) {
       try {
@@ -226,24 +227,31 @@ async function waitForClientRenderedPreview(page: Page): Promise<Frame> {
           frame.locator(".katex-display .katex").count()
         ]);
         if (rendered.every((count) => count > 0)) {
-          return frame;
+          await assertClientRenderingInFrame(frame);
+          return;
         }
-      } catch {
-        // Client renderers can reload the preview frame while they initialize.
+      } catch (error) {
+        lastError = error;
+        // Keep frame discovery and assertions in one retry scope: client renderers can
+        // reload the preview frame between either operation while they initialize.
       }
     }
     await page.waitForTimeout(100);
   }
 
+  const lastErrorMessage =
+    lastError instanceof Error ? lastError.message : JSON.stringify(lastError);
+  const detail =
+    lastError === undefined ? "" : ` Last renderer error: ${lastErrorMessage ?? "unknown"}.`;
   throw new Error(
-    `Host preview test failed: preview frame was not found. Frames: ${page
+    `Host preview test failed: final client-rendered preview was not found.${detail} Frames: ${page
       .frames()
       .map((frame) => frame.url())
       .join(", ")}`
   );
 }
 
-async function assertFinalClientRendering(preview: Frame): Promise<void> {
+async function assertClientRenderingInFrame(preview: Frame): Promise<void> {
   const mermaid = preview.locator(".mermaid svg");
   assert((await mermaid.textContent())?.includes("Alpha"), "Mermaid renders Alpha in an SVG");
   assert((await mermaid.textContent())?.includes("Beta"), "Mermaid renders Beta in an SVG");
