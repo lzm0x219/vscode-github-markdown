@@ -1,4 +1,5 @@
 import type { Frame, Locator, Page } from "playwright";
+import { assertFinalClientRendering } from "./client-rendering";
 
 const quickInputTimeoutMs = 5_000;
 const maxCommandAttempts = 3;
@@ -11,8 +12,7 @@ export async function assertClientRenderedPreview(page: Page): Promise<void> {
   await openFile(page, "client-rendering.md");
   await runCommand(page, "Markdown: Open Preview to the Side");
 
-  const preview = await waitForClientRenderedPreview(page);
-  await assertFinalClientRendering(preview);
+  await assertFinalClientRendering(page);
   await assertThemeRendering(page);
 }
 
@@ -213,81 +213,6 @@ async function closeQuickInput(page: Page, quickInput: Locator): Promise<void> {
     await page.keyboard.press("Escape");
   }
   await quickInput.waitFor({ state: "hidden", timeout: quickInputTimeoutMs });
-}
-
-async function waitForClientRenderedPreview(page: Page): Promise<Frame> {
-  const deadline = Date.now() + 30_000;
-  while (Date.now() < deadline) {
-    for (const frame of page.frames()) {
-      try {
-        const rendered = await Promise.all([
-          frame.locator(".vscode-github-markdown").count(),
-          frame.locator(".mermaid svg").count(),
-          frame.locator(".katex-display .katex").count()
-        ]);
-        if (rendered.every((count) => count > 0)) {
-          return frame;
-        }
-      } catch {
-        // Client renderers can reload the preview frame while they initialize.
-      }
-    }
-    await page.waitForTimeout(100);
-  }
-
-  throw new Error(
-    `Host preview test failed: preview frame was not found. Frames: ${page
-      .frames()
-      .map((frame) => frame.url())
-      .join(", ")}`
-  );
-}
-
-async function assertFinalClientRendering(preview: Frame): Promise<void> {
-  const mermaid = preview.locator(".mermaid svg");
-  assert((await mermaid.textContent())?.includes("Alpha"), "Mermaid renders Alpha in an SVG");
-  assert((await mermaid.textContent())?.includes("Beta"), "Mermaid renders Beta in an SVG");
-
-  const katexHtml = preview.locator(".katex-display .katex-html");
-  assert(await katexHtml.isVisible(), "KaTeX output is visible");
-  const katexBox = await katexHtml.boundingBox();
-  assert(
-    katexBox && katexBox.width > 0 && katexBox.height > 0,
-    "KaTeX output occupies visible space"
-  );
-  const katexSource = await preview
-    .locator('.katex-display annotation[encoding="application/x-tex"]')
-    .textContent();
-  assert(katexSource?.includes("S_{12}"), "KaTeX preserves the complete fixture expression");
-
-  const overflow = await preview.evaluate(() => {
-    const pageScroller = document.scrollingElement;
-    const nestedVerticalScrollers = [
-      ...document.querySelectorAll<HTMLElement>("body, body *")
-    ].filter((element) => {
-      if (element === pageScroller) return false;
-      const style = getComputedStyle(element);
-      return (
-        ["auto", "scroll"].includes(style.overflowY) &&
-        element.scrollHeight > element.clientHeight + 1
-      );
-    });
-    return {
-      pageScrollable: Boolean(
-        pageScroller && pageScroller.scrollHeight > pageScroller.clientHeight + 1
-      ),
-      nestedVerticalScrollerLabels: nestedVerticalScrollers.map((element) =>
-        typeof element.className === "string" && element.className
-          ? element.className
-          : element.tagName
-      )
-    };
-  });
-  assert(overflow.pageScrollable, "Long KaTeX fixture exercises the page scrollbar");
-  assert(
-    overflow.nestedVerticalScrollerLabels.length === 0,
-    `KaTeX does not create a second vertical scroll area (${overflow.nestedVerticalScrollerLabels.join(", ")})`
-  );
 }
 
 async function waitForThemedPreview(
