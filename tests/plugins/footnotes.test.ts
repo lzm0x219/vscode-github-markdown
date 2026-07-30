@@ -32,6 +32,17 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain("My reference.");
   });
 
+  it("matches footnote labels without regard to case", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^foo].\n\n[^Foo]: Case-insensitive reference.");
+
+    expect(html).toContain(
+      '<a href="#user-content-fn-1" id="user-content-fnref-1" data-footnote-ref="" aria-describedby="footnote-label">1</a>'
+    );
+    expect(html).toContain("Case-insensitive reference.");
+    expect(html).not.toContain("[^foo]");
+  });
+
   it("renders multiple footnotes with correct numbering", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("A[^1]. B[^2].\n\n[^1]: Ref A.\n\n[^2]: Ref B.");
@@ -71,6 +82,16 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain('<li id="user-content-fn-1">');
     expect(html).toContain('<li id="user-content-fn-2">');
     expect(html).not.toContain("[^second]:");
+  });
+
+  it("keeps the first duplicate footnote definition", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render(
+      "Text[^note].\n\n[^note]: First definition.\n\n[^note]: Second definition."
+    );
+
+    expect(html).toContain("First definition.");
+    expect(html).not.toContain("Second definition.");
   });
 
   it("renders multiple references to same footnote with backrefs", () => {

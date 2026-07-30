@@ -22,6 +22,11 @@ type FootnoteState = MarkdownState & {
 
 type FragmentRenderer = (tokens: MarkdownToken[]) => string;
 
+type ParsedFootnoteDefinition = {
+  label: string;
+  definition: string;
+};
+
 const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
 const footnoteOrderKey = "githubMarkdownFootnoteOrder";
@@ -72,19 +77,19 @@ function collectFootnotes(
         let definitionEnd = paragraphOpen.map?.[1];
         if (definitionEnd !== undefined) {
           const continuation = collectFootnoteContinuation(sourceLines, definitionEnd);
-          const lastLabel = [...parsedDefinitions.keys()].pop();
-          if (continuation && lastLabel) {
-            const definition = parsedDefinitions.get(lastLabel) ?? "";
-            parsedDefinitions.set(
-              lastLabel,
-              normalizeFootnoteDefinition(`${definition}\n\n${continuation.markdown}`)
+          const lastDefinition = parsedDefinitions.at(-1);
+          if (continuation && lastDefinition) {
+            lastDefinition.definition = normalizeFootnoteDefinition(
+              `${lastDefinition.definition}\n\n${continuation.markdown}`
             );
             definitionEnd = continuation.endLine;
           }
         }
 
-        for (const [label, definition] of parsedDefinitions) {
-          definitions.set(label, definition);
+        for (const { label, definition } of parsedDefinitions) {
+          if (!definitions.has(label)) {
+            definitions.set(label, definition);
+          }
         }
 
         index += 2;
@@ -146,21 +151,24 @@ function collectFootnoteContinuation(
   };
 }
 
-function parseFootnoteDefinitions(content: string): Map<string, string> | undefined {
-  const definitions = new Map<string, string>();
+function parseFootnoteDefinitions(content: string): ParsedFootnoteDefinition[] | undefined {
+  const definitions: ParsedFootnoteDefinition[] = [];
   let currentLabel: string | undefined;
   let currentLines: string[] = [];
 
   const commit = () => {
     if (!currentLabel) return;
-    definitions.set(currentLabel, normalizeFootnoteDefinition(currentLines.join("\n")));
+    definitions.push({
+      label: currentLabel,
+      definition: normalizeFootnoteDefinition(currentLines.join("\n"))
+    });
   };
 
   for (const line of content.split("\n")) {
     const match = line.match(footnoteDefinitionLinePattern);
     if (match) {
       commit();
-      currentLabel = match[1]?.trim();
+      currentLabel = normalizeFootnoteLabel(match[1] ?? "");
       currentLines = [match[2] ?? ""];
       continue;
     }
@@ -168,7 +176,7 @@ function parseFootnoteDefinitions(content: string): Map<string, string> | undefi
     currentLines.push(line);
   }
   commit();
-  return definitions.size > 0 ? definitions : undefined;
+  return definitions.length > 0 ? definitions : undefined;
 }
 
 function applyFootnoteReferences(
@@ -230,7 +238,7 @@ function applyFootnoteReferencesToTokens(
 
       for (const match of child.content.matchAll(footnoteReferencePattern)) {
         const fullMatch = match[0];
-        const label = match[1]?.trim();
+        const label = normalizeFootnoteLabel(match[1] ?? "");
         const matchIndex = match.index ?? -1;
 
         if (!label || !graph.definitions.has(label) || matchIndex < 0) {
@@ -333,6 +341,10 @@ function normalizeFootnoteDefinition(definition: string): string {
     .replace(/^\n/, "")
     .replace(/\n[ \t]{4}/g, "\n")
     .trim();
+}
+
+function normalizeFootnoteLabel(label: string): string {
+  return label.trim().toLowerCase();
 }
 
 function renderFootnoteDefinition(
