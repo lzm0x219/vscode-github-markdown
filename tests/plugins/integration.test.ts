@@ -70,6 +70,17 @@ describe("plugin chain integration", () => {
     expect(html).toContain("footnote-ref");
   });
 
+  it("renders footnote fragments without nesting the document theme container", () => {
+    const md = createChain();
+    const html = md.render(
+      'Ref[^1].\n\n[^1]: :rocket: مرحبا <img src="/assets/logo.png" alt="logo">'
+    );
+
+    expect(html.match(/class="vscode-github-markdown"/g)).toHaveLength(1);
+    expect(html).toContain('<p dir="auto">🚀 مرحبا');
+    expect(html).toContain('src="./assets/logo.png"');
+  });
+
   it("renders emoji inside an alert", () => {
     const md = createChain();
     const html = md.render("> [!TIP]\n> Use :rocket: for speed.");
