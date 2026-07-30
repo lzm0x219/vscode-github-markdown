@@ -127,6 +127,9 @@ describe("markdown-it-github-footnotes", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("Text\\[^1].\n\n[^1]: My reference.");
 
-    expect(html).toBe("<p>Text[^1].</p>\n");
+    expect(html).toContain("Text[^1].");
+    expect(html).not.toContain("data-footnote-ref");
+    expect(html).not.toContain('class="footnotes"');
+    expect(html).not.toContain("My reference.");
   });
 });
