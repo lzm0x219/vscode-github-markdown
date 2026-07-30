@@ -108,7 +108,7 @@ The host tests build the extension, launch a real VS Code host, activate the ins
 # Minimum supported or another explicit desktop version
 VSCODE_TEST_VERSION=1.74.0 nub run test:host:desktop
 
-# Current stable desktop and browser hosts
+# Current stable desktop host and pinned browser host
 nub run test:host:desktop
 nub run test:host:web
 ```

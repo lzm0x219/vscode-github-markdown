@@ -31,6 +31,9 @@
             "context": "Host smoke (desktop-stable)"
           },
           {
+            "context": "Host smoke (desktop-preview-pinned)"
+          },
+          {
             "context": "Host smoke (web-stable)"
           }
         ]

@@ -5,9 +5,9 @@ overrides, recovery, and rollback.
 
 ## Main protection
 
-The repository ruleset is versioned at `.github/rulesets/main.json`. It requires the core CI check
-and the desktop minimum, desktop stable, and Web stable host checks, rejects branch deletion, and
-rejects non-fast-forward updates. It has no bypass actors.
+The repository ruleset is versioned at `.github/rulesets/main.json`. It requires the core CI check,
+the desktop minimum and current stable smoke checks, and the pinned desktop and browser preview
+checks. It rejects branch deletion and non-fast-forward updates and has no bypass actors.
 
 Inspect and apply the ruleset:
 
