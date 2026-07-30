@@ -72,11 +72,21 @@ jobs:
           - name: desktop-minimum
             kind: desktop
             vscode: 1.74.0
+            smoke: true
+            preview: false
           - name: desktop-stable
             kind: desktop
-            vscode: 1.129.0
+            vscode: stable
+            smoke: true
+            preview: false
+          - name: desktop-preview-pinned
+            kind: desktop
+            smoke: false
+            preview: true
           - name: web-stable
             kind: web
+            smoke: true
+            preview: true
 
     steps:
       - uses: actions/checkout@v7
@@ -100,21 +110,19 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Desktop Extension Host smoke test
-        if: matrix.kind == 'desktop'
+        if: matrix.kind == 'desktop' && matrix.smoke
         env:
           VSCODE_TEST_VERSION: ${{ matrix.vscode }}
         run: xvfb-run -a nub run test:host:desktop
 
-      - name: Desktop final Markdown preview regression
-        if: matrix.name == 'desktop-stable'
-        env:
-          VSCODE_TEST_VERSION: ${{ matrix.vscode }}
+      - name: Desktop pinned final Markdown preview regression
+        if: matrix.kind == 'desktop' && matrix.preview
         run: xvfb-run -a nub run test:host:desktop:preview
 
       - name: Web Extension Host smoke test
-        if: matrix.kind == 'web'
+        if: matrix.kind == 'web' && matrix.smoke
         run: nub run test:host:web
 
-      - name: Web final Markdown preview regression
-        if: matrix.kind == 'web'
+      - name: Web pinned final Markdown preview regression
+        if: matrix.kind == 'web' && matrix.preview
         run: nub run test:host:web:preview
