@@ -56,7 +56,7 @@ vi.mock("vscode", () => ({
   }
 }));
 
-import { updateMermaidThemeSync } from "../../src/integrations/mermaid";
+import { restoreMermaidThemeSync, updateMermaidThemeSync } from "../../src/integrations/mermaid";
 
 describe("Mermaid theme synchronization", () => {
   beforeEach(() => {
@@ -116,6 +116,33 @@ describe("Mermaid theme synchronization", () => {
     ]);
   });
 
+  it("keeps the latest theme request when overlapping updates would finish out of order", async () => {
+    const memento = createTestMemento();
+    let releaseFirstUpdate = () => {};
+    const firstUpdateGate = new Promise<void>((resolve) => {
+      releaseFirstUpdate = resolve;
+    });
+    updateGates.set("lightModeTheme", firstUpdateGate);
+    updateGates.set("darkModeTheme", firstUpdateGate);
+
+    const firstUpdate = updateMermaidThemeSync(memento);
+    await vi.waitFor(() => expect(updateCalls).toHaveLength(2));
+
+    markdownConfig["theme.mode"] = "vscode";
+    updateGates.clear();
+    const latestUpdate = updateMermaidThemeSync(memento);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    releaseFirstUpdate();
+    await Promise.all([firstUpdate, latestUpdate]);
+
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "vscode",
+      darkModeTheme: "vscode"
+    });
+  });
+
   it("also supports the legacy external Mermaid extension", async () => {
     const memento = createTestMemento();
     mermaidExtensionIds = new Set(["bierner.markdown-mermaid"]);
@@ -141,6 +168,57 @@ describe("Mermaid theme synchronization", () => {
       { key: "lightModeTheme", value: "neutral", target: 1 },
       { key: "darkModeTheme", value: "forest", target: 1 }
     ]);
+  });
+
+  it("restores the original themes when disabling synchronization overlaps an update", async () => {
+    const memento = createTestMemento();
+    let releaseUpdate = () => {};
+    const updateGate = new Promise<void>((resolve) => {
+      releaseUpdate = resolve;
+    });
+    updateGates.set("lightModeTheme", updateGate);
+    updateGates.set("darkModeTheme", updateGate);
+
+    const update = updateMermaidThemeSync(memento);
+    await vi.waitFor(() => expect(updateCalls).toHaveLength(2));
+
+    markdownConfig["mermaid.syncTheme"] = false;
+    const restore = updateMermaidThemeSync(memento);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    releaseUpdate();
+    await Promise.all([update, restore]);
+
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+  });
+
+  it("restores the original themes when deactivation overlaps an update", async () => {
+    const memento = createTestMemento();
+    let releaseUpdate = () => {};
+    const updateGate = new Promise<void>((resolve) => {
+      releaseUpdate = resolve;
+    });
+    updateGates.set("lightModeTheme", updateGate);
+    updateGates.set("darkModeTheme", updateGate);
+
+    const update = updateMermaidThemeSync(memento);
+    await vi.waitFor(() => expect(updateCalls).toHaveLength(2));
+
+    const restore = restoreMermaidThemeSync(memento);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    releaseUpdate();
+    await Promise.all([update, restore]);
+
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
   });
 
   it("does not overwrite Mermaid choices made while synchronization was active", async () => {

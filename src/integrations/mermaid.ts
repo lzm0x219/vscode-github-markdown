@@ -39,16 +39,21 @@ const mermaidExtensionIds = [
 ] as const;
 const MERMAID_LIGHT_THEME: MermaidTheme = "default";
 const MERMAID_DARK_THEME: MermaidTheme = "dark";
+let mermaidThemeOperationQueue: Promise<void> = Promise.resolve();
 
 export function getMermaidSyncTheme(): boolean {
   return getConfiguration().get<boolean>(section.syncTheme, true);
 }
 
-export async function updateMermaidThemeSync(memento: vscode.Memento): Promise<void> {
+export function updateMermaidThemeSync(memento: vscode.Memento): Promise<void> {
+  return enqueueMermaidThemeOperation(() => updateMermaidThemeSyncNow(memento));
+}
+
+async function updateMermaidThemeSyncNow(memento: vscode.Memento): Promise<void> {
   const configuration = getOriginMermaidThemeConfiguration();
 
   if (!getMermaidSyncTheme()) {
-    await restoreMermaidThemeSync(memento, configuration);
+    await restoreMermaidThemeSyncNow(memento, configuration);
     return;
   }
 
@@ -80,9 +85,16 @@ export async function updateMermaidThemeSync(memento: vscode.Memento): Promise<v
   }
 }
 
-export async function restoreMermaidThemeSync(
+export function restoreMermaidThemeSync(
   memento: vscode.Memento,
   configuration = getOriginMermaidThemeConfiguration()
+): Promise<void> {
+  return enqueueMermaidThemeOperation(() => restoreMermaidThemeSyncNow(memento, configuration));
+}
+
+async function restoreMermaidThemeSyncNow(
+  memento: vscode.Memento,
+  configuration: vscode.WorkspaceConfiguration
 ): Promise<void> {
   const snapshot = memento.get<MermaidThemeSnapshot>(snapshotKey);
   if (!snapshot || !hasMermaidThemeConfiguration(configuration)) {
@@ -105,6 +117,12 @@ export async function restoreMermaidThemeSync(
 
   await Promise.all(updates);
   await memento.update(snapshotKey, undefined);
+}
+
+function enqueueMermaidThemeOperation(operation: () => Promise<void>): Promise<void> {
+  const queuedOperation = mermaidThemeOperationQueue.then(operation);
+  mermaidThemeOperationQueue = queuedOperation.catch(() => {});
+  return queuedOperation;
 }
 
 function resolveMermaidThemes(): readonly [MermaidTheme, MermaidTheme] {
