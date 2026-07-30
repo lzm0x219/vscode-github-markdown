@@ -6,7 +6,7 @@ import { project } from "../shared/project";
 import { assertClientRenderedPreview } from "./preview";
 import { hostVersions } from "./versions";
 
-const version = process.env["VSCODE_TEST_VERSION"] ?? hostVersions.stable.version;
+const version = process.env["VSCODE_TEST_VERSION"] ?? hostVersions.pinnedPreview.desktopVersion;
 const fixtures = join(project.root, "tests", "fixtures", "host");
 const dataDir = join(tmpdir(), "vsgm-host-preview", version);
 const executablePath = await downloadAndUnzipVSCode(version);
