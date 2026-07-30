@@ -8,27 +8,14 @@ This file records notable changes that people can observe or act on when using t
 
 ### Mermaid
 
-- Overlapping theme changes now apply in request order, so the latest GitHub Markdown theme wins and turning off synchronization still restores your previous Mermaid themes.
-
-- Mermaid theme synchronization now restores any setting it changed when a partial update fails, preserving your previous light and dark theme choices.
+- Mermaid theme synchronization now processes rapid changes in order and rolls back partial updates. The latest theme wins, and disabling synchronization or a failed update restores previous settings.
 
 ### Markdown preview
 
-- Footnote references now recognize single-word definitions and labels containing inline punctuation instead of rendering them as ordinary links or literal Markdown, including references nested inside Markdown links.
-
-- Empty footnote definitions now keep a valid return target, and indented code blocks inside footnotes retain their code formatting.
-
-- Footnote definitions inside list items now resolve correctly, and adjacent continuation lines stay in the same paragraph instead of being split.
-
-- Footnote labels now match definitions without regard to letter case and keep the first duplicate definition, matching GitHub instead of leaving references unresolved or showing later duplicate text.
-
-- Footnotes now render inside a single theme container, preventing nested preview styles from altering their layout and appearance.
-
-- Footnotes referenced from another footnote now resolve with GitHub-matching numbering and return links instead of appearing as literal Markdown.
-
-- Multi-paragraph footnotes now keep their indented paragraphs and formatting inside the footnote instead of rendering later blocks in the document body.
-
-- Raw HTML images now rewrite quoted and unquoted project-root `src` paths, preserving `data-src` attributes and protocol-relative image URLs.
+- Footnote references now resolve for single-word definitions, labels with punctuation or case differences, and references inside Markdown links. References from other footnotes also receive GitHub-matching numbering and return links.
+- Duplicate footnote labels now use the first definition, and empty definitions retain a valid return target.
+- Footnote definitions in list items now resolve correctly. Continuation lines, indented code blocks, and multiple paragraphs stay inside the footnote without losing formatting or introducing nested theme styles.
+- Raw HTML images now rewrite quoted and unquoted project-root `src` paths without changing `data-src` attributes or protocol-relative URLs.
 
 ## [v4.4.1] - 2026-07-26
 
