@@ -39,6 +39,29 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain('href="#user-content-fn-2"');
   });
 
+  it("resolves a footnote referenced from another footnote definition", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Body[^a].\n\n[^a]: See note[^b].\n\n[^b]: Nested note.");
+    const footnoteA = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0];
+    const footnoteB = html.match(/<li id="user-content-fn-2">[\s\S]*?<\/li>/)?.[0];
+
+    expect(html).toContain(
+      '<a href="#user-content-fn-1" id="user-content-fnref-1" data-footnote-ref="" aria-describedby="footnote-label">1</a>'
+    );
+    expect(footnoteA).toContain(
+      '<a href="#user-content-fn-2" id="user-content-fnref-2" data-footnote-ref="" aria-describedby="footnote-label">2</a>'
+    );
+    expect(footnoteA).toContain("See note");
+    expect(footnoteA).toContain(
+      'href="#user-content-fnref-1" data-footnote-backref="" aria-label="Back to reference 1"'
+    );
+    expect(footnoteB).toContain("Nested note.");
+    expect(footnoteB).toContain(
+      'href="#user-content-fnref-2" data-footnote-backref="" aria-label="Back to reference 2"'
+    );
+    expect(html).not.toContain("[^b]");
+  });
+
   it("parses consecutive footnote definitions as separate notes", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render(
