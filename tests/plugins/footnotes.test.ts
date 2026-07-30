@@ -43,6 +43,14 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).not.toContain("[^foo]");
   });
 
+  it("uses Unicode case folding for footnote labels", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^straße].\n\n[^STRASSE]: Unicode case-folded reference.");
+
+    expect(html).toContain("Unicode case-folded reference.");
+    expect(html).not.toContain("[^straße]");
+  });
+
   it("renders multiple footnotes with correct numbering", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("A[^1]. B[^2].\n\n[^1]: Ref A.\n\n[^2]: Ref B.");
@@ -87,7 +95,7 @@ describe("markdown-it-github-footnotes", () => {
   it("keeps the first duplicate footnote definition", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render(
-      "Text[^note].\n\n[^note]: First definition.\n\n[^note]: Second definition."
+      "Text[^note].\n\n[^Note]: First definition.\n[^note]: Second definition."
     );
 
     expect(html).toContain("First definition.");

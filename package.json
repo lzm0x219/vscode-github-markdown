@@ -84,6 +84,7 @@
     "rollup-plugin-visualizer": "7.0.1",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
+    "unicode-case-folding": "1.1.1",
     "vitest": "4.1.10"
   },
   "l10n": "./l10n",

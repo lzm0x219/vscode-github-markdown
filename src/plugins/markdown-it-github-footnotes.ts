@@ -1,5 +1,6 @@
 import { l10n } from "vscode";
 import type MarkdownIt from "markdown-it";
+import { caseFold } from "unicode-case-folding";
 import type { MarkdownToken, MarkdownState } from "./shared";
 
 type FootnoteReference = {
@@ -344,7 +345,7 @@ function normalizeFootnoteDefinition(definition: string): string {
 }
 
 function normalizeFootnoteLabel(label: string): string {
-  return label.trim().toLowerCase();
+  return caseFold(label.trim());
 }
 
 function renderFootnoteDefinition(
