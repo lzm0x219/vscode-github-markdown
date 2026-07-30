@@ -3,15 +3,7 @@ import type MarkdownIt from "markdown-it";
 import { registerThemeCommands } from "./commands";
 import { registerMarkdownPreviewEvents } from "./events";
 import { restoreMermaidThemeSync, updateMermaidThemeSync } from "./integrations/mermaid";
-import alerts from "./plugins/markdown-it-github-alerts";
-import directionality from "./plugins/markdown-it-github-directionality";
-import emoji from "./plugins/markdown-it-github-emoji";
-import footnotes from "./plugins/markdown-it-github-footnotes";
-import imageUrl from "./plugins/markdown-it-github-image-url";
-import strikethrough from "./plugins/markdown-it-github-strikethrough";
-import tagfilter from "./plugins/markdown-it-github-tagfilter";
-import taskLists from "./plugins/markdown-it-github-task-lists";
-import theme from "./plugins/markdown-it-github-theme";
+import { extendMarkdownIt } from "./markdown-it";
 
 let activeMemento: vscode.Memento | undefined;
 
@@ -28,20 +20,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<{
     console.error("[github-markdown] Failed to sync Mermaid theme on activation:", error);
   }
 
-  return {
-    extendMarkdownIt(md: MarkdownIt): MarkdownIt {
-      return md
-        .use(strikethrough)
-        .use(tagfilter)
-        .use(taskLists)
-        .use(alerts)
-        .use(emoji)
-        .use(footnotes)
-        .use(directionality)
-        .use(theme)
-        .use(imageUrl);
-    }
-  };
+  return { extendMarkdownIt };
 }
 
 export async function deactivate(): Promise<void> {

@@ -89,6 +89,7 @@ vi.mock("vscode", () => ({
 }));
 
 import { activate, deactivate } from "../src/extension";
+import { extendMarkdownIt } from "../src/markdown-it";
 
 function createContext(): vscode.ExtensionContext {
   return {
@@ -128,7 +129,7 @@ describe("extension lifecycle", () => {
     vi.restoreAllMocks();
   });
 
-  it("registers and owns commands and configuration events during activation", async () => {
+  it("registers and owns commands, configuration events, and Markdown-It composition", async () => {
     const context = createContext();
 
     const api = await activate(context);
@@ -142,6 +143,7 @@ describe("extension lifecycle", () => {
     expect(harness.configurationListener).toBeTypeOf("function");
     expect(context.subscriptions).toHaveLength(5);
     expect(harness.mermaidUpdates).toHaveLength(2);
+    expect(api).toEqual(expect.objectContaining({ extendMarkdownIt }));
 
     const html = api.extendMarkdownIt(new MarkdownIt({ html: true })).render("# Hello");
     expect(html).toContain('class="vscode-github-markdown"');
