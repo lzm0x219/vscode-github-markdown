@@ -43,7 +43,7 @@ jobs:
         run: nubx oxlint --type-aware .
 
       - name: Test
-        run: nub run test
+        run: nub run test:coverage
 
       - name: Verify Markdown compatibility
         run: nub scripts/verify/index.ts
