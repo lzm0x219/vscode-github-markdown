@@ -18,6 +18,10 @@ const harness = vi.hoisted(() => ({
   mermaidGlobalConfig: {} as Record<string, string | undefined>,
   mermaidUpdateError: undefined as Error | undefined,
   mermaidUpdates: [] as { key: string; value: string | undefined; target: number }[],
+  quickPickCalls: [] as {
+    items: { label: string; value: string }[];
+    options: { placeHolder?: string };
+  }[],
   quickPickResult: undefined as { label: string; value: string } | undefined
 }));
 
@@ -40,7 +44,13 @@ vi.mock("vscode", () => ({
       }
     },
     window: {
-      showQuickPick: async () => harness.quickPickResult,
+      showQuickPick: async (
+        items: { label: string; value: string }[],
+        options: { placeHolder?: string }
+      ) => {
+        harness.quickPickCalls.push({ items, options });
+        return harness.quickPickResult;
+      },
       showInformationMessage: (message: string) => {
         harness.informationMessages.push(message);
       },
@@ -98,6 +108,63 @@ function createContext(): vscode.ExtensionContext {
   } as unknown as vscode.ExtensionContext;
 }
 
+const themeModeItems = [
+  { label: "Single theme", value: "single" },
+  { label: "Sync with system", value: "system" },
+  { label: "VS Code theme", value: "vscode" }
+];
+
+const themeItems = [
+  { label: "Light", value: "light" },
+  { label: "Light Protanopia & Deuteranopia", value: "light_colorblind" },
+  { label: "Light high contrast", value: "light_high_contrast" },
+  { label: "Light Tritanopia", value: "light_tritanopia" },
+  { label: "Dark", value: "dark" },
+  { label: "Dark Protanopia & Deuteranopia", value: "dark_colorblind" },
+  { label: "Dark dimmed", value: "dark_dimmed" },
+  { label: "Dark high contrast", value: "dark_high_contrast" },
+  { label: "Dark Tritanopia", value: "dark_tritanopia" }
+];
+
+const themeCommandCases = [
+  {
+    commandId: "vscode-github-markdown.changeThemeMode",
+    quickPickItems: themeModeItems,
+    placeHolder: "Select a theme mode",
+    newSelection: { label: "Single theme", value: "single" },
+    currentSelection: { label: "VS Code theme", value: "vscode" },
+    configurationKey: "theme.mode",
+    successMessage: "Theme mode changed to Single theme"
+  },
+  {
+    commandId: "vscode-github-markdown.changeSingleTheme",
+    quickPickItems: themeItems,
+    placeHolder: "Select a theme",
+    newSelection: { label: "Dark dimmed", value: "dark_dimmed" },
+    currentSelection: { label: "Light high contrast", value: "light_high_contrast" },
+    configurationKey: "theme.single",
+    successMessage: "Single theme changed to Dark dimmed."
+  },
+  {
+    commandId: "vscode-github-markdown.changeLightTheme",
+    quickPickItems: themeItems,
+    placeHolder: "Select a light theme",
+    newSelection: { label: "Light high contrast", value: "light_high_contrast" },
+    currentSelection: { label: "Light Tritanopia", value: "light_tritanopia" },
+    configurationKey: "theme.light",
+    successMessage: "Light theme changed to Light high contrast."
+  },
+  {
+    commandId: "vscode-github-markdown.changeDarkTheme",
+    quickPickItems: themeItems,
+    placeHolder: "Select a dark theme",
+    newSelection: { label: "Dark dimmed", value: "dark_dimmed" },
+    currentSelection: { label: "Dark Tritanopia", value: "dark_tritanopia" },
+    configurationKey: "theme.dark",
+    successMessage: "Dark theme changed to Dark dimmed."
+  }
+];
+
 describe("extension lifecycle", () => {
   beforeEach(() => {
     harness.commandHandlers.clear();
@@ -110,6 +177,7 @@ describe("extension lifecycle", () => {
     harness.informationMessages.length = 0;
     harness.mermaidUpdates.length = 0;
     harness.mermaidUpdateError = undefined;
+    harness.quickPickCalls.length = 0;
     harness.quickPickResult = undefined;
     harness.markdownConfig = {
       "theme.mode": "system",
@@ -249,20 +317,57 @@ describe("extension lifecycle", () => {
     );
   });
 
-  it("updates a theme through a registered command while treating cancellation as a no-op", async () => {
+  it("treats theme command cancellation as a no-op", async () => {
     const context = createContext();
     await activate(context);
     const command = harness.commandHandlers.get("vscode-github-markdown.changeThemeMode");
 
     await command?.();
+
     expect(harness.githubUpdates).toEqual([]);
-
-    harness.quickPickResult = { label: "Single theme", value: "single" };
-    await command?.();
-
-    expect(harness.githubUpdates).toEqual([{ key: "theme.mode", value: "single", target: true }]);
-    expect(harness.informationMessages).toEqual(["Theme mode changed to Single theme"]);
+    expect(harness.informationMessages).toEqual([]);
   });
+
+  it.each(themeCommandCases)(
+    "updates the expected configuration through $commandId",
+    async ({
+      commandId,
+      quickPickItems,
+      placeHolder,
+      newSelection,
+      configurationKey,
+      successMessage
+    }) => {
+      const context = createContext();
+      await activate(context);
+      harness.quickPickResult = newSelection;
+      const command = harness.commandHandlers.get(commandId);
+
+      await command?.();
+
+      expect(harness.quickPickCalls).toEqual([{ items: quickPickItems, options: { placeHolder } }]);
+      expect(harness.githubUpdates).toEqual([
+        { key: configurationKey, value: newSelection.value, target: true }
+      ]);
+      expect(harness.informationMessages).toEqual([successMessage]);
+    }
+  );
+
+  it.each(themeCommandCases)(
+    "does not rewrite the current value through $commandId",
+    async ({ commandId, configurationKey, currentSelection }) => {
+      harness.markdownConfig[configurationKey] = currentSelection.value;
+      const context = createContext();
+      await activate(context);
+      harness.quickPickResult = currentSelection;
+      const command = harness.commandHandlers.get(commandId);
+
+      await command?.();
+
+      expect(harness.githubUpdates).toEqual([]);
+      expect(harness.informationMessages).toEqual([]);
+    }
+  );
 
   it("reports a theme configuration update failure without changing the active value", async () => {
     const context = createContext();
