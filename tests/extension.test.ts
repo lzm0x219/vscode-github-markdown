@@ -1,6 +1,6 @@
 import type vscode from "vscode";
 import MarkdownIt from "markdown-it";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createTestMemento } from "./helpers/memento";
 
 const harness = vi.hoisted(() => ({
@@ -8,11 +8,15 @@ const harness = vi.hoisted(() => ({
   configurationListener: undefined as
     | ((event: { affectsConfiguration(section: string): boolean }) => Promise<void>)
     | undefined,
+  executeError: undefined as Error | undefined,
   executeCalls: [] as string[],
+  errorMessages: [] as string[],
+  githubUpdateError: undefined as Error | undefined,
   githubUpdates: [] as { key: string; value: unknown; target: unknown }[],
   informationMessages: [] as string[],
   markdownConfig: {} as Record<string, string | boolean>,
   mermaidGlobalConfig: {} as Record<string, string | undefined>,
+  mermaidUpdateError: undefined as Error | undefined,
   mermaidUpdates: [] as { key: string; value: string | undefined; target: number }[],
   quickPickResult: undefined as { label: string; value: string } | undefined
 }));
@@ -30,6 +34,9 @@ vi.mock("vscode", () => ({
       },
       executeCommand: async (id: string) => {
         harness.executeCalls.push(id);
+        if (harness.executeError) {
+          throw harness.executeError;
+        }
       }
     },
     window: {
@@ -37,7 +44,9 @@ vi.mock("vscode", () => ({
       showInformationMessage: (message: string) => {
         harness.informationMessages.push(message);
       },
-      showErrorMessage: vi.fn()
+      showErrorMessage: (message: string) => {
+        harness.errorMessages.push(message);
+      }
     },
     workspace: {
       getConfiguration: (namespace?: string) => {
@@ -46,6 +55,9 @@ vi.mock("vscode", () => ({
             inspect: (key: string) => ({ globalValue: harness.mermaidGlobalConfig[key] }),
             update: async (key: string, value: string | undefined, target: number) => {
               harness.mermaidUpdates.push({ key, value, target });
+              if (harness.mermaidUpdateError) {
+                throw harness.mermaidUpdateError;
+              }
               harness.mermaidGlobalConfig[key] = value;
             }
           };
@@ -55,6 +67,9 @@ vi.mock("vscode", () => ({
             key in harness.markdownConfig ? harness.markdownConfig[key] : defaultValue,
           update: async (key: string, value: unknown, target: unknown) => {
             harness.githubUpdates.push({ key, value, target });
+            if (harness.githubUpdateError) {
+              throw harness.githubUpdateError;
+            }
             harness.markdownConfig[key] = value as string | boolean;
           }
         };
@@ -86,10 +101,14 @@ describe("extension lifecycle", () => {
   beforeEach(() => {
     harness.commandHandlers.clear();
     harness.configurationListener = undefined;
+    harness.executeError = undefined;
     harness.executeCalls.length = 0;
+    harness.errorMessages.length = 0;
+    harness.githubUpdateError = undefined;
     harness.githubUpdates.length = 0;
     harness.informationMessages.length = 0;
     harness.mermaidUpdates.length = 0;
+    harness.mermaidUpdateError = undefined;
     harness.quickPickResult = undefined;
     harness.markdownConfig = {
       "theme.mode": "system",
@@ -102,6 +121,11 @@ describe("extension lifecycle", () => {
       lightModeTheme: "neutral",
       darkModeTheme: "forest"
     };
+    vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("registers and owns commands and configuration events during activation", async () => {
@@ -140,6 +164,64 @@ describe("extension lifecycle", () => {
     expect(harness.executeCalls).toEqual(["markdown.preview.refresh"]);
   });
 
+  it("ignores configuration changes outside the extension namespace", async () => {
+    const context = createContext();
+    await activate(context);
+    harness.mermaidUpdates.length = 0;
+    harness.executeCalls.length = 0;
+
+    await harness.configurationListener?.({
+      affectsConfiguration: () => false
+    });
+
+    expect(harness.mermaidUpdates).toEqual([]);
+    expect(harness.executeCalls).toEqual([]);
+  });
+
+  it("refreshes the preview after Mermaid synchronization fails", async () => {
+    const context = createContext();
+    await activate(context);
+    harness.mermaidUpdates.length = 0;
+    harness.mermaidUpdateError = new Error("Mermaid update failed");
+
+    await harness.configurationListener?.({
+      affectsConfiguration: (section) => section === "githubMarkdown"
+    });
+
+    expect(harness.executeCalls).toEqual(["markdown.preview.refresh"]);
+    expect(console.error).toHaveBeenCalledWith(
+      "[github-markdown] Failed to sync Mermaid theme:",
+      harness.mermaidUpdateError
+    );
+  });
+
+  it("contains preview refresh failures inside the configuration listener", async () => {
+    const context = createContext();
+    await activate(context);
+    harness.executeError = new Error("Preview refresh failed");
+
+    await expect(
+      harness.configurationListener?.({
+        affectsConfiguration: (section) => section === "githubMarkdown"
+      })
+    ).resolves.toBeUndefined();
+    expect(console.error).toHaveBeenCalledWith(
+      "[github-markdown] Failed to refresh preview:",
+      harness.executeError
+    );
+  });
+
+  it("contains Mermaid synchronization failures during activation", async () => {
+    const context = createContext();
+    harness.mermaidUpdateError = new Error("Activation sync failed");
+
+    await expect(activate(context)).resolves.toBeDefined();
+    expect(console.error).toHaveBeenCalledWith(
+      "[github-markdown] Failed to sync Mermaid theme on activation:",
+      harness.mermaidUpdateError
+    );
+  });
+
   it("restores Mermaid settings when the extension is deactivated", async () => {
     const context = createContext();
     await activate(context);
@@ -151,6 +233,18 @@ describe("extension lifecycle", () => {
       { key: "lightModeTheme", value: "neutral", target: 1 },
       { key: "darkModeTheme", value: "forest", target: 1 }
     ]);
+  });
+
+  it("contains Mermaid restoration failures during deactivation", async () => {
+    const context = createContext();
+    await activate(context);
+    harness.mermaidUpdateError = new Error("Deactivation restore failed");
+
+    await expect(deactivate()).resolves.toBeUndefined();
+    expect(console.error).toHaveBeenCalledWith(
+      "[github-markdown] Failed to restore Mermaid theme on deactivation:",
+      harness.mermaidUpdateError
+    );
   });
 
   it("updates a theme through a registered command while treating cancellation as a no-op", async () => {
@@ -166,5 +260,19 @@ describe("extension lifecycle", () => {
 
     expect(harness.githubUpdates).toEqual([{ key: "theme.mode", value: "single", target: true }]);
     expect(harness.informationMessages).toEqual(["Theme mode changed to Single theme"]);
+  });
+
+  it("reports a theme configuration update failure without changing the active value", async () => {
+    const context = createContext();
+    await activate(context);
+    const command = harness.commandHandlers.get("vscode-github-markdown.changeThemeMode");
+    harness.quickPickResult = { label: "Single theme", value: "single" };
+    harness.githubUpdateError = new Error("Configuration update failed");
+
+    await expect(command?.()).resolves.toBeUndefined();
+
+    expect(harness.markdownConfig["theme.mode"]).toBe("system");
+    expect(harness.informationMessages).toEqual([]);
+    expect(harness.errorMessages).toEqual(["Failed to change theme. See output for details."]);
   });
 });
