@@ -33,9 +33,21 @@ describe("markdown-it-github-image-url", () => {
     expect(html).toContain('data-src="/lazy.png" src="./actual.png"');
   });
 
+  it("rewrites an unquoted project-root src attribute", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render("<img data-src=/lazy.png src=/actual.png alt=logo>");
+    expect(html).toContain("data-src=/lazy.png src=./actual.png alt=logo");
+  });
+
   it("preserves protocol-relative image URLs", () => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render('<img src="//cdn.example.com/a.png">');
     expect(html).toContain('src="//cdn.example.com/a.png"');
+  });
+
+  it("preserves unquoted protocol-relative image URLs", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render("<img src=//cdn.example.com/a.png>");
+    expect(html).toContain("src=//cdn.example.com/a.png");
   });
 });

@@ -2,13 +2,14 @@ import type MarkdownIt from "markdown-it";
 
 const imageTagPattern = /<img(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
 const projectRootSrcAttributePattern =
-  /(<img(?:[^"'<>]|"[^"]*"|'[^']*')*?[\t\n\f\r ]+src[\t\n\f\r ]*=[\t\n\f\r ]*)(["'])(\/(?!\/)[^"']+)\2/i;
+  /(<img(?:[^"'<>]|"[^"]*"|'[^']*')*?[\t\n\f\r ]+src[\t\n\f\r ]*=[\t\n\f\r ]*)(?:(["'])(\/(?!\/)[^"']+)\2|(\/(?!\/)[^\t\n\f\r "'`=<>]+))/i;
 
 function rewriteImgSrc(html: string): string {
   return html.replace(imageTagPattern, (imageTag) =>
     imageTag.replace(
       projectRootSrcAttributePattern,
-      (_match, before, quote, src) => `${before}${quote}.${src}${quote}`
+      (_match, before, quote = "", quotedSrc, unquotedSrc) =>
+        `${before}${quote}.${quotedSrc ?? unquotedSrc}${quote}`
     )
   );
 }
