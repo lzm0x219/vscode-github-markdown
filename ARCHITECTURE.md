@@ -43,7 +43,8 @@ Before the first update, the original global values are stored in extension glob
 
 ## Verification Boundaries
 
-- Unit tests cover plugins, commands, configuration events, Mermaid state restoration, and build/parity helpers.
+- Unit tests cover plugins, commands, configuration events, Mermaid state restoration, and reusable build/parity helpers. Coverage thresholds gate `src/**/*.ts` and unit-testable `scripts/**/*.ts` independently so strong runtime coverage cannot hide weak development tooling coverage.
+- Generated sources and explicitly listed thin command entrypoints are outside the unit-coverage denominator. Host launch/browser-driving entrypoints and the `scripts/verify` harness are also excluded because they require their real VS Code/browser host or repository-level verification environment; small host configuration and assertion helpers remain covered by unit tests.
 - `scripts/verify` checks the complete Markdown transformation and manifest boundaries.
 - Pixel parity renders committed GitHub reference input and local output in the same Chromium process. Exact cases use zero tolerance; host-rendered features use explicit recorded budgets.
 - Desktop host smoke tests run against VS Code 1.74.0 and stable. A browser-host smoke test protects the `browser` entrypoint and the no-Node-runtime constraint. These tests activate the extension, render through VS Code's built-in Markdown engine so the `markdown.markdownItPlugins` contribution is exercised, and verify the contributed preview stylesheet exists.

@@ -70,12 +70,15 @@ nubx oxlint .
 nubx oxlint --type-aware .
 nubx oxfmt .
 nub run test
+nub run test:coverage
 nub run test:host:desktop
 nub run test:host:web
 nub run verify:parity
 nub run package
 nub scripts/verify/index.ts
 ```
+
+Coverage is gated as two independent aggregates: extension runtime code under `src/**/*.ts`, and unit-testable development code under `scripts/**/*.ts`. Generated sources, explicitly listed thin command entrypoints, host launch/browser-driving entrypoints, and the verification harness are excluded from the unit-coverage denominator because their evidence comes from generation or the real build, host, parity, packaging, and verification commands listed above. Small host configuration and assertion helpers stay inside the scripts aggregate. Keep new testable helpers inside the appropriate aggregate; do not add an exclusion merely to make a coverage regression pass.
 
 ## GitHub Markdown Parity Baseline
 
