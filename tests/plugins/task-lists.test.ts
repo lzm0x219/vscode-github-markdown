@@ -52,11 +52,14 @@ describe("markdown-it-github-task-lists", () => {
     expect(html).toContain('<a href="https://github.com/octo-org/octo-repo/issues/739">#739</a>');
   });
 
-  it("does not add duplicate contains-task-list class", () => {
+  it("adds contains-task-list exactly once to the task list", () => {
     const md = new MarkdownIt().use(githubTaskLists);
-    const html = md.render("- [x] A\n- [ ] B");
-    // The regex checks that "contains-task-list" appears exactly once in the <ul> tag
-    const match = html.match(/<ul class="contains-task-list">/);
-    expect(match).toBeTruthy();
+    const html = md.render("- Parent\n  - [x] A\n  - [ ] B");
+    const taskListClassCounts = (html.match(/<ul\b[^>]*>/g) ?? []).map((openTag) => {
+      const classNames = openTag.match(/\bclass="([^"]*)"/)?.[1]?.split(/\s+/) ?? [];
+      return classNames.filter((className) => className === "contains-task-list").length;
+    });
+
+    expect(taskListClassCounts.filter((count) => count > 0)).toEqual([1]);
   });
 });
