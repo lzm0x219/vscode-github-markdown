@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { hostVersions } from "../../../scripts/host/versions";
 
@@ -8,5 +9,14 @@ describe("hostVersions", () => {
       desktopVersion: "1.129.0",
       webCommit: "125df4672b8a6a34975303c6b0baa124e560a4f7"
     });
+  });
+
+  it("keeps the pinned desktop version in one source of truth", () => {
+    const workflow = readFileSync(
+      new URL("../../../.github/workflows/ci.yml", import.meta.url),
+      "utf8"
+    );
+
+    expect(workflow).not.toContain(`vscode: ${hostVersions.pinnedPreview.desktopVersion}`);
   });
 });

@@ -1,6 +1,6 @@
 import type { Frame, Locator, Page } from "playwright";
 import { describe, expect, it } from "vitest";
-import { assertFinalClientRendering } from "../../../scripts/host/preview";
+import { assertFinalClientRendering } from "../../../scripts/host/client-rendering";
 
 describe("assertFinalClientRendering", () => {
   it("reacquires the preview when its frame reloads during the final assertions", async () => {

@@ -81,7 +81,6 @@ jobs:
             preview: false
           - name: desktop-preview-pinned
             kind: desktop
-            vscode: 1.129.0
             smoke: false
             preview: true
           - name: web-stable
@@ -118,8 +117,6 @@ jobs:
 
       - name: Desktop pinned final Markdown preview regression
         if: matrix.kind == 'desktop' && matrix.preview
-        env:
-          VSCODE_TEST_VERSION: ${{ matrix.vscode }}
         run: xvfb-run -a nub run test:host:desktop:preview
 
       - name: Web Extension Host smoke test
