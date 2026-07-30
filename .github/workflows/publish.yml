@@ -115,6 +115,9 @@ jobs:
       - name: Test
         run: nub run test
 
+      - name: Verify Markdown compatibility
+        run: nub scripts/verify/index.ts
+
       - name: Verify Markdown parity baseline
         run: pnpm run verify:parity
 
