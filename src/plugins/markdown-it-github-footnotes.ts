@@ -8,6 +8,14 @@ type FootnoteReference = {
   referenceCount: number;
 };
 
+type FootnoteGraph = {
+  definitions: Map<string, string>;
+  order: string[];
+  numbers: Map<string, number>;
+  referenceCounts: Map<string, number>;
+  references: FootnoteReference[];
+};
+
 type FootnoteState = MarkdownState & {
   src: string;
 };
@@ -28,10 +36,10 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
     const footnotes = collectFootnotes(markdownState.tokens, markdownState.src);
     markdownState.tokens = footnotes.tokens;
 
-    applyFootnoteReferences(markdownState, footnotes.definitions);
+    const definitionTokens = applyFootnoteReferences(markdownState, footnotes.definitions, md);
 
     if (footnotes.definitions.size > 0) {
-      appendFootnoteSection(markdownState, footnotes.definitions, md, renderFragment);
+      appendFootnoteSection(markdownState, definitionTokens, renderFragment);
     }
   });
 
@@ -163,16 +171,49 @@ function parseFootnoteDefinitions(content: string): Map<string, string> | undefi
   return definitions.size > 0 ? definitions : undefined;
 }
 
-function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, string>) {
+function applyFootnoteReferences(
+  state: MarkdownState,
+  definitions: Map<string, string>,
+  md: MarkdownIt
+): Map<string, MarkdownToken[]> {
+  const definitionTokens = new Map<string, MarkdownToken[]>();
   if (definitions.size === 0) {
-    return;
+    return definitionTokens;
   }
 
-  const numbers = new Map<string, number>();
-  const referenceCounts = new Map<string, number>();
-  const references: FootnoteReference[] = [];
+  const graph: FootnoteGraph = {
+    definitions,
+    order: [],
+    numbers: new Map<string, number>(),
+    referenceCounts: new Map<string, number>(),
+    references: []
+  };
 
-  for (const token of state.tokens) {
+  applyFootnoteReferencesToTokens(state.tokens, state, graph);
+
+  for (let index = 0; index < graph.order.length; index += 1) {
+    const label = graph.order[index];
+    const definition = label ? definitions.get(label) : undefined;
+    if (!label || !definition) {
+      continue;
+    }
+
+    const tokens = md.parse(definition, {});
+    applyFootnoteReferencesToTokens(tokens, state, graph);
+    definitionTokens.set(label, tokens);
+  }
+
+  state.env[footnoteOrderKey] = graph.order;
+  state.env[footnoteReferencesKey] = graph.references;
+  return definitionTokens;
+}
+
+function applyFootnoteReferencesToTokens(
+  tokens: MarkdownToken[],
+  state: MarkdownState,
+  graph: FootnoteGraph
+): void {
+  for (const token of tokens) {
     if (token.type !== "inline" || !token.children) {
       continue;
     }
@@ -192,7 +233,7 @@ function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, 
         const label = match[1]?.trim();
         const matchIndex = match.index ?? -1;
 
-        if (!label || !definitions.has(label) || matchIndex < 0) {
+        if (!label || !graph.definitions.has(label) || matchIndex < 0) {
           continue;
         }
 
@@ -202,11 +243,15 @@ function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, 
           nextChildren.push(textToken);
         }
 
-        const number = numbers.get(label) ?? numbers.size + 1;
-        numbers.set(label, number);
-        const referenceCount = (referenceCounts.get(label) ?? 0) + 1;
-        referenceCounts.set(label, referenceCount);
-        references.push({ label, number, referenceCount });
+        let number = graph.numbers.get(label);
+        if (number === undefined) {
+          number = graph.order.length + 1;
+          graph.numbers.set(label, number);
+          graph.order.push(label);
+        }
+        const referenceCount = (graph.referenceCounts.get(label) ?? 0) + 1;
+        graph.referenceCounts.set(label, referenceCount);
+        graph.references.push({ label, number, referenceCount });
 
         const htmlToken = new state.Token("html_inline", "", 0);
         htmlToken.content = `<sup class="footnote-ref"><a href="#user-content-fn-${number}" id="${footnoteReferenceId(
@@ -233,17 +278,11 @@ function applyFootnoteReferences(state: MarkdownState, definitions: Map<string, 
 
     token.children = nextChildren;
   }
-
-  state.env[footnoteOrderKey] = [...numbers.entries()]
-    .sort((left, right) => left[1] - right[1])
-    .map(([label]) => label);
-  state.env[footnoteReferencesKey] = references;
 }
 
 function appendFootnoteSection(
   state: MarkdownState,
-  definitions: Map<string, string>,
-  md: MarkdownIt,
+  definitionTokens: Map<string, MarkdownToken[]>,
   renderFragment: FragmentRenderer
 ) {
   const footnoteOrder = state.env[footnoteOrderKey];
@@ -257,8 +296,8 @@ function appendFootnoteSection(
 
   const items = referencedLabels
     .map((label, index) => {
-      const definition = definitions.get(label);
-      if (!definition) {
+      const tokens = definitionTokens.get(label);
+      if (!tokens) {
         return "";
       }
 
@@ -267,7 +306,7 @@ function appendFootnoteSection(
         .filter((reference) => reference.label === label)
         .map((reference) => renderBackref(reference.number, reference.referenceCount))
         .join(" ");
-      const content = renderFootnoteDefinition(definition, backrefs, state, md, renderFragment);
+      const content = renderFootnoteDefinition(tokens, backrefs, state, renderFragment);
       return `<li id="user-content-fn-${number}">
 ${content}
 </li>`;
@@ -297,13 +336,11 @@ function normalizeFootnoteDefinition(definition: string): string {
 }
 
 function renderFootnoteDefinition(
-  definition: string,
+  tokens: MarkdownToken[],
   backrefs: string,
   state: MarkdownState,
-  md: MarkdownIt,
   renderFragment: FragmentRenderer
 ): string {
-  const tokens = md.parse(definition, {});
   let lastInline: MarkdownToken | undefined;
 
   for (const token of tokens) {

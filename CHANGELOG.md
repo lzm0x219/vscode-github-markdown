@@ -14,6 +14,8 @@ This file records notable changes that people can observe or act on when using t
 
 - Footnotes now render inside a single theme container, preventing nested preview styles from altering their layout and appearance.
 
+- Footnotes referenced from another footnote now resolve with GitHub-matching numbering and return links instead of appearing as literal Markdown.
+
 - Multi-paragraph footnotes now keep their indented paragraphs and formatting inside the footnote instead of rendering later blocks in the document body.
 
 - Raw HTML images now rewrite only project-root `src` paths, preserving `data-src` attributes and protocol-relative image URLs.
