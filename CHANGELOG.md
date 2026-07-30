@@ -14,6 +14,12 @@ This file records notable changes that people can observe or act on when using t
 
 ### Markdown preview
 
+- Footnote references now recognize single-word definitions and labels containing inline punctuation instead of rendering them as ordinary links or literal Markdown, including references nested inside Markdown links.
+
+- Empty footnote definitions now keep a valid return target, and indented code blocks inside footnotes retain their code formatting.
+
+- Footnote definitions inside list items now resolve correctly, and adjacent continuation lines stay in the same paragraph instead of being split.
+
 - Footnote labels now match definitions without regard to letter case and keep the first duplicate definition, matching GitHub instead of leaving references unresolved or showing later duplicate text.
 
 - Footnotes now render inside a single theme container, preventing nested preview styles from altering their layout and appearance.

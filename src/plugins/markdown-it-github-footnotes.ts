@@ -1,5 +1,6 @@
 import { l10n } from "vscode";
 import type MarkdownIt from "markdown-it";
+import type StateBlock from "markdown-it/lib/rules_block/state_block.mjs";
 import { caseFold } from "unicode-case-folding";
 import type { MarkdownToken, MarkdownState } from "./shared";
 
@@ -17,19 +18,13 @@ type FootnoteGraph = {
   references: FootnoteReference[];
 };
 
-type FootnoteState = MarkdownState & {
-  src: string;
-};
-
 type FragmentRenderer = (tokens: MarkdownToken[]) => string;
-
-type ParsedFootnoteDefinition = {
-  label: string;
-  definition: string;
-};
 
 const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
+const footnoteDefinitionsKey = "githubMarkdownFootnoteDefinitions";
+const footnoteHardbreakLabelsKey = "githubMarkdownFootnoteHardbreakLabels";
+const nestedFootnoteParseKey = "githubMarkdownNestedFootnoteParse";
 const footnoteOrderKey = "githubMarkdownFootnoteOrder";
 const footnoteReferencesKey = "githubMarkdownFootnoteReferences";
 
@@ -37,14 +32,41 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
   const render = md.renderer.render.bind(md.renderer);
   const renderFragment: FragmentRenderer = (tokens) => render(tokens, md.options, {});
 
+  md.block.ruler.before(
+    "reference",
+    "github-markdown-footnote-definition",
+    footnoteDefinitionBlock,
+    { alt: ["paragraph", "reference"] }
+  );
+
+  md.inline.ruler.before("escape", "github-markdown-footnote-reference", (state, silent) => {
+    if (silent) {
+      return false;
+    }
+
+    const match = state.src.slice(state.pos).match(/^\[\^([^\]\n]+)\]/);
+    const fullMatch = match?.[0];
+    const label = normalizeFootnoteLabel(match?.[1] ?? "");
+    if (!fullMatch || !label || !footnoteDefinitions(state).has(label)) {
+      return false;
+    }
+
+    const token = state.push("text", "", 0);
+    token.content = fullMatch;
+    state.pos += fullMatch.length;
+    return true;
+  });
+
   md.core.ruler.after("inline", "github-markdown-footnotes", (state) => {
-    const markdownState = state as unknown as FootnoteState;
-    const footnotes = collectFootnotes(markdownState.tokens, markdownState.src);
-    markdownState.tokens = footnotes.tokens;
+    if (state.env[nestedFootnoteParseKey] === true) {
+      return;
+    }
 
-    const definitionTokens = applyFootnoteReferences(markdownState, footnotes.definitions, md);
+    const markdownState = state as unknown as MarkdownState;
+    const definitions = footnoteDefinitions(markdownState);
+    const definitionTokens = applyFootnoteReferences(markdownState, definitions, md);
 
-    if (footnotes.definitions.size > 0) {
+    if (definitions.size > 0) {
       appendFootnoteSection(markdownState, definitionTokens, renderFragment);
     }
   });
@@ -52,132 +74,75 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
   return md;
 }
 
-function collectFootnotes(
-  tokens: MarkdownToken[],
-  source: string
-): {
-  definitions: Map<string, string>;
-  tokens: MarkdownToken[];
-} {
-  const definitions = new Map<string, string>();
-  const output: MarkdownToken[] = [];
-  const sourceLines = source.split("\n");
-
-  for (let index = 0; index < tokens.length; index += 1) {
-    const paragraphOpen = tokens[index];
-    const inline = tokens[index + 1];
-    const paragraphClose = tokens[index + 2];
-
-    if (
-      paragraphOpen?.type === "paragraph_open" &&
-      inline?.type === "inline" &&
-      paragraphClose?.type === "paragraph_close"
-    ) {
-      const parsedDefinitions = parseFootnoteDefinitions(inline.content);
-      if (parsedDefinitions) {
-        let definitionEnd = paragraphOpen.map?.[1];
-        if (definitionEnd !== undefined) {
-          const continuation = collectFootnoteContinuation(sourceLines, definitionEnd);
-          const lastDefinition = parsedDefinitions.at(-1);
-          if (continuation && lastDefinition) {
-            lastDefinition.definition = normalizeFootnoteDefinition(
-              `${lastDefinition.definition}\n\n${continuation.markdown}`
-            );
-            definitionEnd = continuation.endLine;
-          }
-        }
-
-        for (const { label, definition } of parsedDefinitions) {
-          if (!definitions.has(label)) {
-            definitions.set(label, definition);
-          }
-        }
-
-        index += 2;
-        while (definitionEnd !== undefined) {
-          const nextTokenStart = tokens[index + 1]?.map?.[0];
-          if (nextTokenStart === undefined || nextTokenStart >= definitionEnd) {
-            break;
-          }
-          index += 1;
-        }
-        continue;
-      }
-    }
-
-    const token = tokens[index];
-    if (token) {
-      output.push(token);
-    }
+function footnoteDefinitionBlock(
+  state: StateBlock,
+  startLine: number,
+  endLine: number,
+  silent: boolean
+): boolean {
+  if ((state.sCount[startLine] ?? 0) - state.blkIndent >= 4) {
+    return false;
   }
 
-  return {
-    definitions,
-    tokens: output
-  };
-}
+  const lineStart = (state.bMarks[startLine] ?? 0) + (state.tShift[startLine] ?? 0);
+  const lineEnd = state.eMarks[startLine] ?? lineStart;
+  const match = state.src.slice(lineStart, lineEnd).match(footnoteDefinitionLinePattern);
+  if (!match) {
+    return false;
+  }
+  if (silent) {
+    return true;
+  }
 
-function collectFootnoteContinuation(
-  sourceLines: string[],
-  startLine: number
-): { markdown: string; endLine: number } | undefined {
-  const markdownLines: string[] = [];
+  let definition = match[2] ?? "";
+  const hasInlineDefinition = definition.length > 0;
+  let scanLine = startLine + 1;
+  let definitionEnd = scanLine;
   let pendingBlankLines = 0;
-  let lineIndex = startLine;
+  const continuationLines: string[] = [];
 
-  for (; lineIndex < sourceLines.length; lineIndex += 1) {
-    const line = sourceLines[lineIndex] ?? "";
-    if (/^[ \t]*$/.test(line)) {
+  for (; scanLine < endLine; scanLine += 1) {
+    if (state.isEmpty(scanLine)) {
       pendingBlankLines += 1;
       continue;
     }
-
-    const continuation = line.match(/^(?: {4}|\t)(.*)$/);
-    if (!continuation) {
+    if ((state.sCount[scanLine] ?? 0) - state.blkIndent < 4) {
       break;
     }
 
-    markdownLines.push(...Array.from({ length: pendingBlankLines }, () => ""));
-    markdownLines.push(continuation[1] ?? "");
+    continuationLines.push(...Array.from({ length: pendingBlankLines }, () => ""));
+    continuationLines.push(state.getLines(scanLine, scanLine + 1, state.blkIndent + 4, false));
     pendingBlankLines = 0;
+    definitionEnd = scanLine + 1;
   }
 
-  if (markdownLines.length === 0) {
-    return undefined;
+  if (continuationLines.length > 0) {
+    definition = `${definition}\n${continuationLines.join("\n")}`;
   }
 
-  return {
-    markdown: markdownLines.join("\n"),
-    endLine: lineIndex
-  };
+  const label = normalizeFootnoteLabel(match[1] ?? "");
+  const definitions = footnoteDefinitions(state);
+  if (label && !definitions.has(label)) {
+    definitions.set(label, normalizeFootnoteDefinition(definition));
+    if (hasInlineDefinition && continuationLines.length > 0) {
+      const hardbreakLabels = footnoteHardbreakLabels(state);
+      hardbreakLabels.add(label);
+      state.env[footnoteHardbreakLabelsKey] = hardbreakLabels;
+    }
+  }
+  state.env[footnoteDefinitionsKey] = definitions;
+  state.line = definitionEnd;
+  return true;
 }
 
-function parseFootnoteDefinitions(content: string): ParsedFootnoteDefinition[] | undefined {
-  const definitions: ParsedFootnoteDefinition[] = [];
-  let currentLabel: string | undefined;
-  let currentLines: string[] = [];
+function footnoteDefinitions(state: { env: Record<string, unknown> }): Map<string, string> {
+  const definitions = state.env[footnoteDefinitionsKey];
+  return definitions instanceof Map ? definitions : new Map();
+}
 
-  const commit = () => {
-    if (!currentLabel) return;
-    definitions.push({
-      label: currentLabel,
-      definition: normalizeFootnoteDefinition(currentLines.join("\n"))
-    });
-  };
-
-  for (const line of content.split("\n")) {
-    const match = line.match(footnoteDefinitionLinePattern);
-    if (match) {
-      commit();
-      currentLabel = normalizeFootnoteLabel(match[1] ?? "");
-      currentLines = [match[2] ?? ""];
-      continue;
-    }
-    if (!currentLabel) return undefined;
-    currentLines.push(line);
-  }
-  commit();
-  return definitions.length > 0 ? definitions : undefined;
+function footnoteHardbreakLabels(state: { env: Record<string, unknown> }): Set<string> {
+  const labels = state.env[footnoteHardbreakLabelsKey];
+  return labels instanceof Set ? labels : new Set();
 }
 
 function applyFootnoteReferences(
@@ -203,11 +168,17 @@ function applyFootnoteReferences(
   for (let index = 0; index < graph.order.length; index += 1) {
     const label = graph.order[index];
     const definition = label ? definitions.get(label) : undefined;
-    if (!label || !definition) {
+    if (!label || definition === undefined) {
       continue;
     }
 
-    const tokens = md.parse(definition, {});
+    const tokens = md.parse(definition, {
+      [footnoteDefinitionsKey]: definitions,
+      [nestedFootnoteParseKey]: true
+    });
+    if (footnoteHardbreakLabels(state).has(label)) {
+      promoteSoftbreaks(tokens);
+    }
     applyFootnoteReferencesToTokens(tokens, state, graph);
     definitionTokens.set(label, tokens);
   }
@@ -228,7 +199,23 @@ function applyFootnoteReferencesToTokens(
     }
 
     const nextChildren: MarkdownToken[] = [];
+    let linkDepth = 0;
+    let deferredLinkReferences: MarkdownToken[] = [];
     for (const child of token.children) {
+      if (child.type === "link_open") {
+        linkDepth += 1;
+        nextChildren.push(child);
+        continue;
+      }
+      if (child.type === "link_close") {
+        nextChildren.push(child);
+        linkDepth = Math.max(0, linkDepth - 1);
+        if (linkDepth === 0 && deferredLinkReferences.length > 0) {
+          nextChildren.push(...deferredLinkReferences);
+          deferredLinkReferences = [];
+        }
+        continue;
+      }
       if (child.type !== "text") {
         nextChildren.push(child);
         continue;
@@ -263,10 +250,15 @@ function applyFootnoteReferencesToTokens(
         graph.references.push({ label, number, referenceCount });
 
         const htmlToken = new state.Token("html_inline", "", 0);
-        htmlToken.content = `<sup class="footnote-ref"><a href="#user-content-fn-${number}" id="${footnoteReferenceId(
-          number,
-          referenceCount
-        )}" data-footnote-ref="" aria-describedby="footnote-label">${number}</a></sup>`;
+        const anchor = renderFootnoteReferenceAnchor(number, referenceCount);
+        if (linkDepth > 0) {
+          htmlToken.content = "<sup></sup>";
+          const deferredReference = new state.Token("html_inline", "", 0);
+          deferredReference.content = anchor;
+          deferredLinkReferences.push(deferredReference);
+        } else {
+          htmlToken.content = `<sup class="footnote-ref">${anchor}</sup>`;
+        }
         nextChildren.push(htmlToken);
 
         lastIndex = matchIndex + fullMatch.length;
@@ -284,8 +276,23 @@ function applyFootnoteReferencesToTokens(
         nextChildren.push(textToken);
       }
     }
+    nextChildren.push(...deferredLinkReferences);
 
     token.children = nextChildren;
+  }
+}
+
+function promoteSoftbreaks(tokens: MarkdownToken[]): void {
+  for (const token of tokens) {
+    if (token.type !== "inline" || !token.children) {
+      continue;
+    }
+    for (const child of token.children) {
+      if (child.type === "softbreak") {
+        child.type = "hardbreak";
+        child.tag = "br";
+      }
+    }
   }
 }
 
@@ -338,10 +345,7 @@ ${content}
 }
 
 function normalizeFootnoteDefinition(definition: string): string {
-  return definition
-    .replace(/^\n/, "")
-    .replace(/\n[ \t]{4}/g, "\n")
-    .trim();
+  return definition.replace(/^\n+/, "").trimEnd();
 }
 
 function normalizeFootnoteLabel(label: string): string {
@@ -406,6 +410,13 @@ function renderBackref(number: number, referenceCount: number): string {
     number,
     referenceCount
   )}" data-footnote-backref="" aria-label="${l10n.t("Back to reference {0}{1}", number, suffix)}" class="data-footnote-backref">↩${marker}</a>`;
+}
+
+function renderFootnoteReferenceAnchor(number: number, referenceCount: number): string {
+  return `<a href="#user-content-fn-${number}" id="${footnoteReferenceId(
+    number,
+    referenceCount
+  )}" data-footnote-ref="" aria-describedby="footnote-label">${number}</a>`;
 }
 
 function footnoteReferenceId(number: number, referenceCount: number): string {

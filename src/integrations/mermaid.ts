@@ -81,6 +81,18 @@ async function updateMermaidThemeSyncNow(memento: vscode.Memento): Promise<void>
 
   const failure = [lightResult, darkResult].find((result) => result.status === "rejected");
   if (failure?.status === "rejected") {
+    try {
+      await restoreMermaidThemeSyncNow(memento, configuration);
+    } catch (restoreError) {
+      const failureMessage =
+        failure.reason instanceof Error ? failure.reason.message : String(failure.reason);
+      const restoreFailures =
+        restoreError instanceof AggregateError ? restoreError.errors : [restoreError];
+      throw new AggregateError(
+        [failure.reason, ...restoreFailures],
+        `${failureMessage}; failed to restore the original Mermaid themes`
+      );
+    }
     throw failure.reason;
   }
 }
@@ -115,7 +127,13 @@ async function restoreMermaidThemeSyncNow(
     updates.push(updateMermaidTheme(configuration, originSection.dark, snapshot.dark));
   }
 
-  await Promise.all(updates);
+  const restoreResults = await Promise.allSettled(updates);
+  const restoreFailures = restoreResults
+    .filter((result): result is PromiseRejectedResult => result.status === "rejected")
+    .map((result) => result.reason);
+  if (restoreFailures.length > 0) {
+    throw new AggregateError(restoreFailures, "Failed to restore the original Mermaid themes");
+  }
   await memento.update(snapshotKey, undefined);
 }
 

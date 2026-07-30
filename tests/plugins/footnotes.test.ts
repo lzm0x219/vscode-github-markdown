@@ -32,6 +32,24 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain("My reference.");
   });
 
+  it("keeps single-word footnote definitions out of Markdown link references", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^a].\n\n[^a]: body");
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0];
+
+    expect(html).toContain("data-footnote-ref");
+    expect(footnote).toContain("body");
+    expect(html).not.toContain('href="body"');
+  });
+
+  it("renders an empty footnote definition with its backreference", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^a].\n\n[^a]:");
+
+    expect(html).toContain('<li id="user-content-fn-1">');
+    expect(html).toContain("data-footnote-backref");
+  });
+
   it("matches footnote labels without regard to case", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("Text[^foo].\n\n[^Foo]: Case-insensitive reference.");
@@ -49,6 +67,38 @@ describe("markdown-it-github-footnotes", () => {
 
     expect(html).toContain("Unicode case-folded reference.");
     expect(html).not.toContain("[^straße]");
+  });
+
+  it("recognizes a footnote label that contains inline punctuation", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^a*b*].\n\n[^a*b*]: Punctuation label.");
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0];
+
+    expect(html).toContain("data-footnote-ref");
+    expect(footnote).toContain("Punctuation label.");
+    expect(html).not.toContain("[^a");
+  });
+
+  it("keeps a footnote reference inside a Markdown link label", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("[link[^a]](https://example.com)\n\n[^a]: note body");
+
+    expect(html).toContain(
+      '<a href="https://example.com">link<sup></sup></a><a href="#user-content-fn-1" id="user-content-fnref-1" data-footnote-ref="" aria-describedby="footnote-label">1</a>'
+    );
+    expect(html).toContain("note body");
+    expect(html).not.toContain("[link");
+  });
+
+  it("recognizes an inline-punctuation label referenced by another footnote", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render(
+      "Text[^outer].\n\n[^outer]: Nested[^a*b*].\n\n[^a*b*]: Punctuation label."
+    );
+
+    expect(html).toContain('href="#user-content-fn-2"');
+    expect(html).toContain("Punctuation label.");
+    expect(html).not.toContain("[^a");
   });
 
   it("renders multiple footnotes with correct numbering", () => {
@@ -92,6 +142,17 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).not.toContain("[^second]:");
   });
 
+  it("recognizes a footnote definition inside a list item", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Body[^a].\n\n- item\n  [^a]: list body\n");
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0];
+
+    expect(html).toContain("data-footnote-ref");
+    expect(html).toContain("<ul>\n<li>item</li>\n</ul>");
+    expect(footnote).toContain("list body");
+    expect(html).not.toContain("[^a]:");
+  });
+
   it("keeps the first duplicate footnote definition", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render(
@@ -105,11 +166,11 @@ describe("markdown-it-github-footnotes", () => {
   it("renders multiple references to same footnote with backrefs", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("First[^1]. Second[^1].\n\n[^1]: Shared ref.");
-    // Two references to the same footnote
-    const referenceCount = (html.match(/fnref-1/g) ?? []).length;
-    expect(referenceCount).toBeGreaterThanOrEqual(2);
-    // Backreference with sup
+
+    expect(html).toContain('id="user-content-fnref-1"');
+    expect(html).toContain('id="user-content-fnref-1-2"');
     expect(html).toContain("data-footnote-backref");
+    expect(html).toContain("<sup>2</sup>");
   });
 
   it("renders inline markup in footnote definition", () => {
@@ -123,6 +184,33 @@ describe("markdown-it-github-footnotes", () => {
     const html = md.render("Text[^1].\n\n[^1]:\n    Line 1.\n    Line 2.");
     expect(html).toContain("Line 1.");
     expect(html).toContain("Line 2.");
+  });
+
+  it("keeps an adjacent continuation line in the same footnote paragraph", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Body[^a].\n\n[^a]: first line\n    second line\n");
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0] ?? "";
+
+    expect(footnote).toContain("first line<br>\nsecond line");
+    expect(footnote.match(/<p dir="auto">/g)).toHaveLength(1);
+  });
+
+  it("preserves soft breaks when a footnote starts on a continuation line", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Body[^a].\n\n[^a]:\n    first line\n    second line\n");
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0] ?? "";
+
+    expect(footnote).toContain("first line\nsecond line");
+    expect(footnote).not.toContain("<br>");
+  });
+
+  it("preserves indented code blocks inside a footnote", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^1].\n\n[^1]:\n        const value = 1;");
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0];
+
+    expect(footnote).toContain("<pre><code>const value = 1;");
+    expect(footnote).not.toContain("<p>const value = 1;");
   });
 
   it("keeps indented paragraphs inside the footnote", () => {
@@ -160,5 +248,14 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).not.toContain("data-footnote-ref");
     expect(html).not.toContain('class="footnotes"');
     expect(html).not.toContain("My reference.");
+  });
+
+  it("does not collect footnote definitions from fenced code", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^a].\n\n```markdown\n[^a]: body\n```");
+
+    expect(html).toContain("[^a]: body");
+    expect(html).not.toContain("data-footnote-ref");
+    expect(html).not.toContain('class="footnotes"');
   });
 });

@@ -261,8 +261,14 @@ describe("extension lifecycle", () => {
     expect(harness.executeCalls).toEqual(["markdown.preview.refresh"]);
     expect(console.error).toHaveBeenCalledWith(
       "[github-markdown] Failed to sync Mermaid theme:",
-      harness.mermaidUpdateError
+      expect.any(AggregateError)
     );
+    const loggedError = vi.mocked(console.error).mock.calls[0]?.[1];
+    expect((loggedError as AggregateError).errors).toEqual([
+      harness.mermaidUpdateError,
+      harness.mermaidUpdateError,
+      harness.mermaidUpdateError
+    ]);
   });
 
   it("contains preview refresh failures inside the configuration listener", async () => {
@@ -313,8 +319,13 @@ describe("extension lifecycle", () => {
     await expect(deactivate()).resolves.toBeUndefined();
     expect(console.error).toHaveBeenCalledWith(
       "[github-markdown] Failed to restore Mermaid theme on deactivation:",
-      harness.mermaidUpdateError
+      expect.any(AggregateError)
     );
+    const loggedError = vi.mocked(console.error).mock.calls[0]?.[1];
+    expect((loggedError as AggregateError).errors).toEqual([
+      harness.mermaidUpdateError,
+      harness.mermaidUpdateError
+    ]);
   });
 
   it("treats theme command cancellation as a no-op", async () => {
