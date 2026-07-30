@@ -60,6 +60,6 @@ describe("markdown-it-github-task-lists", () => {
       return classNames.filter((className) => className === "contains-task-list").length;
     });
 
-    expect(taskListClassCounts.filter((count) => count > 0)).toEqual([1]);
+    expect(taskListClassCounts).toEqual([0, 1]);
   });
 });
