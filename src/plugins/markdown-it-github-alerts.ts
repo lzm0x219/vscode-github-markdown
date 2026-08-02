@@ -50,7 +50,7 @@ function octicon(name: string, path: string): string {
 function applyAlerts(state: MarkdownState) {
   for (let index = 0; index < state.tokens.length - 2; index += 1) {
     const blockquoteOpen = state.tokens[index];
-    if (blockquoteOpen?.type !== "blockquote_open") {
+    if (blockquoteOpen?.type !== "blockquote_open" || blockquoteOpen.level !== 0) {
       continue;
     }
 

@@ -18,7 +18,7 @@ type FootnoteGraph = {
   references: FootnoteReference[];
 };
 
-type FragmentRenderer = (tokens: MarkdownToken[]) => string;
+type FragmentRenderer = (tokens: MarkdownToken[], env: Record<string, unknown>) => string;
 
 const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
@@ -30,7 +30,7 @@ const footnoteReferencesKey = "githubMarkdownFootnoteReferences";
 
 export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
   const render = md.renderer.render.bind(md.renderer);
-  const renderFragment: FragmentRenderer = (tokens) => render(tokens, md.options, {});
+  const renderFragment: FragmentRenderer = (tokens, env) => render(tokens, md.options, env);
 
   md.block.ruler.before(
     "reference",
@@ -172,10 +172,7 @@ function applyFootnoteReferences(
       continue;
     }
 
-    const tokens = md.parse(definition, {
-      [footnoteDefinitionsKey]: definitions,
-      [nestedFootnoteParseKey]: true
-    });
+    const tokens = parseFootnoteDefinition(md, definition, state.env);
     if (footnoteHardbreakLabels(state).has(label)) {
       promoteSoftbreaks(tokens);
     }
@@ -186,6 +183,26 @@ function applyFootnoteReferences(
   state.env[footnoteOrderKey] = graph.order;
   state.env[footnoteReferencesKey] = graph.references;
   return definitionTokens;
+}
+
+function parseFootnoteDefinition(
+  md: MarkdownIt,
+  definition: string,
+  env: Record<string, unknown>
+): MarkdownToken[] {
+  const hadNestedParseFlag = Object.hasOwn(env, nestedFootnoteParseKey);
+  const previousNestedParseFlag = env[nestedFootnoteParseKey];
+  env[nestedFootnoteParseKey] = true;
+
+  try {
+    return md.parse(definition, env);
+  } finally {
+    if (hadNestedParseFlag) {
+      env[nestedFootnoteParseKey] = previousNestedParseFlag;
+    } else {
+      delete env[nestedFootnoteParseKey];
+    }
+  }
 }
 
 function applyFootnoteReferencesToTokens(
@@ -369,16 +386,18 @@ function renderFootnoteDefinition(
     }
   }
 
-  if (lastInline?.children) {
+  const trailingParagraphInline =
+    tokens.at(-1)?.type === "paragraph_close" ? lastInline : undefined;
+  if (trailingParagraphInline?.children) {
     const separator = new state.Token("text", "", 0);
     separator.content = " ";
     const backref = new state.Token("html_inline", "", 0);
     backref.content = backrefs;
-    lastInline.children.push(separator, backref);
+    trailingParagraphInline.children.push(separator, backref);
   }
 
-  const content = renderFragment(tokens).trimEnd();
-  return lastInline ? content : `${content}\n<p dir="auto">${backrefs}</p>`;
+  const content = renderFragment(tokens, state.env).trimEnd();
+  return trailingParagraphInline ? content : `${content}\n${backrefs}`;
 }
 
 function footnoteReferences(state: MarkdownState): FootnoteReference[] {

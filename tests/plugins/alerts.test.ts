@@ -64,6 +64,15 @@ describe("markdown-it-github-alerts", () => {
     expect(html).not.toContain("markdown-alert");
   });
 
+  it("does not render alerts inside list items", () => {
+    const md = new MarkdownIt().use(githubAlerts);
+    const html = md.render("- > [!NOTE]\n  > List quote.");
+
+    expect(html).toContain("<blockquote>");
+    expect(html).toContain("[!NOTE]");
+    expect(html).not.toContain("markdown-alert");
+  });
+
   it("removes blockquote wrapper from alert output", () => {
     const md = new MarkdownIt().use(githubAlerts);
     const html = md.render("> [!NOTE]\n> Content.");

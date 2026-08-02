@@ -54,4 +54,14 @@ describe("markdown-it-github-emoji", () => {
     const html = md.render(":warning:");
     expect(html).toContain('<g-emoji class="g-emoji" alias="warning">⚠️</g-emoji>');
   });
+
+  it("does not rewrite shortcodes inside automatic links", () => {
+    const md = new MarkdownIt({ linkify: true }).use(githubEmoji);
+    const html = md.render("https://example.com/:rocket:");
+
+    expect(html.match(/<a\b/g)).toHaveLength(1);
+    expect(html).toContain('href="https://example.com/:rocket:"');
+    expect(html).toContain("https://example.com/:rocket:");
+    expect(html).not.toContain("🚀");
+  });
 });

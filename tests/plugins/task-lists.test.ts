@@ -52,6 +52,14 @@ describe("markdown-it-github-task-lists", () => {
     expect(html).toContain('<a href="https://github.com/octo-org/octo-repo/issues/739">#739</a>');
   });
 
+  it("requires whitespace after the task list marker", () => {
+    const md = new MarkdownIt().use(githubTaskLists);
+    const html = md.render("- [x]oops");
+
+    expect(html).not.toContain("task-list-item-checkbox");
+    expect(html).toContain("[x]oops");
+  });
+
   it("adds contains-task-list exactly once to the task list", () => {
     const md = new MarkdownIt().use(githubTaskLists);
     const html = md.render("- Parent\n  - [x] A\n  - [ ] B");

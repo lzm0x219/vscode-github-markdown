@@ -12,9 +12,12 @@ This file records notable changes that people can observe or act on when using t
 
 ### Markdown preview
 
-- Footnote references now resolve for single-word definitions, labels with punctuation or case differences, and references inside Markdown links. References from other footnotes also receive GitHub-matching numbering and return links.
+- Automatic links containing text such as `:rocket:` now stay intact instead of producing nested links.
+- Footnote references now resolve for single-word definitions, labels with punctuation or case differences, and references inside Markdown links. References from other footnotes also receive GitHub-matching numbering and return links, and reference-style links inside definitions use targets from the main document.
 - Duplicate footnote labels now use the first definition, and empty definitions retain a valid return target.
-- Footnote definitions in list items now resolve correctly. Continuation lines, indented code blocks, and multiple paragraphs stay inside the footnote without losing formatting or introducing nested theme styles.
+- Footnote definitions in list items now resolve correctly. Continuation lines, indented code blocks, and multiple paragraphs stay inside the footnote without losing formatting or introducing nested theme styles. Return links appear after trailing code and quoted blocks.
+- Task list markers now require whitespace after the checkbox, so entries such as `[x]text` remain ordinary list text as they do on GitHub.
+- Alert markers inside list items now remain ordinary blockquotes, matching GitHub, which renders alerts only at the top level.
 - Raw HTML images now rewrite quoted and unquoted project-root `src` paths without changing `data-src` attributes or protocol-relative URLs.
 
 ## [v4.4.1] - 2026-07-26
