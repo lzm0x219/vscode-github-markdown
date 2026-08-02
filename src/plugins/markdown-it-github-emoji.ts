@@ -7,7 +7,7 @@ const EMOJI_IMAGE_SIZE = "20";
 const wrappedUnicodeEmojiAliases = new Set(["warning"]);
 
 export default function markdownItGitHubEmoji(md: MarkdownIt): MarkdownIt {
-  md.core.ruler.after("inline", "github-markdown-emoji", (state) => {
+  md.core.ruler.after("linkify", "github-markdown-emoji", (state) => {
     applyEmojiShortcodes(state as unknown as MarkdownState, md);
   });
 
@@ -21,8 +21,19 @@ function applyEmojiShortcodes(state: MarkdownState, md: MarkdownIt) {
     }
 
     const nextChildren: MarkdownToken[] = [];
+    let automaticLinkDepth = 0;
     for (const child of token.children) {
-      if (child.type !== "text" || !child.content.includes(":")) {
+      if (child.type === "link_open" && child.markup === "linkify") {
+        automaticLinkDepth += 1;
+        nextChildren.push(child);
+        continue;
+      }
+      if (child.type === "link_close" && child.markup === "linkify") {
+        nextChildren.push(child);
+        automaticLinkDepth = Math.max(0, automaticLinkDepth - 1);
+        continue;
+      }
+      if (automaticLinkDepth > 0 || child.type !== "text" || !child.content.includes(":")) {
         nextChildren.push(child);
         continue;
       }

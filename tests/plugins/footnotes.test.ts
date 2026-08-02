@@ -179,6 +179,14 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain("<strong>bold</strong>");
   });
 
+  it("resolves document link references inside footnote definitions", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render("Text[^1].\n\n[ref]: https://example.com\n\n[^1]: [link][ref]");
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0];
+
+    expect(footnote).toContain('<a href="https://example.com">link</a>');
+  });
+
   it("normalizes multiline footnote definitions", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("Text[^1].\n\n[^1]:\n    Line 1.\n    Line 2.");
@@ -211,6 +219,16 @@ describe("markdown-it-github-footnotes", () => {
 
     expect(footnote).toContain("<pre><code>const value = 1;");
     expect(footnote).not.toContain("<p>const value = 1;");
+  });
+
+  it("places the backreference after a trailing code block", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const html = md.render(
+      "Text[^1].\n\n[^1]: Paragraph.\n\n    ```\n    const value = 1;\n    ```"
+    );
+    const footnote = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0] ?? "";
+
+    expect(footnote.indexOf("data-footnote-backref")).toBeGreaterThan(footnote.indexOf("</pre>"));
   });
 
   it("keeps indented paragraphs inside the footnote", () => {

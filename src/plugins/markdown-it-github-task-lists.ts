@@ -2,7 +2,7 @@ import { l10n } from "vscode";
 import type MarkdownIt from "markdown-it";
 import type { MarkdownToken, MarkdownState } from "./shared";
 
-const taskListMarkerPattern = /^[ \t]*\[( |x|X)\][ \t]*/;
+const taskListMarkerPattern = /^[ \t]*\[( |x|X)\][ \t]+/;
 
 export default function markdownItGitHubTaskLists(md: MarkdownIt): MarkdownIt {
   md.core.ruler.after("inline", "github-markdown-task-lists", (state) => {
