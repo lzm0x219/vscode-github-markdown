@@ -44,11 +44,19 @@ async function assertThemeRendering(page: Page): Promise<void> {
 
   let lightPalette: MermaidPalette | undefined;
   let darkPalette: MermaidPalette | undefined;
+  let previousMode: ThemeExpectation["mode"] | undefined;
+  let previousPalette: MermaidPalette | undefined;
   for (const [label, expectation] of singleCases) {
     await selectQuickPick(page, "GitHub Markdown: Change Single Theme", label);
-    const palette = await waitForThemedPreview(page, expectation);
+    const palette = await waitForThemedPreview(
+      page,
+      expectation,
+      previousMode && previousMode !== expectation.mode ? previousPalette : undefined
+    );
     if (label === "Light") lightPalette = palette;
     if (label === "Dark dimmed") darkPalette = palette;
+    previousMode = expectation.mode;
+    previousPalette = palette;
   }
   assert(
     JSON.stringify(lightPalette) !== JSON.stringify(darkPalette),
