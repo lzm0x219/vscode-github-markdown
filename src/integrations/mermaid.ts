@@ -134,7 +134,7 @@ async function updateNow(memento: vscode.Memento): Promise<void> {
   if (failure?.status !== "rejected") return;
 
   try {
-    await restoreNow(memento, configuration);
+    await restoreNow(memento, configuration, true);
   } catch (restoreError) {
     const restoreFailures =
       restoreError instanceof AggregateError ? restoreError.errors : [restoreError];
@@ -148,7 +148,8 @@ async function updateNow(memento: vscode.Memento): Promise<void> {
 
 async function restoreNow(
   memento: vscode.Memento,
-  configuration: vscode.WorkspaceConfiguration
+  configuration: vscode.WorkspaceConfiguration,
+  preserveReleased = false
 ): Promise<void> {
   if (!hasConfiguration(configuration)) return;
   const identity = getWorkspaceIdentity();
@@ -160,7 +161,7 @@ async function restoreNow(
       vscode.ConfigurationTarget.Workspace
     ] as const) {
       const context = loadContext(memento, identity, slot, key, target);
-      if (context.state) {
+      if (context.state && !(preserveReleased && context.state.releasedBy !== undefined)) {
         transactions.push(prepareRestore(configuration, { ...context, state: context.state }));
       }
     }

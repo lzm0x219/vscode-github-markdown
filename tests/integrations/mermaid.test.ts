@@ -962,6 +962,57 @@ describe("Mermaid theme synchronization", () => {
     expect(storedMemento.get(lightStateKey)).not.toHaveProperty("applied");
   });
 
+  it("keeps a released takeover when another configuration update fails", async () => {
+    const storedMemento = createTestMemento();
+    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
+    let releaseClaim = () => {};
+    const claimGate = new Promise<void>((resolve) => {
+      releaseClaim = resolve;
+    });
+    let shouldGateClaim = true;
+    const memento: typeof storedMemento = {
+      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
+      update: async (key: string, value: unknown) => {
+        await storedMemento.update(key, value);
+        if (key === lightStateKey && shouldGateClaim) {
+          shouldGateClaim = false;
+          await claimGate;
+        }
+      },
+      keys: () => storedMemento.keys()
+    };
+    updateFailures.add("darkModeTheme");
+
+    const synchronization = updateMermaidThemeSync(memento);
+    await vi.waitFor(() =>
+      expect(storedMemento.get(lightStateKey)).toEqual(
+        expect.objectContaining({
+          pending: { kind: "apply", desired: "default", previous: "neutral" }
+        })
+      )
+    );
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+    releaseClaim();
+    await expect(synchronization).rejects.toThrow("Failed to update darkModeTheme");
+
+    expect(storedMemento.get(lightStateKey)).toEqual(
+      expect.objectContaining({
+        original: "neutral",
+        releasedBy: "workspace:file:///workspace-a.code-workspace"
+      })
+    );
+
+    updateFailures.clear();
+    updateCalls.length = 0;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "dark", target: 1 }]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "dark"
+    });
+  });
+
   it("keeps a released takeover when another transaction fails to finalize", async () => {
     const storedMemento = createTestMemento();
     const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
