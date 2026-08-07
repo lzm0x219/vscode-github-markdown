@@ -61,4 +61,40 @@ describe("runPackageAudit", () => {
     });
     expect(await readFile(summaryPath, "utf8")).toContain("Conclusion: **FAIL**");
   });
+
+  it("enforces absolute checks without inventing a historical baseline", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "package-audit-"));
+    temporaryDirectories.push(directory);
+    const outputPath = join(directory, "report.json");
+    const summaryPath = join(directory, "summary.md");
+    const readPaths: unknown[] = [];
+
+    await expect(
+      runPackageAudit({
+        currentPath: "current",
+        outputPath,
+        summaryPath,
+        readSnapshot: async (path) => {
+          readPaths.push(path);
+          return {
+            archiveBytes: 524_289,
+            entries: { "extension/release-CHANGELOG.txt": 526 }
+          };
+        }
+      })
+    ).rejects.toBeInstanceOf(PackageAuditError);
+
+    expect(readPaths).toEqual(["current"]);
+    const report = JSON.parse(await readFile(outputPath, "utf8"));
+    expect(report).toMatchObject({
+      mode: "current-only",
+      conclusion: "fail",
+      violations: [
+        { rule: "maximum-size", actual: 524_289, limit: 524_288 },
+        { rule: "forbidden-file", path: "extension/release-CHANGELOG.txt" }
+      ]
+    });
+    expect(report).not.toHaveProperty("baseline");
+    expect(await readFile(summaryPath, "utf8")).toContain("| Baseline | Not available |");
+  });
 });
