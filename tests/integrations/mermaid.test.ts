@@ -33,25 +33,6 @@ function getEffectiveMermaidConfig(): Record<string, string | undefined> {
   };
 }
 
-function injectStateOnRead(
-  storedMemento: ReturnType<typeof createTestMemento>,
-  stateKey: string,
-  concurrentState: unknown
-): ReturnType<typeof createTestMemento> {
-  let reads = 0;
-  return {
-    get: <T>(key: string, defaultValue?: T) => {
-      if (key === stateKey && ++reads === 3) {
-        void storedMemento.update(stateKey, concurrentState);
-        return concurrentState as T;
-      }
-      return storedMemento.get(key, defaultValue);
-    },
-    update: (key: string, value: unknown) => storedMemento.update(key, value),
-    keys: () => storedMemento.keys()
-  };
-}
-
 vi.mock("vscode", () => ({
   default: {
     ConfigurationTarget: { Global: 1, Workspace: 2 },
@@ -981,8 +962,7 @@ describe("Mermaid theme synchronization", () => {
     expect(memento.get(lightStateKey)).toEqual(
       expect.objectContaining({
         original: "neutral",
-        releasedBy: "workspace:file:///workspace-a.code-workspace",
-        releasedValue: "neutral"
+        releasedBy: "workspace:file:///workspace-a.code-workspace"
       })
     );
     expect(memento.get(lightStateKey)).not.toHaveProperty("pending");
@@ -990,245 +970,95 @@ describe("Mermaid theme synchronization", () => {
     expect(memento.get(lightStateKey)).not.toHaveProperty("owner");
   });
 
-  it("claims an existing global lease before writing configuration", async () => {
-    const storedMemento = createTestMemento();
-    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
-    await storedMemento.update(lightStateKey, {
-      version: 2,
-      revision: "workspace-a:1",
-      target: "global",
-      original: "neutral",
-      applied: "default",
-      owner: "workspace:file:///workspace-a.code-workspace"
-    });
-    let lightStateReads = 0;
-    const persistedKeys: string[] = [];
-    const memento: typeof storedMemento = {
-      get: <T>(key: string, defaultValue?: T) => {
-        if (key === lightStateKey && ++lightStateReads > 1) {
-          return {
-            version: 2,
-            revision: "workspace-b:2",
-            target: "global",
-            original: "neutral",
-            applied: "dark",
-            owner: "workspace:file:///workspace-b.code-workspace"
-          } as T;
-        }
-        return storedMemento.get(key, defaultValue);
-      },
-      update: async (key: string, value: unknown) => {
-        persistedKeys.push(key);
-        await storedMemento.update(key, value);
-      },
-      keys: () => storedMemento.keys()
-    };
-    mermaidGlobalConfig["lightModeTheme"] = "default";
-    markdownConfig["theme.mode"] = "vscode";
-
-    await expect(updateMermaidThemeSync(memento)).rejects.toThrow(
-      "Mermaid theme state changed in another extension host"
-    );
-
-    expect(updateCalls).toEqual([]);
-    expect(persistedKeys).not.toContain(lightStateKey);
-  });
-
-  it("rolls back configuration when a newer global lease wins after the write", async () => {
+  it("does not roll back a completed single-host write when Memento reads lag an update", async () => {
     const storedMemento = createTestMemento();
     const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
     const darkStateKey = "githubMarkdown.mermaid.themeState.v2.global.dark";
     await storedMemento.update(lightStateKey, {
       version: 2,
-      revision: "workspace-a:1",
+      revision: "initial-light",
       target: "global",
-      original: "neutral",
-      applied: "default",
-      owner: "workspace:file:///workspace-a.code-workspace"
+      applied: "default"
     });
     await storedMemento.update(darkStateKey, {
       version: 2,
-      revision: "workspace-a:2",
+      revision: "initial-dark",
       target: "global",
-      original: "forest",
-      releasedBy: "workspace:file:///workspace-a.code-workspace"
+      applied: "default"
     });
-    const concurrentLightState = {
-      version: 2 as const,
-      revision: "workspace-b:3",
-      target: "global" as const,
-      original: "neutral",
-      applied: "dark",
-      owner: "workspace:file:///workspace-b.code-workspace"
+    const staleReads = new Map<string, unknown>();
+    const memento: typeof storedMemento = {
+      get: <T>(key: string, defaultValue?: T) => {
+        if (staleReads.has(key)) {
+          const stale = staleReads.get(key) as T;
+          staleReads.delete(key);
+          return stale;
+        }
+        return storedMemento.get(key, defaultValue);
+      },
+      update: async (key: string, value: unknown) => {
+        const previous = storedMemento.get(key);
+        await storedMemento.update(key, value);
+        if (key === lightStateKey || key === darkStateKey) staleReads.set(key, previous);
+      },
+      keys: () => storedMemento.keys()
     };
-    const memento = injectStateOnRead(storedMemento, lightStateKey, concurrentLightState);
-    mermaidGlobalConfig["lightModeTheme"] = "default";
-    markdownConfig["theme.mode"] = "vscode";
-
-    await expect(updateMermaidThemeSync(memento)).rejects.toThrow(
-      "Mermaid theme state changed in another extension host"
-    );
-
-    expect(updateCalls).toEqual([
-      { key: "lightModeTheme", value: "vscode", target: 1 },
-      { key: "lightModeTheme", value: "dark", target: 1 }
-    ]);
-    expect(mermaidGlobalConfig["lightModeTheme"]).toBe("dark");
-    expect(storedMemento.get(lightStateKey)).toEqual(concurrentLightState);
-
-    workspaceIdentity = "file:///workspace-b.code-workspace";
+    mermaidGlobalConfig = { lightModeTheme: "default", darkModeTheme: "default" };
     markdownConfig["theme.mode"] = "single";
     markdownConfig["theme.single"] = "dark_dimmed";
-    updateCalls.length = 0;
-    await updateMermaidThemeSync(memento);
 
-    expect(updateCalls).toEqual([{ key: "lightModeTheme", value: "dark", target: 1 }]);
-    expect(storedMemento.get(lightStateKey)).toEqual(expect.objectContaining({ applied: "dark" }));
-    expect(storedMemento.get(lightStateKey)).not.toHaveProperty("releasedBy");
-  });
-
-  it("rolls back a restoration when a newer global lease wins after the write", async () => {
-    const storedMemento = createTestMemento();
-    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
-    await storedMemento.update(lightStateKey, {
-      version: 2,
-      revision: "workspace-a:1",
-      target: "global",
-      original: "neutral",
-      applied: "default",
-      owner: "workspace:file:///workspace-a.code-workspace"
-    });
-    const concurrentLightState = {
-      version: 2 as const,
-      revision: "workspace-c:2",
-      target: "global" as const,
-      original: "base",
-      applied: "dark",
-      owner: "workspace:file:///workspace-c.code-workspace"
-    };
-    const memento = injectStateOnRead(storedMemento, lightStateKey, concurrentLightState);
-    mermaidGlobalConfig["lightModeTheme"] = "default";
-
-    await expect(restoreMermaidThemeSync(memento)).rejects.toThrow(
-      "Mermaid theme state changed in another extension host"
-    );
-
-    expect(updateCalls).toEqual([
-      { key: "lightModeTheme", value: "neutral", target: 1 },
-      { key: "lightModeTheme", value: "dark", target: 1 }
-    ]);
-    expect(mermaidGlobalConfig["lightModeTheme"]).toBe("dark");
-    expect(storedMemento.get(lightStateKey)).toEqual(concurrentLightState);
-
-    workspaceIdentity = "file:///workspace-c.code-workspace";
-    markdownConfig["theme.mode"] = "single";
-    markdownConfig["theme.single"] = "dark_dimmed";
-    updateCalls.length = 0;
-    await updateMermaidThemeSync(memento);
+    await expect(updateMermaidThemeSync(memento)).resolves.toBeUndefined();
 
     expect(updateCalls).toEqual([
       { key: "lightModeTheme", value: "dark", target: 1 },
       { key: "darkModeTheme", value: "dark", target: 1 }
     ]);
-    expect(storedMemento.get(lightStateKey)).toEqual(expect.objectContaining({ applied: "dark" }));
-    expect(storedMemento.get(lightStateKey)).not.toHaveProperty("releasedBy");
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "dark", darkModeTheme: "dark" });
+    expect(storedMemento.get(lightStateKey)).not.toHaveProperty("revision");
+    expect(storedMemento.get(darkStateKey)).not.toHaveProperty("revision");
   });
 
-  it("recovers the user's value when a released global lease wins after the write", async () => {
+  it("removes an earlier state claim when persisting the next claim fails", async () => {
     const storedMemento = createTestMemento();
-    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
-    await storedMemento.update(lightStateKey, {
-      version: 2,
-      revision: "workspace-a:1",
-      target: "global",
-      original: "neutral",
-      applied: "default",
-      owner: "workspace:file:///workspace-a.code-workspace"
-    });
-    await storedMemento.update("githubMarkdown.mermaid.themeState.v2.global.dark", {
-      version: 2,
-      revision: "workspace-a:2",
-      target: "global",
-      original: "forest",
-      releasedBy: "workspace:file:///workspace-a.code-workspace"
-    });
-    const concurrentLightState = {
-      version: 2 as const,
-      revision: "workspace-b:3",
-      target: "global" as const,
-      original: "neutral",
-      releasedBy: "workspace:file:///workspace-b.code-workspace",
-      releasedValue: "forest" as const,
-      releasedValueCaptured: true as const
+    let updateCount = 0;
+    const memento: typeof storedMemento = {
+      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
+      update: async (key: string, value: unknown) => {
+        if (++updateCount === 2) throw new Error("Failed to persist Mermaid state");
+        await storedMemento.update(key, value);
+      },
+      keys: () => storedMemento.keys()
     };
-    const memento = injectStateOnRead(storedMemento, lightStateKey, concurrentLightState);
-    mermaidGlobalConfig["lightModeTheme"] = "default";
-    markdownConfig["theme.mode"] = "vscode";
 
     await expect(updateMermaidThemeSync(memento)).rejects.toThrow(
-      "Mermaid theme state changed in another extension host"
+      "Failed to persist Mermaid state"
     );
 
-    expect(updateCalls).toEqual([
-      { key: "lightModeTheme", value: "vscode", target: 1 },
-      { key: "lightModeTheme", value: "forest", target: 1 }
-    ]);
-    expect(mermaidGlobalConfig["lightModeTheme"]).toBe("forest");
-    expect(storedMemento.get(lightStateKey)).toEqual(concurrentLightState);
-
-    workspaceIdentity = "file:///workspace-b.code-workspace";
-    updateCalls.length = 0;
-    await updateMermaidThemeSync(memento);
-
     expect(updateCalls).toEqual([]);
-    expect(mermaidGlobalConfig["lightModeTheme"]).toBe("forest");
-    expect(storedMemento.get(lightStateKey)).toEqual(concurrentLightState);
+    expect(storedMemento.keys()).toEqual([]);
   });
 
-  it("preserves the current value when a winning released lease predates value capture", async () => {
+  it("rolls back configuration and state when final state persistence fails", async () => {
     const storedMemento = createTestMemento();
-    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
-    await storedMemento.update(lightStateKey, {
-      version: 2,
-      revision: "workspace-a:1",
-      target: "global",
-      original: "neutral",
-      applied: "default",
-      owner: "workspace:file:///workspace-a.code-workspace"
-    });
-    await storedMemento.update("githubMarkdown.mermaid.themeState.v2.global.dark", {
-      version: 2,
-      revision: "workspace-a:2",
-      target: "global",
-      original: "forest",
-      releasedBy: "workspace:file:///workspace-a.code-workspace"
-    });
-    const concurrentLightState = {
-      version: 2 as const,
-      revision: "workspace-b:3",
-      target: "global" as const,
-      original: "neutral",
-      releasedBy: "workspace:file:///workspace-b.code-workspace"
+    let updateCount = 0;
+    const memento: typeof storedMemento = {
+      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
+      update: async (key: string, value: unknown) => {
+        if (++updateCount === 3) throw new Error("Failed to finalize Mermaid state");
+        await storedMemento.update(key, value);
+      },
+      keys: () => storedMemento.keys()
     };
-    const memento = injectStateOnRead(storedMemento, lightStateKey, concurrentLightState);
-    mermaidGlobalConfig["lightModeTheme"] = "default";
-    markdownConfig["theme.mode"] = "vscode";
 
     await expect(updateMermaidThemeSync(memento)).rejects.toThrow(
-      "Mermaid theme state changed in another extension host"
+      "Failed to finalize Mermaid state"
     );
 
-    expect(updateCalls).toEqual([{ key: "lightModeTheme", value: "vscode", target: 1 }]);
-    expect(mermaidGlobalConfig["lightModeTheme"]).toBe("vscode");
-    expect(storedMemento.get(lightStateKey)).toEqual(concurrentLightState);
-
-    workspaceIdentity = "file:///workspace-b.code-workspace";
-    updateCalls.length = 0;
-    await updateMermaidThemeSync(memento);
-
-    expect(updateCalls).toEqual([]);
-    expect(mermaidGlobalConfig["lightModeTheme"]).toBe("vscode");
-    expect(storedMemento.get(lightStateKey)).toEqual(concurrentLightState);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+    expect(storedMemento.keys()).toEqual([]);
   });
 
   it.each([

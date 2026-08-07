@@ -34,8 +34,6 @@ type SlotState = {
   applied?: MermaidTheme;
   owner?: string;
   releasedBy?: string;
-  releasedValue?: MermaidTheme | undefined;
-  releasedValueCaptured?: true;
   pending?: Pending;
 };
 type LegacySnapshot = {
@@ -50,7 +48,6 @@ type SlotContext = {
   key: SlotKey;
   target: Target;
   stateKey: string;
-  revision: string | undefined;
   state: SlotState | undefined;
 };
 type Transaction = SlotContext & {
@@ -73,16 +70,6 @@ const mermaidExtensionIds = [
   "bierner.markdown-mermaid"
 ] as const;
 let operationQueue: Promise<void> = Promise.resolve();
-let revisionCounter = 0;
-
-class ConcurrentStateError extends Error {
-  constructor(
-    readonly key: string,
-    readonly persistedState: SlotState | undefined
-  ) {
-    super("Mermaid theme state changed in another extension host");
-  }
-}
 
 export function getMermaidSyncTheme(): boolean {
   return getConfiguration().get<boolean>(section.syncTheme, true);
@@ -189,21 +176,20 @@ async function prepareApply(
   if (state?.pending?.kind === "apply") {
     reconciled = true;
     if (previousValue === state.pending.desired) state.applied = state.pending.desired;
-    else if (previousValue !== state.pending.previous)
-      state = release(state, identity, previousValue);
+    else if (previousValue !== state.pending.previous) state = release(state, identity);
     if (state.pending?.kind === "apply") delete state.pending;
   } else if (state?.pending?.kind === "restore") {
     reconciled = true;
     if (previousValue === state.pending.desired) state = undefined;
     else if (previousValue === state.pending.previous) delete state.pending;
-    else state = release(state, identity, previousValue);
+    else state = release(state, identity);
   }
   if (state?.releasedBy !== undefined) {
     if (reconciled) await saveContext(memento, context, state);
     return undefined;
   }
   if (state?.applied !== undefined && previousValue !== state.applied) {
-    await saveContext(memento, context, release(state, identity, previousValue));
+    await saveContext(memento, context, release(state, identity));
     return undefined;
   }
 
@@ -247,13 +233,8 @@ function prepareRestore(
   };
 }
 
-function release(state: SlotState, identity: string, value: MermaidTheme | undefined): SlotState {
-  const released = {
-    ...state,
-    releasedBy: identity,
-    releasedValue: value,
-    releasedValueCaptured: true as const
-  };
+function release(state: SlotState, identity: string): SlotState {
+  const released = { ...state, releasedBy: identity };
   delete released.applied;
   delete released.owner;
   delete released.pending;
@@ -295,13 +276,7 @@ async function executeTransactions(
       }
     }
   } catch (persistenceError) {
-    const failures = await recoverTransactions(
-      memento,
-      configuration,
-      transactions,
-      results,
-      persistenceError
-    );
+    const failures = await recoverTransactions(memento, configuration, transactions, results);
     if (failures.length) throw new AggregateError([persistenceError, ...failures]);
     throw persistenceError;
   }
@@ -312,40 +287,25 @@ async function recoverTransactions(
   memento: vscode.Memento,
   configuration: vscode.WorkspaceConfiguration,
   transactions: Transaction[],
-  results: PromiseSettledResult<void>[],
-  persistenceError: unknown
+  results: PromiseSettledResult<void>[]
 ): Promise<unknown[]> {
-  const conflict = persistenceError instanceof ConcurrentStateError ? persistenceError : undefined;
   const updates = transactions.map((transaction, index): ConfigurationUpdate => {
-    const isConflict = conflict?.key === transaction.stateKey;
-    const winner = isConflict ? getWinnerValue(conflict.persistedState) : undefined;
     const current = getThemeAtTarget(configuration, transaction.key, transaction.target);
     return {
       key: transaction.key,
       target: transaction.target,
-      desiredValue: isConflict ? winner?.value : transaction.previousValue,
+      desiredValue: transaction.previousValue,
       shouldWrite:
         results[index]?.status === "fulfilled" &&
         transaction.shouldWrite &&
-        current === transaction.desiredValue &&
-        (!isConflict || winner?.captured === true)
+        current === transaction.desiredValue
     };
   });
   const recoveryResults = await writeSequentially(configuration, updates);
   const failures = recoveryResults
     .filter((result): result is PromiseRejectedResult => result.status === "rejected")
     .map((result) => result.reason);
-  for (const [index, result] of recoveryResults.entries()) {
-    const transaction = transactions[index];
-    if (result.status !== "fulfilled" || !transaction || conflict?.key === transaction.stateKey) {
-      continue;
-    }
-    try {
-      await saveContext(memento, transaction, transaction.previousState);
-    } catch (error) {
-      if (!(error instanceof ConcurrentStateError)) failures.push(error);
-    }
-  }
+  failures.push(...(await restoreStates(memento, transactions)));
   return failures;
 }
 
@@ -358,7 +318,7 @@ async function restoreStates(
     try {
       await saveContext(memento, transaction, transaction.previousState);
     } catch (error) {
-      if (!(error instanceof ConcurrentStateError)) failures.push(error);
+      failures.push(error);
     }
   }
   return failures;
@@ -409,7 +369,6 @@ function loadContext(
     key,
     target,
     stateKey,
-    revision: persisted?.revision,
     state: valid ? { ...persisted } : undefined
   };
 }
@@ -419,20 +378,14 @@ async function saveContext(
   context: SlotContext,
   state: SlotState | undefined
 ): Promise<void> {
-  const persisted = memento.get<SlotState>(context.stateKey);
-  if (persisted?.revision !== context.revision) {
-    throw new ConcurrentStateError(context.stateKey, persisted);
-  }
   if (!state) {
     await memento.update(context.stateKey, undefined);
-    context.revision = undefined;
     context.state = undefined;
     return;
   }
-  const revision = `${Date.now()}:${++revisionCounter}`;
-  const next = { ...state, revision } satisfies SlotState;
+  const next = { ...state };
+  delete next.revision;
   await memento.update(context.stateKey, next);
-  context.revision = revision;
   context.state = next;
 }
 
@@ -448,18 +401,9 @@ async function discardWorkspaceState(
     key: slot === "light" ? originSection.light : originSection.dark,
     target: vscode.ConfigurationTarget.Workspace,
     stateKey,
-    revision: persisted.revision,
     state: persisted
   };
   await saveContext(memento, context, undefined);
-}
-
-function getWinnerValue(
-  state: SlotState | undefined
-): { captured: boolean; value?: MermaidTheme | undefined } | undefined {
-  if (state?.applied !== undefined) return { captured: true, value: state.applied };
-  if (state?.releasedValueCaptured) return { captured: true, value: state.releasedValue };
-  return state ? { captured: false } : undefined;
 }
 
 async function migrateSnapshot(memento: vscode.Memento, currentIdentity: string): Promise<void> {
