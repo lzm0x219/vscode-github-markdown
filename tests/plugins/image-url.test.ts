@@ -51,7 +51,7 @@ const vscode = vi.hoisted(() => {
   };
 });
 
-vi.mock("vscode", () => ({ default: vscode }));
+vi.mock("vscode", () => ({ ...vscode, default: vscode }));
 
 import githubImageUrl from "../../src/plugins/markdown-it-github-image-url";
 
