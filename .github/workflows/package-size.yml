@@ -27,14 +27,16 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ matrix.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: jdx/mise-action@v4
 
-      - name: Install nub
-        run: npm install --global @nubjs/nub
+      # Compare both refs with the toolchain declared by the pull request.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.ref }}
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --no-runtime
 
       - name: Build
         run: nub run build
@@ -61,9 +63,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: jdx/mise-action@v4
-
-      - name: Install nub
-        run: npm install --global @nubjs/nub
 
       - name: Download baseline VSIX
         uses: actions/download-artifact@v8

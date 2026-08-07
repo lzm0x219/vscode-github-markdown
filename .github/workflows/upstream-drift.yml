@@ -23,9 +23,6 @@ jobs:
 
       - uses: jdx/mise-action@v4
 
-      - name: Install nub
-        run: npm install --global @nubjs/nub
-
       - run: pnpm install --frozen-lockfile
 
       - name: Cache Chromium
