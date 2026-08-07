@@ -30,4 +30,15 @@ describe("resolveDesktopPreviewDirectories", () => {
 
     expect(Buffer.byteLength(`${userDataDir}/1.12-main.sock`)).toBeLessThanOrEqual(103);
   });
+
+  it("keeps the macOS IPC socket within its byte budget for a long temporary directory", () => {
+    const longTemporaryDirectory = "/Users/example/a-very-long-workspace-specific-temp-directory";
+    const { userDataDir } = resolveDesktopPreviewDirectories(
+      longTemporaryDirectory,
+      "1.129.0",
+      "/worktrees/first/project"
+    );
+
+    expect(Buffer.byteLength(`${userDataDir}/1.12-main.sock`)).toBeLessThanOrEqual(103);
+  });
 });
