@@ -1,4 +1,4 @@
-import type vscode from "vscode";
+import vscode from "vscode";
 import MarkdownIt from "markdown-it";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createTestMemento } from "./helpers/memento";
@@ -16,6 +16,7 @@ const harness = vi.hoisted(() => ({
   informationMessages: [] as string[],
   localizedMessages: {} as Record<string, string>,
   markdownConfig: {} as Record<string, string | boolean>,
+  markdownWorkspaceConfig: {} as Record<string, string | boolean>,
   mermaidGlobalConfig: {} as Record<string, string | undefined>,
   mermaidUpdateError: undefined as Error | undefined,
   mermaidUpdates: [] as { key: string; value: string | undefined; target: number }[],
@@ -29,7 +30,7 @@ const harness = vi.hoisted(() => ({
 
 vi.mock("vscode", () => ({
   default: {
-    ConfigurationTarget: { Global: 1 },
+    ConfigurationTarget: { Global: 1, Workspace: 2 },
     extensions: {
       getExtension: (id: string) => (id === "vscode.mermaid-markdown-features" ? {} : undefined)
     },
@@ -43,6 +44,7 @@ vi.mock("vscode", () => ({
         if (harness.executeError) {
           throw harness.executeError;
         }
+        await harness.commandHandlers.get(id)?.();
       }
     },
     window: {
@@ -79,13 +81,24 @@ vi.mock("vscode", () => ({
         }
         return {
           get: (key: string, defaultValue?: unknown) =>
-            key in harness.markdownConfig ? harness.markdownConfig[key] : defaultValue,
+            key in harness.markdownWorkspaceConfig
+              ? harness.markdownWorkspaceConfig[key]
+              : key in harness.markdownConfig
+                ? harness.markdownConfig[key]
+                : defaultValue,
+          inspect: (key: string) => ({
+            key: `githubMarkdown.${key}`,
+            globalValue: harness.markdownConfig[key],
+            workspaceValue: harness.markdownWorkspaceConfig[key]
+          }),
           update: async (key: string, value: unknown, target: unknown) => {
             harness.githubUpdates.push({ key, value, target });
             if (harness.githubUpdateError) {
               throw harness.githubUpdateError;
             }
-            harness.markdownConfig[key] = value as string | boolean;
+            const targetConfig =
+              target === 2 ? harness.markdownWorkspaceConfig : harness.markdownConfig;
+            targetConfig[key] = value as string | boolean;
           }
         };
       },
@@ -197,6 +210,7 @@ describe("extension lifecycle", () => {
       "theme.dark": "dark",
       "mermaid.syncTheme": true
     };
+    harness.markdownWorkspaceConfig = {};
     harness.mermaidGlobalConfig = {
       lightModeTheme: "neutral",
       darkModeTheme: "forest"
@@ -342,9 +356,8 @@ describe("extension lifecycle", () => {
   it("treats theme command cancellation as a no-op", async () => {
     const context = createContext();
     await activate(context);
-    const command = harness.commandHandlers.get("vscode-github-markdown.changeThemeMode");
 
-    await command?.();
+    await vscode.commands.executeCommand("vscode-github-markdown.changeThemeMode");
 
     expect(harness.githubUpdates).toEqual([]);
     expect(harness.informationMessages).toEqual([]);
@@ -363,15 +376,45 @@ describe("extension lifecycle", () => {
       const context = createContext();
       await activate(context);
       harness.quickPickResult = newSelection;
-      const command = harness.commandHandlers.get(commandId);
 
-      await command?.();
+      await vscode.commands.executeCommand(commandId);
 
+      const configuration = vscode.workspace.getConfiguration("githubMarkdown");
       expect(harness.quickPickCalls).toEqual([{ items: quickPickItems, options: { placeHolder } }]);
-      expect(harness.githubUpdates).toEqual([
-        { key: configurationKey, value: newSelection.value, target: true }
-      ]);
+      expect(configuration.get(configurationKey)).toBe(newSelection.value);
+      expect(configuration.inspect(configurationKey)).toEqual(
+        expect.objectContaining({
+          globalValue: newSelection.value,
+          workspaceValue: undefined
+        })
+      );
       expect(harness.informationMessages).toEqual([successMessage]);
+    }
+  );
+
+  it.each(themeCommandCases)(
+    "updates an existing workspace override through $commandId",
+    async ({ commandId, currentSelection, newSelection, configurationKey, successMessage }) => {
+      const originalGlobalValue = harness.markdownConfig[configurationKey];
+      harness.markdownWorkspaceConfig[configurationKey] = currentSelection.value;
+      const context = createContext();
+      await activate(context);
+      harness.quickPickResult = newSelection;
+
+      await vscode.commands.executeCommand(commandId);
+
+      const configuration = vscode.workspace.getConfiguration("githubMarkdown");
+      expect({
+        effectiveValue: configuration.get(configurationKey),
+        globalValue: configuration.inspect(configurationKey)?.globalValue,
+        workspaceValue: configuration.inspect(configurationKey)?.workspaceValue,
+        informationMessages: harness.informationMessages
+      }).toEqual({
+        effectiveValue: newSelection.value,
+        globalValue: originalGlobalValue,
+        workspaceValue: newSelection.value,
+        informationMessages: [successMessage]
+      });
     }
   );
 
@@ -384,9 +427,8 @@ describe("extension lifecycle", () => {
     const context = createContext();
     await activate(context);
     harness.quickPickValue = "dark_dimmed";
-    const command = harness.commandHandlers.get("vscode-github-markdown.changeSingleTheme");
 
-    await command?.();
+    await vscode.commands.executeCommand("vscode-github-markdown.changeSingleTheme");
 
     expect(harness.informationMessages).toEqual(["固定主题已切换为 柔和暗色。"]);
     expect(harness.quickPickCalls).toEqual([
@@ -404,9 +446,8 @@ describe("extension lifecycle", () => {
       const context = createContext();
       await activate(context);
       harness.quickPickResult = currentSelection;
-      const command = harness.commandHandlers.get(commandId);
 
-      await command?.();
+      await vscode.commands.executeCommand(commandId);
 
       expect(harness.githubUpdates).toEqual([]);
       expect(harness.informationMessages).toEqual([]);
@@ -416,11 +457,12 @@ describe("extension lifecycle", () => {
   it("reports a theme configuration update failure without changing the active value", async () => {
     const context = createContext();
     await activate(context);
-    const command = harness.commandHandlers.get("vscode-github-markdown.changeThemeMode");
     harness.quickPickResult = { label: "Single theme", value: "single" };
     harness.githubUpdateError = new Error("Configuration update failed");
 
-    await expect(command?.()).resolves.toBeUndefined();
+    await expect(
+      vscode.commands.executeCommand("vscode-github-markdown.changeThemeMode")
+    ).resolves.toBeUndefined();
 
     expect(harness.markdownConfig["theme.mode"]).toBe("system");
     expect(harness.informationMessages).toEqual([]);

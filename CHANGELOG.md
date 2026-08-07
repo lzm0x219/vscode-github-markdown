@@ -13,6 +13,7 @@ This file records notable changes that people can observe or act on when using t
 ### Themes and appearance
 
 - Theme and theme-mode Quick Picks now display Chinese labels in Simplified Chinese VS Code, and confirmation messages no longer mix Chinese text with English theme names.
+- Theme Quick Picks now update existing workspace-level theme settings, so confirmed selections take effect instead of being hidden by a workspace override.
 
 ## [v4.4.2] - 2026-08-02
 

@@ -1,11 +1,16 @@
 import { appendFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { readPackageSnapshot } from "./archive";
-import { auditPackageComparison, type PackageSnapshot } from "./audit";
+import {
+  auditCurrentPackage,
+  auditPackageComparison,
+  type PackageAuditReport,
+  type PackageSnapshot
+} from "./audit";
 import { renderPackageAuditReport } from "./report";
 
 type PackageAuditOptions = {
-  baselinePath: string;
+  baselinePath?: string;
   currentPath: string;
   outputPath: string;
   summaryPath?: string;
@@ -21,11 +26,16 @@ export class PackageAuditError extends Error {
 
 export async function runPackageAudit(options: PackageAuditOptions): Promise<void> {
   const readSnapshot = options.readSnapshot ?? readPackageSnapshot;
-  const [baseline, current] = await Promise.all([
-    readSnapshot(options.baselinePath),
-    readSnapshot(options.currentPath)
-  ]);
-  const report = auditPackageComparison(baseline, current);
+  let report: PackageAuditReport;
+  if (options.baselinePath) {
+    const [baseline, current] = await Promise.all([
+      readSnapshot(options.baselinePath),
+      readSnapshot(options.currentPath)
+    ]);
+    report = auditPackageComparison(baseline, current);
+  } else {
+    report = auditCurrentPackage(await readSnapshot(options.currentPath));
+  }
   const markdown = renderPackageAuditReport(report);
 
   await mkdir(dirname(options.outputPath), { recursive: true });
