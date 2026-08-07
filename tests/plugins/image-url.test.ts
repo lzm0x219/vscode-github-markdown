@@ -175,6 +175,15 @@ describe("markdown-it-github-image-url", () => {
     );
   });
 
+  it("preserves browser semantics for a legacy entity without a semicolon", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render('<img src="/assets/a&amp?theme=light#hero" alt=logo>', renderEnv());
+
+    expect(html).toBe(
+      '<img src="https://webview.test/workspace/assets/a&amp;?theme=light#hero" alt=logo>'
+    );
+  });
+
   it("serializes an unquoted src against the owning folder in a multi-root workspace", () => {
     vscode.workspace.getWorkspaceFolder.mockReturnValueOnce({
       uri: new vscode.MockUri("file", "/second-workspace")
