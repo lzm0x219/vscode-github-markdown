@@ -36,7 +36,7 @@ jobs:
         with:
           ref: ${{ matrix.ref }}
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --no-runtime
 
       - name: Build
         run: nub run build
