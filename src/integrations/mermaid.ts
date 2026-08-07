@@ -305,7 +305,10 @@ async function recoverTransactions(
   const failures = recoveryResults
     .filter((result): result is PromiseRejectedResult => result.status === "rejected")
     .map((result) => result.reason);
-  failures.push(...(await restoreStates(memento, transactions)));
+  const restoredTransactions = transactions.filter(
+    (_, index) => recoveryResults[index]?.status === "fulfilled"
+  );
+  failures.push(...(await restoreStates(memento, restoredTransactions)));
   return failures;
 }
 

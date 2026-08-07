@@ -1061,6 +1061,50 @@ describe("Mermaid theme synchronization", () => {
     expect(storedMemento.keys()).toEqual([]);
   });
 
+  it("keeps rollback intent when final state persistence and one configuration rollback fail", async () => {
+    const storedMemento = createTestMemento();
+    let updateCount = 0;
+    const memento: typeof storedMemento = {
+      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
+      update: async (key: string, value: unknown) => {
+        if (++updateCount === 3) throw new Error("Failed to finalize Mermaid state");
+        await storedMemento.update(key, value);
+      },
+      keys: () => storedMemento.keys()
+    };
+    updateFailureCalls.add(4);
+
+    const error = await updateMermaidThemeSync(memento).catch((reason: unknown) => reason);
+
+    expect(error).toBeInstanceOf(AggregateError);
+    expect((error as AggregateError).errors).toEqual([
+      expect.objectContaining({ message: "Failed to finalize Mermaid state" }),
+      expect.objectContaining({ message: "Failed to update darkModeTheme" })
+    ]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "dark"
+    });
+    expect(storedMemento.get("githubMarkdown.mermaid.themeState.v2.global.light")).toBeUndefined();
+    expect(storedMemento.get("githubMarkdown.mermaid.themeState.v2.global.dark")).toEqual(
+      expect.objectContaining({
+        pending: { kind: "apply", desired: "dark", previous: "forest" }
+      })
+    );
+
+    updateFailureCalls.clear();
+    updateCalls.length = 0;
+    markdownConfig["mermaid.syncTheme"] = false;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "forest", target: 1 }]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+    expect(storedMemento.keys()).toEqual([]);
+  });
+
   it.each([
     ["darkModeTheme", "lightModeTheme"],
     ["lightModeTheme", "darkModeTheme"]
