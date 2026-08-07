@@ -58,8 +58,9 @@ async function assertThemeRendering(page: Page): Promise<void> {
     previousMode = expectation.mode;
     previousPalette = palette;
   }
+  assert(lightPalette && darkPalette, "Single mode captures light and dark Mermaid palettes");
   assert(
-    JSON.stringify(lightPalette) !== JSON.stringify(darkPalette),
+    !sameMermaidPalette(lightPalette, darkPalette),
     "Single mode switches Mermaid between light and dark palettes"
   );
 
@@ -67,12 +68,17 @@ async function assertThemeRendering(page: Page): Promise<void> {
   await selectQuickPick(page, "GitHub Markdown: Change Dark Theme", "Dark Tritanopia");
   await selectQuickPick(page, "GitHub Markdown: Change Theme Mode", "Sync with system");
 
-  const systemLightPalette = await selectColorTheme(page, "Light Modern", {
-    mode: "auto",
-    light: "light_high_contrast",
-    dark: "dark_tritanopia",
-    body: "vscode-light"
-  });
+  await selectColorTheme(
+    page,
+    "Light Modern",
+    {
+      mode: "auto",
+      light: "light_high_contrast",
+      dark: "dark_tritanopia",
+      body: "vscode-light"
+    },
+    lightPalette
+  );
   await selectColorTheme(
     page,
     "Dark Modern",
@@ -82,7 +88,7 @@ async function assertThemeRendering(page: Page): Promise<void> {
       dark: "dark_tritanopia",
       body: "vscode-dark"
     },
-    systemLightPalette
+    darkPalette
   );
 }
 
@@ -90,7 +96,7 @@ async function selectColorTheme(
   page: Page,
   option: string,
   expectation: ThemeExpectation,
-  previousPalette?: MermaidPalette
+  expectedPalette: MermaidPalette
 ): Promise<MermaidPalette> {
   let lastError: unknown;
 
@@ -101,8 +107,9 @@ async function selectColorTheme(
       return await waitForThemedPreview(
         page,
         expectation,
-        previousPalette,
-        themeSettleAttemptTimeoutMs
+        undefined,
+        themeSettleAttemptTimeoutMs,
+        expectedPalette
       );
     } catch (error) {
       lastError = error;
@@ -227,7 +234,8 @@ async function waitForThemedPreview(
   page: Page,
   expectation: ThemeExpectation,
   previousPalette?: MermaidPalette,
-  timeoutMs = 30_000
+  timeoutMs = 30_000,
+  expectedPalette?: MermaidPalette
 ): Promise<MermaidPalette> {
   const deadline = Date.now() + timeoutMs;
   const selector =
@@ -244,8 +252,8 @@ async function waitForThemedPreview(
         if (!(await frame.locator(".mermaid svg").count())) continue;
 
         const palette = await readMermaidPalette(frame);
-        if (previousPalette && JSON.stringify(palette) === JSON.stringify(previousPalette))
-          continue;
+        if (previousPalette && sameMermaidPalette(palette, previousPalette)) continue;
+        if (expectedPalette && !sameMermaidPalette(palette, expectedPalette)) continue;
         return palette;
       } catch {
         // Theme and client renderer changes can replace the preview frame.
@@ -301,6 +309,14 @@ async function readMermaidPalette(preview: Frame): Promise<MermaidPalette> {
       textColor: label ? getComputedStyle(label).color : ""
     };
   });
+}
+
+function sameMermaidPalette(left: MermaidPalette, right: MermaidPalette): boolean {
+  return (
+    left.background === right.background &&
+    left.nodeFill === right.nodeFill &&
+    left.textColor === right.textColor
+  );
 }
 
 function assert(value: unknown, message: string): asserts value {
