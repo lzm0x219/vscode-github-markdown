@@ -170,13 +170,17 @@ jobs:
             exit 1
           fi
           baseline="${{ steps.package_baseline.outputs.path }}"
-          if [[ -z "$baseline" ]]; then
-            baseline="$archive"
+          if [[ -n "$baseline" ]]; then
+            nub scripts/package-audit/index.ts \
+              "$baseline" \
+              "$archive" \
+              artifacts/package-size/release.json
+          else
+            nub scripts/package-audit/index.ts \
+              --current-only \
+              "$archive" \
+              artifacts/package-size/release.json
           fi
-          nub scripts/package-audit/index.ts \
-            "$baseline" \
-            "$archive" \
-            artifacts/package-size/release.json
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v7

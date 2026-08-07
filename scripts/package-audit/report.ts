@@ -9,11 +9,21 @@ export function renderPackageAuditReport(report: PackageAuditReport): string {
     `Conclusion: **${report.conclusion.toUpperCase()}**`,
     "",
     "| Package | Size |",
-    "| --- | ---: |",
-    `| Baseline | ${formatBytes(report.baseline.archiveBytes)} |`,
-    `| Current | ${formatBytes(report.current.archiveBytes)} |`,
-    `| Change | ${formatSignedBytes(report.archiveDeltaBytes)} (${formatSignedPercent(report.archiveDeltaRatio)}) |`
+    "| --- | ---: |"
   ];
+  if ("baseline" in report) {
+    lines.push(
+      `| Baseline | ${formatBytes(report.baseline.archiveBytes)} |`,
+      `| Current | ${formatBytes(report.current.archiveBytes)} |`,
+      `| Change | ${formatSignedBytes(report.archiveDeltaBytes)} (${formatSignedPercent(report.archiveDeltaRatio)}) |`
+    );
+  } else {
+    lines.push(
+      "| Baseline | Not available |",
+      `| Current | ${formatBytes(report.current.archiveBytes)} |`,
+      "| Change | Not evaluated |"
+    );
+  }
 
   if (report.violations.length > 0) {
     lines.push(
@@ -23,6 +33,8 @@ export function renderPackageAuditReport(report: PackageAuditReport): string {
       ...report.violations.map((violation) => `- ${renderViolation(violation)}`)
     );
   }
+
+  if (!("baseline" in report)) return `${lines.join("\n")}\n`;
 
   lines.push("", "## Largest file increases", "", "| File | Baseline | Current | Change |");
   lines.push("| --- | ---: | ---: | ---: |");

@@ -19,4 +19,15 @@ describe("publish package audit", () => {
     expect(auditStep).toContain('"$archive" \\\n');
     expect(auditStep).not.toContain('"$archive" \\\n            "$archive"');
   });
+
+  it("runs an explicit current-only audit for the first stable release", () => {
+    const auditStep = workflow.slice(
+      workflow.indexOf("Verify VSIX contents and size"),
+      workflow.indexOf("Upload VSIX artifact")
+    );
+
+    expect(auditStep).not.toContain('baseline="$archive"');
+    expect(auditStep).toContain('if [[ -n "$baseline" ]]');
+    expect(auditStep).toContain("--current-only");
+  });
 });
