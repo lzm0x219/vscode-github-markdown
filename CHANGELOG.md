@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Markdown preview
+
+- Raw HTML images with project-root `src` paths now resolve from the workspace root when the Markdown file is inside a subdirectory, instead of looking for the image beneath that subdirectory.
+
 ### Themes and appearance
 
 - Theme and theme-mode Quick Picks now display Chinese labels in Simplified Chinese VS Code, and confirmation messages no longer mix Chinese text with English theme names.
