@@ -76,6 +76,17 @@ type MermaidThemeUpdateOperation = {
   previousValue: MermaidTheme | undefined;
 };
 
+type MermaidThemeStateClaim = Pick<
+  MermaidThemeUpdateOperation,
+  "slot" | "target" | "state" | "previousState"
+>;
+
+type MermaidThemeRestoration = MermaidThemeStateClaim & {
+  key: typeof originSection.light | typeof originSection.dark;
+  previousValue: MermaidTheme | undefined;
+  shouldWrite: boolean;
+};
+
 const snapshotKey = "githubMarkdown.mermaid.originalGlobalThemes";
 const stateKeyPrefix = "githubMarkdown.mermaid.themeState.v2";
 const mermaidExtensionIds = [
@@ -86,6 +97,8 @@ const MERMAID_LIGHT_THEME: MermaidTheme = "default";
 const MERMAID_DARK_THEME: MermaidTheme = "dark";
 let mermaidThemeOperationQueue: Promise<void> = Promise.resolve();
 let mermaidThemeStateRevision = 0;
+
+class ConcurrentMermaidThemeStateError extends Error {}
 
 export function getMermaidSyncTheme(): boolean {
   return getConfiguration().get<boolean>(section.syncTheme, true);
@@ -110,7 +123,18 @@ async function updateMermaidThemeSyncNow(memento: vscode.Memento): Promise<void>
 
   const [light, dark] = resolveMermaidThemes();
   const operations = prepareMermaidThemeUpdates(configuration, states, { light, dark });
-  await persistMermaidThemeStates(memento, states);
+  try {
+    await persistMermaidThemeStates(memento, states);
+  } catch (claimError) {
+    const rollbackFailures = await rollbackMermaidThemeClaims(memento, states, operations);
+    if (rollbackFailures.length > 0) {
+      throw new AggregateError(
+        [claimError, ...rollbackFailures],
+        `${getErrorMessage(claimError)}; failed to release Mermaid theme state claims`
+      );
+    }
+    throw claimError;
+  }
   const updateResults = await Promise.allSettled(
     operations.map((operation) =>
       updateMermaidTheme(configuration, operation.key, operation.theme, operation.target)
@@ -127,7 +151,24 @@ async function updateMermaidThemeSyncNow(memento: vscode.Memento): Promise<void>
     }
     markMermaidThemeStateDirty(states, operation.target, operation.slot);
   });
-  await persistMermaidThemeStates(memento, states);
+  try {
+    await persistMermaidThemeStates(memento, states);
+  } catch (persistenceError) {
+    const rollbackFailures = await rollbackMermaidThemesAfterPersistenceFailure(
+      memento,
+      configuration,
+      states,
+      operations,
+      updateResults
+    );
+    if (rollbackFailures.length > 0) {
+      throw new AggregateError(
+        [persistenceError, ...rollbackFailures],
+        `${getErrorMessage(persistenceError)}; failed to roll back Mermaid themes after a state persistence failure`
+      );
+    }
+    throw persistenceError;
+  }
 
   const failure = updateResults.find((result) => result.status === "rejected");
   if (failure?.status === "rejected") {
@@ -139,11 +180,9 @@ async function updateMermaidThemeSyncNow(memento: vscode.Memento): Promise<void>
       updateResults
     );
     if (restoreFailures.length > 0) {
-      const failureMessage =
-        failure.reason instanceof Error ? failure.reason.message : String(failure.reason);
       throw new AggregateError(
         [failure.reason, ...restoreFailures],
-        `${failureMessage}; failed to restore the original Mermaid themes`
+        `${getErrorMessage(failure.reason)}; failed to restore the original Mermaid themes`
       );
     }
     throw failure.reason;
@@ -167,13 +206,22 @@ async function restoreMermaidThemeSyncNow(
   }
 
   const states = loadedStates ?? (await loadMermaidThemeStates(memento));
-  const restorations = collectMermaidThemeRestorations(states);
+  const restorations = collectMermaidThemeRestorations(configuration, states);
+  try {
+    await persistMermaidThemeStates(memento, states);
+  } catch (claimError) {
+    const rollbackFailures = await rollbackMermaidThemeClaims(memento, states, restorations);
+    if (rollbackFailures.length > 0) {
+      throw new AggregateError(
+        [claimError, ...rollbackFailures],
+        `${getErrorMessage(claimError)}; failed to release Mermaid theme restoration claims`
+      );
+    }
+    throw claimError;
+  }
   const restoreResults = await Promise.allSettled(
-    restorations.map(({ key, state, target }) => {
-      if (
-        state.applied === undefined ||
-        getMermaidThemeAtTarget(configuration, key, target) !== state.applied
-      ) {
+    restorations.map(({ key, shouldWrite, state, target }) => {
+      if (!shouldWrite) {
         return Promise.resolve();
       }
       return updateMermaidTheme(configuration, key, state.original, target);
@@ -189,7 +237,24 @@ async function restoreMermaidThemeSyncNow(
     )[restoration.slot];
     markMermaidThemeStateDirty(states, restoration.target, restoration.slot);
   });
-  await persistMermaidThemeStates(memento, states);
+  try {
+    await persistMermaidThemeStates(memento, states);
+  } catch (persistenceError) {
+    const rollbackFailures = await rollbackMermaidRestorationsAfterPersistenceFailure(
+      memento,
+      configuration,
+      states,
+      restorations,
+      restoreResults
+    );
+    if (rollbackFailures.length > 0) {
+      throw new AggregateError(
+        [persistenceError, ...rollbackFailures],
+        `${getErrorMessage(persistenceError)}; failed to roll back Mermaid theme restoration after a state persistence failure`
+      );
+    }
+    throw persistenceError;
+  }
   const restoreFailures = restoreResults
     .filter((result): result is PromiseRejectedResult => result.status === "rejected")
     .map((result) => result.reason);
@@ -362,6 +427,10 @@ function prepareMermaidThemeUpdates(
       dirtySlots.add(slot);
       continue;
     }
+    if (effective.target === vscode.ConfigurationTarget.Global) {
+      state.owner = states.identity;
+      dirtySlots.add(slot);
+    }
     operations.push({
       slot,
       key,
@@ -375,45 +444,193 @@ function prepareMermaidThemeUpdates(
   return operations;
 }
 
-function collectMermaidThemeRestorations(states: MermaidThemeStates): {
-  slot: MermaidThemeSlot;
-  key: typeof originSection.light | typeof originSection.dark;
-  target: MermaidThemeTarget;
-  state: MermaidThemeSlotState;
-}[] {
-  const restorations: {
-    slot: MermaidThemeSlot;
-    key: typeof originSection.light | typeof originSection.dark;
-    target: MermaidThemeTarget;
-    state: MermaidThemeSlotState;
-  }[] = [];
+function collectMermaidThemeRestorations(
+  configuration: vscode.WorkspaceConfiguration,
+  states: MermaidThemeStates
+): MermaidThemeRestoration[] {
+  const restorations: MermaidThemeRestoration[] = [];
   for (const [slot, key] of [
     ["light", originSection.light],
     ["dark", originSection.dark]
   ] as const) {
-    const workspaceState = states.workspace[slot];
-    if (workspaceState) {
+    const effective = getEffectiveMermaidThemeOverride(configuration, key);
+    if (effective.target === vscode.ConfigurationTarget.Workspace) {
+      const workspaceState = states.workspace[slot];
+      if (!workspaceState) {
+        continue;
+      }
+      const previousValue = getMermaidThemeAtTarget(
+        configuration,
+        key,
+        vscode.ConfigurationTarget.Workspace
+      );
+      const previousState = { ...workspaceState };
+      states.dirtyWorkspace.add(slot);
       restorations.push({
         slot,
         key,
         target: vscode.ConfigurationTarget.Workspace,
-        state: workspaceState
+        state: workspaceState,
+        previousState,
+        previousValue,
+        shouldWrite:
+          workspaceState.applied !== undefined && previousValue === workspaceState.applied
       });
+      continue;
+    }
+
+    if (states.workspace[slot] !== undefined) {
+      delete states.workspace[slot];
+      states.dirtyWorkspace.add(slot);
     }
     const globalState = states.global[slot];
-    if (
-      globalState &&
-      (globalState.owner === states.identity || globalState.releasedBy === states.identity)
-    ) {
+    if (globalState) {
+      const previousValue = getMermaidThemeAtTarget(
+        configuration,
+        key,
+        vscode.ConfigurationTarget.Global
+      );
+      const previousState = { ...globalState };
+      globalState.owner = states.identity;
+      states.dirtyGlobal.add(slot);
       restorations.push({
         slot,
         key,
         target: vscode.ConfigurationTarget.Global,
-        state: globalState
+        state: globalState,
+        previousState,
+        previousValue,
+        shouldWrite: globalState.applied !== undefined && previousValue === globalState.applied
       });
     }
   }
   return restorations;
+}
+
+async function rollbackMermaidThemeClaims(
+  memento: vscode.Memento,
+  states: MermaidThemeStates,
+  operations: MermaidThemeStateClaim[]
+): Promise<unknown[]> {
+  const failures: unknown[] = [];
+  for (const operation of operations) {
+    if (
+      operation.state.revision === undefined ||
+      operation.state.revision === operation.previousState?.revision
+    ) {
+      continue;
+    }
+    try {
+      await restorePreviousMermaidThemeState(memento, states, operation);
+    } catch (error) {
+      if (!(error instanceof ConcurrentMermaidThemeStateError)) {
+        failures.push(error);
+      }
+    }
+  }
+  return failures;
+}
+
+async function rollbackMermaidThemesAfterPersistenceFailure(
+  memento: vscode.Memento,
+  configuration: vscode.WorkspaceConfiguration,
+  states: MermaidThemeStates,
+  operations: MermaidThemeUpdateOperation[],
+  updateResults: PromiseSettledResult<void>[]
+): Promise<unknown[]> {
+  const configurationRollbacks = operations.map((operation, index) => {
+    const updateResult = updateResults[index];
+    if (
+      updateResult?.status !== "fulfilled" ||
+      getMermaidThemeAtTarget(configuration, operation.key, operation.target) !== operation.theme
+    ) {
+      return Promise.resolve();
+    }
+    return updateMermaidTheme(
+      configuration,
+      operation.key,
+      operation.previousValue,
+      operation.target
+    );
+  });
+  const configurationResults = await Promise.allSettled(configurationRollbacks);
+  const failures = configurationResults
+    .filter((result): result is PromiseRejectedResult => result.status === "rejected")
+    .map((result) => result.reason);
+
+  for (const [index, result] of configurationResults.entries()) {
+    const operation = operations[index];
+    if (result.status !== "fulfilled" || !operation || operation.state.revision === undefined) {
+      continue;
+    }
+    try {
+      await restorePreviousMermaidThemeState(memento, states, operation);
+    } catch (error) {
+      if (!(error instanceof ConcurrentMermaidThemeStateError)) {
+        failures.push(error);
+      }
+    }
+  }
+  return failures;
+}
+
+async function rollbackMermaidRestorationsAfterPersistenceFailure(
+  memento: vscode.Memento,
+  configuration: vscode.WorkspaceConfiguration,
+  states: MermaidThemeStates,
+  restorations: MermaidThemeRestoration[],
+  restoreResults: PromiseSettledResult<void>[]
+): Promise<unknown[]> {
+  const configurationRollbacks = restorations.map((restoration, index) => {
+    const restoreResult = restoreResults[index];
+    if (
+      restoreResult?.status !== "fulfilled" ||
+      !restoration.shouldWrite ||
+      getMermaidThemeAtTarget(configuration, restoration.key, restoration.target) !==
+        restoration.state.original
+    ) {
+      return Promise.resolve();
+    }
+    return updateMermaidTheme(
+      configuration,
+      restoration.key,
+      restoration.previousValue,
+      restoration.target
+    );
+  });
+  const configurationResults = await Promise.allSettled(configurationRollbacks);
+  const failures = configurationResults
+    .filter((result): result is PromiseRejectedResult => result.status === "rejected")
+    .map((result) => result.reason);
+
+  for (const [index, result] of configurationResults.entries()) {
+    const restoration = restorations[index];
+    if (result.status !== "fulfilled" || !restoration) {
+      continue;
+    }
+    try {
+      await restorePreviousMermaidThemeState(memento, states, restoration);
+    } catch (error) {
+      if (!(error instanceof ConcurrentMermaidThemeStateError)) {
+        failures.push(error);
+      }
+    }
+  }
+  return failures;
+}
+
+async function restorePreviousMermaidThemeState(
+  memento: vscode.Memento,
+  states: MermaidThemeStates,
+  operation: MermaidThemeStateClaim
+): Promise<void> {
+  await persistMermaidThemeState(
+    memento,
+    getMermaidThemeStateKey(states.identity, operation.target, operation.slot),
+    operation.previousState ? { ...operation.previousState } : undefined,
+    getMermaidThemeStateRevision(states, operation.target, operation.slot),
+    states.identity
+  );
 }
 
 async function rollbackFailedMermaidThemeSync(
@@ -475,6 +692,18 @@ function markMermaidThemeStateDirty(
   );
 }
 
+function getMermaidThemeStateRevision(
+  states: MermaidThemeStates,
+  target: MermaidThemeTarget,
+  slot: MermaidThemeSlot
+): string | undefined {
+  return (
+    target === vscode.ConfigurationTarget.Global
+      ? states.globalRevisions
+      : states.workspaceRevisions
+  )[slot];
+}
+
 async function persistMermaidThemeStates(
   memento: vscode.Memento,
   states: MermaidThemeStates
@@ -520,7 +749,9 @@ async function persistMermaidThemeState(
 ): Promise<string | undefined> {
   const persistedState = memento.get<MermaidThemeSlotState>(key);
   if (persistedState?.revision !== expectedRevision) {
-    throw new Error("Mermaid theme state changed in another extension host");
+    throw new ConcurrentMermaidThemeStateError(
+      "Mermaid theme state changed in another extension host"
+    );
   }
   if (!state) {
     await memento.update(key, undefined);
@@ -538,6 +769,20 @@ function getGlobalThemeStateKey(slot: MermaidThemeSlot): string {
 
 function getWorkspaceThemeStateKey(identity: string, slot: MermaidThemeSlot): string {
   return `${stateKeyPrefix}.workspace.${encodeURIComponent(identity)}.${slot}`;
+}
+
+function getMermaidThemeStateKey(
+  identity: string,
+  target: MermaidThemeTarget,
+  slot: MermaidThemeSlot
+): string {
+  return target === vscode.ConfigurationTarget.Global
+    ? getGlobalThemeStateKey(slot)
+    : getWorkspaceThemeStateKey(identity, slot);
+}
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function hasMermaidExtension(): boolean {
