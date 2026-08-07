@@ -56,8 +56,11 @@
     "test:host:web:preview": "nub run build && nub scripts/host/web-preview.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "package": "nubx vsce package",
+    "package": "nubx vsce package --no-dependencies",
     "release:note": "nub scripts/release/index.ts"
+  },
+  "dependencies": {
+    "unicode-case-folding": "1.1.1"
   },
   "devDependencies": {
     "@types/markdown-it": "14.1.2",
@@ -84,7 +87,6 @@
     "rollup-plugin-visualizer": "7.0.1",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
-    "unicode-case-folding": "1.1.1",
     "vitest": "4.1.10"
   },
   "l10n": "./l10n",
