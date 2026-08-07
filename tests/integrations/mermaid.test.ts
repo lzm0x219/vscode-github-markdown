@@ -24,6 +24,7 @@ let updateGates = new Map<string, Promise<void>>();
 let updateFailureCalls = new Set<number>();
 let updateGateCalls = new Map<number, Promise<void>>();
 let updateNoopCalls = new Set<number>();
+let updateObservedValues = new Map<number, string | undefined>();
 
 function getEffectiveMermaidConfig(): Record<string, string | undefined> {
   return {
@@ -66,10 +67,13 @@ vi.mock("vscode", () => ({
               if (updateNoopCalls.has(callNumber)) {
                 return;
               }
+              const observedValue = updateObservedValues.has(callNumber)
+                ? updateObservedValues.get(callNumber)
+                : value;
               if (target === 2) {
-                mermaidWorkspaceConfig[key] = value;
+                mermaidWorkspaceConfig[key] = observedValue;
               } else {
-                mermaidGlobalConfig[key] = value;
+                mermaidGlobalConfig[key] = observedValue;
               }
             }
           };
@@ -108,6 +112,7 @@ describe("Mermaid theme synchronization", () => {
     updateFailureCalls = new Set();
     updateGateCalls = new Map();
     updateNoopCalls = new Set();
+    updateObservedValues = new Map();
   });
 
   it("configures both Mermaid slots from the system-mode light and dark themes", async () => {
@@ -175,6 +180,31 @@ describe("Mermaid theme synchronization", () => {
     expect(memento.get("githubMarkdown.mermaid.themeState.v2.global.dark")).toEqual(
       expect.objectContaining({ applied: "dark" })
     );
+  });
+
+  it("does not retry over a third-party value observed after a configuration update", async () => {
+    const memento = createTestMemento();
+    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
+    updateObservedValues.set(1, "base");
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "default", target: 1 },
+      { key: "darkModeTheme", value: "dark", target: 1 }
+    ]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "dark"
+    });
+    expect(memento.get(lightStateKey)).toEqual(
+      expect.objectContaining({
+        original: "neutral",
+        releasedBy: "workspace:file:///workspace-a.code-workspace"
+      })
+    );
+    expect(memento.get(lightStateKey)).not.toHaveProperty("pending");
+    expect(memento.get(lightStateKey)).not.toHaveProperty("applied");
   });
 
   it("waits for the first configuration write to settle before starting the second", async () => {
@@ -881,6 +911,96 @@ describe("Mermaid theme synchronization", () => {
           desired: "default",
           previous: "neutral"
         }
+      })
+    );
+  });
+
+  it("preserves a user takeover while the apply claim is being persisted", async () => {
+    const storedMemento = createTestMemento();
+    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
+    let releaseClaim = () => {};
+    const claimGate = new Promise<void>((resolve) => {
+      releaseClaim = resolve;
+    });
+    let shouldGateClaim = true;
+    const memento: typeof storedMemento = {
+      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
+      update: async (key: string, value: unknown) => {
+        await storedMemento.update(key, value);
+        if (key === lightStateKey && shouldGateClaim) {
+          shouldGateClaim = false;
+          await claimGate;
+        }
+      },
+      keys: () => storedMemento.keys()
+    };
+
+    const synchronization = updateMermaidThemeSync(memento);
+    await vi.waitFor(() =>
+      expect(storedMemento.get(lightStateKey)).toEqual(
+        expect.objectContaining({
+          pending: { kind: "apply", desired: "default", previous: "neutral" }
+        })
+      )
+    );
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+    releaseClaim();
+    await synchronization;
+
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "dark", target: 1 }]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "dark"
+    });
+    expect(storedMemento.get(lightStateKey)).toEqual(
+      expect.objectContaining({
+        original: "neutral",
+        releasedBy: "workspace:file:///workspace-a.code-workspace"
+      })
+    );
+    expect(storedMemento.get(lightStateKey)).not.toHaveProperty("pending");
+    expect(storedMemento.get(lightStateKey)).not.toHaveProperty("applied");
+  });
+
+  it("keeps a released takeover when another transaction fails to finalize", async () => {
+    const storedMemento = createTestMemento();
+    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
+    let releaseClaim = () => {};
+    const claimGate = new Promise<void>((resolve) => {
+      releaseClaim = resolve;
+    });
+    let updateCount = 0;
+    const memento: typeof storedMemento = {
+      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
+      update: async (key: string, value: unknown) => {
+        updateCount += 1;
+        if (updateCount === 4) throw new Error("Failed to finalize Mermaid state");
+        await storedMemento.update(key, value);
+        if (updateCount === 1) await claimGate;
+      },
+      keys: () => storedMemento.keys()
+    };
+
+    const synchronization = updateMermaidThemeSync(memento);
+    await vi.waitFor(() =>
+      expect(storedMemento.get(lightStateKey)).toEqual(
+        expect.objectContaining({
+          pending: { kind: "apply", desired: "default", previous: "neutral" }
+        })
+      )
+    );
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+    releaseClaim();
+    await expect(synchronization).rejects.toThrow("Failed to finalize Mermaid state");
+
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "forest"
+    });
+    expect(storedMemento.get(lightStateKey)).toEqual(
+      expect.objectContaining({
+        original: "neutral",
+        releasedBy: "workspace:file:///workspace-a.code-workspace"
       })
     );
   });
