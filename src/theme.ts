@@ -1,3 +1,4 @@
+import { l10n } from "vscode";
 import { getConfiguration } from "./configuration";
 
 export type ThemeMode = "single" | "system" | "vscode";
@@ -26,27 +27,27 @@ export function isLightTheme(theme: Theme): boolean {
   return lightThemeNames.has(theme);
 }
 
-const themeLabelKeys: Record<Theme, string> = {
-  light: "Light",
-  light_colorblind: "Light Protanopia & Deuteranopia",
-  light_high_contrast: "Light high contrast",
-  light_tritanopia: "Light Tritanopia",
-  dark: "Dark",
-  dark_colorblind: "Dark Protanopia & Deuteranopia",
-  dark_dimmed: "Dark dimmed",
-  dark_high_contrast: "Dark high contrast",
-  dark_tritanopia: "Dark Tritanopia"
+const themeLabels: Record<Theme, () => string> = {
+  light: () => l10n.t("Light"),
+  light_colorblind: () => l10n.t("Light Protanopia & Deuteranopia"),
+  light_high_contrast: () => l10n.t("Light high contrast"),
+  light_tritanopia: () => l10n.t("Light Tritanopia"),
+  dark: () => l10n.t("Dark"),
+  dark_colorblind: () => l10n.t("Dark Protanopia & Deuteranopia"),
+  dark_dimmed: () => l10n.t("Dark dimmed"),
+  dark_high_contrast: () => l10n.t("Dark high contrast"),
+  dark_tritanopia: () => l10n.t("Dark Tritanopia")
 } as const;
 
-export const ThemeKeys = Object.keys(themeLabelKeys) as Theme[];
+export const ThemeKeys = Object.keys(themeLabels) as Theme[];
 
-const themeModeLabelKeys: Record<ThemeMode, string> = {
-  single: "Single theme",
-  system: "Sync with system",
-  vscode: "VS Code theme"
+const themeModeLabels: Record<ThemeMode, () => string> = {
+  single: () => l10n.t("Single theme"),
+  system: () => l10n.t("Sync with system"),
+  vscode: () => l10n.t("VS Code theme")
 } as const;
 
-export const ThemeModeKeys = Object.keys(themeModeLabelKeys) as (keyof typeof themeModeLabelKeys)[];
+export const ThemeModeKeys = Object.keys(themeModeLabels) as (keyof typeof themeModeLabels)[];
 
 export const section = {
   mode: "theme.mode",
@@ -121,7 +122,7 @@ export function getThemeModeList(): {
   value: ThemeMode;
 }[] {
   return ThemeModeKeys.map((mode) => ({
-    label: themeModeLabelKeys[mode],
+    label: themeModeLabels[mode](),
     value: mode
   }));
 }
@@ -131,7 +132,7 @@ export function getThemeList(): {
   value: Theme;
 }[] {
   return ThemeKeys.map((theme) => ({
-    label: themeLabelKeys[theme],
+    label: themeLabels[theme](),
     value: theme
   }));
 }

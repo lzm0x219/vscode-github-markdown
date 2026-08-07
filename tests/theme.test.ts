@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const localizedMessages = vi.hoisted(() => ({ values: {} as Record<string, string> }));
+
 let configStore: Record<string, string> = {
   "theme.mode": "system",
   "theme.single": "light",
@@ -17,6 +19,9 @@ vi.mock("vscode", () => ({
         update: async () => {}
       })
     }
+  },
+  l10n: {
+    t: (message: string) => localizedMessages.values[message] ?? message
   }
 }));
 
@@ -32,6 +37,7 @@ import {
 describe("theme logic", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localizedMessages.values = {};
     configStore = {
       "theme.mode": "system",
       "theme.single": "light",
@@ -150,5 +156,18 @@ describe("theme logic", () => {
       expect(labels.has("Light")).toBe(true);
       expect(labels.has("Dark dimmed")).toBe(true);
     });
+  });
+
+  it("resolves theme option labels when each list is requested", () => {
+    expect(getThemeModeList()[0]).toEqual({ label: "Single theme", value: "single" });
+    expect(getThemeList()[6]).toEqual({ label: "Dark dimmed", value: "dark_dimmed" });
+
+    localizedMessages.values = {
+      "Single theme": "固定主题",
+      "Dark dimmed": "柔和暗色"
+    };
+
+    expect(getThemeModeList()[0]).toEqual({ label: "固定主题", value: "single" });
+    expect(getThemeList()[6]).toEqual({ label: "柔和暗色", value: "dark_dimmed" });
   });
 });
