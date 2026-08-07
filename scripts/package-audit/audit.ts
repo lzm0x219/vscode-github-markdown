@@ -10,15 +10,24 @@ export type PackageEntryIncrease = {
   deltaBytes: number;
 };
 
-export type PackageAuditReport = {
+type PackageAuditReportBase = {
   conclusion: "pass" | "fail";
-  baseline: PackageSnapshot;
   current: PackageSnapshot;
+  violations: PackageAuditViolation[];
+};
+
+export type PackageComparisonAuditReport = PackageAuditReportBase & {
+  baseline: PackageSnapshot;
   archiveDeltaBytes: number;
   archiveDeltaRatio: number;
   largestEntryIncreases: PackageEntryIncrease[];
-  violations: PackageAuditViolation[];
 };
+
+export type CurrentPackageAuditReport = PackageAuditReportBase & {
+  mode: "current-only";
+};
+
+export type PackageAuditReport = PackageComparisonAuditReport | CurrentPackageAuditReport;
 
 export type PackageAuditViolation =
   | {
@@ -42,7 +51,7 @@ const forbiddenPackageFiles = new Set([
 export function auditPackageComparison(
   baseline: PackageSnapshot,
   current: PackageSnapshot
-): PackageAuditReport {
+): PackageComparisonAuditReport {
   const archiveDeltaBytes = current.archiveBytes - baseline.archiveBytes;
   const archiveDeltaRatio =
     baseline.archiveBytes === 0 ? 0 : archiveDeltaBytes / baseline.archiveBytes;
@@ -56,14 +65,7 @@ export function auditPackageComparison(
       (left, right) => right.deltaBytes - left.deltaBytes || left.path.localeCompare(right.path)
     )
     .slice(0, 10);
-  const violations: PackageAuditViolation[] = [];
-  if (current.archiveBytes > maximumPackageBytes) {
-    violations.push({
-      rule: "maximum-size",
-      actual: current.archiveBytes,
-      limit: maximumPackageBytes
-    });
-  }
+  const violations = auditMaximumPackageSize(current);
   if (archiveDeltaBytes > maximumPackageIncreaseBytes) {
     violations.push({
       rule: "maximum-increase-bytes",
@@ -78,12 +80,7 @@ export function auditPackageComparison(
       limit: maximumPackageIncreaseRatio
     });
   }
-  for (const path of Object.keys(current.entries).sort()) {
-    if (path.startsWith("extension/.serena/") || forbiddenPackageFiles.has(path)) {
-      violations.push({ rule: "forbidden-file", path });
-    }
-  }
-
+  violations.push(...auditForbiddenPackageFiles(current));
   return {
     conclusion: violations.length === 0 ? "pass" : "fail",
     baseline,
@@ -93,4 +90,35 @@ export function auditPackageComparison(
     largestEntryIncreases,
     violations
   };
+}
+
+export function auditCurrentPackage(current: PackageSnapshot): CurrentPackageAuditReport {
+  const violations = auditCurrentPackageViolations(current);
+  return {
+    mode: "current-only",
+    conclusion: violations.length === 0 ? "pass" : "fail",
+    current,
+    violations
+  };
+}
+
+function auditCurrentPackageViolations(current: PackageSnapshot): PackageAuditViolation[] {
+  return [...auditMaximumPackageSize(current), ...auditForbiddenPackageFiles(current)];
+}
+
+function auditMaximumPackageSize(current: PackageSnapshot): PackageAuditViolation[] {
+  if (current.archiveBytes > maximumPackageBytes) {
+    return [{ rule: "maximum-size", actual: current.archiveBytes, limit: maximumPackageBytes }];
+  }
+  return [];
+}
+
+function auditForbiddenPackageFiles(current: PackageSnapshot): PackageAuditViolation[] {
+  const violations: PackageAuditViolation[] = [];
+  for (const path of Object.keys(current.entries).sort()) {
+    if (path.startsWith("extension/.serena/") || forbiddenPackageFiles.has(path)) {
+      violations.push({ rule: "forbidden-file", path });
+    }
+  }
+  return violations;
 }
