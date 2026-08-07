@@ -40,18 +40,12 @@ const vscode = vi.hoisted(() => {
       parse(value: string): MockUri {
         const match = /^(.*?):(?:\/\/)?([^?#]*)(?:\?([^#]*))?(?:#(.*))?$/.exec(value);
         if (!match?.[1] || match[2] === undefined) throw new Error(`Invalid URI: ${value}`);
-        return new MockUri(
-          match[1],
-          match[2],
-          match[3],
-          match[4],
-          "",
-          match[2].replaceAll("/", "\\")
-        );
+        const path = decodeURIComponent(match[2]);
+        return new MockUri(match[1], path, match[3], match[4], "", path.replaceAll("/", "\\"));
       }
     },
     workspace: {
-      getWorkspaceFolder: () => ({ uri: new MockUri("file", "/workspace") })
+      getWorkspaceFolder: vi.fn(() => ({ uri: new MockUri("file", "/workspace") }))
     }
   };
 });
@@ -59,6 +53,25 @@ const vscode = vi.hoisted(() => {
 vi.mock("vscode", () => ({ ...vscode, default: vscode }));
 
 import githubImageUrl from "../../src/plugins/markdown-it-github-image-url";
+
+function renderEnv(documentPath = "/workspace/README.md") {
+  return {
+    currentDocument: new vscode.MockUri("file", documentPath),
+    resourceProvider: {
+      asWebviewUri(
+        resource: InstanceType<typeof vscode.MockUri>
+      ): InstanceType<typeof vscode.MockUri> {
+        return new vscode.MockUri(
+          "https",
+          resource.path,
+          resource.query,
+          resource.fragment,
+          "webview.test"
+        );
+      }
+    }
+  };
+}
 
 describe("markdown-it-github-image-url", () => {
   it("rewrites absolute image path to relative in HTML img tag", () => {
@@ -74,16 +87,7 @@ describe("markdown-it-github-image-url", () => {
     "resolves a project-root HTML image from a %s using URI path semantics",
     (_case, documentPath) => {
       const md = new MarkdownIt({ html: true }).use(githubImageUrl);
-      const html = md.render('<img src="/assets/logo.svg" alt="logo">', {
-        currentDocument: new vscode.MockUri("file", documentPath),
-        resourceProvider: {
-          asWebviewUri(
-            resource: InstanceType<typeof vscode.MockUri>
-          ): InstanceType<typeof vscode.MockUri> {
-            return new vscode.MockUri("https", resource.path, "", "", "webview.test");
-          }
-        }
-      });
+      const html = md.render('<img src="/assets/logo.svg" alt="logo">', renderEnv(documentPath));
 
       expect(html).toContain('src="https://webview.test/workspace/assets/logo.svg"');
     }
@@ -116,18 +120,86 @@ describe("markdown-it-github-image-url", () => {
   it("rewrites an unquoted project-root src attribute", () => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render("<img data-src=/lazy.png src=/actual.png alt=logo>");
-    expect(html).toContain("data-src=/lazy.png src=./actual.png alt=logo");
+    expect(html).toBe('<img data-src=/lazy.png src="./actual.png" alt=logo>');
+  });
+
+  it("quotes a rewritten unquoted src when its URI contains a decoded space", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(
+      "<img src=/assets/my%20logo.svg alt=logo>",
+      renderEnv("/workspace/docs/guide.md")
+    );
+
+    expect(html).toBe('<img src="https://webview.test/workspace/assets/my logo.svg" alt=logo>');
+  });
+
+  it("preserves a single-quoted src while escaping a decoded apostrophe", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render("<img src='/assets/author%27s-logo.svg' alt='logo'>", renderEnv());
+
+    expect(html).toBe(
+      "<img src='https://webview.test/workspace/assets/author&#39;s-logo.svg' alt='logo'>"
+    );
+  });
+
+  it("preserves a double-quoted src while escaping a decoded quotation mark", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render('<img src="/assets/%22logo%22.svg" alt="logo">', renderEnv());
+
+    expect(html).toBe(
+      '<img src="https://webview.test/workspace/assets/&quot;logo&quot;.svg" alt="logo">'
+    );
+  });
+
+  it("preserves query and fragment components in a serialized src", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(
+      '<img src="/assets/logo.svg?theme=light&size=wide#hero" alt=logo>',
+      renderEnv()
+    );
+
+    expect(html).toBe(
+      '<img src="https://webview.test/workspace/assets/logo.svg?theme=light&amp;size=wide#hero" alt=logo>'
+    );
+  });
+
+  it("serializes an unquoted src against the owning folder in a multi-root workspace", () => {
+    vscode.workspace.getWorkspaceFolder.mockReturnValueOnce({
+      uri: new vscode.MockUri("file", "/second-workspace")
+    });
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(
+      "<img src=/assets/my%20logo.svg alt=logo>",
+      renderEnv("/second-workspace/docs/guide.md")
+    );
+
+    expect(html).toBe(
+      '<img src="https://webview.test/second-workspace/assets/my logo.svg" alt=logo>'
+    );
+  });
+
+  it("serializes the relative fallback when URI parsing fails", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render("<img src=/assets/bad%ZZ.svg alt=logo>", renderEnv());
+
+    expect(html).toBe('<img src="./assets/bad%ZZ.svg" alt=logo>');
   });
 
   it("preserves protocol-relative image URLs", () => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render('<img src="//cdn.example.com/a.png">');
-    expect(html).toContain('src="//cdn.example.com/a.png"');
+    expect(html).toBe('<img src="//cdn.example.com/a.png">');
   });
 
   it("preserves unquoted protocol-relative image URLs", () => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render("<img src=//cdn.example.com/a.png>");
-    expect(html).toContain("src=//cdn.example.com/a.png");
+    expect(html).toBe("<img src=//cdn.example.com/a.png>");
+  });
+
+  it("preserves an unquoted remote image URL", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render("<img src=https://example.com/a.png alt=logo>");
+    expect(html).toBe("<img src=https://example.com/a.png alt=logo>");
   });
 });

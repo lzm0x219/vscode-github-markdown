@@ -15,9 +15,20 @@ function rewriteImgSrc(html: string, env: ImageRenderEnv | undefined): string {
     imageTag.replace(
       projectRootSrcAttributePattern,
       (_match, before, quote = "", quotedSrc, unquotedSrc) =>
-        `${before}${quote}${toProjectRootResourceUri(quotedSrc ?? unquotedSrc, env)}${quote}`
+        `${before}${serializeAttributeValue(
+          toProjectRootResourceUri(quotedSrc ?? unquotedSrc, env),
+          quote
+        )}`
     )
   );
+}
+
+function serializeAttributeValue(value: string, quote: string): string {
+  const delimiter = quote === "'" ? "'" : '"';
+  const escaped = value
+    .replaceAll("&", "&amp;")
+    .replaceAll(delimiter, delimiter === '"' ? "&quot;" : "&#39;");
+  return `${delimiter}${escaped}${delimiter}`;
 }
 
 function toProjectRootResourceUri(src: string, env: ImageRenderEnv | undefined): string {
