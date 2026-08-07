@@ -30,7 +30,7 @@ function toProjectRootResourceUri(src: string, env: ImageRenderEnv | undefined):
 
   try {
     const parsed = vscode.Uri.parse(`markdown-link:${src}`);
-    const resource = vscode.Uri.joinPath(workspaceFolder.uri, parsed.fsPath).with({
+    const resource = vscode.Uri.joinPath(workspaceFolder.uri, parsed.path).with({
       fragment: parsed.fragment,
       query: parsed.query
     });

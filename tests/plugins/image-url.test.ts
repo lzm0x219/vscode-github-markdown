@@ -8,12 +8,9 @@ const vscode = vi.hoisted(() => {
       readonly path: string,
       readonly query = "",
       readonly fragment = "",
-      readonly authority = ""
+      readonly authority = "",
+      readonly fsPath = path
     ) {}
-
-    get fsPath(): string {
-      return this.path;
-    }
 
     toString(): string {
       return `${this.scheme}://${this.authority}${this.path}${this.query ? `?${this.query}` : ""}${this.fragment ? `#${this.fragment}` : ""}`;
@@ -25,7 +22,8 @@ const vscode = vi.hoisted(() => {
         this.path,
         change.query ?? this.query,
         change.fragment ?? this.fragment,
-        this.authority
+        this.authority,
+        this.fsPath
       );
     }
   }
@@ -42,7 +40,14 @@ const vscode = vi.hoisted(() => {
       parse(value: string): MockUri {
         const match = /^(.*?):(?:\/\/)?([^?#]*)(?:\?([^#]*))?(?:#(.*))?$/.exec(value);
         if (!match?.[1] || match[2] === undefined) throw new Error(`Invalid URI: ${value}`);
-        return new MockUri(match[1], match[2], match[3], match[4]);
+        return new MockUri(
+          match[1],
+          match[2],
+          match[3],
+          match[4],
+          "",
+          match[2].replaceAll("/", "\\")
+        );
       }
     },
     workspace: {
@@ -65,21 +70,24 @@ describe("markdown-it-github-image-url", () => {
   it.each([
     ["root document", "/workspace/README.md"],
     ["nested document", "/workspace/docs/guide.md"]
-  ])("resolves a project-root HTML image from a %s", (_case, documentPath) => {
-    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
-    const html = md.render('<img src="/assets/logo.svg" alt="logo">', {
-      currentDocument: new vscode.MockUri("file", documentPath),
-      resourceProvider: {
-        asWebviewUri(
-          resource: InstanceType<typeof vscode.MockUri>
-        ): InstanceType<typeof vscode.MockUri> {
-          return new vscode.MockUri("https", resource.path, "", "", "webview.test");
+  ])(
+    "resolves a project-root HTML image from a %s using URI path semantics",
+    (_case, documentPath) => {
+      const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+      const html = md.render('<img src="/assets/logo.svg" alt="logo">', {
+        currentDocument: new vscode.MockUri("file", documentPath),
+        resourceProvider: {
+          asWebviewUri(
+            resource: InstanceType<typeof vscode.MockUri>
+          ): InstanceType<typeof vscode.MockUri> {
+            return new vscode.MockUri("https", resource.path, "", "", "webview.test");
+          }
         }
-      }
-    });
+      });
 
-    expect(html).toContain('src="https://webview.test/workspace/assets/logo.svg"');
-  });
+      expect(html).toContain('src="https://webview.test/workspace/assets/logo.svg"');
+    }
+  );
 
   it("does not touch already-relative paths", () => {
     const md = new MarkdownIt().use(githubImageUrl);
