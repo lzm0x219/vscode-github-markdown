@@ -163,6 +163,18 @@ describe("markdown-it-github-image-url", () => {
     );
   });
 
+  it("decodes existing HTML entities without applying Markdown backslash escapes", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(
+      '<img src="/assets/a\\&amp;b.svg?theme=light&amp;size=wide#hero" alt=logo>',
+      renderEnv()
+    );
+
+    expect(html).toBe(
+      '<img src="https://webview.test/workspace/assets/a\\&amp;b.svg?theme=light&amp;size=wide#hero" alt=logo>'
+    );
+  });
+
   it("serializes an unquoted src against the owning folder in a multi-root workspace", () => {
     vscode.workspace.getWorkspaceFolder.mockReturnValueOnce({
       uri: new vscode.MockUri("file", "/second-workspace")

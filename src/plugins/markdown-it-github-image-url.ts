@@ -4,23 +4,31 @@ import type MarkdownIt from "markdown-it";
 const imageTagPattern = /<img(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
 const projectRootSrcAttributePattern =
   /(<img(?:[^"'<>]|"[^"]*"|'[^']*')*?[\t\n\f\r ]+src[\t\n\f\r ]*=[\t\n\f\r ]*)(?:(["'])(\/(?!\/)[^"']+)\2|(\/(?!\/)[^\t\n\f\r "'`=<>]+))/i;
+const htmlEntityPattern = /&[a-z#][a-z0-9]{1,31};/gi;
 
 type ImageRenderEnv = {
   currentDocument?: vscode.Uri;
   resourceProvider?: Pick<vscode.Webview, "asWebviewUri">;
 };
 
-function rewriteImgSrc(html: string, env: ImageRenderEnv | undefined): string {
+function rewriteImgSrc(
+  html: string,
+  env: ImageRenderEnv | undefined,
+  decodeHtmlEntity: (entity: string) => string
+): string {
   return html.replace(imageTagPattern, (imageTag) =>
     imageTag.replace(
       projectRootSrcAttributePattern,
-      (_match, before, quote = "", quotedSrc, unquotedSrc) =>
-        `${before}${serializeAttributeValue(
-          toProjectRootResourceUri(quotedSrc ?? unquotedSrc, env),
-          quote
-        )}`
+      (_match, before, quote = "", quotedSrc, unquotedSrc) => {
+        const src = decodeHtmlEntities(quotedSrc ?? unquotedSrc, decodeHtmlEntity);
+        return `${before}${serializeAttributeValue(toProjectRootResourceUri(src, env), quote)}`;
+      }
     )
   );
+}
+
+function decodeHtmlEntities(value: string, decodeHtmlEntity: (entity: string) => string): string {
+  return value.replace(htmlEntityPattern, (entity) => decodeHtmlEntity(entity));
 }
 
 function serializeAttributeValue(value: string, quote: string): string {
@@ -59,7 +67,9 @@ export default function markdownItImageUrl(md: MarkdownIt): MarkdownIt {
 
     md.renderer.rules[ruleName] = (tokens, idx, options, env, self) => {
       if (tokens[idx]) {
-        tokens[idx].content = rewriteImgSrc(tokens[idx].content, env as ImageRenderEnv);
+        tokens[idx].content = rewriteImgSrc(tokens[idx].content, env as ImageRenderEnv, (entity) =>
+          md.utils.unescapeAll(entity)
+        );
       }
       return defaultRender(tokens, idx, options, env, self);
     };
