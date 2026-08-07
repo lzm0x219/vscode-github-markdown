@@ -39,7 +39,9 @@ Theme metadata written by `src/plugins/markdown-it-github-theme.ts` selects eith
 
 Mermaid rendering belongs to the separate `markdown-mermaid` extension. If its configuration keys exist and `githubMarkdown.mermaid.syncTheme` is enabled, this extension maps the selected GitHub themes to both `markdown-mermaid.lightModeTheme` and `markdown-mermaid.darkModeTheme`.
 
-Before the first update, the original global values are stored in extension global state. Disabling synchronization restores those values and removes the snapshot. If `markdown-mermaid` is absent, synchronization is a no-op. No Mermaid runtime is bundled.
+Each Mermaid slot uses the Workspace target when that setting has an explicit workspace override; otherwise it uses Global. Original values and the last applied values are stored per target in extension global state, with Workspace records keyed by the current workspace identity. Stopping synchronization or deactivating the extension restores every still-owned Global record and the current workspace's still-owned Workspace records. A user change releases the affected record, so restoration does not overwrite the newer choice.
+
+Apply and restore intent is persisted before configuration writes. Pending records are reconciled after an interrupted transition, and released records preserve user takeovers across later workspace changes. Concurrent extension hosts cannot update shared Global settings atomically, so the latest observed host write wins until another host observes a user takeover. If `markdown-mermaid` is absent, synchronization is a no-op. No Mermaid runtime is bundled.
 
 ## Verification Boundaries
 

@@ -145,13 +145,14 @@ async function restoreNow(
   await migrateSnapshot(memento, identity);
   const transactions: Transaction[] = [];
   for (const [slot, key] of slots) {
-    const target = getEffectiveTarget(configuration, key);
-    if (target === vscode.ConfigurationTarget.Global) {
-      await discardWorkspaceState(memento, identity, slot);
-    }
-    const context = loadContext(memento, identity, slot, key, target);
-    if (context.state) {
-      transactions.push(prepareRestore(configuration, { ...context, state: context.state }));
+    for (const target of [
+      vscode.ConfigurationTarget.Global,
+      vscode.ConfigurationTarget.Workspace
+    ] as const) {
+      const context = loadContext(memento, identity, slot, key, target);
+      if (context.state) {
+        transactions.push(prepareRestore(configuration, { ...context, state: context.state }));
+      }
     }
   }
   const results = await executeTransactions(memento, configuration, transactions, () => undefined);
