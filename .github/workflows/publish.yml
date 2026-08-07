@@ -150,8 +150,36 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  publish:
+  prepare-release:
     needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: vscode-github-markdown-${{ github.ref_name }}
+          path: release
+
+      - name: Ensure draft GitHub Release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "GitHub Release $GITHUB_REF_NAME already exists"
+            exit 0
+          fi
+
+          gh release create "$GITHUB_REF_NAME" \
+            --draft \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release/release-CHANGELOG.txt \
+            --repo "$GITHUB_REPOSITORY"
+
+  publish:
+    needs: prepare-release
     runs-on: ubuntu-latest
     environment: release
     permissions:
