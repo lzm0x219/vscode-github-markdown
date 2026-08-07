@@ -16,6 +16,7 @@ let mermaidGlobalConfig: Record<string, string | undefined> = {
 let mermaidWorkspaceConfig: Record<string, string | undefined> = {};
 let mermaidConfigurationRegistered = true;
 let mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
+let workspaceIdentity = "file:///workspace-a.code-workspace";
 
 const updateCalls: { key: string; value: string | undefined; target: number }[] = [];
 let updateFailures = new Set<string>();
@@ -38,6 +39,9 @@ vi.mock("vscode", () => ({
       getExtension: (id: string) => (mermaidExtensionIds.has(id) ? {} : undefined)
     },
     workspace: {
+      get workspaceFile() {
+        return { toString: () => workspaceIdentity };
+      },
       getConfiguration: (namespace?: string) => {
         if (namespace === "markdown-mermaid") {
           return {
@@ -94,6 +98,7 @@ describe("Mermaid theme synchronization", () => {
     mermaidWorkspaceConfig = {};
     mermaidConfigurationRegistered = true;
     mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
+    workspaceIdentity = "file:///workspace-a.code-workspace";
     updateFailures = new Set();
     updateGates = new Map();
     updateFailureCalls = new Set();
@@ -197,10 +202,6 @@ describe("Mermaid theme synchronization", () => {
     const memento = createTestMemento();
 
     await updateMermaidThemeSync(memento);
-    mermaidGlobalConfig["lightModeTheme"] = "base";
-    mermaidGlobalConfig["darkModeTheme"] = "vscode";
-    await updateMermaidThemeSync(memento);
-
     markdownConfig["mermaid.syncTheme"] = false;
     updateCalls.length = 0;
     await updateMermaidThemeSync(memento);
@@ -228,6 +229,107 @@ describe("Mermaid theme synchronization", () => {
     });
     expect(mermaidGlobalConfig).toEqual({
       lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+  });
+
+  it("does not restore workspace overrides captured for another workspace", async () => {
+    const memento = createTestMemento();
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    };
+
+    await updateMermaidThemeSync(memento);
+
+    workspaceIdentity = "file:///workspace-b.code-workspace";
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "default",
+      darkModeTheme: "dark"
+    };
+    markdownConfig["mermaid.syncTheme"] = false;
+    updateCalls.length = 0;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([]);
+    expect(mermaidWorkspaceConfig).toEqual({
+      lightModeTheme: "default",
+      darkModeTheme: "dark"
+    });
+  });
+
+  it("rebases workspace synchronization after the extension host changes workspaces", async () => {
+    const memento = createTestMemento();
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    };
+
+    await updateMermaidThemeSync(memento);
+
+    workspaceIdentity = "file:///workspace-b.code-workspace";
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "neutral",
+      darkModeTheme: "base"
+    };
+    await updateMermaidThemeSync(memento);
+
+    markdownConfig["mermaid.syncTheme"] = false;
+    await updateMermaidThemeSync(memento);
+
+    expect(mermaidWorkspaceConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "base"
+    });
+  });
+
+  it("restores global snapshots created before workspace targets were recorded", async () => {
+    const memento = createTestMemento();
+    await memento.update("githubMarkdown.mermaid.originalGlobalThemes", {
+      light: "neutral",
+      dark: "forest",
+      applied: {
+        light: "default",
+        dark: "dark"
+      }
+    });
+    mermaidGlobalConfig = {
+      lightModeTheme: "default",
+      darkModeTheme: "dark"
+    };
+    markdownConfig["mermaid.syncTheme"] = false;
+
+    await updateMermaidThemeSync(memento);
+
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+  });
+
+  it("stops synchronizing a Mermaid slot after the user changes that target", async () => {
+    const memento = createTestMemento();
+
+    await updateMermaidThemeSync(memento);
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+    markdownConfig["theme.mode"] = "vscode";
+    updateCalls.length = 0;
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "vscode", target: 1 }]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    });
+
+    markdownConfig["mermaid.syncTheme"] = false;
+    updateCalls.length = 0;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "forest", target: 1 }]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
       darkModeTheme: "forest"
     });
   });
