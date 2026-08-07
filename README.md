@@ -76,7 +76,7 @@ This project focuses on three practical outcomes:
 - **Footnotes** — `[^1]` references with automatic numbering, backrefs, and a footnotes section at the bottom.
 - **Alerts** — `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]` render with proper icons and styling.
 - **Emoji Shortcodes** — `:rocket:`, `:+1:`, `:tada:` and thousands more, including both Unicode emoji and image-based custom emoji from GitHub.
-- **HTML Image Path Rewriting** — absolute paths in HTML `<img>` tags (`/path/to/img`) are rewritten to relative paths (`./path/to/img`), so project-local images work correctly in VS Code's webview preview.
+- **HTML Project-Root Images** — absolute paths in HTML `<img>` tags (`/path/to/img`) resolve from the workspace root in VS Code's webview preview, including from Markdown files in subdirectories.
 
 ### Pixel-Verified Preview Parity
 

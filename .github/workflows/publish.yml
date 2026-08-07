@@ -127,6 +127,41 @@ jobs:
       - name: Package
         run: nub run package
 
+      - name: Download previous published VSIX baseline
+        id: package_baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          baseline_directory="artifacts/packages/baseline"
+          baseline_tag="$(
+            gh release list \
+              --exclude-drafts \
+              --exclude-pre-releases \
+              --limit 100 \
+              --json tagName,publishedAt \
+              --repo "$GITHUB_REPOSITORY" \
+              | jq -r --arg current "$GITHUB_REF_NAME" \
+                'map(select(.tagName != $current)) | max_by(.publishedAt).tagName // empty'
+          )"
+
+          if [[ -z "$baseline_tag" ]]; then
+            echo "::notice::No previous published stable VSIX exists; applying absolute package checks only"
+            exit 0
+          fi
+
+          mkdir -p "$baseline_directory"
+          gh release download "$baseline_tag" \
+            --pattern '*.vsix' \
+            --dir "$baseline_directory" \
+            --repo "$GITHUB_REPOSITORY"
+          baseline="$(find "$baseline_directory" -maxdepth 1 -type f -name '*.vsix' -print -quit)"
+          if [[ -z "$baseline" ]]; then
+            echo "::error::Release $baseline_tag has no VSIX asset"
+            exit 1
+          fi
+          echo "path=$baseline" >> "$GITHUB_OUTPUT"
+          echo "tag=$baseline_tag" >> "$GITHUB_OUTPUT"
+
       - name: Verify VSIX contents and size
         run: |
           archive="$(find . -maxdepth 1 -type f -name '*.vsix' -print -quit)"
@@ -134,10 +169,18 @@ jobs:
             echo "::error::No VSIX archive was produced"
             exit 1
           fi
-          nub scripts/package-audit/index.ts \
-            "$archive" \
-            "$archive" \
-            artifacts/package-size/release.json
+          baseline="${{ steps.package_baseline.outputs.path }}"
+          if [[ -n "$baseline" ]]; then
+            nub scripts/package-audit/index.ts \
+              "$baseline" \
+              "$archive" \
+              artifacts/package-size/release.json
+          else
+            nub scripts/package-audit/index.ts \
+              --current-only \
+              "$archive" \
+              artifacts/package-size/release.json
+          fi
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v7
@@ -150,8 +193,36 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  publish:
+  prepare-release:
     needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: vscode-github-markdown-${{ github.ref_name }}
+          path: release
+
+      - name: Ensure draft GitHub Release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "GitHub Release $GITHUB_REF_NAME already exists"
+            exit 0
+          fi
+
+          gh release create "$GITHUB_REF_NAME" \
+            --draft \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release/release-CHANGELOG.txt \
+            --repo "$GITHUB_REPOSITORY"
+
+  publish:
+    needs: prepare-release
     runs-on: ubuntu-latest
     environment: release
     permissions:
