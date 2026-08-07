@@ -1,4 +1,4 @@
-import { basename, posix, win32 } from "node:path";
+import { basename, posix } from "node:path";
 import { describe, expect, it } from "vitest";
 import { resolveDesktopPreviewDirectories } from "../../../scripts/host/desktop-preview-profile";
 
@@ -86,7 +86,7 @@ describe("resolveDesktopPreviewDirectories", () => {
     expect(firstUser.extensionsDir).toBe(secondUser.extensionsDir);
   });
 
-  it("applies the short IPC profile only on POSIX platforms", () => {
+  it("uses the short IPC profile only on macOS", () => {
     const version = "1.129.0";
     const projectRoot = "/worktrees/first/project";
     const longPosixTemporaryDirectory =
@@ -106,7 +106,9 @@ describe("resolveDesktopPreviewDirectories", () => {
       version,
       projectRoot,
       {
-        canonicalTemporaryDirectory: "/private/tmp",
+        get canonicalTemporaryDirectory(): string {
+          throw new Error("Linux must not resolve the macOS short temp directory");
+        },
         platform: "linux",
         userIdentity: "501"
       }
@@ -118,7 +120,9 @@ describe("resolveDesktopPreviewDirectories", () => {
       version,
       String.raw`C:\worktrees\first\project`,
       {
-        canonicalTemporaryDirectory: String.raw`C:\Windows\Temp`,
+        get canonicalTemporaryDirectory(): string {
+          throw new Error("Windows must not resolve the macOS short temp directory");
+        },
         platform: "win32",
         userIdentity: "501"
       }
@@ -127,13 +131,18 @@ describe("resolveDesktopPreviewDirectories", () => {
     expect(Buffer.byteLength(posix.join(darwin.userDataDir, "1.12-main.sock"))).toBeLessThanOrEqual(
       103
     );
-    expect(darwin.userDataDir).toMatch(/^\/private\/tmp\/vsgm-[0-9A-Za-z_-]+\//);
-    expect(linux).toEqual(darwin);
-    expect(win32.dirname(windows.userDataDir)).toBe(
-      win32.join(longWindowsTemporaryDirectory, "vsgm-host-preview", version)
+    expect(darwin.userDataDir).toBe("/private/tmp/vsgm-TMEvqyfJs8Qg/fvPC_ef8LPLl/cYMkdORUhW-W");
+    expect(linux.userDataDir).toBe(
+      "/Users/example/a-very-long-workspace-specific-temp-directory/vsgm-host-preview/1.129.0/cYMkdORUhW-W"
+    );
+    expect(linux.extensionsDir).toBe(
+      "/Users/example/a-very-long-workspace-specific-temp-directory/vsgm-host-preview/1.129.0/extensions"
+    );
+    expect(windows.userDataDir).toBe(
+      String.raw`C:\Users\example\a-very-long-workspace-specific-temp-directory\vsgm-host-preview\1.129.0\NnLlm78TWwha`
     );
     expect(windows.extensionsDir).toBe(
-      win32.join(longWindowsTemporaryDirectory, "vsgm-host-preview", version, "extensions")
+      String.raw`C:\Users\example\a-very-long-workspace-specific-temp-directory\vsgm-host-preview\1.129.0\extensions`
     );
   });
 });

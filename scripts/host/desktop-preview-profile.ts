@@ -6,7 +6,7 @@ const maximumMacOsIpcSocketPathBytes = 103;
 const macOsIpcSocketName = "1.12-main.sock";
 
 interface DesktopPreviewEnvironment {
-  canonicalTemporaryDirectory: string;
+  canonicalTemporaryDirectory?: string;
   platform: NodeJS.Platform;
   userIdentity: string;
 }
@@ -15,7 +15,7 @@ export function resolveDesktopPreviewDirectories(
   temporaryDirectory: string,
   version: string,
   projectRoot: string,
-  environment: DesktopPreviewEnvironment = desktopPreviewEnvironment(temporaryDirectory)
+  environment: DesktopPreviewEnvironment = desktopPreviewEnvironment()
 ): { extensionsDir: string; userDataDir: string } {
   const path = environment.platform === "win32" ? win32 : posix;
   const dataDir = path.join(temporaryDirectory, "vsgm-host-preview", version);
@@ -24,14 +24,14 @@ export function resolveDesktopPreviewDirectories(
   return {
     extensionsDir: path.join(dataDir, "extensions"),
     userDataDir:
-      environment.platform === "win32" || fitsMacOsIpcSocket(userDataDir)
-        ? userDataDir
-        : path.join(
-            environment.canonicalTemporaryDirectory,
+      environment.platform === "darwin" && !fitsMacOsIpcSocket(userDataDir)
+        ? path.join(
+            environment.canonicalTemporaryDirectory ?? shortTemporaryDirectory(temporaryDirectory),
             `vsgm-${stableId(`${environment.userIdentity}\0${temporaryDirectory}`)}`,
             stableId(version),
             projectId
           )
+        : userDataDir
   };
 }
 
@@ -45,17 +45,15 @@ function fitsMacOsIpcSocket(userDataDir: string): boolean {
   );
 }
 
-function desktopPreviewEnvironment(temporaryDirectory: string): DesktopPreviewEnvironment {
+function desktopPreviewEnvironment(): DesktopPreviewEnvironment {
   return {
-    canonicalTemporaryDirectory: shortTemporaryDirectory(temporaryDirectory, process.platform),
     platform: process.platform,
     userIdentity: typeof process.getuid === "function" ? String(process.getuid()) : "unknown"
   };
 }
 
-function shortTemporaryDirectory(temporaryDirectory: string, platform: NodeJS.Platform): string {
-  const path = platform === "win32" ? win32 : posix;
-  const rootTemporaryDirectory = path.join(path.parse(temporaryDirectory).root, "tmp");
+function shortTemporaryDirectory(temporaryDirectory: string): string {
+  const rootTemporaryDirectory = posix.join(posix.parse(temporaryDirectory).root, "tmp");
   try {
     return realpathSync.native(rootTemporaryDirectory);
   } catch {
