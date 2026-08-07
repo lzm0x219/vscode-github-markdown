@@ -13,6 +13,7 @@ let mermaidGlobalConfig: Record<string, string | undefined> = {
   lightModeTheme: "neutral",
   darkModeTheme: "forest"
 };
+let mermaidWorkspaceConfig: Record<string, string | undefined> = {};
 let mermaidConfigurationRegistered = true;
 let mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
 
@@ -22,9 +23,17 @@ let updateGates = new Map<string, Promise<void>>();
 let updateFailureCalls = new Set<number>();
 let updateGateCalls = new Map<number, Promise<void>>();
 
+function getEffectiveMermaidConfig(): Record<string, string | undefined> {
+  return {
+    lightModeTheme:
+      mermaidWorkspaceConfig["lightModeTheme"] ?? mermaidGlobalConfig["lightModeTheme"],
+    darkModeTheme: mermaidWorkspaceConfig["darkModeTheme"] ?? mermaidGlobalConfig["darkModeTheme"]
+  };
+}
+
 vi.mock("vscode", () => ({
   default: {
-    ConfigurationTarget: { Global: 1 },
+    ConfigurationTarget: { Global: 1, Workspace: 2 },
     extensions: {
       getExtension: (id: string) => (mermaidExtensionIds.has(id) ? {} : undefined)
     },
@@ -34,7 +43,10 @@ vi.mock("vscode", () => ({
           return {
             inspect: (key: string) =>
               mermaidConfigurationRegistered
-                ? { globalValue: mermaidGlobalConfig[key] }
+                ? {
+                    globalValue: mermaidGlobalConfig[key],
+                    workspaceValue: mermaidWorkspaceConfig[key]
+                  }
                 : undefined,
             update: async (key: string, value: string | undefined, target: number) => {
               updateCalls.push({ key, value, target });
@@ -46,7 +58,11 @@ vi.mock("vscode", () => ({
               if (updateGate) {
                 await updateGate;
               }
-              mermaidGlobalConfig[key] = value;
+              if (target === 2) {
+                mermaidWorkspaceConfig[key] = value;
+              } else {
+                mermaidGlobalConfig[key] = value;
+              }
             }
           };
         }
@@ -75,6 +91,7 @@ describe("Mermaid theme synchronization", () => {
       lightModeTheme: "neutral",
       darkModeTheme: "forest"
     };
+    mermaidWorkspaceConfig = {};
     mermaidConfigurationRegistered = true;
     mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
     updateFailures = new Set();
@@ -94,6 +111,25 @@ describe("Mermaid theme synchronization", () => {
       { key: "lightModeTheme", value: "default", target: 1 },
       { key: "darkModeTheme", value: "dark", target: 1 }
     ]);
+  });
+
+  it("synchronizes workspace Mermaid overrides without changing global settings", async () => {
+    const memento = createTestMemento();
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    };
+
+    await updateMermaidThemeSync(memento);
+
+    expect(getEffectiveMermaidConfig()).toEqual({
+      lightModeTheme: "default",
+      darkModeTheme: "dark"
+    });
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
   });
 
   it("configures both Mermaid slots from the fixed theme in single mode", async () => {
@@ -175,6 +211,27 @@ describe("Mermaid theme synchronization", () => {
     ]);
   });
 
+  it("restores workspace Mermaid overrides when synchronization is disabled", async () => {
+    const memento = createTestMemento();
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    };
+
+    await updateMermaidThemeSync(memento);
+    markdownConfig["mermaid.syncTheme"] = false;
+    await updateMermaidThemeSync(memento);
+
+    expect(getEffectiveMermaidConfig()).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    });
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+  });
+
   it("restores the original themes when disabling synchronization overlaps an update", async () => {
     const memento = createTestMemento();
     let releaseUpdate = () => {};
@@ -239,6 +296,27 @@ describe("Mermaid theme synchronization", () => {
     expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "forest", target: 1 }]);
     expect(mermaidGlobalConfig).toEqual({
       lightModeTheme: "base",
+      darkModeTheme: "forest"
+    });
+  });
+
+  it("does not overwrite workspace Mermaid choices made while synchronization was active", async () => {
+    const memento = createTestMemento();
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    };
+
+    await updateMermaidThemeSync(memento);
+    mermaidWorkspaceConfig["lightModeTheme"] = "forest";
+    await restoreMermaidThemeSync(memento);
+
+    expect(getEffectiveMermaidConfig()).toEqual({
+      lightModeTheme: "forest",
+      darkModeTheme: "vscode"
+    });
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
       darkModeTheme: "forest"
     });
   });

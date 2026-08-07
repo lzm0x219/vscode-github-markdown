@@ -23,9 +23,15 @@ export const themes = ["vscode", "base", "forest", "dark", "default", "neutral"]
 
 export type MermaidTheme = (typeof themes)[number];
 
+type MermaidThemeTarget = vscode.ConfigurationTarget.Global | vscode.ConfigurationTarget.Workspace;
+
 type MermaidThemeSnapshot = {
   light: MermaidTheme | undefined;
   dark: MermaidTheme | undefined;
+  targets?: {
+    light: MermaidThemeTarget;
+    dark: MermaidThemeTarget;
+  };
   applied?: {
     light?: MermaidTheme;
     dark?: MermaidTheme;
@@ -64,8 +70,18 @@ async function updateMermaidThemeSyncNow(memento: vscode.Memento): Promise<void>
   const snapshot = await preserveMermaidThemes(memento, configuration);
   const [light, dark] = resolveMermaidThemes();
   const [lightResult, darkResult] = await Promise.allSettled([
-    updateMermaidTheme(configuration, originSection.light, light),
-    updateMermaidTheme(configuration, originSection.dark, dark)
+    updateMermaidTheme(
+      configuration,
+      originSection.light,
+      light,
+      snapshot.targets?.light ?? vscode.ConfigurationTarget.Global
+    ),
+    updateMermaidTheme(
+      configuration,
+      originSection.dark,
+      dark,
+      snapshot.targets?.dark ?? vscode.ConfigurationTarget.Global
+    )
   ]);
   const applied = { ...snapshot.applied };
   if (lightResult.status === "fulfilled") {
@@ -114,17 +130,22 @@ async function restoreMermaidThemeSyncNow(
   }
 
   const updates: Promise<void>[] = [];
+  const lightTarget = snapshot.targets?.light ?? vscode.ConfigurationTarget.Global;
   if (
     snapshot.applied?.light !== undefined &&
-    getGlobalMermaidTheme(configuration, originSection.light) === snapshot.applied.light
+    getMermaidThemeAtTarget(configuration, originSection.light, lightTarget) ===
+      snapshot.applied.light
   ) {
-    updates.push(updateMermaidTheme(configuration, originSection.light, snapshot.light));
+    updates.push(
+      updateMermaidTheme(configuration, originSection.light, snapshot.light, lightTarget)
+    );
   }
+  const darkTarget = snapshot.targets?.dark ?? vscode.ConfigurationTarget.Global;
   if (
     snapshot.applied?.dark !== undefined &&
-    getGlobalMermaidTheme(configuration, originSection.dark) === snapshot.applied.dark
+    getMermaidThemeAtTarget(configuration, originSection.dark, darkTarget) === snapshot.applied.dark
   ) {
-    updates.push(updateMermaidTheme(configuration, originSection.dark, snapshot.dark));
+    updates.push(updateMermaidTheme(configuration, originSection.dark, snapshot.dark, darkTarget));
   }
 
   const restoreResults = await Promise.allSettled(updates);
@@ -169,9 +190,15 @@ async function preserveMermaidThemes(
     return snapshot;
   }
 
+  const light = getEffectiveMermaidThemeOverride(configuration, originSection.light);
+  const dark = getEffectiveMermaidThemeOverride(configuration, originSection.dark);
   const newSnapshot = {
-    light: getGlobalMermaidTheme(configuration, originSection.light),
-    dark: getGlobalMermaidTheme(configuration, originSection.dark)
+    light: light.value,
+    dark: dark.value,
+    targets: {
+      light: light.target,
+      dark: dark.target
+    }
   } satisfies MermaidThemeSnapshot;
   await memento.update(snapshotKey, newSnapshot);
   return newSnapshot;
@@ -192,17 +219,39 @@ function hasMermaidThemeConfiguration(configuration: vscode.WorkspaceConfigurati
   );
 }
 
-function getGlobalMermaidTheme(
+function getMermaidThemeAtTarget(
+  configuration: vscode.WorkspaceConfiguration,
+  key: typeof originSection.light | typeof originSection.dark,
+  target: MermaidThemeTarget
+): MermaidTheme | undefined {
+  const inspected = configuration.inspect<MermaidTheme>(key);
+  return target === vscode.ConfigurationTarget.Workspace
+    ? inspected?.workspaceValue
+    : inspected?.globalValue;
+}
+
+function getEffectiveMermaidThemeOverride(
   configuration: vscode.WorkspaceConfiguration,
   key: typeof originSection.light | typeof originSection.dark
-): MermaidTheme | undefined {
-  return configuration.inspect<MermaidTheme>(key)?.globalValue;
+): { value: MermaidTheme | undefined; target: MermaidThemeTarget } {
+  const inspected = configuration.inspect<MermaidTheme>(key);
+  if (inspected?.workspaceValue !== undefined) {
+    return {
+      value: inspected.workspaceValue,
+      target: vscode.ConfigurationTarget.Workspace
+    };
+  }
+  return {
+    value: inspected?.globalValue,
+    target: vscode.ConfigurationTarget.Global
+  };
 }
 
 async function updateMermaidTheme(
   configuration: vscode.WorkspaceConfiguration,
   key: typeof originSection.light | typeof originSection.dark,
-  theme: MermaidTheme | undefined
+  theme: MermaidTheme | undefined,
+  target: MermaidThemeTarget = vscode.ConfigurationTarget.Global
 ): Promise<void> {
-  await configuration.update(key, theme, vscode.ConfigurationTarget.Global);
+  await configuration.update(key, theme, target);
 }
