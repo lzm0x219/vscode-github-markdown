@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Themes and appearance
+
+- Theme and theme-mode Quick Picks now display Chinese labels in Simplified Chinese VS Code, and confirmation messages no longer mix Chinese text with English theme names.
+
 ## [v4.4.2] - 2026-08-02
 
 v4.4.2 keeps Mermaid theme synchronization consistent during rapid changes and failed updates. Markdown preview now matches GitHub more closely for footnotes, project-root images, task lists, alerts, and automatic links.

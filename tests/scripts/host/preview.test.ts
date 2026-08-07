@@ -1,6 +1,39 @@
 import type { Frame, Locator, Page } from "playwright";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { assertFinalClientRendering } from "../../../scripts/host/client-rendering";
+import { assertClientRenderedPreview } from "../../../scripts/host/preview";
+
+type MermaidPalette = {
+  background: string;
+  nodeFill: string;
+  textColor: string;
+};
+
+const lightPalette: MermaidPalette = {
+  background: "rgb(255, 255, 255)",
+  nodeFill: "rgb(221, 238, 255)",
+  textColor: "rgb(31, 35, 40)"
+};
+const darkPalette: MermaidPalette = {
+  background: "rgb(13, 17, 23)",
+  nodeFill: "rgb(22, 27, 34)",
+  textColor: "rgb(230, 237, 243)"
+};
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
+describe("assertClientRenderedPreview", () => {
+  it("waits for system theme palettes when the first rendered sample is stale", async () => {
+    vi.useFakeTimers();
+    const preview = createThemePreviewPage();
+
+    await expect(assertClientRenderedPreview(preview.page)).resolves.toBeUndefined();
+
+    expect(preview.readPalette()).toEqual(darkPalette);
+  });
+});
 
 describe("assertFinalClientRendering", () => {
   it("reacquires the preview when its frame reloads during the final assertions", async () => {
@@ -45,4 +78,205 @@ function createPreviewFrame({
     }),
     url: () => "vscode-webview://preview"
   } as unknown as Frame;
+}
+
+type ThemePreviewState = {
+  activeCommand: string | undefined;
+  body: "vscode-dark" | "vscode-light";
+  dark: string;
+  inputValue: string;
+  light: string;
+  mode: "auto" | "dark" | "light";
+  palette: MermaidPalette;
+  pendingPalette: MermaidPalette | undefined;
+  quickInputVisible: boolean;
+};
+
+function createThemePreviewPage(): {
+  page: Page;
+  readPalette: () => MermaidPalette;
+} {
+  const state: ThemePreviewState = {
+    activeCommand: undefined,
+    body: "vscode-light",
+    dark: "dark",
+    inputValue: "",
+    light: "light",
+    mode: "light",
+    palette: lightPalette,
+    pendingPalette: undefined,
+    quickInputVisible: false
+  };
+  const frame = createThemeFrame(state);
+  const page = {
+    frames: () => [frame],
+    keyboard: {
+      press: async (key: string) => {
+        if (key === "Escape") state.quickInputVisible = false;
+      }
+    },
+    locator: (selector: string) => createWorkbenchLocator(selector, state),
+    waitForTimeout: async (milliseconds: number) => {
+      if (state.pendingPalette) {
+        state.palette = state.pendingPalette;
+        state.pendingPalette = undefined;
+      }
+      vi.advanceTimersByTime(milliseconds);
+    }
+  } as unknown as Page;
+
+  return { page, readPalette: () => state.palette };
+}
+
+function createWorkbenchLocator(
+  selector: string,
+  state: ThemePreviewState,
+  text?: string
+): Locator {
+  const locator = {
+    click: async () => {
+      if (!selector.includes(".monaco-list-row") || !text) return;
+      if (state.inputValue.startsWith(">")) {
+        state.activeCommand = text;
+        if (!isQuickPickCommand(text)) state.quickInputVisible = false;
+        return;
+      }
+      applyQuickPick(state, state.activeCommand, text);
+      state.quickInputVisible = false;
+    },
+    fill: async (value: string) => {
+      state.inputValue = value;
+    },
+    filter: ({ hasText }: { hasText: string }) => createWorkbenchLocator(selector, state, hasText),
+    first: () => locator,
+    getByText: (value: string) => createWorkbenchLocator(selector, state, value),
+    isVisible: async () =>
+      selector.includes(".quick-input-widget") ? state.quickInputVisible : true,
+    locator: (child: string) => createWorkbenchLocator(`${selector} ${child}`, state),
+    press: async (key: string) => {
+      if (key === "F1") {
+        state.quickInputVisible = true;
+        state.activeCommand = undefined;
+      }
+    },
+    waitFor: async () => {}
+  };
+  return locator as unknown as Locator;
+}
+
+function isQuickPickCommand(command: string): boolean {
+  return (
+    command === "GitHub Markdown: Change Light Theme" ||
+    command === "GitHub Markdown: Change Dark Theme" ||
+    command === "GitHub Markdown: Change Theme Mode" ||
+    command === "GitHub Markdown: Change Single Theme" ||
+    command === "Preferences: Color Theme"
+  );
+}
+
+function applyQuickPick(
+  state: ThemePreviewState,
+  command: string | undefined,
+  option: string
+): void {
+  if (command === "GitHub Markdown: Change Light Theme") {
+    state.light = option === "Light high contrast" ? "light_high_contrast" : "light";
+    return;
+  }
+  if (command === "GitHub Markdown: Change Dark Theme") {
+    state.dark = option === "Dark Tritanopia" ? "dark_tritanopia" : "dark";
+    return;
+  }
+  if (command === "GitHub Markdown: Change Theme Mode") {
+    state.mode = option === "Sync with system" ? "auto" : "light";
+    return;
+  }
+  if (command === "GitHub Markdown: Change Single Theme") {
+    applySingleTheme(state, option);
+    return;
+  }
+  if (command === "Preferences: Color Theme") {
+    const isLight = option === "Light Modern";
+    state.body = isLight ? "vscode-light" : "vscode-dark";
+    state.palette = isLight ? darkPalette : lightPalette;
+    state.pendingPalette = isLight ? lightPalette : darkPalette;
+  }
+}
+
+function applySingleTheme(state: ThemePreviewState, option: string): void {
+  const cases: Record<
+    string,
+    { dark: string; light: string; mode: "dark" | "light"; palette: MermaidPalette }
+  > = {
+    Light: { dark: "dark", light: "light", mode: "light", palette: lightPalette },
+    "Dark dimmed": {
+      dark: "dark_dimmed",
+      light: "light",
+      mode: "dark",
+      palette: darkPalette
+    },
+    "Light Protanopia & Deuteranopia": {
+      dark: "dark",
+      light: "light_colorblind",
+      mode: "light",
+      palette: { ...lightPalette, nodeFill: "rgb(219, 231, 255)" }
+    },
+    "Light high contrast": {
+      dark: "dark",
+      light: "light_high_contrast",
+      mode: "light",
+      palette: { ...lightPalette, nodeFill: "rgb(255, 255, 255)" }
+    },
+    "Light Tritanopia": {
+      dark: "dark",
+      light: "light_tritanopia",
+      mode: "light",
+      palette: { ...lightPalette, nodeFill: "rgb(224, 239, 255)" }
+    }
+  };
+  const selected = cases[option];
+  if (!selected) throw new Error(`Unexpected single theme option: ${option}`);
+  state.dark = selected.dark;
+  state.light = selected.light;
+  state.mode = selected.mode;
+  state.palette = selected.palette;
+}
+
+function createThemeFrame(state: ThemePreviewState): Frame {
+  return {
+    evaluate: async () => ({
+      pageScrollable: true,
+      nestedVerticalScrollerLabels: []
+    }),
+    locator(selector: string) {
+      return {
+        boundingBox: async () => ({ x: 0, y: 0, width: 100, height: 100 }),
+        count: async () => countThemeSelector(selector, state),
+        evaluate: async () => state.palette,
+        evaluateAll: async () => [],
+        isVisible: async () => true,
+        textContent: async () => {
+          if (selector === ".mermaid svg") return "Alpha Beta";
+          if (selector.includes("annotation")) return "S_{12}";
+          return "";
+        }
+      } as unknown as Locator;
+    },
+    url: () => "vscode-webview://preview"
+  } as unknown as Frame;
+}
+
+function countThemeSelector(selector: string, state: ThemePreviewState): number {
+  if (selector === ".vscode-github-markdown") return 1;
+  if (selector.startsWith(".vscode-github-markdown[")) {
+    const expected =
+      `.vscode-github-markdown[data-color-mode="${state.mode}"]` +
+      `[data-light-theme="${state.light}"]` +
+      `[data-dark-theme="${state.dark}"]`;
+    return selector === expected ? 1 : 0;
+  }
+  if (selector === `body.${state.body}`) return 1;
+  if (selector === ".mermaid svg[data-host-preview-stale]") return 0;
+  if (selector === ".mermaid svg" || selector === ".katex-display .katex") return 1;
+  return 0;
 }

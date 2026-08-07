@@ -14,6 +14,7 @@ const harness = vi.hoisted(() => ({
   githubUpdateError: undefined as Error | undefined,
   githubUpdates: [] as { key: string; value: unknown; target: unknown }[],
   informationMessages: [] as string[],
+  localizedMessages: {} as Record<string, string>,
   markdownConfig: {} as Record<string, string | boolean>,
   mermaidGlobalConfig: {} as Record<string, string | undefined>,
   mermaidUpdateError: undefined as Error | undefined,
@@ -22,7 +23,8 @@ const harness = vi.hoisted(() => ({
     items: { label: string; value: string }[];
     options: { placeHolder?: string };
   }[],
-  quickPickResult: undefined as { label: string; value: string } | undefined
+  quickPickResult: undefined as { label: string; value: string } | undefined,
+  quickPickValue: undefined as string | undefined
 }));
 
 vi.mock("vscode", () => ({
@@ -49,6 +51,9 @@ vi.mock("vscode", () => ({
         options: { placeHolder?: string }
       ) => {
         harness.quickPickCalls.push({ items, options });
+        if (harness.quickPickValue) {
+          return items.find((item) => item.value === harness.quickPickValue);
+        }
         return harness.quickPickResult;
       },
       showInformationMessage: (message: string) => {
@@ -93,8 +98,12 @@ vi.mock("vscode", () => ({
     }
   },
   l10n: {
-    t: (message: string, ...args: (string | number)[]) =>
-      message.replace(/\{(\d+)\}/g, (_match, index) => String(args[Number(index)] ?? ""))
+    t: (message: string, ...args: (string | number)[]) => {
+      const localizedMessage = harness.localizedMessages[message] ?? message;
+      return localizedMessage.replace(/\{(\d+)\}/g, (_match, index) =>
+        String(args[Number(index)] ?? "")
+      );
+    }
   }
 }));
 
@@ -175,10 +184,12 @@ describe("extension lifecycle", () => {
     harness.githubUpdateError = undefined;
     harness.githubUpdates.length = 0;
     harness.informationMessages.length = 0;
+    harness.localizedMessages = {};
     harness.mermaidUpdates.length = 0;
     harness.mermaidUpdateError = undefined;
     harness.quickPickCalls.length = 0;
     harness.quickPickResult = undefined;
+    harness.quickPickValue = undefined;
     harness.markdownConfig = {
       "theme.mode": "system",
       "theme.single": "light",
@@ -363,6 +374,28 @@ describe("extension lifecycle", () => {
       expect(harness.informationMessages).toEqual([successMessage]);
     }
   );
+
+  it("localizes theme labels before interpolating the success message", async () => {
+    harness.localizedMessages = {
+      "Select a theme": "选择主题",
+      "Single theme changed to {0}.": "固定主题已切换为 {0}。",
+      "Dark dimmed": "柔和暗色"
+    };
+    const context = createContext();
+    await activate(context);
+    harness.quickPickValue = "dark_dimmed";
+    const command = harness.commandHandlers.get("vscode-github-markdown.changeSingleTheme");
+
+    await command?.();
+
+    expect(harness.informationMessages).toEqual(["固定主题已切换为 柔和暗色。"]);
+    expect(harness.quickPickCalls).toEqual([
+      {
+        items: expect.arrayContaining([{ label: "柔和暗色", value: "dark_dimmed" }]),
+        options: { placeHolder: "选择主题" }
+      }
+    ]);
+  });
 
   it.each(themeCommandCases)(
     "does not rewrite the current value through $commandId",
