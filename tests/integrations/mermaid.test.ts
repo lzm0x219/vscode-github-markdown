@@ -258,7 +258,7 @@ describe("Mermaid theme synchronization", () => {
     });
   });
 
-  it("rebases workspace synchronization after the extension host changes workspaces", async () => {
+  it("re-resolves the Mermaid targets after the extension host changes workspaces", async () => {
     const memento = createTestMemento();
     mermaidWorkspaceConfig = {
       lightModeTheme: "base",
@@ -268,18 +268,54 @@ describe("Mermaid theme synchronization", () => {
     await updateMermaidThemeSync(memento);
 
     workspaceIdentity = "file:///workspace-b.code-workspace";
-    mermaidWorkspaceConfig = {
-      lightModeTheme: "neutral",
-      darkModeTheme: "base"
-    };
+    mermaidWorkspaceConfig = {};
+    updateCalls.length = 0;
     await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "default", target: 1 },
+      { key: "darkModeTheme", value: "dark", target: 1 }
+    ]);
+
+    markdownConfig["mermaid.syncTheme"] = false;
+    await updateMermaidThemeSync(memento);
+
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+  });
+
+  it("adopts workspace targets after leaving a workspace that used global themes", async () => {
+    const memento = createTestMemento();
+
+    await updateMermaidThemeSync(memento);
+
+    workspaceIdentity = "file:///workspace-b.code-workspace";
+    mermaidWorkspaceConfig = {
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    };
+    updateCalls.length = 0;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "neutral", target: 1 },
+      { key: "darkModeTheme", value: "forest", target: 1 },
+      { key: "lightModeTheme", value: "default", target: 2 },
+      { key: "darkModeTheme", value: "dark", target: 2 }
+    ]);
 
     markdownConfig["mermaid.syncTheme"] = false;
     await updateMermaidThemeSync(memento);
 
     expect(mermaidWorkspaceConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "vscode"
+    });
+    expect(mermaidGlobalConfig).toEqual({
       lightModeTheme: "neutral",
-      darkModeTheme: "base"
+      darkModeTheme: "forest"
     });
   });
 

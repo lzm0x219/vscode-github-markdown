@@ -203,6 +203,13 @@ async function preserveMermaidThemes(
     return rebaseMermaidThemesForWorkspace(memento, configuration, snapshot);
   }
 
+  return captureMermaidThemes(memento, configuration);
+}
+
+async function captureMermaidThemes(
+  memento: vscode.Memento,
+  configuration: vscode.WorkspaceConfiguration
+): Promise<MermaidThemeSnapshot> {
   const light = getEffectiveMermaidThemeOverride(configuration, originSection.light);
   const dark = getEffectiveMermaidThemeOverride(configuration, originSection.dark);
   const newSnapshot = {
@@ -226,38 +233,47 @@ async function rebaseMermaidThemesForWorkspace(
   const workspaceIdentity = getWorkspaceIdentity();
   if (
     snapshot.workspaceIdentity === workspaceIdentity ||
-    (snapshot.targets?.light !== vscode.ConfigurationTarget.Workspace &&
-      snapshot.targets?.dark !== vscode.ConfigurationTarget.Workspace)
+    (snapshot.workspaceIdentity === undefined && snapshot.targets === undefined)
   ) {
     return snapshot;
   }
 
-  const rebasedSnapshot: MermaidThemeSnapshot = {
-    ...snapshot,
-    workspaceIdentity,
-    applied: { ...snapshot.applied },
-    released: { ...snapshot.released }
+  const released = {
+    light: isGloballyReleased(snapshot, configuration, "light", originSection.light),
+    dark: isGloballyReleased(snapshot, configuration, "dark", originSection.dark)
   };
-  if (snapshot.targets?.light === vscode.ConfigurationTarget.Workspace) {
-    rebasedSnapshot.light = getMermaidThemeAtTarget(
-      configuration,
-      originSection.light,
-      vscode.ConfigurationTarget.Workspace
-    );
-    delete rebasedSnapshot.applied?.light;
-    delete rebasedSnapshot.released?.light;
-  }
-  if (snapshot.targets?.dark === vscode.ConfigurationTarget.Workspace) {
-    rebasedSnapshot.dark = getMermaidThemeAtTarget(
-      configuration,
-      originSection.dark,
-      vscode.ConfigurationTarget.Workspace
-    );
-    delete rebasedSnapshot.applied?.dark;
-    delete rebasedSnapshot.released?.dark;
-  }
+  await restoreMermaidThemeSyncNow(memento, configuration);
+  const currentSnapshot = await captureMermaidThemes(memento, configuration);
+  const rebasedSnapshot = {
+    ...currentSnapshot,
+    released: {
+      ...(currentSnapshot.targets?.light === vscode.ConfigurationTarget.Global && released.light
+        ? { light: true as const }
+        : {}),
+      ...(currentSnapshot.targets?.dark === vscode.ConfigurationTarget.Global && released.dark
+        ? { dark: true as const }
+        : {})
+    }
+  } satisfies MermaidThemeSnapshot;
   await memento.update(snapshotKey, rebasedSnapshot);
   return rebasedSnapshot;
+}
+
+function isGloballyReleased(
+  snapshot: MermaidThemeSnapshot,
+  configuration: vscode.WorkspaceConfiguration,
+  slot: "light" | "dark",
+  key: typeof originSection.light | typeof originSection.dark
+): boolean {
+  if (snapshot.targets?.[slot] !== vscode.ConfigurationTarget.Global) {
+    return false;
+  }
+  return (
+    snapshot.released?.[slot] === true ||
+    (snapshot.applied?.[slot] !== undefined &&
+      getMermaidThemeAtTarget(configuration, key, vscode.ConfigurationTarget.Global) !==
+        snapshot.applied[slot])
+  );
 }
 
 function hasMermaidExtension(): boolean {
