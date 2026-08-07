@@ -3,12 +3,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { _electron as electron } from "playwright";
 import { project } from "../shared/project";
+import { resolveDesktopPreviewDirectories } from "./desktop-preview-profile";
 import { assertClientRenderedPreview } from "./preview";
 import { hostVersions } from "./versions";
 
 const version = process.env["VSCODE_TEST_VERSION"] ?? hostVersions.pinnedPreview.desktopVersion;
 const fixtures = join(project.root, "tests", "fixtures", "host");
-const dataDir = join(tmpdir(), "vsgm-host-preview", version);
+const directories = resolveDesktopPreviewDirectories(tmpdir(), version, project.root);
 const executablePath = await downloadAndUnzipVSCode(version);
 const application = await electron.launch({
   executablePath,
@@ -16,8 +17,8 @@ const application = await electron.launch({
   args: [
     fixtures,
     `--extensionDevelopmentPath=${project.root}`,
-    `--user-data-dir=${join(dataDir, "user-data")}`,
-    `--extensions-dir=${join(dataDir, "extensions")}`,
+    `--user-data-dir=${directories.userDataDir}`,
+    `--extensions-dir=${directories.extensionsDir}`,
     "--disable-extensions",
     "--disable-workspace-trust",
     "--skip-release-notes",
