@@ -1,4 +1,4 @@
-import { l10n } from "vscode";
+import vscode, { l10n } from "vscode";
 import { getConfiguration } from "./configuration";
 
 export type ThemeMode = "single" | "system" | "vscode";
@@ -56,12 +56,25 @@ export const section = {
   dark: "theme.dark"
 } as const;
 
+async function updateThemeConfiguration<T>(
+  key: (typeof section)[keyof typeof section],
+  value: T
+): Promise<void> {
+  const configuration = getConfiguration();
+  // Theme settings use window scope, so an unscoped configuration cannot write WorkspaceFolder.
+  const target =
+    configuration.inspect<T>(key)?.workspaceValue === undefined
+      ? vscode.ConfigurationTarget.Global
+      : vscode.ConfigurationTarget.Workspace;
+  await configuration.update(key, value, target);
+}
+
 export function getThemeMode(): ThemeMode {
   return getConfiguration().get(section.mode, "system");
 }
 
 export async function setThemeMode(mode: ThemeMode): Promise<void> {
-  await getConfiguration().update(section.mode, mode, true);
+  await updateThemeConfiguration(section.mode, mode);
 }
 
 export function getSingleTheme(): Theme {
@@ -69,7 +82,7 @@ export function getSingleTheme(): Theme {
 }
 
 export async function setSingleTheme(theme: Theme): Promise<void> {
-  await getConfiguration().update(section.single, theme, true);
+  await updateThemeConfiguration(section.single, theme);
 }
 
 export function getLightTheme(): Theme {
@@ -77,7 +90,7 @@ export function getLightTheme(): Theme {
 }
 
 export async function setLightTheme(theme: Theme): Promise<void> {
-  await getConfiguration().update(section.light, theme, true);
+  await updateThemeConfiguration(section.light, theme);
 }
 
 export function getDarkTheme(): Theme {
@@ -85,7 +98,7 @@ export function getDarkTheme(): Theme {
 }
 
 export async function setDarkTheme(theme: Theme): Promise<void> {
-  await getConfiguration().update(section.dark, theme, true);
+  await updateThemeConfiguration(section.dark, theme);
 }
 
 export function getThemeColorMode(): ThemeColorMode {
