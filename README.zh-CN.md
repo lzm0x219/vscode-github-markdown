@@ -76,7 +76,7 @@ VS Code 自带的 Markdown Preview 更偏通用渲染，而开发者真正关心
 - **脚注** — `[^1]` 引用自动编号、自动回跳链接，并在文末生成脚注区域。
 - **Alerts** — `[!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 五种提示框，附带正确的图标和样式。
 - **Emoji 短代码** — `:rocket:`、`:+1:`、`:tada:` 等数千个短代码，同时支持 Unicode emoji 和 GitHub 自定义图片 emoji。
-- **HTML 图片路径重写** — HTML `<img>` 标签中的绝对路径（`/path/to/img`）会重写为相对路径（`./path/to/img`），让项目本地图片在 VS Code webview 预览中正常显示。
+- **HTML 项目根图片** — HTML `<img>` 标签中的绝对路径（`/path/to/img`）会在 VS Code webview 预览中从工作区根目录解析，位于子目录中的 Markdown 文件也能正确引用。
 
 ### 经过像素验证的预览一致性
 
