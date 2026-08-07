@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Mermaid
+
+- Mermaid theme synchronization now respects workspace-level Mermaid theme settings, restores their original values when synchronization stops, and leaves global themes and newer user choices unchanged.
+
 ### Themes and appearance
 
 - Theme and theme-mode Quick Picks now display Chinese labels in Simplified Chinese VS Code, and confirmation messages no longer mix Chinese text with English theme names.
