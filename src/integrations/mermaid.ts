@@ -56,8 +56,13 @@ type Transaction = SlotContext & {
   previousValue: MermaidTheme | undefined;
   desiredValue: MermaidTheme | undefined;
   shouldWrite: boolean;
+  ownershipLost?: boolean;
 };
-type ConfigurationUpdate = Pick<Transaction, "key" | "target" | "desiredValue" | "shouldWrite">;
+type WriteOutcome = "released" | "skipped" | "written";
+type ConfigurationUpdate = Pick<Transaction, "key" | "target" | "desiredValue" | "shouldWrite"> & {
+  expectedValue: MermaidTheme | undefined;
+  onOwnershipLost: () => Promise<void>;
+};
 
 const snapshotKey = "githubMarkdown.mermaid.originalGlobalThemes";
 const stateKeyPrefix = "githubMarkdown.mermaid.themeState.v2";
@@ -115,16 +120,31 @@ async function updateNow(memento: vscode.Memento): Promise<void> {
     if (transaction) transactions.push(transaction);
   }
 
-  const results = await executeTransactions(memento, configuration, transactions, (transaction) => {
-    const next = { ...transaction.state, applied: transaction.desiredValue as MermaidTheme };
-    delete next.pending;
-    return next;
-  });
+  const results = await executeTransactions(
+    memento,
+    configuration,
+    identity,
+    transactions,
+    (transaction) => {
+      const next = { ...transaction.state, applied: transaction.desiredValue as MermaidTheme };
+      delete next.pending;
+      return next;
+    }
+  );
   const failure = results.find((result) => result.status === "rejected");
   if (failure?.status !== "rejected") return;
 
   try {
-    await restoreNow(memento, configuration);
+    await restoreNow(
+      memento,
+      configuration,
+      true,
+      new Set(
+        transactions
+          .filter((transaction) => transaction.ownershipLost)
+          .map((transaction) => transaction.stateKey)
+      )
+    );
   } catch (restoreError) {
     const restoreFailures =
       restoreError instanceof AggregateError ? restoreError.errors : [restoreError];
@@ -138,7 +158,9 @@ async function updateNow(memento: vscode.Memento): Promise<void> {
 
 async function restoreNow(
   memento: vscode.Memento,
-  configuration: vscode.WorkspaceConfiguration
+  configuration: vscode.WorkspaceConfiguration,
+  preserveReleased = false,
+  preservedStateKeys: ReadonlySet<string> = new Set()
 ): Promise<void> {
   if (!hasConfiguration(configuration)) return;
   const identity = getWorkspaceIdentity();
@@ -150,12 +172,22 @@ async function restoreNow(
       vscode.ConfigurationTarget.Workspace
     ] as const) {
       const context = loadContext(memento, identity, slot, key, target);
-      if (context.state) {
+      if (
+        context.state &&
+        !preservedStateKeys.has(context.stateKey) &&
+        !(preserveReleased && context.state.releasedBy !== undefined)
+      ) {
         transactions.push(prepareRestore(configuration, { ...context, state: context.state }));
       }
     }
   }
-  const results = await executeTransactions(memento, configuration, transactions, () => undefined);
+  const results = await executeTransactions(
+    memento,
+    configuration,
+    identity,
+    transactions,
+    () => undefined
+  );
   const failures = results
     .filter((result): result is PromiseRejectedResult => result.status === "rejected")
     .map((result) => result.reason);
@@ -245,9 +277,10 @@ function release(state: SlotState, identity: string): SlotState {
 async function executeTransactions(
   memento: vscode.Memento,
   configuration: vscode.WorkspaceConfiguration,
+  identity: string,
   transactions: Transaction[],
   finalize: (transaction: Transaction) => SlotState | undefined
-): Promise<PromiseSettledResult<void>[]> {
+): Promise<PromiseSettledResult<WriteOutcome>[]> {
   const claimed: Transaction[] = [];
   try {
     for (const transaction of transactions) {
@@ -262,33 +295,59 @@ async function executeTransactions(
 
   const results = await writeSequentially(
     configuration,
-    transactions.map(({ key, target, desiredValue, shouldWrite }) => ({
-      key,
-      target,
-      desiredValue,
-      shouldWrite
+    transactions.map((transaction) => ({
+      key: transaction.key,
+      target: transaction.target,
+      desiredValue: transaction.desiredValue,
+      shouldWrite: transaction.shouldWrite,
+      expectedValue: transaction.previousValue,
+      onOwnershipLost: () => markReleased(memento, transaction, identity)
     }))
   );
+  await retryRejectedReleases(memento, identity, transactions, results);
   try {
     for (const [index, result] of results.entries()) {
       const transaction = transactions[index];
-      if (result.status === "fulfilled" && transaction) {
+      if (result.status === "fulfilled" && result.value !== "released" && transaction) {
         await saveContext(memento, transaction, finalize(transaction));
       }
     }
   } catch (persistenceError) {
-    const failures = await recoverTransactions(memento, configuration, transactions, results);
+    const failures = await recoverTransactions(
+      memento,
+      configuration,
+      identity,
+      transactions,
+      results
+    );
     if (failures.length) throw new AggregateError([persistenceError, ...failures]);
     throw persistenceError;
   }
   return results;
 }
 
+async function retryRejectedReleases(
+  memento: vscode.Memento,
+  identity: string,
+  transactions: Transaction[],
+  results: PromiseSettledResult<WriteOutcome>[]
+): Promise<void> {
+  for (const [index, transaction] of transactions.entries()) {
+    if (results[index]?.status !== "rejected" || !transaction.ownershipLost) continue;
+    try {
+      await markReleased(memento, transaction, identity);
+    } catch {
+      // Keep the original rejection; the pending claim remains retryable after a crash.
+    }
+  }
+}
+
 async function recoverTransactions(
   memento: vscode.Memento,
   configuration: vscode.WorkspaceConfiguration,
+  identity: string,
   transactions: Transaction[],
-  results: PromiseSettledResult<void>[]
+  results: PromiseSettledResult<WriteOutcome>[]
 ): Promise<unknown[]> {
   const updates = transactions.map((transaction, index): ConfigurationUpdate => {
     const current = getThemeAtTarget(configuration, transaction.key, transaction.target);
@@ -296,21 +355,36 @@ async function recoverTransactions(
       key: transaction.key,
       target: transaction.target,
       desiredValue: transaction.previousValue,
+      expectedValue: transaction.desiredValue,
       shouldWrite:
         results[index]?.status === "fulfilled" &&
+        results[index].value === "written" &&
         transaction.shouldWrite &&
-        current === transaction.desiredValue
+        current === transaction.desiredValue,
+      onOwnershipLost: () => markReleased(memento, transaction, identity)
     };
   });
   const recoveryResults = await writeSequentially(configuration, updates);
   const failures = recoveryResults
     .filter((result): result is PromiseRejectedResult => result.status === "rejected")
     .map((result) => result.reason);
-  const restoredTransactions = transactions.filter(
-    (_, index) => recoveryResults[index]?.status === "fulfilled"
-  );
+  const restoredTransactions = transactions.filter((_, index) => {
+    const result = recoveryResults[index];
+    const primaryResult = results[index];
+    const wasReleased = primaryResult?.status === "fulfilled" && primaryResult.value === "released";
+    return result?.status === "fulfilled" && result.value !== "released" && !wasReleased;
+  });
   failures.push(...(await restoreStates(memento, restoredTransactions)));
   return failures;
+}
+
+async function markReleased(
+  memento: vscode.Memento,
+  transaction: Transaction,
+  identity: string
+): Promise<void> {
+  transaction.ownershipLost = true;
+  await saveContext(memento, transaction, release(transaction.state, identity));
 }
 
 async function restoreStates(
@@ -331,24 +405,35 @@ async function restoreStates(
 async function writeSequentially(
   configuration: vscode.WorkspaceConfiguration,
   updates: ConfigurationUpdate[]
-): Promise<PromiseSettledResult<void>[]> {
-  const results: PromiseSettledResult<void>[] = [];
+): Promise<PromiseSettledResult<WriteOutcome>[]> {
+  const results: PromiseSettledResult<WriteOutcome>[] = [];
   for (const update of updates) {
     if (!update.shouldWrite) {
-      results.push({ status: "fulfilled", value: undefined });
+      results.push({ status: "fulfilled", value: "skipped" });
       continue;
     }
     try {
-      let settled = false;
+      if (getThemeAtTarget(configuration, update.key, update.target) !== update.expectedValue) {
+        await update.onOwnershipLost();
+        results.push({ status: "fulfilled", value: "released" });
+        continue;
+      }
+      let outcome: WriteOutcome | undefined;
       for (let attempt = 0; attempt < 2; attempt += 1) {
         await configuration.update(update.key, update.desiredValue, update.target);
-        if (getThemeAtTarget(configuration, update.key, update.target) === update.desiredValue) {
-          settled = true;
+        const current = getThemeAtTarget(configuration, update.key, update.target);
+        if (current === update.desiredValue) {
+          outcome = "written";
+          break;
+        }
+        if (current !== update.expectedValue) {
+          await update.onOwnershipLost();
+          outcome = "released";
           break;
         }
       }
-      if (!settled) throw new Error(`Mermaid theme configuration did not settle for ${update.key}`);
-      results.push({ status: "fulfilled", value: undefined });
+      if (!outcome) throw new Error(`Mermaid theme configuration did not settle for ${update.key}`);
+      results.push({ status: "fulfilled", value: outcome });
     } catch (reason) {
       results.push({ status: "rejected", reason });
     }
