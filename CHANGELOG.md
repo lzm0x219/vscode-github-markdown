@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+## [v4.4.3] - 2026-08-08
+
+v4.4.3 makes theme controls and Mermaid synchronization behave predictably with workspace-level settings. It also improves project-root images in nested Markdown files and keeps Simplified Chinese theme pickers fully localized.
+
 ### Mermaid
 
 - Mermaid theme synchronization now respects workspace-level Mermaid theme settings, restores their original values when synchronization stops, and leaves global themes and newer user choices unchanged.
@@ -148,6 +152,7 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 - v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
 - Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
+[v4.4.3]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.2...v4.4.3
 [v4.4.2]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.1...v4.4.2
 [v4.4.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.0...v4.4.1
 [v4.4.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.3.0...v4.4.0
@@ -156,4 +161,4 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 [v4.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.2...HEAD
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.3...HEAD
