@@ -15,7 +15,7 @@ export default defineConfig({
   clean: false,
   publint: true,
   deps: {
-    alwaysBundle: ["entities/lib/decode.js", "unicode-case-folding"],
+    alwaysBundle: ["entities/decode", "unicode-case-folding"],
     neverBundle: ["vscode"],
     onlyBundle: ["entities", "unicode-case-folding"]
   },

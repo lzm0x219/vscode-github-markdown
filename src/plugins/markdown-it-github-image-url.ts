@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import type MarkdownIt from "markdown-it";
-import { decodeCodePoint } from "entities/lib/decode.js";
+import { replaceCodePoint } from "entities/decode";
 
 const imageTagPattern = /<img(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
 const projectRootSrcAttributePattern =
@@ -37,7 +37,7 @@ function decodeHtmlAttribute(value: string, decodeNamedEntity: (value: string) =
     if (reference.startsWith("&#")) {
       const hexadecimal = reference[2]?.toLowerCase() === "x";
       const digits = reference.slice(hexadecimal ? 3 : 2, reference.endsWith(";") ? -1 : undefined);
-      return decodeCodePoint(Number.parseInt(digits, hexadecimal ? 16 : 10));
+      return String.fromCodePoint(replaceCodePoint(Number.parseInt(digits, hexadecimal ? 16 : 10)));
     }
 
     if (reference.endsWith(";")) return decodeNamedEntity(reference);
