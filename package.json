@@ -60,6 +60,7 @@
     "release:note": "nub scripts/release/index.ts"
   },
   "dependencies": {
+    "entities": "4.5.0",
     "unicode-case-folding": "1.1.1"
   },
   "devDependencies": {

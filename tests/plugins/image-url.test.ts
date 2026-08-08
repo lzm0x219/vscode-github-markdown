@@ -184,6 +184,20 @@ describe("markdown-it-github-image-url", () => {
     );
   });
 
+  it.each([
+    ["a Windows-1252 compatibility code point", "&#128;", "€"],
+    ["a null code point", "&#0;", "�"],
+    ["a surrogate code point", "&#55296;", "�"],
+    ["an out-of-range code point", "&#1114112;", "�"]
+  ])("preserves browser semantics for %s", (_case, reference, expected) => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(`<img src="/assets/a${reference}.svg" alt=logo>`, renderEnv());
+
+    expect(html).toBe(
+      `<img src="https://webview.test/workspace/assets/a${expected}.svg" alt=logo>`
+    );
+  });
+
   it("serializes an unquoted src against the owning folder in a multi-root workspace", () => {
     vscode.workspace.getWorkspaceFolder.mockReturnValueOnce({
       uri: new vscode.MockUri("file", "/second-workspace")
