@@ -14,6 +14,7 @@ export default defineConfig({
   clean: true,
   dts: false,
   deps: {
+    alwaysBundle: ["entities"],
     neverBundle: ["vscode"]
   },
   outputOptions: {
