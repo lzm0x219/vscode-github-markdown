@@ -1,7 +1,7 @@
 {
   "name": "vscode-github-markdown",
   "displayName": "%displayName%",
-  "version": "4.4.2",
+  "version": "4.4.3",
   "description": "%description%",
   "categories": [
     "Other"
