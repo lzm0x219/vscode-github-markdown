@@ -12,7 +12,7 @@ This file records notable changes that people can observe or act on when using t
 
 ### Markdown preview
 
-- Raw HTML images with project-root `src` paths now resolve from the workspace root when the Markdown file is inside a subdirectory, instead of looking for the image beneath that subdirectory.
+- Raw HTML images with project-root `src` paths now resolve correctly from nested Markdown files, including unquoted paths with encoded spaces and paths containing existing HTML entity references.
 
 ### Themes and appearance
 
