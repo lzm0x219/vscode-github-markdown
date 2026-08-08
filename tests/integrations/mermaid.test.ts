@@ -34,6 +34,35 @@ function getEffectiveMermaidConfig(): Record<string, string | undefined> {
   };
 }
 
+function createControlledMemento(
+  onUpdate: (update: {
+    callNumber: number;
+    key: string;
+    persist: () => Promise<void>;
+    value: unknown;
+  }) => Promise<void>
+): {
+  memento: ReturnType<typeof createTestMemento>;
+  storedMemento: ReturnType<typeof createTestMemento>;
+} {
+  const storedMemento = createTestMemento();
+  let callNumber = 0;
+  const memento: typeof storedMemento = {
+    get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
+    update: async (key: string, value: unknown) => {
+      callNumber += 1;
+      await onUpdate({
+        callNumber,
+        key,
+        persist: async () => storedMemento.update(key, value),
+        value
+      });
+    },
+    keys: () => storedMemento.keys()
+  };
+  return { memento, storedMemento };
+}
+
 vi.mock("vscode", () => ({
   default: {
     ConfigurationTarget: { Global: 1, Workspace: 2 },
@@ -916,24 +945,19 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("preserves a user takeover while the apply claim is being persisted", async () => {
-    const storedMemento = createTestMemento();
     const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
     let releaseClaim = () => {};
     const claimGate = new Promise<void>((resolve) => {
       releaseClaim = resolve;
     });
     let shouldGateClaim = true;
-    const memento: typeof storedMemento = {
-      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
-      update: async (key: string, value: unknown) => {
-        await storedMemento.update(key, value);
-        if (key === lightStateKey && shouldGateClaim) {
-          shouldGateClaim = false;
-          await claimGate;
-        }
-      },
-      keys: () => storedMemento.keys()
-    };
+    const { memento, storedMemento } = createControlledMemento(async ({ key, persist }) => {
+      await persist();
+      if (key === lightStateKey && shouldGateClaim) {
+        shouldGateClaim = false;
+        await claimGate;
+      }
+    });
 
     const synchronization = updateMermaidThemeSync(memento);
     await vi.waitFor(() =>
@@ -963,24 +987,19 @@ describe("Mermaid theme synchronization", () => {
   });
 
   it("keeps a released takeover when another configuration update fails", async () => {
-    const storedMemento = createTestMemento();
     const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
     let releaseClaim = () => {};
     const claimGate = new Promise<void>((resolve) => {
       releaseClaim = resolve;
     });
     let shouldGateClaim = true;
-    const memento: typeof storedMemento = {
-      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
-      update: async (key: string, value: unknown) => {
-        await storedMemento.update(key, value);
-        if (key === lightStateKey && shouldGateClaim) {
-          shouldGateClaim = false;
-          await claimGate;
-        }
-      },
-      keys: () => storedMemento.keys()
-    };
+    const { memento, storedMemento } = createControlledMemento(async ({ key, persist }) => {
+      await persist();
+      if (key === lightStateKey && shouldGateClaim) {
+        shouldGateClaim = false;
+        await claimGate;
+      }
+    });
     updateFailures.add("darkModeTheme");
 
     const synchronization = updateMermaidThemeSync(memento);
@@ -1013,24 +1032,72 @@ describe("Mermaid theme synchronization", () => {
     });
   });
 
-  it("keeps a released takeover when another transaction fails to finalize", async () => {
-    const storedMemento = createTestMemento();
+  it("keeps a takeover when persisting its released state fails", async () => {
     const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
     let releaseClaim = () => {};
     const claimGate = new Promise<void>((resolve) => {
       releaseClaim = resolve;
     });
-    let updateCount = 0;
-    const memento: typeof storedMemento = {
-      get: <T>(key: string, defaultValue?: T) => storedMemento.get(key, defaultValue),
-      update: async (key: string, value: unknown) => {
-        updateCount += 1;
-        if (updateCount === 4) throw new Error("Failed to finalize Mermaid state");
-        await storedMemento.update(key, value);
-        if (updateCount === 1) await claimGate;
-      },
-      keys: () => storedMemento.keys()
-    };
+    let shouldGateClaim = true;
+    let shouldRejectRelease = true;
+    const { memento, storedMemento } = createControlledMemento(async ({ key, persist, value }) => {
+      if (
+        key === lightStateKey &&
+        shouldRejectRelease &&
+        typeof value === "object" &&
+        value !== null &&
+        "releasedBy" in value
+      ) {
+        shouldRejectRelease = false;
+        throw new Error("Failed to persist released Mermaid state");
+      }
+      await persist();
+      if (key === lightStateKey && shouldGateClaim) {
+        shouldGateClaim = false;
+        await claimGate;
+      }
+    });
+
+    const synchronization = updateMermaidThemeSync(memento);
+    await vi.waitFor(() =>
+      expect(storedMemento.get(lightStateKey)).toEqual(
+        expect.objectContaining({
+          pending: { kind: "apply", desired: "default", previous: "neutral" }
+        })
+      )
+    );
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+    releaseClaim();
+    await expect(synchronization).rejects.toThrow("Failed to persist released Mermaid state");
+
+    expect(storedMemento.get(lightStateKey)).toEqual(
+      expect.objectContaining({
+        original: "neutral",
+        releasedBy: "workspace:file:///workspace-a.code-workspace"
+      })
+    );
+
+    updateCalls.length = 0;
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "dark", target: 1 }]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "base",
+      darkModeTheme: "dark"
+    });
+  });
+
+  it("keeps a released takeover when another transaction fails to finalize", async () => {
+    const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
+    let releaseClaim = () => {};
+    const claimGate = new Promise<void>((resolve) => {
+      releaseClaim = resolve;
+    });
+    const { memento, storedMemento } = createControlledMemento(async ({ callNumber, persist }) => {
+      if (callNumber === 4) throw new Error("Failed to finalize Mermaid state");
+      await persist();
+      if (callNumber === 1) await claimGate;
+    });
 
     const synchronization = updateMermaidThemeSync(memento);
     await vi.waitFor(() =>

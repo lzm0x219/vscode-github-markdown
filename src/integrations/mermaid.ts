@@ -56,6 +56,7 @@ type Transaction = SlotContext & {
   previousValue: MermaidTheme | undefined;
   desiredValue: MermaidTheme | undefined;
   shouldWrite: boolean;
+  ownershipLost?: boolean;
 };
 type WriteOutcome = "released" | "skipped" | "written";
 type ConfigurationUpdate = Pick<Transaction, "key" | "target" | "desiredValue" | "shouldWrite"> & {
@@ -134,7 +135,16 @@ async function updateNow(memento: vscode.Memento): Promise<void> {
   if (failure?.status !== "rejected") return;
 
   try {
-    await restoreNow(memento, configuration, true);
+    await restoreNow(
+      memento,
+      configuration,
+      true,
+      new Set(
+        transactions
+          .filter((transaction) => transaction.ownershipLost)
+          .map((transaction) => transaction.stateKey)
+      )
+    );
   } catch (restoreError) {
     const restoreFailures =
       restoreError instanceof AggregateError ? restoreError.errors : [restoreError];
@@ -149,7 +159,8 @@ async function updateNow(memento: vscode.Memento): Promise<void> {
 async function restoreNow(
   memento: vscode.Memento,
   configuration: vscode.WorkspaceConfiguration,
-  preserveReleased = false
+  preserveReleased = false,
+  preservedStateKeys: ReadonlySet<string> = new Set()
 ): Promise<void> {
   if (!hasConfiguration(configuration)) return;
   const identity = getWorkspaceIdentity();
@@ -161,7 +172,11 @@ async function restoreNow(
       vscode.ConfigurationTarget.Workspace
     ] as const) {
       const context = loadContext(memento, identity, slot, key, target);
-      if (context.state && !(preserveReleased && context.state.releasedBy !== undefined)) {
+      if (
+        context.state &&
+        !preservedStateKeys.has(context.stateKey) &&
+        !(preserveReleased && context.state.releasedBy !== undefined)
+      ) {
         transactions.push(prepareRestore(configuration, { ...context, state: context.state }));
       }
     }
@@ -286,9 +301,10 @@ async function executeTransactions(
       desiredValue: transaction.desiredValue,
       shouldWrite: transaction.shouldWrite,
       expectedValue: transaction.previousValue,
-      onOwnershipLost: () => saveContext(memento, transaction, release(transaction.state, identity))
+      onOwnershipLost: () => markReleased(memento, transaction, identity)
     }))
   );
+  await retryRejectedReleases(memento, identity, transactions, results);
   try {
     for (const [index, result] of results.entries()) {
       const transaction = transactions[index];
@@ -310,6 +326,22 @@ async function executeTransactions(
   return results;
 }
 
+async function retryRejectedReleases(
+  memento: vscode.Memento,
+  identity: string,
+  transactions: Transaction[],
+  results: PromiseSettledResult<WriteOutcome>[]
+): Promise<void> {
+  for (const [index, transaction] of transactions.entries()) {
+    if (results[index]?.status !== "rejected" || !transaction.ownershipLost) continue;
+    try {
+      await markReleased(memento, transaction, identity);
+    } catch {
+      // Keep the original rejection; the pending claim remains retryable after a crash.
+    }
+  }
+}
+
 async function recoverTransactions(
   memento: vscode.Memento,
   configuration: vscode.WorkspaceConfiguration,
@@ -329,7 +361,7 @@ async function recoverTransactions(
         results[index].value === "written" &&
         transaction.shouldWrite &&
         current === transaction.desiredValue,
-      onOwnershipLost: () => saveContext(memento, transaction, release(transaction.state, identity))
+      onOwnershipLost: () => markReleased(memento, transaction, identity)
     };
   });
   const recoveryResults = await writeSequentially(configuration, updates);
@@ -344,6 +376,15 @@ async function recoverTransactions(
   });
   failures.push(...(await restoreStates(memento, restoredTransactions)));
   return failures;
+}
+
+async function markReleased(
+  memento: vscode.Memento,
+  transaction: Transaction,
+  identity: string
+): Promise<void> {
+  transaction.ownershipLost = true;
+  await saveContext(memento, transaction, release(transaction.state, identity));
 }
 
 async function restoreStates(
