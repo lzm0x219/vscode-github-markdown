@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+## [v4.4.4] - 2026-08-13
+
+v4.4.4 makes code block copy controls match GitHub more closely across preview themes.
+
 ### Themes and appearance
 
 - Code blocks now show GitHub's muted copy icon and success icon directly in the top-right corner, without separate resting button chrome, while keeping their colors and hover feedback aligned with the active preview theme.
@@ -156,6 +160,7 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 - v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
 - Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
+[v4.4.4]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.3...v4.4.4
 [v4.4.3]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.2...v4.4.3
 [v4.4.2]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.1...v4.4.2
 [v4.4.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.0...v4.4.1
@@ -165,4 +170,4 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 [v4.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.3...HEAD
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.4...HEAD
