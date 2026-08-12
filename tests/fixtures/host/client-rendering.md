@@ -5,6 +5,10 @@ flowchart LR
   alpha[Alpha] --> beta[Beta]
 ```
 
+```ts
+const themedCopyIcon = true;
+```
+
 $$
 \begin{aligned}
 S_1 &= a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} \\

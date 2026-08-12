@@ -33,6 +33,27 @@ describe("assertClientRenderedPreview", () => {
 
     expect(preview.readPalette()).toEqual(darkPalette);
   });
+
+  it("checks the code copy button across every GitHub theme and VS Code theme mode", async () => {
+    vi.useFakeTimers();
+    const preview = createThemePreviewPage();
+
+    await expect(assertClientRenderedPreview(preview.page)).resolves.toBeUndefined();
+
+    expect(preview.readSingleThemeSelections()).toEqual([
+      "Light",
+      "Light Protanopia & Deuteranopia",
+      "Light high contrast",
+      "Light Tritanopia",
+      "Dark",
+      "Dark Protanopia & Deuteranopia",
+      "Dark dimmed",
+      "Dark high contrast",
+      "Dark Tritanopia"
+    ]);
+    expect(preview.readThemeModeSelections()).toContain("VS Code theme");
+    expect(preview.readCopyButtonEvaluations()).toBe(10);
+  });
 });
 
 describe("assertFinalClientRendering", () => {
@@ -83,29 +104,38 @@ function createPreviewFrame({
 type ThemePreviewState = {
   activeCommand: string | undefined;
   body: "vscode-dark" | "vscode-light";
+  copyButtonEvaluations: number;
   dark: string;
   inputValue: string;
   light: string;
-  mode: "auto" | "dark" | "light";
+  mode: "auto" | "dark" | "light" | "vscode";
   palette: MermaidPalette;
   pendingPalette: MermaidPalette | undefined;
   quickInputVisible: boolean;
+  singleThemeSelections: string[];
+  themeModeSelections: string[];
 };
 
 function createThemePreviewPage(): {
   page: Page;
+  readCopyButtonEvaluations: () => number;
   readPalette: () => MermaidPalette;
+  readSingleThemeSelections: () => string[];
+  readThemeModeSelections: () => string[];
 } {
   const state: ThemePreviewState = {
     activeCommand: undefined,
     body: "vscode-light",
+    copyButtonEvaluations: 0,
     dark: "dark",
     inputValue: "",
     light: "light",
     mode: "light",
     palette: lightPalette,
     pendingPalette: undefined,
-    quickInputVisible: false
+    quickInputVisible: false,
+    singleThemeSelections: [],
+    themeModeSelections: []
   };
   const frame = createThemeFrame(state);
   const page = {
@@ -125,7 +155,13 @@ function createThemePreviewPage(): {
     }
   } as unknown as Page;
 
-  return { page, readPalette: () => state.palette };
+  return {
+    page,
+    readCopyButtonEvaluations: () => state.copyButtonEvaluations,
+    readPalette: () => state.palette,
+    readSingleThemeSelections: () => [...state.singleThemeSelections],
+    readThemeModeSelections: () => [...state.themeModeSelections]
+  };
 }
 
 function createWorkbenchLocator(
@@ -188,10 +224,13 @@ function applyQuickPick(
     return;
   }
   if (command === "GitHub Markdown: Change Theme Mode") {
-    state.mode = option === "Sync with system" ? "auto" : "light";
+    state.themeModeSelections.push(option);
+    state.mode =
+      option === "Sync with system" ? "auto" : option === "VS Code theme" ? "vscode" : "light";
     return;
   }
   if (command === "GitHub Markdown: Change Single Theme") {
+    state.singleThemeSelections.push(option);
     applySingleTheme(state, option);
     return;
   }
@@ -232,6 +271,25 @@ function applySingleTheme(state: ThemePreviewState, option: string): void {
       light: "light_tritanopia",
       mode: "light",
       palette: { ...lightPalette, nodeFill: "rgb(224, 239, 255)" }
+    },
+    Dark: { dark: "dark", light: "light", mode: "dark", palette: darkPalette },
+    "Dark Protanopia & Deuteranopia": {
+      dark: "dark_colorblind",
+      light: "light",
+      mode: "dark",
+      palette: darkPalette
+    },
+    "Dark high contrast": {
+      dark: "dark_high_contrast",
+      light: "light",
+      mode: "dark",
+      palette: darkPalette
+    },
+    "Dark Tritanopia": {
+      dark: "dark_tritanopia",
+      light: "light",
+      mode: "dark",
+      palette: darkPalette
     }
   };
   const selected = cases[option];
@@ -249,18 +307,47 @@ function createThemeFrame(state: ThemePreviewState): Frame {
       nestedVerticalScrollerLabels: []
     }),
     locator(selector: string) {
-      return {
+      const locator = {
         boundingBox: async () => ({ x: 0, y: 0, width: 100, height: 100 }),
         count: async () => countThemeSelector(selector, state),
-        evaluate: async () => state.palette,
+        evaluate: async () => {
+          if (selector === ".code-block-copy-button") {
+            state.copyButtonEvaluations += 1;
+            return {
+              parentTag: "PRE",
+              buttonPosition: "absolute",
+              buttonTop: "8px",
+              buttonRight: "8px",
+              buttonColor: "muted",
+              buttonBackground: "rgba(0, 0, 0, 0)",
+              buttonBorderWidth: "0px",
+              buttonBorderRadius: "6px",
+              buttonWidth: "28px",
+              buttonHeight: "28px",
+              buttonOpacity: "1",
+              svgBackground: "muted",
+              svgMaskImage: "url(github-copy-icon)",
+              copiedColor: "success",
+              copiedMaskImage: "url(github-check-icon)",
+              pathDisplay: "none",
+              expectedMuted: "muted",
+              expectedSuccess: "success",
+              centerOffset: { x: 0, y: 0 }
+            };
+          }
+          return state.palette;
+        },
         evaluateAll: async () => [],
+        first: () => locator,
         isVisible: async () => true,
         textContent: async () => {
           if (selector === ".mermaid svg") return "Alpha Beta";
           if (selector.includes("annotation")) return "S_{12}";
           return "";
-        }
-      } as unknown as Locator;
+        },
+        waitFor: async () => {}
+      };
+      return locator as unknown as Locator;
     },
     url: () => "vscode-webview://preview"
   } as unknown as Frame;
@@ -277,6 +364,7 @@ function countThemeSelector(selector: string, state: ThemePreviewState): number 
   }
   if (selector === `body.${state.body}`) return 1;
   if (selector === ".mermaid svg[data-host-preview-stale]") return 0;
+  if (selector === ".code-block-copy-button") return 1;
   if (selector === ".mermaid svg" || selector === ".katex-display .katex") return 1;
   return 0;
 }

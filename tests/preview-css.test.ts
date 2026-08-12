@@ -45,6 +45,24 @@ describe("preview theme CSS", () => {
     }
   });
 
+  it("maps code block copy controls to the active preview theme", () => {
+    const previewRootCss = extractCssBlock(previewCss, ".vscode-github-markdown {");
+
+    expect(previewRootCss).toContain(".code-block-copy-button {");
+    expect(previewRootCss).toContain("color: var(--fgColor-muted)");
+    expect(previewRootCss).toContain("background-color: transparent");
+    expect(previewRootCss).toContain("border: 0");
+    expect(previewRootCss).toContain("border-radius: 6px");
+    expect(previewRootCss).toContain("opacity: 1");
+    expect(previewRootCss).toContain("transition: none");
+    expect(previewRootCss).toContain("background-color: var(--bgColor-neutral-muted)");
+    expect(previewRootCss).toContain("M0 6.75C0 5.784.784 5 1.75 5h1.5");
+    expect(previewRootCss).toContain("M5 1.75C5 .784 5.784 0 6.75 0h7.5");
+    expect(previewRootCss).toContain("M13.78 4.22a.75.75 0 0 1 0 1.06");
+    expect(previewRootCss).toContain("&.copied {");
+    expect(previewRootCss).toContain("color: var(--fgColor-success)");
+  });
+
   it("keeps high-contrast foreground, links, and focus outlines readable", () => {
     expect(previewCss).toContain("body.vscode-high-contrast");
     expect(previewCss).toContain("body.vscode-high-contrast-light");
