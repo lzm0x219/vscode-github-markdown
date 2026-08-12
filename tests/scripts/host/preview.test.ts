@@ -54,6 +54,17 @@ describe("assertClientRenderedPreview", () => {
     expect(preview.readThemeModeSelections()).toContain("VS Code theme");
     expect(preview.readCopyButtonEvaluations()).toBe(10);
   });
+
+  it("keeps checking themes when the host has no built-in code copy button", async () => {
+    vi.useFakeTimers();
+    const preview = createThemePreviewPage({ copyButtonAvailable: false });
+
+    await expect(assertClientRenderedPreview(preview.page)).resolves.toBeUndefined();
+
+    expect(preview.readSingleThemeSelections()).toHaveLength(9);
+    expect(preview.readThemeModeSelections()).toContain("VS Code theme");
+    expect(preview.readCopyButtonEvaluations()).toBe(0);
+  });
 });
 
 describe("assertFinalClientRendering", () => {
@@ -104,6 +115,7 @@ function createPreviewFrame({
 type ThemePreviewState = {
   activeCommand: string | undefined;
   body: "vscode-dark" | "vscode-light";
+  copyButtonAvailable: boolean;
   copyButtonEvaluations: number;
   dark: string;
   inputValue: string;
@@ -116,7 +128,9 @@ type ThemePreviewState = {
   themeModeSelections: string[];
 };
 
-function createThemePreviewPage(): {
+function createThemePreviewPage({
+  copyButtonAvailable = true
+}: { copyButtonAvailable?: boolean } = {}): {
   page: Page;
   readCopyButtonEvaluations: () => number;
   readPalette: () => MermaidPalette;
@@ -126,6 +140,7 @@ function createThemePreviewPage(): {
   const state: ThemePreviewState = {
     activeCommand: undefined,
     body: "vscode-light",
+    copyButtonAvailable,
     copyButtonEvaluations: 0,
     dark: "dark",
     inputValue: "",
@@ -312,6 +327,7 @@ function createThemeFrame(state: ThemePreviewState): Frame {
         count: async () => countThemeSelector(selector, state),
         evaluate: async () => {
           if (selector === ".code-block-copy-button") {
+            if (!state.copyButtonAvailable) throw new Error("Code copy button is unavailable");
             state.copyButtonEvaluations += 1;
             return {
               parentTag: "PRE",
@@ -345,7 +361,11 @@ function createThemeFrame(state: ThemePreviewState): Frame {
           if (selector.includes("annotation")) return "S_{12}";
           return "";
         },
-        waitFor: async () => {}
+        waitFor: async () => {
+          if (selector === ".code-block-copy-button" && !state.copyButtonAvailable) {
+            throw new Error("Code copy button is unavailable");
+          }
+        }
       };
       return locator as unknown as Locator;
     },
@@ -364,7 +384,7 @@ function countThemeSelector(selector: string, state: ThemePreviewState): number 
   }
   if (selector === `body.${state.body}`) return 1;
   if (selector === ".mermaid svg[data-host-preview-stale]") return 0;
-  if (selector === ".code-block-copy-button") return 1;
+  if (selector === ".code-block-copy-button") return state.copyButtonAvailable ? 1 : 0;
   if (selector === ".mermaid svg" || selector === ".katex-display .katex") return 1;
   return 0;
 }

@@ -35,6 +35,12 @@ async function assertThemeRendering(page: Page): Promise<void> {
   await selectQuickPick(page, "GitHub Markdown: Change Theme Mode", "Single theme");
   await selectQuickPick(page, "Preferences: Color Theme", "Light Modern");
   await refreshPreview(page);
+  const copyButtonAvailable = await hasCodeCopyButton(page);
+  if (!copyButtonAvailable) {
+    console.warn(
+      "[host-preview] built-in code copy button is unavailable; skipping its rendering assertions"
+    );
+  }
 
   const singleCases = [
     ["Light", { mode: "light", light: "light", dark: "dark" }],
@@ -61,7 +67,7 @@ async function assertThemeRendering(page: Page): Promise<void> {
     );
     if (label === "Light") lightPalette = palette;
     if (label === "Dark dimmed") darkPalette = palette;
-    await assertCodeCopyButtonTheme(page, label);
+    if (copyButtonAvailable) await assertCodeCopyButtonTheme(page, label);
     previousMode = expectation.mode;
     previousPalette = palette;
   }
@@ -106,7 +112,23 @@ async function assertThemeRendering(page: Page): Promise<void> {
     dark: "dark_tritanopia",
     body: "vscode-dark"
   });
-  await assertCodeCopyButtonTheme(page, "VS Code theme");
+  if (copyButtonAvailable) await assertCodeCopyButtonTheme(page, "VS Code theme");
+}
+
+async function hasCodeCopyButton(page: Page, timeoutMs = 2_000): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    for (const frame of page.frames()) {
+      try {
+        if (!(await frame.locator(".vscode-github-markdown").count())) continue;
+        if (await frame.locator(".code-block-copy-button").count()) return true;
+      } catch {
+        // Preview frames can be replaced while detecting host capabilities.
+      }
+    }
+    await page.waitForTimeout(100);
+  }
+  return false;
 }
 
 async function assertCodeCopyButtonTheme(page: Page, theme: string): Promise<void> {
