@@ -23,7 +23,7 @@ type MermaidPalette = {
 };
 
 type ThemeExpectation = {
-  mode: "auto" | "dark" | "light";
+  mode: "auto" | "dark" | "light" | "vscode";
   light: string;
   dark: string;
   body?: "vscode-dark" | "vscode-light";
@@ -33,13 +33,25 @@ async function assertThemeRendering(page: Page): Promise<void> {
   await selectQuickPick(page, "GitHub Markdown: Change Light Theme", "Light");
   await selectQuickPick(page, "GitHub Markdown: Change Dark Theme", "Dark");
   await selectQuickPick(page, "GitHub Markdown: Change Theme Mode", "Single theme");
+  await selectQuickPick(page, "Preferences: Color Theme", "Light Modern");
+  await refreshPreview(page);
+  const copyButtonAvailable = await hasCodeCopyButton(page);
+  if (!copyButtonAvailable) {
+    console.warn(
+      "[host-preview] built-in code copy button is unavailable; skipping its rendering assertions"
+    );
+  }
 
   const singleCases = [
     ["Light", { mode: "light", light: "light", dark: "dark" }],
-    ["Dark dimmed", { mode: "dark", light: "light", dark: "dark_dimmed" }],
     ["Light Protanopia & Deuteranopia", { mode: "light", light: "light_colorblind", dark: "dark" }],
     ["Light high contrast", { mode: "light", light: "light_high_contrast", dark: "dark" }],
-    ["Light Tritanopia", { mode: "light", light: "light_tritanopia", dark: "dark" }]
+    ["Light Tritanopia", { mode: "light", light: "light_tritanopia", dark: "dark" }],
+    ["Dark", { mode: "dark", light: "light", dark: "dark" }],
+    ["Dark Protanopia & Deuteranopia", { mode: "dark", light: "light", dark: "dark_colorblind" }],
+    ["Dark dimmed", { mode: "dark", light: "light", dark: "dark_dimmed" }],
+    ["Dark high contrast", { mode: "dark", light: "light", dark: "dark_high_contrast" }],
+    ["Dark Tritanopia", { mode: "dark", light: "light", dark: "dark_tritanopia" }]
   ] as const;
 
   let lightPalette: MermaidPalette | undefined;
@@ -55,6 +67,7 @@ async function assertThemeRendering(page: Page): Promise<void> {
     );
     if (label === "Light") lightPalette = palette;
     if (label === "Dark dimmed") darkPalette = palette;
+    if (copyButtonAvailable) await assertCodeCopyButtonTheme(page, label);
     previousMode = expectation.mode;
     previousPalette = palette;
   }
@@ -90,6 +103,130 @@ async function assertThemeRendering(page: Page): Promise<void> {
     },
     darkPalette
   );
+
+  await selectQuickPick(page, "GitHub Markdown: Change Theme Mode", "VS Code theme");
+  await refreshPreview(page);
+  await waitForThemedPreview(page, {
+    mode: "vscode",
+    light: "light_high_contrast",
+    dark: "dark_tritanopia",
+    body: "vscode-dark"
+  });
+  if (copyButtonAvailable) await assertCodeCopyButtonTheme(page, "VS Code theme");
+}
+
+async function hasCodeCopyButton(page: Page, timeoutMs = 2_000): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    for (const frame of page.frames()) {
+      try {
+        if (!(await frame.locator(".vscode-github-markdown").count())) continue;
+        if (await frame.locator(".code-block-copy-button").count()) return true;
+      } catch {
+        // Preview frames can be replaced while detecting host capabilities.
+      }
+    }
+    await page.waitForTimeout(100);
+  }
+  return false;
+}
+
+async function assertCodeCopyButtonTheme(page: Page, theme: string): Promise<void> {
+  const state = await readCodeCopyButtonState(page);
+  assert(
+    state.buttonColor === state.expectedMuted && state.svgBackground === state.expectedMuted,
+    `code copy icon uses the muted default color in ${theme}; observed ${JSON.stringify(state)}`
+  );
+  assert(
+    state.buttonBackground === "rgba(0, 0, 0, 0)" && state.buttonBorderWidth === "0px",
+    `code copy icon has no resting button chrome; observed ${JSON.stringify(state)}`
+  );
+  assert(
+    state.buttonWidth === "28px" &&
+      state.buttonHeight === "28px" &&
+      state.buttonBorderRadius === "6px" &&
+      state.buttonOpacity === "1",
+    `code copy icon matches GitHub's visible 28px control; observed ${JSON.stringify(state)}`
+  );
+  assert(
+    state.svgMaskImage !== "none" && state.pathDisplay === "none",
+    `code copy icon uses the GitHub Octicon mask; observed ${JSON.stringify(state)}`
+  );
+  assert(
+    state.parentTag === "PRE" &&
+      state.buttonPosition === "absolute" &&
+      state.buttonTop === "8px" &&
+      state.buttonRight === "8px",
+    `code copy icon sits directly in the code block; observed ${JSON.stringify(state)}`
+  );
+  assert(
+    state.copiedMaskImage !== state.svgMaskImage && state.copiedColor === state.expectedSuccess,
+    `copied feedback uses the GitHub check icon; observed ${JSON.stringify(state)}`
+  );
+  assert(
+    state.centerOffset.x === 0 && state.centerOffset.y === 0,
+    `code copy icon stays centered; observed ${JSON.stringify(state)}`
+  );
+}
+
+async function readCodeCopyButtonState(page: Page) {
+  for (const frame of page.frames()) {
+    if (!(await frame.locator(".vscode-github-markdown").count())) continue;
+    const button = frame.locator(".code-block-copy-button").first();
+    await button.waitFor({ state: "attached", timeout: 2_000 });
+    return button.evaluate((element) => {
+      const svg = element.querySelector("svg");
+      const path = svg?.querySelector("path");
+      const root = element.closest<HTMLElement>(".vscode-github-markdown");
+      if (!svg || !path || !root) throw new Error("Incomplete code copy button DOM");
+
+      const resolveColor = (token: string): string => {
+        const probe = document.createElement("span");
+        probe.style.color = `var(${token})`;
+        root.append(probe);
+        const color = getComputedStyle(probe).color;
+        probe.remove();
+        return color;
+      };
+      const buttonRect = element.getBoundingClientRect();
+      const svgRect = svg.getBoundingClientRect();
+      const buttonStyle = getComputedStyle(element);
+      const svgStyle = getComputedStyle(svg);
+      const svgMaskImage = svgStyle.maskImage || svgStyle.webkitMaskImage;
+      const expectedSuccess = resolveColor("--fgColor-success");
+      element.classList.add("copied");
+      const copiedStyle = getComputedStyle(element);
+      const copiedSvgStyle = getComputedStyle(svg);
+      const copiedColor = copiedStyle.color;
+      const copiedMaskImage = copiedSvgStyle.maskImage || copiedSvgStyle.webkitMaskImage;
+      element.classList.remove("copied");
+      return {
+        parentTag: element.parentElement?.tagName,
+        buttonPosition: buttonStyle.position,
+        buttonTop: buttonStyle.top,
+        buttonRight: buttonStyle.right,
+        buttonColor: buttonStyle.color,
+        buttonBackground: buttonStyle.backgroundColor,
+        buttonBorderWidth: buttonStyle.borderTopWidth,
+        buttonBorderRadius: buttonStyle.borderRadius,
+        buttonWidth: buttonStyle.width,
+        buttonHeight: buttonStyle.height,
+        buttonOpacity: buttonStyle.opacity,
+        svgBackground: svgStyle.backgroundColor,
+        svgMaskImage,
+        copiedColor,
+        copiedMaskImage,
+        pathDisplay: getComputedStyle(path).display,
+        expectedMuted: resolveColor("--fgColor-muted"),
+        expectedSuccess,
+        centerOffset: {
+          x: svgRect.x + svgRect.width / 2 - (buttonRect.x + buttonRect.width / 2),
+          y: svgRect.y + svgRect.height / 2 - (buttonRect.y + buttonRect.height / 2)
+        }
+      };
+    });
+  }
+  throw new Error("Code copy button preview frame not found");
 }
 
 async function selectColorTheme(

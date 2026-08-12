@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Themes and appearance
+
+- Code blocks now show GitHub's muted copy icon and success icon directly in the top-right corner, without separate resting button chrome, while keeping their colors and hover feedback aligned with the active preview theme.
+
 ## [v4.4.3] - 2026-08-08
 
 v4.4.3 makes theme controls and Mermaid synchronization behave predictably with workspace-level settings. It also improves project-root images in nested Markdown files and keeps Simplified Chinese theme pickers fully localized.
