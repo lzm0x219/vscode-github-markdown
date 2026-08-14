@@ -85,7 +85,7 @@
     "playwright": "1.62.1",
     "pngjs": "7.0.0",
     "publint": "0.3.23",
-    "rollup-plugin-visualizer": "7.0.1",
+    "rollup-plugin-visualizer": "7.1.1",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
     "vitest": "4.1.10"
