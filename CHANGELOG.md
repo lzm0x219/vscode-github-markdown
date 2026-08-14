@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Installation and compatibility
+
+- The Marketplace page now displays the README banner without exposing unsupported HTML tags, while the GitHub README continues to switch between light and dark artwork.
+
 ## [v4.4.4] - 2026-08-13
 
 v4.4.4 makes code block copy controls match GitHub more closely across preview themes.
