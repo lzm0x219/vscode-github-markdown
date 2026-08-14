@@ -32,6 +32,7 @@ pnpm-lock.yaml
 pnpm-workspace.yaml
 release-please-config.json
 release-CHANGELOG.txt
+README.md
 scripts/**
 src/**
 tsconfig.json

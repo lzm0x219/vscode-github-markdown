@@ -49,3 +49,4 @@ artifacts/
 .vscode-test-web/
 
 *.vsix
+README.marketplace.md
