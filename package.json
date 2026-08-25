@@ -68,7 +68,7 @@
     "@types/node": "24.13.3",
     "@types/pngjs": "6.0.5",
     "@types/vscode": "1.74.0",
-    "@vitest/coverage-v8": "4.1.10",
+    "@vitest/coverage-v8": "4.1.11",
     "@vscode/l10n-dev": "0.0.35",
     "@vscode/test-electron": "3.1.0",
     "@vscode/test-web": "0.0.81",
@@ -88,7 +88,7 @@
     "rollup-plugin-visualizer": "7.1.1",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   },
   "l10n": "./l10n",
   "contributes": {
