@@ -1,7 +1,11 @@
 import type { Frame, Locator, Page } from "playwright";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { assertFinalClientRendering } from "../../../scripts/host/client-rendering";
-import { assertClientRenderedPreview } from "../../../scripts/host/preview";
+import {
+  assertClientRenderedPreview,
+  assertGfmSemanticDom,
+  type GfmSemanticDom
+} from "../../../scripts/host/preview";
 
 type MermaidPalette = {
   background: string;
@@ -65,6 +69,17 @@ describe("assertClientRenderedPreview", () => {
     expect(preview.readThemeModeSelections()).toContain("VS Code theme");
     expect(preview.readCopyButtonEvaluations()).toBe(0);
   });
+
+  it("asserts the semantic contract of the final GFM preview DOM", () => {
+    expect(() => assertGfmSemanticDom(createSemanticSnapshot())).not.toThrow();
+  });
+
+  it("reports the first missing semantic contract instead of accepting a partial DOM", () => {
+    const snapshot = createSemanticSnapshot();
+    snapshot.directionality.fencedCodeHasDirection = true;
+
+    expect(() => assertGfmSemanticDom(snapshot)).toThrow("fenced code has no direction attribute");
+  });
 });
 
 describe("assertFinalClientRendering", () => {
@@ -127,7 +142,10 @@ function createPreviewFrame({
         boundingBox: async () => ({ x: 0, y: 0, width: 100, height: 100 })
       } as unknown as Locator;
     },
-    evaluate: async () => overflow,
+    evaluate: async () => ({
+      ...overflow,
+      ...createSemanticSnapshot()
+    }),
     url: () => "vscode-webview://preview"
   } as unknown as Frame;
 }
@@ -345,7 +363,8 @@ function createThemeFrame(state: ThemePreviewState): Frame {
   return {
     evaluate: async () => ({
       pageScrollable: true,
-      nestedVerticalScrollerLabels: []
+      nestedVerticalScrollerLabels: [],
+      ...createSemanticSnapshot()
     }),
     locator(selector: string) {
       const locator = {
@@ -413,4 +432,50 @@ function countThemeSelector(selector: string, state: ThemePreviewState): number 
   if (selector === ".code-block-copy-button") return state.copyButtonAvailable ? 1 : 0;
   if (selector === ".mermaid svg" || selector === ".katex-display .katex") return 1;
   return 0;
+}
+
+function createSemanticSnapshot(): GfmSemanticDom {
+  return {
+    available: true,
+    strikethrough: {
+      single: true,
+      double: true,
+      escaped: true,
+      inlineCode: true,
+      unmatched: true,
+      longRun: true
+    },
+    tagfilter: {
+      filteredTags: {
+        title: true,
+        textarea: true,
+        style: true,
+        xmp: true,
+        iframe: true,
+        noembed: true,
+        noframes: true,
+        script: true,
+        plaintext: true
+      },
+      allowedStrong: true,
+      details: true,
+      picture: true
+    },
+    directionality: {
+      heading: true,
+      paragraph: true,
+      list: true,
+      alert: true,
+      footnoteReference: true,
+      footnoteDefinition: true,
+      explicit: true,
+      inlineCodeHasDirection: false,
+      fencedCodeHasDirection: false
+    },
+    footnotes: {
+      reference: true,
+      section: true,
+      backreference: true
+    }
+  };
 }
