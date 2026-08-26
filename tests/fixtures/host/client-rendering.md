@@ -1,5 +1,23 @@
 # Client rendering fixture
 
+## Theme stress content
+
+| Feature | Status  |
+| ------- | ------- |
+| Table   | Covered |
+
+> [!NOTE]
+> Theme stress alert.
+
+- [x] Completed theme task
+- [ ] Pending theme task
+
+[Theme stress link](https://example.com/theme-stress)
+
+Theme stress footnote.[^theme-stress]
+
+[^theme-stress]: Theme stress footnote content.
+
 ```mermaid
 flowchart LR
   alpha[Alpha] --> beta[Beta]
