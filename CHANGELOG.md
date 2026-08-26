@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Accessibility
+
+- Keyboard focus indicators now remain visible on preview links, footnote references, and code-copy controls, including high-contrast themes.
+
 ### Installation and compatibility
 
 - The Marketplace page now displays the README banner without exposing unsupported HTML tags, while the GitHub README continues to switch between light and dark artwork.
