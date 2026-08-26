@@ -15,13 +15,13 @@ observable in the final Markdown preview DOM:
 
 ## Host matrix
 
-| Host | Entry point | Coverage |
-| --- | --- | --- |
-| VS Code desktop minimum | `test:host:desktop` with `VSCODE_TEST_VERSION=1.74.0` | Extension-host Markdown output and renderer contribution |
-| VS Code desktop stable | `test:host:desktop` with `VSCODE_TEST_VERSION=stable` | Extension-host Markdown output and renderer contribution |
-| VS Code desktop pinned preview | `test:host:desktop:preview` | Final Webview DOM and client rendering |
-| VS Code Web stable | `test:host:web` | Extension-host Markdown output and renderer contribution |
-| VS Code Web pinned preview | `test:host:web:preview` | Final Webview DOM and client rendering |
+| Host                           | Entry point                                           | Coverage                                                 |
+| ------------------------------ | ----------------------------------------------------- | -------------------------------------------------------- |
+| VS Code desktop minimum        | `test:host:desktop` with `VSCODE_TEST_VERSION=1.74.0` | Extension-host Markdown output and renderer contribution |
+| VS Code desktop stable         | `test:host:desktop` with `VSCODE_TEST_VERSION=stable` | Extension-host Markdown output and renderer contribution |
+| VS Code desktop pinned preview | `test:host:desktop:preview`                           | Final Webview DOM and client rendering                   |
+| VS Code Web stable             | `test:host:web`                                       | Extension-host Markdown output and renderer contribution |
+| VS Code Web pinned preview     | `test:host:web:preview`                               | Final Webview DOM and client rendering                   |
 
 The desktop and Web preview jobs use the same fixture and DOM assertions. The
 minimum and stable desktop smoke jobs exercise the exported Markdown-it hook and

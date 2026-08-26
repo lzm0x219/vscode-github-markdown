@@ -12,7 +12,10 @@ host-gfm-footnote-reference العربية.[^host]
 
 [^host]: host-gfm-footnote-definition ملاحظة هامشية mixed English.
 
-host-gfm-double ~~double-strike~~ host-gfm-single ~single-strike~.
+host-gfm-double ~~double-strike~~.
+
+<!-- prettier-ignore -->
+host-gfm-single ~single-strike~.
 
 host-gfm-escaped \~escaped-tilde\~.
 
