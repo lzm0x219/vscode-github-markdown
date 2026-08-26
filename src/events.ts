@@ -3,11 +3,7 @@ import { section } from "./configuration";
 import { updateMermaidThemeSync } from "./integrations/mermaid";
 
 export function registerMarkdownPreviewEvents(memento: vscode.Memento): vscode.Disposable {
-  return vscode.workspace.onDidChangeConfiguration(async (e) => {
-    if (!e.affectsConfiguration(section.namespace)) {
-      return;
-    }
-
+  const syncAndRefresh = async (): Promise<void> => {
     try {
       await updateMermaidThemeSync(memento);
     } catch (error) {
@@ -19,5 +15,20 @@ export function registerMarkdownPreviewEvents(memento: vscode.Memento): vscode.D
     } catch (error) {
       console.error("[github-markdown] Failed to refresh preview:", error);
     }
+  };
+
+  const configurationSubscription = vscode.workspace.onDidChangeConfiguration(async (e) => {
+    if (!e.affectsConfiguration(section.namespace)) {
+      return;
+    }
+    await syncAndRefresh();
   });
+  const extensionSubscription = vscode.extensions.onDidChange(syncAndRefresh);
+
+  return {
+    dispose: () => {
+      configurationSubscription.dispose();
+      extensionSubscription.dispose();
+    }
+  };
 }

@@ -8,6 +8,7 @@ const harness = vi.hoisted(() => ({
   configurationListener: undefined as
     | ((event: { affectsConfiguration(section: string): boolean }) => Promise<void>)
     | undefined,
+  extensionListener: undefined as (() => Promise<void>) | undefined,
   executeError: undefined as Error | undefined,
   executeCalls: [] as string[],
   errorMessages: [] as string[],
@@ -17,6 +18,7 @@ const harness = vi.hoisted(() => ({
   localizedMessages: {} as Record<string, string>,
   markdownConfig: {} as Record<string, string | boolean>,
   markdownWorkspaceConfig: {} as Record<string, string | boolean>,
+  mermaidExtensionIds: new Set<string>(["vscode.mermaid-markdown-features"]),
   mermaidGlobalConfig: {} as Record<string, string | undefined>,
   mermaidUpdateError: undefined as Error | undefined,
   mermaidUpdates: [] as { key: string; value: string | undefined; target: number }[],
@@ -32,7 +34,11 @@ vi.mock("vscode", () => ({
   default: {
     ConfigurationTarget: { Global: 1, Workspace: 2 },
     extensions: {
-      getExtension: (id: string) => (id === "vscode.mermaid-markdown-features" ? {} : undefined)
+      getExtension: (id: string) => (harness.mermaidExtensionIds.has(id) ? {} : undefined),
+      onDidChange: (listener: () => Promise<void>) => {
+        harness.extensionListener = listener;
+        return { dispose: vi.fn() };
+      }
     },
     commands: {
       registerCommand: (id: string, handler: () => Promise<void>) => {
@@ -191,6 +197,7 @@ describe("extension lifecycle", () => {
   beforeEach(() => {
     harness.commandHandlers.clear();
     harness.configurationListener = undefined;
+    harness.extensionListener = undefined;
     harness.executeError = undefined;
     harness.executeCalls.length = 0;
     harness.errorMessages.length = 0;
@@ -211,6 +218,7 @@ describe("extension lifecycle", () => {
       "mermaid.syncTheme": true
     };
     harness.markdownWorkspaceConfig = {};
+    harness.mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features"]);
     harness.mermaidGlobalConfig = {
       lightModeTheme: "neutral",
       darkModeTheme: "forest"
@@ -234,6 +242,7 @@ describe("extension lifecycle", () => {
       "vscode-github-markdown.changeDarkTheme"
     ]);
     expect(harness.configurationListener).toBeTypeOf("function");
+    expect(harness.extensionListener).toBeTypeOf("function");
     expect(context.subscriptions).toHaveLength(5);
     expect(harness.mermaidUpdates).toHaveLength(2);
     expect(api).toEqual(expect.objectContaining({ extendMarkdownIt }));
@@ -255,6 +264,39 @@ describe("extension lifecycle", () => {
     expect(harness.mermaidUpdates).toEqual([
       { key: "lightModeTheme", value: "neutral", target: 1 },
       { key: "darkModeTheme", value: "forest", target: 1 }
+    ]);
+    expect(harness.executeCalls).toEqual(["markdown.preview.refresh"]);
+  });
+
+  it("restores Mermaid settings when its renderer is removed while this extension stays active", async () => {
+    const context = createContext();
+    await activate(context);
+    harness.mermaidUpdates.length = 0;
+    harness.executeCalls.length = 0;
+    harness.mermaidExtensionIds.clear();
+
+    await harness.extensionListener?.();
+
+    expect(harness.mermaidUpdates).toEqual([
+      { key: "lightModeTheme", value: "neutral", target: 1 },
+      { key: "darkModeTheme", value: "forest", target: 1 }
+    ]);
+    expect(harness.executeCalls).toEqual(["markdown.preview.refresh"]);
+  });
+
+  it("synchronizes Mermaid when a renderer is installed after activation", async () => {
+    const context = createContext();
+    harness.mermaidExtensionIds.clear();
+    await activate(context);
+    harness.mermaidUpdates.length = 0;
+    harness.executeCalls.length = 0;
+    harness.mermaidExtensionIds.add("bierner.markdown-mermaid");
+
+    await harness.extensionListener?.();
+
+    expect(harness.mermaidUpdates).toEqual([
+      { key: "lightModeTheme", value: "default", target: 1 },
+      { key: "darkModeTheme", value: "dark", target: 1 }
     ]);
     expect(harness.executeCalls).toEqual(["markdown.preview.refresh"]);
   });
