@@ -111,6 +111,62 @@ describe("markdown-it-github-image-url", () => {
     expect(html).toContain(`src="./assets/logo.svg"`);
   });
 
+  it("rewrites Markdown images with project-root paths from nested documents", () => {
+    const md = new MarkdownIt().use(githubImageUrl);
+    const html = md.render(
+      "![logo](/assets/logo.svg?theme=light#hero)",
+      renderEnv("/workspace/docs/guide.md")
+    );
+
+    expect(html).toBe(
+      '<p><img src="https://webview.test/workspace/assets/logo.svg?theme=light#hero" alt="logo"></p>\n'
+    );
+  });
+
+  it("rewrites project-root candidates in responsive image srcset attributes", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(
+      '<picture><source data-srcset="/lazy.webp 1x" srcset="/assets/hero.webp?theme=light&amp;size=wide#top 1x, https://cdn.example.com/hero.webp 2x, ../hero.webp 3x, //cdn.example.com/hero.webp 4x"><img srcset="/assets/fallback.webp 1x, /assets/fallback@2x.webp 2x" src="/assets/fallback.webp" alt="hero"></picture>',
+      renderEnv("/workspace/docs/guide.md")
+    );
+
+    expect(html).toBe(
+      '<p><picture><source data-srcset="/lazy.webp 1x" srcset="https://webview.test/workspace/assets/hero.webp?theme=light&amp;size=wide#top 1x, https://cdn.example.com/hero.webp 2x, ../hero.webp 3x, //cdn.example.com/hero.webp 4x"><img srcset="https://webview.test/workspace/assets/fallback.webp 1x, https://webview.test/workspace/assets/fallback@2x.webp 2x" src="https://webview.test/workspace/assets/fallback.webp" alt="hero"></picture></p>\n'
+    );
+  });
+
+  it("preserves srcset whitespace while resolving a leading project-root candidate", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(
+      '<source srcset="  /assets/hero.webp 1x, /assets/hero@2x.webp 2x">',
+      renderEnv("/workspace/docs/guide.md")
+    );
+
+    expect(html).toBe(
+      '<source srcset="  https://webview.test/workspace/assets/hero.webp 1x, https://webview.test/workspace/assets/hero@2x.webp 2x">'
+    );
+  });
+
+  it("leaves relative, protocol-relative, external, and data image URLs unchanged", () => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    const html = md.render(
+      [
+        "![relative](../images/photo.png)",
+        "![protocol-relative](//cdn.example.com/photo.png)",
+        "![external](https://cdn.example.com/photo.png)",
+        '<img src="data:image/svg+xml,%3Csvg%3E%3C/svg%3E" alt="data">',
+        '<img data-src="/lazy.png" src="//cdn.example.com/photo.png">'
+      ].join("\n"),
+      renderEnv("/workspace/docs/guide.md")
+    );
+
+    expect(html).toContain('src="../images/photo.png"');
+    expect(html).toContain('src="//cdn.example.com/photo.png"');
+    expect(html).toContain('src="https://cdn.example.com/photo.png"');
+    expect(html).toContain('src="data:image/svg+xml,%3Csvg%3E%3C/svg%3E"');
+    expect(html).toContain('data-src="/lazy.png" src="//cdn.example.com/photo.png"');
+  });
+
   it("rewrites only the src attribute on raw HTML images", () => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render('<img data-src="/lazy.png" src="/actual.png">');

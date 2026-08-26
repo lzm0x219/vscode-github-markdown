@@ -54,6 +54,29 @@ async function assertClientRenderingInFrame(preview: Frame): Promise<void> {
     .textContent();
   assert(katexSource?.includes("S_{12}"), "KaTeX preserves the complete fixture expression");
 
+  for (const alt of ["Root Markdown image", "Relative Markdown image", "Root HTML image"]) {
+    const image = preview.locator(`img[alt="${alt}"]`);
+    if ((await image.count()) === 0 || typeof image.waitFor !== "function") continue;
+    await image.waitFor({ state: "visible", timeout: 10_000 });
+    const imageState = await image.evaluate((element) => {
+      const image = element as HTMLImageElement;
+      return { complete: image.complete, naturalWidth: image.naturalWidth };
+    });
+    assert(
+      imageState.complete && imageState.naturalWidth > 0,
+      `${alt} loads in the final Webview preview (${JSON.stringify(imageState)})`
+    );
+  }
+
+  const source = preview.locator("source[srcset]");
+  if ((await source.count()) > 0 && typeof source.getAttribute === "function") {
+    const srcset = await source.first().getAttribute("srcset");
+    assert(
+      srcset !== null && !/^\s*\/images\/local-image\.svg(?:\s|,|$)/.test(srcset),
+      `Project-root srcset candidates are rewritten in the final Webview preview (${srcset})`
+    );
+  }
+
   const overflow = await preview.evaluate(() => {
     const pageScroller = document.scrollingElement;
     const nestedVerticalScrollers = [

@@ -18,6 +18,10 @@ This file records notable changes that people can observe or act on when using t
 
 - Mermaid theme synchronization now follows companion renderer installation and removal while the extension is active, and restores only the settings it still owns when no renderer is available.
 
+### Markdown preview
+
+- Project-root paths in Markdown images and responsive HTML image candidates now resolve in nested documents and VS Code Webviews, while relative, external, protocol-relative, data, and lazy-loading URLs remain unchanged.
+
 ## [v4.4.4] - 2026-08-13
 
 v4.4.4 makes code block copy controls match GitHub more closely across preview themes.

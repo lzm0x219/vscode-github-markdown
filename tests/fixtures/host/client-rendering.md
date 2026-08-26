@@ -9,6 +9,15 @@ flowchart LR
 const themedCopyIcon = true;
 ```
 
+![Root Markdown image](/images/local-image.svg)
+
+![Relative Markdown image](images/local-image.svg)
+
+<picture>
+  <source srcset="/images/local-image.svg 1x, /images/local-image.svg?variant=2 2x">
+  <img src="/images/local-image.svg" alt="Root HTML image">
+</picture>
+
 $$
 \begin{aligned}
 S_1 &= a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} \\
