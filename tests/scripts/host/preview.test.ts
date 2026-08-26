@@ -83,11 +83,34 @@ describe("assertFinalClientRendering", () => {
     await expect(assertFinalClientRendering(page, 1_000)).resolves.toBeUndefined();
     expect(frameReads).toBe(2);
   });
+
+  it("rejects a preview with a nested vertical scroll area", async () => {
+    vi.useFakeTimers();
+    const frame = createPreviewFrame({
+      overflow: {
+        pageScrollable: true,
+        nestedVerticalScrollerLabels: ["katex-scroll"]
+      }
+    });
+    const page = {
+      frames: () => [frame],
+      waitForTimeout: async (milliseconds: number) => {
+        vi.advanceTimersByTime(milliseconds);
+      }
+    } as unknown as Page;
+
+    const assertion = assertFinalClientRendering(page, 1_000);
+    await expect(assertion).rejects.toThrow("second vertical scroll area");
+  });
 });
 
 function createPreviewFrame({
-  detachDuringAssertion = false
-}: { detachDuringAssertion?: boolean } = {}): Frame {
+  detachDuringAssertion = false,
+  overflow = { pageScrollable: true, nestedVerticalScrollerLabels: [] as string[] }
+}: {
+  detachDuringAssertion?: boolean;
+  overflow?: { pageScrollable: boolean; nestedVerticalScrollerLabels: string[] };
+} = {}): Frame {
   return {
     locator(selector: string) {
       return {
@@ -104,10 +127,7 @@ function createPreviewFrame({
         boundingBox: async () => ({ x: 0, y: 0, width: 100, height: 100 })
       } as unknown as Locator;
     },
-    evaluate: async () => ({
-      pageScrollable: true,
-      nestedVerticalScrollerLabels: []
-    }),
+    evaluate: async () => overflow,
     url: () => "vscode-webview://preview"
   } as unknown as Frame;
 }
