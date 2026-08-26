@@ -63,6 +63,17 @@ describe("preview theme CSS", () => {
     expect(previewRootCss).toContain("color: var(--fgColor-success)");
   });
 
+  it("keeps links, footnote references, and copy controls keyboard-visible", () => {
+    const previewRootCss = extractCssBlock(previewCss, ".vscode-github-markdown {");
+
+    expect(previewRootCss).toContain("a:focus-visible");
+    expect(previewRootCss).toContain('[role="button"]:focus-visible');
+    expect(previewRootCss).toContain(".code-block-copy-button:focus-visible");
+    expect(previewRootCss).toContain("outline: 2px solid var(--focus-outlineColor)");
+    expect(previewRootCss).toContain("outline-offset: -2px");
+    expect(previewRootCss).toContain("box-shadow: none");
+  });
+
   it("keeps high-contrast foreground, links, and focus outlines readable", () => {
     expect(previewCss).toContain("body.vscode-high-contrast");
     expect(previewCss).toContain("body.vscode-high-contrast-light");
