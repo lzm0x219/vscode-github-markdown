@@ -64,11 +64,11 @@
     "unicode-case-folding": "1.1.1"
   },
   "devDependencies": {
-    "@types/markdown-it": "14.1.2",
-    "@types/node": "24.13.3",
+    "@types/markdown-it": "14.2.0",
+    "@types/node": "26.3.0",
     "@types/pngjs": "6.0.5",
-    "@types/vscode": "1.74.0",
-    "@vitest/coverage-v8": "4.1.10",
+    "@types/vscode": "1.134.0",
+    "@vitest/coverage-v8": "4.1.11",
     "@vscode/l10n-dev": "0.0.35",
     "@vscode/test-electron": "3.1.0",
     "@vscode/test-web": "0.0.81",
@@ -77,18 +77,18 @@
     "is-in-ci": "2.0.0",
     "lefthook": "2.1.10",
     "lightningcss": "1.33.0",
-    "markdown-it": "14.3.0",
+    "markdown-it": "15.0.0",
     "oxfmt": "0.65.0",
     "oxlint": "1.80.0",
     "oxlint-tsgolint": "7.0.2001",
     "pixelmatch": "7.2.0",
     "playwright": "1.62.1",
     "pngjs": "7.0.0",
-    "publint": "0.3.23",
+    "publint": "0.3.24",
     "rollup-plugin-visualizer": "7.1.1",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   },
   "l10n": "./l10n",
   "contributes": {
