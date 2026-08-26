@@ -14,6 +14,189 @@ export async function assertClientRenderedPreview(page: Page): Promise<void> {
 
   await assertFinalClientRendering(page);
   await assertThemeRendering(page);
+
+  await openFile(page, "gfm-semantics.md");
+  await runCommand(page, "Markdown: Open Preview to the Side");
+  await assertGfmSemanticRendering(page);
+}
+
+export type GfmSemanticDom = {
+  available: boolean;
+  strikethrough: {
+    single: boolean;
+    double: boolean;
+    escaped: boolean;
+    inlineCode: boolean;
+    unmatched: boolean;
+    longRun: boolean;
+  };
+  tagfilter: {
+    filteredTags: Record<string, boolean>;
+    allowedStrong: boolean;
+    details: boolean;
+    picture: boolean;
+  };
+  directionality: {
+    heading: boolean;
+    paragraph: boolean;
+    list: boolean;
+    alert: boolean;
+    footnoteReference: boolean;
+    footnoteDefinition: boolean;
+    explicit: boolean;
+    inlineCodeHasDirection: boolean;
+    fencedCodeHasDirection: boolean;
+  };
+  footnotes: {
+    reference: boolean;
+    section: boolean;
+    backreference: boolean;
+  };
+};
+
+export async function assertGfmSemanticRendering(page: Page, timeoutMs = 30_000): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  let lastError: unknown;
+
+  while (Date.now() < deadline) {
+    for (const frame of page.frames()) {
+      try {
+        const snapshot = await readGfmSemanticDom(frame);
+        if (!snapshot?.available) continue;
+        assertGfmSemanticDom(snapshot);
+        return;
+      } catch (error) {
+        lastError = error;
+        if (error instanceof GfmSemanticAssertionError) throw error;
+        // Preview frames can be replaced while the Markdown renderer commits its DOM.
+      }
+    }
+    await page.waitForTimeout(100);
+  }
+
+  const detail = lastError instanceof Error ? ` Last renderer error: ${lastError.message}.` : "";
+  throw new Error(`Host preview test failed: final GFM semantic DOM was not found.${detail}`);
+}
+
+async function readGfmSemanticDom(frame: Frame): Promise<GfmSemanticDom | undefined> {
+  return frame.evaluate(() => {
+    const root = document.querySelector<HTMLElement>(".vscode-github-markdown");
+    if (!root) return undefined;
+
+    const markerElement = (selector: string, marker: string): Element | undefined =>
+      [...root.querySelectorAll(selector)].find((element) => element.textContent?.includes(marker));
+    const markerContainerHasElement = (marker: string, selector: string): boolean =>
+      Boolean(markerElement("p", marker)?.querySelector(selector));
+    const markerText = (marker: string): boolean => root.textContent?.includes(marker) ?? false;
+    const codeWithMarker = (marker: string): Element | undefined =>
+      [...root.querySelectorAll("code")].find((element) => element.textContent?.includes(marker));
+    const fencedCode = codeWithMarker("host-gfm-fenced-code");
+    const fencedPre = fencedCode?.closest("pre");
+    const filteredTags = [
+      "title",
+      "textarea",
+      "style",
+      "xmp",
+      "iframe",
+      "noembed",
+      "noframes",
+      "script",
+      "plaintext"
+    ];
+
+    return {
+      available: Boolean(markerElement("h1", "host-gfm-heading")),
+      strikethrough: {
+        single: markerContainerHasElement("host-gfm-single", "del"),
+        double: markerContainerHasElement("host-gfm-double", "s"),
+        escaped: markerText("host-gfm-escaped ~escaped-tilde~."),
+        inlineCode: [...root.querySelectorAll("code")].some(
+          (element) => element.textContent === "~code-tilde~"
+        ),
+        unmatched: markerText("host-gfm-unmatched ~unmatched-tilde."),
+        longRun: markerText("host-gfm-long ~~~long-tilde~~~.")
+      },
+      tagfilter: {
+        filteredTags: Object.fromEntries(
+          filteredTags.map((tag) => [tag, root.querySelectorAll(tag).length === 0])
+        ),
+        allowedStrong: Boolean(
+          root.querySelector('strong[data-gfm-allowed="strong"]')?.textContent === "host-gfm-strong"
+        ),
+        details: Boolean(markerElement("details", "host-gfm-details")),
+        picture: Boolean(root.querySelector('picture img[alt="host-gfm-picture"]'))
+      },
+      directionality: {
+        heading: markerElement("h1", "host-gfm-heading")?.getAttribute("dir") === "auto",
+        paragraph: markerElement("p", "host-gfm-paragraph")?.getAttribute("dir") === "auto",
+        list: markerElement("ul", "host-gfm-list")?.getAttribute("dir") === "auto",
+        alert:
+          markerElement("div.markdown-alert", "host-gfm-alert")?.getAttribute("dir") === "auto",
+        footnoteReference:
+          markerElement("p", "host-gfm-footnote-reference")?.getAttribute("dir") === "auto",
+        footnoteDefinition:
+          markerElement("p", "host-gfm-footnote-definition")?.getAttribute("dir") === "auto",
+        explicit:
+          markerElement('p[data-gfm-direction="explicit"]', "host-gfm-explicit-rtl")?.getAttribute(
+            "dir"
+          ) === "rtl",
+        inlineCodeHasDirection: Boolean(
+          codeWithMarker("host-gfm-inline-code")?.hasAttribute("dir")
+        ),
+        fencedCodeHasDirection: Boolean(
+          fencedCode?.hasAttribute("dir") || fencedPre?.hasAttribute("dir")
+        )
+      },
+      footnotes: {
+        reference: Boolean(root.querySelector("[data-footnote-ref]")),
+        section: Boolean(root.querySelector("section[data-footnotes]")),
+        backreference: Boolean(root.querySelector("[data-footnote-backref]"))
+      }
+    } satisfies GfmSemanticDom;
+  });
+}
+
+export function assertGfmSemanticDom(snapshot: GfmSemanticDom): void {
+  const missing = [
+    [snapshot.strikethrough.single, "single-tilde strikethrough renders <del>"],
+    [snapshot.strikethrough.double, "double-tilde strikethrough renders <s>"],
+    [snapshot.strikethrough.escaped, "escaped tildes remain literal"],
+    [snapshot.strikethrough.inlineCode, "inline code keeps tildes literal"],
+    [snapshot.strikethrough.unmatched, "unmatched tildes remain literal"],
+    [snapshot.strikethrough.longRun, "long tilde runs remain literal"],
+    [snapshot.tagfilter.allowedStrong, "allowed strong HTML remains rendered"],
+    [snapshot.tagfilter.details, "details remains rendered"],
+    [snapshot.tagfilter.picture, "picture remains rendered"],
+    [snapshot.directionality.heading, "heading uses automatic direction"],
+    [snapshot.directionality.paragraph, "paragraph uses automatic direction"],
+    [snapshot.directionality.list, "list uses automatic direction"],
+    [snapshot.directionality.alert, "alert uses automatic direction"],
+    [snapshot.directionality.footnoteReference, "footnote reference uses automatic direction"],
+    [snapshot.directionality.footnoteDefinition, "footnote definition uses automatic direction"],
+    [snapshot.directionality.explicit, "explicit direction is preserved"],
+    [!snapshot.directionality.inlineCodeHasDirection, "inline code has no direction attribute"],
+    [!snapshot.directionality.fencedCodeHasDirection, "fenced code has no direction attribute"],
+    [snapshot.footnotes.reference, "footnote reference is rendered"],
+    [snapshot.footnotes.section, "footnote section is rendered"],
+    [snapshot.footnotes.backreference, "footnote backreference is rendered"]
+  ].find(([value]) => !value);
+  if (missing) throw new GfmSemanticAssertionError(String(missing[1]));
+
+  const filteredTag = Object.entries(snapshot.tagfilter.filteredTags).find(
+    ([, filtered]) => !filtered
+  );
+  if (filteredTag) {
+    throw new GfmSemanticAssertionError(
+      `filtered ${filteredTag[0]} tag reached the final preview DOM as raw HTML`
+    );
+  }
+}
+
+class GfmSemanticAssertionError extends Error {
+  constructor(message: string) {
+    super(`GFM semantic assertion failed: ${message}`);
+    this.name = "GfmSemanticAssertionError";
+  }
 }
 
 type MermaidPalette = {
