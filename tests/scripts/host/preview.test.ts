@@ -113,6 +113,8 @@ function createPreviewFrame({
 } = {}): Frame {
   return {
     locator(selector: string) {
+      const imageLocator = createImageLocator(selector);
+      if (imageLocator) return imageLocator;
       return {
         count: async () => 1,
         textContent: async () => {
@@ -130,6 +132,26 @@ function createPreviewFrame({
     evaluate: async () => overflow,
     url: () => "vscode-webview://preview"
   } as unknown as Frame;
+}
+
+function createImageLocator(selector: string): Locator | undefined {
+  if (selector.startsWith('img[alt="')) {
+    return {
+      count: async () => 1,
+      evaluate: async (read: (element: HTMLImageElement) => unknown) =>
+        read({ complete: true, naturalWidth: 120 } as HTMLImageElement),
+      waitFor: async () => {}
+    } as unknown as Locator;
+  }
+  if (selector === "source[srcset]") {
+    const sourceLocator = {
+      count: async () => 1,
+      first: () => sourceLocator,
+      getAttribute: async () => "https://webview.test/images/local-image.svg 1x"
+    } as unknown as Locator;
+    return sourceLocator;
+  }
+  return undefined;
 }
 
 type ThemePreviewState = {
@@ -348,6 +370,8 @@ function createThemeFrame(state: ThemePreviewState): Frame {
       nestedVerticalScrollerLabels: []
     }),
     locator(selector: string) {
+      const imageLocator = createImageLocator(selector);
+      if (imageLocator) return imageLocator;
       const locator = {
         boundingBox: async () => ({ x: 0, y: 0, width: 100, height: 100 }),
         count: async () => countThemeSelector(selector, state),
