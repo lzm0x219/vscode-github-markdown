@@ -26,6 +26,28 @@ body,
     text-decoration: underline;
   }
 
+  a:focus,
+  [role="button"]:focus,
+  .code-block-copy-button:focus {
+    outline: 2px solid var(--focus-outlineColor);
+    outline-offset: -2px;
+    box-shadow: none;
+  }
+
+  a:focus:not(:focus-visible),
+  [role="button"]:focus:not(:focus-visible),
+  .code-block-copy-button:focus:not(:focus-visible) {
+    outline: 1px solid #0000;
+  }
+
+  a:focus-visible,
+  [role="button"]:focus-visible,
+  .code-block-copy-button:focus-visible {
+    outline: 2px solid var(--focus-outlineColor);
+    outline-offset: -2px;
+    box-shadow: none;
+  }
+
   &[data-link-underlines="false"] a {
     text-decoration: none;
   }
