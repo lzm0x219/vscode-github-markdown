@@ -130,6 +130,22 @@ describe("GitHub CSS assets", () => {
 
       expect(snapshot.capturedAt).toBe("2026-07-26T00:00:00.000Z");
       expect(snapshot.fixtureCommit).toBe("a".repeat(40));
+      expect(snapshot.extractor).toEqual({
+        package: "generate-github-markdown-css",
+        version: "6.6.0",
+        entryPage: "https://github.com/sindresorhus/generate-github-markdown-css"
+      });
+      expect(snapshot.themes).toEqual([
+        "light",
+        "light_colorblind",
+        "light_high_contrast",
+        "light_tritanopia",
+        "dark",
+        "dark_colorblind",
+        "dark_dimmed",
+        "dark_high_contrast",
+        "dark_tritanopia"
+      ]);
       expect(snapshot.assets).toMatchObject([
         {
           url: "https://github.githubassets.com/assets/primer-123abc.css",
@@ -145,6 +161,25 @@ describe("GitHub CSS assets", () => {
         }
       ]);
       expect(snapshot.assets.every(({ sha256 }) => /^[\da-f]{64}$/.test(sha256))).toBe(true);
+      expect(snapshot.filtering).toEqual({
+        input: {
+          mediaRules: 2,
+          dataSelectors: ["data-preview"],
+          classSelectors: ["unknown"]
+        },
+        output: {
+          mediaRules: 0,
+          dataSelectors: ["data-color-mode", "data-dark-theme", "data-light-theme"],
+          classSelectors: [
+            "vscode-dark",
+            "vscode-github-markdown",
+            "vscode-high-contrast",
+            "vscode-high-contrast-light",
+            "vscode-light"
+          ]
+        },
+        excluded: { mediaRules: 2, dataSelectors: 1, classSelectors: 1 }
+      });
       expect(snapshot.filtering.excluded).toMatchObject({ mediaRules: 2, dataSelectors: 1 });
     } finally {
       globalThis.fetch = originalFetch;
