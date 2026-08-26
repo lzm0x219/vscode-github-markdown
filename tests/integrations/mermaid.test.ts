@@ -309,6 +309,41 @@ describe("Mermaid theme synchronization", () => {
     expect(updateCalls).toHaveLength(2);
   });
 
+  it("uses one shared configuration when both Mermaid renderers are installed", async () => {
+    const memento = createTestMemento();
+    mermaidExtensionIds = new Set(["vscode.mermaid-markdown-features", "bierner.markdown-mermaid"]);
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "default", target: 1 },
+      { key: "darkModeTheme", value: "dark", target: 1 }
+    ]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "default",
+      darkModeTheme: "dark"
+    });
+  });
+
+  it("restores owned settings when every Mermaid renderer disappears", async () => {
+    const memento = createTestMemento();
+    await updateMermaidThemeSync(memento);
+    mermaidExtensionIds.clear();
+    updateCalls.length = 0;
+
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([
+      { key: "lightModeTheme", value: "neutral", target: 1 },
+      { key: "darkModeTheme", value: "forest", target: 1 }
+    ]);
+    expect(mermaidGlobalConfig).toEqual({
+      lightModeTheme: "neutral",
+      darkModeTheme: "forest"
+    });
+    expect(memento.keys()).toEqual([]);
+  });
+
   it("restores the user's global Mermaid settings when synchronization is disabled", async () => {
     const memento = createTestMemento();
 

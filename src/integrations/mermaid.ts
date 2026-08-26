@@ -93,11 +93,18 @@ export function restoreMermaidThemeSync(
 
 async function updateNow(memento: vscode.Memento): Promise<void> {
   const configuration = getOriginConfiguration();
+  // A renderer can be removed or disabled while this extension remains active.
+  // Release values that this extension still owns so a later reinstall starts
+  // from the user's current settings instead of inheriting stale state.
+  if (!hasMermaidExtension()) {
+    await restoreNow(memento, configuration);
+    return;
+  }
   if (!getMermaidSyncTheme()) {
     await restoreNow(memento, configuration);
     return;
   }
-  if (!hasMermaidExtension() || !hasConfiguration(configuration)) return;
+  if (!hasConfiguration(configuration)) return;
 
   const identity = getWorkspaceIdentity();
   await migrateSnapshot(memento, identity);
