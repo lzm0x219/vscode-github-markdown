@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import type MarkdownIt from "markdown-it";
 import { replaceCodePoint } from "entities/decode";
+import { type MarkdownIt } from "markdown-it";
 
 const imageTagPattern = /<img(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
 const responsiveImageTagPattern = /<(?:img|source)(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
@@ -135,12 +135,12 @@ export default function markdownItImageUrl(md: MarkdownIt): MarkdownIt {
   }
 
   const defaultImageRender =
-    md.renderer.rules.image ??
+    md.renderer.rules["image"] ??
     ((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options));
-  md.renderer.rules.image = (tokens, idx, options, env, self) => {
+  md.renderer.rules["image"] = (tokens, idx, options, env, self) => {
     const token = tokens[idx];
     const src = token?.attrGet("src");
-    if (token && src && isProjectRootPath(src)) {
+    if (token && typeof src === "string" && isProjectRootPath(src)) {
       token.attrSet("src", toProjectRootResourceUri(src, env as ImageRenderEnv));
     }
     return defaultImageRender(tokens, idx, options, env, self);

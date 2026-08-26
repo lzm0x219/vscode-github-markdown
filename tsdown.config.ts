@@ -17,7 +17,15 @@ export default defineConfig({
   deps: {
     alwaysBundle: ["entities/decode", "unicode-case-folding"],
     neverBundle: ["vscode"],
-    onlyBundle: ["entities", "unicode-case-folding"]
+    onlyBundle: [
+      "entities",
+      "linkify-it",
+      "markdown-it",
+      "mdurl",
+      "punycode.js",
+      "uc.micro",
+      "unicode-case-folding"
+    ]
   },
   plugins: [
     visualizer({

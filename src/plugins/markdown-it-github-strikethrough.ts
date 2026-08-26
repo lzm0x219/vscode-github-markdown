@@ -1,6 +1,4 @@
-import type MarkdownIt from "markdown-it";
-import type StateInline from "markdown-it/lib/rules_inline/state_inline.mjs";
-import type { Delimiter } from "markdown-it/lib/rules_inline/state_inline.mjs";
+import { type Delimiter, type MarkdownIt, type StateInline } from "markdown-it";
 
 const tildeCharacter = 0x7e;
 const singleTildeDelimiter = 0x1007e;
@@ -41,7 +39,7 @@ function postProcessStrikethrough(state: StateInline): boolean {
   applyStrikethroughTokens(state, state.delimiters);
 
   for (const metadata of state.tokens_meta) {
-    if (metadata) {
+    if (metadata?.delimiters) {
       applyStrikethroughTokens(state, metadata.delimiters);
     }
   }

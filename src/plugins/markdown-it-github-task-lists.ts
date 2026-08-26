@@ -1,5 +1,5 @@
 import { l10n } from "vscode";
-import type MarkdownIt from "markdown-it";
+import { type MarkdownIt } from "markdown-it";
 import type { MarkdownToken, MarkdownState } from "./shared";
 
 const taskListMarkerPattern = /^[ \t]*\[( |x|X)\][ \t]+/;
@@ -69,7 +69,7 @@ function applyTaskLists(state: MarkdownState) {
 
 function attrJoinOnce(token: MarkdownToken, name: string, value: string) {
   const current = token.attrGet(name);
-  if (current?.split(/\s+/).includes(value)) {
+  if (typeof current === "string" && current.split(/\s+/).includes(value)) {
     return;
   }
 

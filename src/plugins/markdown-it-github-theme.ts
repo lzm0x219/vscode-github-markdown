@@ -1,4 +1,4 @@
-import type MarkdownIt from "markdown-it";
+import { type MarkdownIt } from "markdown-it";
 import { getLinkUnderlines } from "../accessibility";
 import { getThemeColorMode, getCurrentLightTheme, getCurrentDarkTheme } from "../theme";
 
