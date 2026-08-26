@@ -37,6 +37,30 @@ const snapshot: GithubCssSnapshot = {
 };
 
 describe("upstream drift probe", () => {
+  it("treats the 30-hour freshness boundary as fresh and missing history as missing", async () => {
+    const boundary = await createDriftReport({
+      now: new Date("2026-07-26T12:00:00.000Z"),
+      lastSuccessAt: "2026-07-25T06:00:00.000Z",
+      captureSnapshot: async () => snapshot,
+      verifyRemoteParity: async () => {}
+    });
+    const missing = await createDriftReport({
+      now: new Date("2026-07-26T12:00:00.000Z"),
+      captureSnapshot: async () => snapshot,
+      verifyRemoteParity: async () => {}
+    });
+
+    expect(boundary.successfulProbeFreshness).toMatchObject({
+      status: "fresh",
+      thresholdHours: maximumSuccessfulProbeAgeHours,
+      ageHours: 30
+    });
+    expect(missing.successfulProbeFreshness).toEqual({
+      status: "missing",
+      thresholdHours: maximumSuccessfulProbeAgeHours
+    });
+  });
+
   it("reports successful comparison with cache and stale-result freshness", async () => {
     const report = await createDriftReport({
       now: new Date("2026-07-26T12:00:00.000Z"),
