@@ -67,7 +67,7 @@
     "@types/markdown-it": "14.2.0",
     "@types/node": "24.13.3",
     "@types/pngjs": "6.0.5",
-    "@types/vscode": "1.74.0",
+    "@types/vscode": "1.134.0",
     "@vitest/coverage-v8": "4.1.11",
     "@vscode/l10n-dev": "0.0.35",
     "@vscode/test-electron": "3.1.0",
