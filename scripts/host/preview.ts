@@ -26,7 +26,7 @@ type ThemeExpectation = {
   mode: "auto" | "dark" | "light" | "vscode";
   light: string;
   dark: string;
-  body?: "vscode-dark" | "vscode-light";
+  body?: "vscode-dark" | "vscode-light" | "vscode-high-contrast" | "vscode-high-contrast-light";
 };
 
 async function assertThemeRendering(page: Page): Promise<void> {
@@ -104,13 +104,20 @@ async function assertThemeRendering(page: Page): Promise<void> {
     darkPalette
   );
 
+  await selectColorTheme(page, "Default High Contrast", {
+    mode: "auto",
+    light: "light_high_contrast",
+    dark: "dark_tritanopia",
+    body: "vscode-high-contrast"
+  });
+
   await selectQuickPick(page, "GitHub Markdown: Change Theme Mode", "VS Code theme");
   await refreshPreview(page);
   await waitForThemedPreview(page, {
     mode: "vscode",
     light: "light_high_contrast",
     dark: "dark_tritanopia",
-    body: "vscode-dark"
+    body: "vscode-high-contrast"
   });
   if (copyButtonAvailable) await assertCodeCopyButtonTheme(page, "VS Code theme");
 }
@@ -233,7 +240,7 @@ async function selectColorTheme(
   page: Page,
   option: string,
   expectation: ThemeExpectation,
-  expectedPalette: MermaidPalette
+  expectedPalette?: MermaidPalette
 ): Promise<MermaidPalette> {
   let lastError: unknown;
 
