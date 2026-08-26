@@ -455,6 +455,19 @@ function countThemeSelector(selector: string, state: ThemePreviewState): number 
   if (selector === ".mermaid svg[data-host-preview-stale]") return 0;
   if (selector === ".code-block-copy-button") return state.copyButtonAvailable ? 1 : 0;
   if (selector === ".mermaid svg" || selector === ".katex-display .katex") return 1;
+  if (
+    [
+      "h1",
+      "table",
+      ".markdown-alert",
+      'input[type="checkbox"]',
+      "[data-footnote-ref]",
+      'a[href="https://example.com/theme-stress"]',
+      "pre code"
+    ].includes(selector)
+  ) {
+    return 1;
+  }
   return 0;
 }
 

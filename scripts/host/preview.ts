@@ -248,6 +248,7 @@ async function assertThemeRendering(page: Page): Promise<void> {
       expectation,
       previousMode && previousMode !== expectation.mode ? previousPalette : undefined
     );
+    await assertThemeStressRendering(page, label);
     if (label === "Light") lightPalette = palette;
     if (label === "Dark dimmed") darkPalette = palette;
     if (copyButtonAvailable) await assertCodeCopyButtonTheme(page, label);
@@ -303,6 +304,41 @@ async function assertThemeRendering(page: Page): Promise<void> {
     body: "vscode-high-contrast"
   });
   if (copyButtonAvailable) await assertCodeCopyButtonTheme(page, "VS Code theme");
+}
+
+async function assertThemeStressRendering(page: Page, theme: string): Promise<void> {
+  const selectors = [
+    ["h1", "heading"],
+    ["table", "table"],
+    [".markdown-alert", "alert"],
+    ['input[type="checkbox"]', "task list"],
+    ["[data-footnote-ref]", "footnote"],
+    ['a[href="https://example.com/theme-stress"]', "link"],
+    ["pre code", "code"]
+  ] as const;
+  const deadline = Date.now() + themeSettleAttemptTimeoutMs;
+  let lastMissing: string[] = selectors.map(([, label]) => label);
+
+  while (Date.now() < deadline) {
+    for (const frame of page.frames()) {
+      try {
+        if (!(await frame.locator(".vscode-github-markdown").count())) continue;
+        const missing: string[] = [];
+        for (const [selector, label] of selectors) {
+          if ((await frame.locator(selector).count()) === 0) missing.push(label);
+        }
+        if (missing.length === 0) return;
+        lastMissing = missing;
+      } catch {
+        // Preview frames can be replaced while the themed DOM commits.
+      }
+    }
+    await page.waitForTimeout(100);
+  }
+
+  throw new Error(
+    `Host preview test failed: ${theme} theme stress content is incomplete (${lastMissing.join(", ")})`
+  );
 }
 
 async function hasCodeCopyButton(page: Page, timeoutMs = 2_000): Promise<boolean> {
