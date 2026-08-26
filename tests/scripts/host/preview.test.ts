@@ -114,7 +114,7 @@ function createPreviewFrame({
 
 type ThemePreviewState = {
   activeCommand: string | undefined;
-  body: "vscode-dark" | "vscode-light";
+  body: "vscode-dark" | "vscode-light" | "vscode-high-contrast" | "vscode-high-contrast-light";
   copyButtonAvailable: boolean;
   copyButtonEvaluations: number;
   dark: string;
@@ -250,6 +250,12 @@ function applyQuickPick(
     return;
   }
   if (command === "Preferences: Color Theme") {
+    if (option === "Default High Contrast") {
+      state.body = "vscode-high-contrast";
+      state.palette = darkPalette;
+      state.pendingPalette = darkPalette;
+      return;
+    }
     const isLight = option === "Light Modern";
     state.body = isLight ? "vscode-light" : "vscode-dark";
     state.palette = isLight ? darkPalette : lightPalette;
