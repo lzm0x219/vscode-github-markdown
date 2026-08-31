@@ -27,4 +27,13 @@ describe("manual tag publishing", () => {
     const publishJob = workflow.slice(publishStart, workflow.indexOf("  finalize:"));
     expect(publishJob).toContain("needs: prepare-release");
   });
+
+  it("logs into the Marketplace publisher tenant without requiring an Azure subscription", () => {
+    const publishStart = workflow.indexOf("  publish:");
+    const publishJob = workflow.slice(publishStart, workflow.indexOf("  finalize:"));
+
+    expect(publishJob).toContain("uses: azure/login@v3");
+    expect(publishJob).toContain("allow-no-subscriptions: true");
+    expect(publishJob).not.toContain("subscription-id:");
+  });
 });
