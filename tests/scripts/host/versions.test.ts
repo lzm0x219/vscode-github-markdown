@@ -34,4 +34,24 @@ describe("hostVersions", () => {
 
     expect(workflow).not.toContain(`vscode: ${hostVersions.pinnedPreview.desktopVersion}`);
   });
+
+  it("keeps Renovate from changing dependencies supplied by the pinned preview host", () => {
+    const renovate = JSON.parse(
+      readFileSync(new URL("../../../.github/renovate.json", import.meta.url), "utf8")
+    ) as {
+      packageRules?: Array<{
+        description?: string;
+        enabled?: boolean;
+        matchManagers?: string[];
+        matchPackageNames?: string[];
+      }>;
+    };
+
+    expect(renovate.packageRules).toContainEqual({
+      description: "Update MarkdownIt only with the pinned VS Code preview host",
+      enabled: false,
+      matchManagers: ["npm"],
+      matchPackageNames: ["markdown-it", "@types/markdown-it"]
+    });
+  });
 });
