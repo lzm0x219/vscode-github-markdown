@@ -24,6 +24,7 @@ type FootnoteIndex = {
 };
 
 type FragmentRenderer = (tokens: MarkdownToken[], env: Record<string, unknown>) => string;
+type HtmlEscaper = (value: string) => string;
 
 const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
@@ -70,7 +71,7 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
     const index = applyFootnoteReferences(markdownState, definitions, md);
 
     if (definitions.size > 0) {
-      appendFootnoteSection(markdownState, index, renderFragment);
+      appendFootnoteSection(markdownState, index, renderFragment, md.utils.escapeHtml);
     }
   });
 
@@ -323,7 +324,8 @@ function promoteSoftbreaks(tokens: MarkdownToken[]): void {
 function appendFootnoteSection(
   state: MarkdownState,
   footnotes: FootnoteIndex,
-  renderFragment: FragmentRenderer
+  renderFragment: FragmentRenderer,
+  escapeHtml: HtmlEscaper
 ) {
   if (footnotes.order.length === 0) {
     return;
@@ -338,7 +340,7 @@ function appendFootnoteSection(
 
       const number = index + 1;
       const backrefs = (footnotes.referencesByLabel.get(label) ?? [])
-        .map((reference) => renderBackref(reference.number, reference.referenceCount))
+        .map((reference) => renderBackref(reference.number, reference.referenceCount, escapeHtml))
         .join(" ");
       const content = renderFootnoteDefinition(tokens, backrefs, state, renderFragment);
       return `<li id="user-content-fn-${number}">
@@ -355,7 +357,7 @@ ${content}
   const footnotesToken = new state.Token("html_block", "", 0);
   footnotesToken.content =
     `<section data-footnotes="" class="footnotes">\n` +
-    `<h2 id="footnote-label" class="sr-only" dir="auto">${l10n.t("Footnotes")}</h2>\n` +
+    `<h2 id="footnote-label" class="sr-only" dir="auto">${escapeHtml(l10n.t("Footnotes"))}</h2>\n` +
     `<ol dir="auto">\n${items}\n</ol>\n` +
     `</section>\n`;
 
@@ -401,13 +403,14 @@ function renderFootnoteDefinition(
   return trailingParagraphInline ? content : `${content}\n${backrefs}`;
 }
 
-function renderBackref(number: number, referenceCount: number): string {
+function renderBackref(number: number, referenceCount: number, escapeHtml: HtmlEscaper): string {
   const suffix = referenceCount === 1 ? "" : `-${referenceCount}`;
   const marker = referenceCount === 1 ? "" : `<sup>${referenceCount}</sup>`;
+  const label = escapeHtml(l10n.t("Back to reference {0}{1}", number, suffix));
   return `<a href="#${footnoteReferenceId(
     number,
     referenceCount
-  )}" data-footnote-backref="" aria-label="${l10n.t("Back to reference {0}{1}", number, suffix)}" class="data-footnote-backref">↩${marker}</a>`;
+  )}" data-footnote-backref="" aria-label="${label}" class="data-footnote-backref">↩${marker}</a>`;
 }
 
 function renderFootnoteReferenceAnchor(number: number, referenceCount: number): string {

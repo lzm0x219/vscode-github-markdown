@@ -3,16 +3,17 @@ import type MarkdownIt from "markdown-it";
 import type { MarkdownToken, MarkdownState } from "./shared";
 
 const taskListMarkerPattern = /^[ \t]*\[( |x|X)\][ \t]+/;
+type HtmlEscaper = (value: string) => string;
 
 export default function markdownItGitHubTaskLists(md: MarkdownIt): MarkdownIt {
   md.core.ruler.after("inline", "github-markdown-task-lists", (state) => {
-    applyTaskLists(state as unknown as MarkdownState);
+    applyTaskLists(state as unknown as MarkdownState, md.utils.escapeHtml);
   });
 
   return md;
 }
 
-function applyTaskLists(state: MarkdownState) {
+function applyTaskLists(state: MarkdownState, escapeHtml: HtmlEscaper) {
   for (let index = 0; index < state.tokens.length - 3; index += 1) {
     const listItemOpen = state.tokens[index];
     const paragraphOpen = state.tokens[index + 1];
@@ -44,10 +45,11 @@ function applyTaskLists(state: MarkdownState) {
     }
 
     const checked = marker.toLowerCase() === "x";
+    const label = escapeHtml(l10n.t(checked ? "Completed task" : "Incomplete task"));
     const checkboxToken = new state.Token("html_inline", "", 0);
     checkboxToken.content = checked
-      ? `<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="${l10n.t("Completed task")}" checked=""> `
-      : `<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="${l10n.t("Incomplete task")}"> `;
+      ? `<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="${label}" checked=""> `
+      : `<input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="${label}"> `;
 
     const inlineChildren = inline.children ? [...inline.children] : [];
     firstChild.content = firstChild.content.slice(match[0].length);
