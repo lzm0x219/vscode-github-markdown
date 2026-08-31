@@ -5,7 +5,6 @@ import { caseFold } from "unicode-case-folding";
 import type { MarkdownToken, MarkdownState } from "./shared";
 
 type FootnoteReference = {
-  label: string;
   number: number;
   referenceCount: number;
 };
@@ -15,7 +14,13 @@ type FootnoteGraph = {
   order: string[];
   numbers: Map<string, number>;
   referenceCounts: Map<string, number>;
-  references: FootnoteReference[];
+  referencesByLabel: Map<string, FootnoteReference[]>;
+};
+
+type FootnoteIndex = {
+  definitionTokens: Map<string, MarkdownToken[]>;
+  order: string[];
+  referencesByLabel: Map<string, FootnoteReference[]>;
 };
 
 type FragmentRenderer = (tokens: MarkdownToken[], env: Record<string, unknown>) => string;
@@ -25,8 +30,6 @@ const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
 const footnoteDefinitionsKey = "githubMarkdownFootnoteDefinitions";
 const footnoteHardbreakLabelsKey = "githubMarkdownFootnoteHardbreakLabels";
 const nestedFootnoteParseKey = "githubMarkdownNestedFootnoteParse";
-const footnoteOrderKey = "githubMarkdownFootnoteOrder";
-const footnoteReferencesKey = "githubMarkdownFootnoteReferences";
 
 export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
   const render = md.renderer.render.bind(md.renderer);
@@ -64,10 +67,10 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
 
     const markdownState = state as unknown as MarkdownState;
     const definitions = footnoteDefinitions(markdownState);
-    const definitionTokens = applyFootnoteReferences(markdownState, definitions, md);
+    const index = applyFootnoteReferences(markdownState, definitions, md);
 
     if (definitions.size > 0) {
-      appendFootnoteSection(markdownState, definitionTokens, renderFragment);
+      appendFootnoteSection(markdownState, index, renderFragment);
     }
   });
 
@@ -149,10 +152,10 @@ function applyFootnoteReferences(
   state: MarkdownState,
   definitions: Map<string, string>,
   md: MarkdownIt
-): Map<string, MarkdownToken[]> {
+): FootnoteIndex {
   const definitionTokens = new Map<string, MarkdownToken[]>();
   if (definitions.size === 0) {
-    return definitionTokens;
+    return { definitionTokens, order: [], referencesByLabel: new Map() };
   }
 
   const graph: FootnoteGraph = {
@@ -160,7 +163,7 @@ function applyFootnoteReferences(
     order: [],
     numbers: new Map<string, number>(),
     referenceCounts: new Map<string, number>(),
-    references: []
+    referencesByLabel: new Map<string, FootnoteReference[]>()
   };
 
   applyFootnoteReferencesToTokens(state.tokens, state, graph);
@@ -180,9 +183,11 @@ function applyFootnoteReferences(
     definitionTokens.set(label, tokens);
   }
 
-  state.env[footnoteOrderKey] = graph.order;
-  state.env[footnoteReferencesKey] = graph.references;
-  return definitionTokens;
+  return {
+    definitionTokens,
+    order: graph.order,
+    referencesByLabel: graph.referencesByLabel
+  };
 }
 
 function parseFootnoteDefinition(
@@ -264,7 +269,9 @@ function applyFootnoteReferencesToTokens(
         }
         const referenceCount = (graph.referenceCounts.get(label) ?? 0) + 1;
         graph.referenceCounts.set(label, referenceCount);
-        graph.references.push({ label, number, referenceCount });
+        const references = graph.referencesByLabel.get(label) ?? [];
+        references.push({ number, referenceCount });
+        graph.referencesByLabel.set(label, references);
 
         const htmlToken = new state.Token("html_inline", "", 0);
         const anchor = renderFootnoteReferenceAnchor(number, referenceCount);
@@ -315,28 +322,22 @@ function promoteSoftbreaks(tokens: MarkdownToken[]): void {
 
 function appendFootnoteSection(
   state: MarkdownState,
-  definitionTokens: Map<string, MarkdownToken[]>,
+  footnotes: FootnoteIndex,
   renderFragment: FragmentRenderer
 ) {
-  const footnoteOrder = state.env[footnoteOrderKey];
-  const referencedLabels = Array.isArray(footnoteOrder)
-    ? footnoteOrder.filter((label): label is string => typeof label === "string")
-    : [];
-  const references = footnoteReferences(state);
-  if (referencedLabels.length === 0) {
+  if (footnotes.order.length === 0) {
     return;
   }
 
-  const items = referencedLabels
+  const items = footnotes.order
     .map((label, index) => {
-      const tokens = definitionTokens.get(label);
+      const tokens = footnotes.definitionTokens.get(label);
       if (!tokens) {
         return "";
       }
 
       const number = index + 1;
-      const backrefs = references
-        .filter((reference) => reference.label === label)
+      const backrefs = (footnotes.referencesByLabel.get(label) ?? [])
         .map((reference) => renderBackref(reference.number, reference.referenceCount))
         .join(" ");
       const content = renderFootnoteDefinition(tokens, backrefs, state, renderFragment);
@@ -398,28 +399,6 @@ function renderFootnoteDefinition(
 
   const content = renderFragment(tokens, state.env).trimEnd();
   return trailingParagraphInline ? content : `${content}\n${backrefs}`;
-}
-
-function footnoteReferences(state: MarkdownState): FootnoteReference[] {
-  const references = state.env[footnoteReferencesKey];
-  if (!Array.isArray(references)) {
-    return [];
-  }
-
-  return references.filter(isFootnoteReference);
-}
-
-function isFootnoteReference(reference: unknown): reference is FootnoteReference {
-  return (
-    typeof reference === "object" &&
-    reference !== null &&
-    "label" in reference &&
-    "number" in reference &&
-    "referenceCount" in reference &&
-    typeof reference.label === "string" &&
-    typeof reference.number === "number" &&
-    typeof reference.referenceCount === "number"
-  );
 }
 
 function renderBackref(number: number, referenceCount: number): string {

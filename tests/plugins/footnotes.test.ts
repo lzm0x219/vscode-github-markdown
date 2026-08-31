@@ -173,6 +173,23 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain("<sup>2</sup>");
   });
 
+  it("renders a large footnote index without leaking backreference state", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const count = 1_000;
+    const references = Array.from({ length: count }, (_, index) => `note[^${index}]`).join(" ");
+    const definitions = Array.from(
+      { length: count },
+      (_, index) => `[^${index}]: Definition ${index}.`
+    ).join("\n");
+    const environment: Record<string, unknown> = {};
+
+    const html = md.render(`${references}\n\n${definitions}`, environment);
+
+    expect(html.match(/data-footnote-backref=""/g)).toHaveLength(count);
+    expect(environment).not.toHaveProperty("githubMarkdownFootnoteOrder");
+    expect(environment).not.toHaveProperty("githubMarkdownFootnoteReferences");
+  });
+
   it("renders inline markup in footnote definition", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("Text[^1].\n\n[^1]: My **bold** reference.");
