@@ -1,21 +1,25 @@
 import MarkdownIt from "markdown-it";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const localizedMessages = vi.hoisted(() => ({ values: {} as Record<string, string> }));
 
 vi.mock("vscode", () => ({
   default: {
     l10n: {
       t: (key: string, ...args: (string | number)[]) => {
+        const message = localizedMessages.values[key] ?? key;
         return args.length > 0
-          ? key.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
-          : key;
+          ? message.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
+          : message;
       }
     }
   },
   l10n: {
     t: (key: string, ...args: (string | number)[]) => {
+      const message = localizedMessages.values[key] ?? key;
       return args.length > 0
-        ? key.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
-        : key;
+        ? message.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ""))
+        : message;
     }
   }
 }));
@@ -23,6 +27,10 @@ vi.mock("vscode", () => ({
 import githubFootnotes from "../../src/plugins/markdown-it-github-footnotes";
 
 describe("markdown-it-github-footnotes", () => {
+  beforeEach(() => {
+    localizedMessages.values = {};
+  });
+
   it("renders footnote reference", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("Text[^1].\n\n[^1]: My reference.");
@@ -30,6 +38,17 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).toContain('href="#user-content-fn-1"');
     expect(html).toContain("footnotes");
     expect(html).toContain("My reference.");
+  });
+
+  it("escapes localized footnote labels", () => {
+    localizedMessages.values["Footnotes"] = 'Notes "<&';
+    localizedMessages.values["Back to reference {0}{1}"] = 'Back "<& {0}{1}';
+
+    const html = new MarkdownIt().use(githubFootnotes).render("Text[^1].\n\n[^1]: Note.");
+
+    expect(html).toContain(">Notes &quot;&lt;&amp;</h2>");
+    expect(html).toContain('aria-label="Back &quot;&lt;&amp; 1"');
+    expect(html).not.toContain('aria-label="Back "<& 1"');
   });
 
   it("keeps single-word footnote definitions out of Markdown link references", () => {

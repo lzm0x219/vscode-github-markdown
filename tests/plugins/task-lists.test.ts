@@ -1,20 +1,26 @@
 import MarkdownIt from "markdown-it";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const localizedMessages = vi.hoisted(() => ({ values: {} as Record<string, string> }));
 
 vi.mock("vscode", () => ({
   default: {
     l10n: {
-      t: (key: string) => key
+      t: (key: string) => localizedMessages.values[key] ?? key
     }
   },
   l10n: {
-    t: (key: string) => key
+    t: (key: string) => localizedMessages.values[key] ?? key
   }
 }));
 
 import githubTaskLists from "../../src/plugins/markdown-it-github-task-lists";
 
 describe("markdown-it-github-task-lists", () => {
+  beforeEach(() => {
+    localizedMessages.values = {};
+  });
+
   it("renders checked task list item", () => {
     const md = new MarkdownIt().use(githubTaskLists);
     const html = md.render("- [x] Completed task");
@@ -29,6 +35,15 @@ describe("markdown-it-github-task-lists", () => {
     const html = md.render("- [ ] Incomplete task");
     expect(html).toContain("task-list-item-checkbox");
     expect(html).not.toContain('checked=""');
+  });
+
+  it("escapes the localized checkbox label", () => {
+    localizedMessages.values["Completed task"] = 'Done "<&';
+
+    const html = new MarkdownIt().use(githubTaskLists).render("- [x] Done");
+
+    expect(html).toContain('aria-label="Done &quot;&lt;&amp;"');
+    expect(html).not.toContain('aria-label="Done "<&"');
   });
 
   it("renders mixed checked and unchecked items", () => {

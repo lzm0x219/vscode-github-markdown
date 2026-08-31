@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Accessibility
+
+- Task-list and footnote labels now remain intact when a translation contains quotes, angle brackets, or ampersands.
+
 ### Themes and appearance
 
 - Light and dark theme commands now show only palettes that match their appearance slot, while existing JSON settings continue to work unchanged.
