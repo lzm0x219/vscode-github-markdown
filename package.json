@@ -45,6 +45,7 @@
     "verify:parity": "nub scripts/parity/index.ts check",
     "verify:parity:remote": "nub scripts/parity/index.ts remote",
     "verify:parity:report": "nub scripts/parity/index.ts report",
+    "verify:release": "nub scripts/release/verify-index.ts",
     "probe:drift": "nub scripts/drift/index.ts",
     "drill:drift": "nub scripts/drift/drill-index.ts",
     "i18n-export": "nubx vscode-l10n-dev export --outDir ./l10n ./src",

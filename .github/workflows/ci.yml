@@ -48,6 +48,9 @@ jobs:
       - name: Verify Markdown parity baseline
         run: pnpm run verify:parity
 
+      - name: Verify release changelog
+        run: nub run verify:release
+
       - name: Upload Markdown parity images
         if: failure()
         uses: actions/upload-artifact@v7
