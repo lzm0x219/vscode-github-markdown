@@ -35,6 +35,21 @@ describe("hostVersions", () => {
     expect(workflow).not.toContain(`vscode: ${hostVersions.pinnedPreview.desktopVersion}`);
   });
 
+  it("caches fixed desktop hosts without freezing the rolling stable channel", () => {
+    const workflow = readFileSync(
+      new URL("../../../.github/workflows/ci.yml", import.meta.url),
+      "utf8"
+    );
+
+    expect(workflow).toContain("- name: Cache fixed VS Code host");
+    expect(workflow).toContain("if: matrix.cache_vscode");
+    expect(workflow).toContain("path: .vscode-test");
+    expect(workflow).toContain(
+      "key: vscode-${{ runner.os }}-${{ matrix.name }}-${{ hashFiles('.github/workflows/ci.yml', 'scripts/host/versions.ts') }}"
+    );
+    expect(workflow).toMatch(/name: desktop-stable[\s\S]*?cache_vscode: false/);
+  });
+
   it("keeps Renovate from changing dependencies supplied by the pinned preview host", () => {
     const renovate = JSON.parse(
       readFileSync(new URL("../../../.github/renovate.json", import.meta.url), "utf8")
