@@ -118,9 +118,6 @@ jobs:
       - name: Verify Markdown parity baseline
         run: pnpm run verify:parity
 
-      - name: Build
-        run: nub run build
-
       - name: Generate release notes
         run: nub run release:note
 

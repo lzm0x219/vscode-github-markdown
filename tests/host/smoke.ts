@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import MarkdownIt from "markdown-it";
+import MarkdownIt, { type MarkdownIt as MarkdownItInstance } from "markdown-it";
 
 type ExtensionApi = {
-  extendMarkdownIt(markdownIt: MarkdownIt): MarkdownIt;
+  extendMarkdownIt(markdownIt: MarkdownItInstance): MarkdownItInstance;
 };
 
 const disallowedRawHtmlTags = [

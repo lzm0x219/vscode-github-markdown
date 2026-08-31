@@ -1,4 +1,4 @@
-import type MarkdownIt from "markdown-it";
+import type { MarkdownIt } from "markdown-it";
 import type { MarkdownToken } from "./shared";
 
 const automaticDirectionRules = [
@@ -14,7 +14,12 @@ export default function markdownItGitHubDirectionality(md: MarkdownIt): Markdown
     wrapRendererRule(md, ruleName, normalizeAutomaticDirection);
   }
   wrapRendererRule(md, "blockquote_open", (token) => {
-    if (token.tag === "div" && token.attrGet("class")?.split(/\s+/).includes("markdown-alert")) {
+    const className = token.attrGet("class");
+    if (
+      token.tag === "div" &&
+      typeof className === "string" &&
+      className.split(/\s+/).includes("markdown-alert")
+    ) {
       normalizeAutomaticDirection(token);
     }
   });
@@ -44,7 +49,8 @@ function wrapRendererRule(
 }
 
 function normalizeAutomaticDirection(token: MarkdownToken): void {
-  const directions = token.attrGet("dir")?.split(/\s+/) ?? [];
+  const direction = token.attrGet("dir");
+  const directions = typeof direction === "string" ? direction.split(/\s+/) : [];
   const explicitDirection = directions.find(
     (direction) => direction === "ltr" || direction === "rtl"
   );

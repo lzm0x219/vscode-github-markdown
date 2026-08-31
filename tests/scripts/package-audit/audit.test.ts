@@ -77,6 +77,7 @@ describe("auditPackageComparison", () => {
       {
         archiveBytes: 200_000,
         entries: {
+          "extension/.playwright-cli/console.log": 143,
           "extension/.serena/project.yml": 9_375,
           "extension/assets/parity-github.png": 9_879,
           "extension/assets/readme-banner.jpg": 79_611,
@@ -86,6 +87,7 @@ describe("auditPackageComparison", () => {
     );
 
     expect(report.violations).toEqual([
+      { rule: "forbidden-file", path: "extension/.playwright-cli/console.log" },
       { rule: "forbidden-file", path: "extension/.serena/project.yml" },
       { rule: "forbidden-file", path: "extension/assets/parity-github.png" },
       { rule: "forbidden-file", path: "extension/assets/readme-banner.jpg" },

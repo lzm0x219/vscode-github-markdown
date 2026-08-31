@@ -47,6 +47,7 @@ const forbiddenPackageFiles = new Set([
   "extension/assets/readme-banner.jpg",
   "extension/release-CHANGELOG.txt"
 ]);
+const forbiddenPackagePathPrefixes = ["extension/.playwright-cli/", "extension/.serena/"];
 
 export function auditPackageComparison(
   baseline: PackageSnapshot,
@@ -116,7 +117,10 @@ function auditMaximumPackageSize(current: PackageSnapshot): PackageAuditViolatio
 function auditForbiddenPackageFiles(current: PackageSnapshot): PackageAuditViolation[] {
   const violations: PackageAuditViolation[] = [];
   for (const path of Object.keys(current.entries).sort()) {
-    if (path.startsWith("extension/.serena/") || forbiddenPackageFiles.has(path)) {
+    if (
+      forbiddenPackagePathPrefixes.some((prefix) => path.startsWith(prefix)) ||
+      forbiddenPackageFiles.has(path)
+    ) {
       violations.push({ rule: "forbidden-file", path });
     }
   }

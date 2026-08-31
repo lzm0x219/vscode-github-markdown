@@ -9,6 +9,7 @@ export const project = {
   root,
   paths: {
     dist: join(root, "dist"),
+    extensionBundle: join(root, "dist", "extension.js"),
     packageJson: join(root, "package.json"),
     previewCssSource: join(root, "src", "extension.preview.css"),
     previewCssOutput: join(root, "dist", "extension.preview.css"),

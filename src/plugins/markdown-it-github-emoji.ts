@@ -1,4 +1,4 @@
-import type MarkdownIt from "markdown-it";
+import type { MarkdownIt } from "markdown-it";
 import type { MarkdownToken, MarkdownState } from "./shared";
 import { githubImageEmojiByAlias, githubUnicodeEmojiByAlias } from "../generated/github-emojis";
 

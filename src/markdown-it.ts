@@ -1,4 +1,4 @@
-import type MarkdownIt from "markdown-it";
+import type { MarkdownIt } from "markdown-it";
 import alerts from "./plugins/markdown-it-github-alerts";
 import directionality from "./plugins/markdown-it-github-directionality";
 import emoji from "./plugins/markdown-it-github-emoji";
