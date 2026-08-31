@@ -1,4 +1,4 @@
 [tools]
 node = "24.19.0"
-"npm:pnpm" = "11.24.0"
+"npm:pnpm" = "12.1.0"
 "npm:@nubjs/nub" = "0.8.0"
