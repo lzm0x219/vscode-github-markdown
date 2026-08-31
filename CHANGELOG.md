@@ -9,6 +9,7 @@ This file records notable changes that people can observe or act on when using t
 ### Themes and appearance
 
 - Light and dark theme commands now show only palettes that match their appearance slot, while existing JSON settings continue to work unchanged.
+- Markdown previews and Mermaid theme synchronization now use documented defaults when stored theme settings contain unsupported values.
 
 ## [v4.5.1] - 2026-09-01
 

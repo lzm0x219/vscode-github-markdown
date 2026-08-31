@@ -25,14 +25,7 @@ vi.mock("vscode", () => ({
   }
 }));
 
-import {
-  getCurrentDarkTheme,
-  getCurrentLightTheme,
-  getThemeColorMode,
-  getThemeList,
-  getThemeModeList,
-  type Theme
-} from "../src/theme";
+import { getResolvedTheme, getThemeList, getThemeModeList, type Theme } from "../src/theme";
 
 describe("theme logic", () => {
   beforeEach(() => {
@@ -46,81 +39,65 @@ describe("theme logic", () => {
     };
   });
 
-  describe("getThemeColorMode", () => {
-    it('returns "light" in single mode with light theme', () => {
-      configStore["theme.mode"] = "single";
-      configStore["theme.single"] = "light";
-      expect(getThemeColorMode()).toBe("light");
+  describe("getResolvedTheme", () => {
+    it("resolves system mode from configured light and dark themes", () => {
+      configStore["theme.light"] = "light_high_contrast";
+      configStore["theme.dark"] = "dark_tritanopia";
+
+      expect(getResolvedTheme()).toEqual({
+        colorMode: "auto",
+        light: "light_high_contrast",
+        dark: "dark_tritanopia"
+      });
     });
 
-    it('returns "dark" in single mode with dark theme', () => {
-      configStore["theme.mode"] = "single";
-      configStore["theme.single"] = "dark";
-      expect(getThemeColorMode()).toBe("dark");
-    });
-
-    it('returns "dark" in single mode with dark_dimmed theme', () => {
-      configStore["theme.mode"] = "single";
-      configStore["theme.single"] = "dark_dimmed";
-      expect(getThemeColorMode()).toBe("dark");
-    });
-
-    it('returns "light" in single mode with light_high_contrast theme', () => {
-      configStore["theme.mode"] = "single";
-      configStore["theme.single"] = "light_high_contrast";
-      expect(getThemeColorMode()).toBe("light");
-    });
-
-    it('returns "auto" in system mode regardless of theme', () => {
-      configStore["theme.mode"] = "system";
-      expect(getThemeColorMode()).toBe("auto");
-    });
-
-    it('returns "vscode" in VS Code mode', () => {
-      configStore["theme.mode"] = "vscode";
-      expect(getThemeColorMode()).toBe("vscode");
-    });
-  });
-
-  describe("getCurrentLightTheme", () => {
-    it("returns the single theme when it is a light theme", () => {
+    it("uses a light single theme without discarding the configured dark theme", () => {
       configStore["theme.mode"] = "single";
       configStore["theme.single"] = "light_colorblind";
-      expect(getCurrentLightTheme()).toBe("light_colorblind");
+      configStore["theme.dark"] = "dark_high_contrast";
+
+      expect(getResolvedTheme()).toEqual({
+        colorMode: "light",
+        light: "light_colorblind",
+        dark: "dark_high_contrast"
+      });
     });
 
-    it("falls back to configured light theme when single theme is dark", () => {
+    it("uses a dark single theme without discarding the configured light theme", () => {
       configStore["theme.mode"] = "single";
       configStore["theme.single"] = "dark_dimmed";
       configStore["theme.light"] = "light_tritanopia";
-      expect(getCurrentLightTheme()).toBe("light_tritanopia");
+
+      expect(getResolvedTheme()).toEqual({
+        colorMode: "dark",
+        light: "light_tritanopia",
+        dark: "dark_dimmed"
+      });
     });
 
-    it("returns configured light theme in system mode", () => {
-      configStore["theme.mode"] = "system";
-      configStore["theme.light"] = "light_high_contrast";
-      expect(getCurrentLightTheme()).toBe("light_high_contrast");
-    });
-  });
+    it("resolves VS Code mode", () => {
+      configStore["theme.mode"] = "vscode";
 
-  describe("getCurrentDarkTheme", () => {
-    it("returns the single theme when it is a dark theme", () => {
-      configStore["theme.mode"] = "single";
-      configStore["theme.single"] = "dark_colorblind";
-      expect(getCurrentDarkTheme()).toBe("dark_colorblind");
+      expect(getResolvedTheme()).toEqual({
+        colorMode: "vscode",
+        light: "light",
+        dark: "dark"
+      });
     });
 
-    it("falls back to configured dark theme when single theme is light", () => {
-      configStore["theme.mode"] = "single";
-      configStore["theme.single"] = "light";
-      configStore["theme.dark"] = "dark_high_contrast";
-      expect(getCurrentDarkTheme()).toBe("dark_high_contrast");
-    });
+    it("falls back when persisted theme settings are invalid", () => {
+      configStore = {
+        "theme.mode": "unknown",
+        "theme.single": "unknown",
+        "theme.light": "unknown",
+        "theme.dark": "unknown"
+      };
 
-    it("returns configured dark theme in system mode", () => {
-      configStore["theme.mode"] = "system";
-      configStore["theme.dark"] = "dark_tritanopia";
-      expect(getCurrentDarkTheme()).toBe("dark_tritanopia");
+      expect(getResolvedTheme()).toEqual({
+        colorMode: "auto",
+        light: "light",
+        dark: "dark"
+      });
     });
   });
 

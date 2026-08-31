@@ -16,6 +16,12 @@ export type DarkTheme =
 
 export type Theme = LightTheme | DarkTheme;
 
+export type ResolvedTheme = Readonly<{
+  colorMode: ThemeColorMode;
+  light: Theme;
+  dark: Theme;
+}>;
+
 export const LightThemeKeys: readonly LightTheme[] = [
   "light",
   "light_colorblind",
@@ -80,7 +86,7 @@ async function updateThemeConfiguration<T>(
 }
 
 export function getThemeMode(): ThemeMode {
-  return getConfiguration().get(section.mode, "system");
+  return readThemeValue(getConfiguration(), section.mode, ThemeModeKeys, "system");
 }
 
 export async function setThemeMode(mode: ThemeMode): Promise<void> {
@@ -88,7 +94,7 @@ export async function setThemeMode(mode: ThemeMode): Promise<void> {
 }
 
 export function getSingleTheme(): Theme {
-  return getConfiguration().get<Theme>(section.single, "light");
+  return readThemeValue(getConfiguration(), section.single, ThemeKeys, "light");
 }
 
 export async function setSingleTheme(theme: Theme): Promise<void> {
@@ -96,7 +102,7 @@ export async function setSingleTheme(theme: Theme): Promise<void> {
 }
 
 export function getLightTheme(): Theme {
-  return getConfiguration().get<Theme>(section.light, "light");
+  return readThemeValue(getConfiguration(), section.light, ThemeKeys, "light");
 }
 
 export async function setLightTheme(theme: LightTheme): Promise<void> {
@@ -104,40 +110,25 @@ export async function setLightTheme(theme: LightTheme): Promise<void> {
 }
 
 export function getDarkTheme(): Theme {
-  return getConfiguration().get<Theme>(section.dark, "dark");
+  return readThemeValue(getConfiguration(), section.dark, ThemeKeys, "dark");
 }
 
 export async function setDarkTheme(theme: DarkTheme): Promise<void> {
   await updateThemeConfiguration(section.dark, theme);
 }
 
-export function getThemeColorMode(): ThemeColorMode {
-  const [mode, theme] = [getThemeMode(), getSingleTheme()];
-  if (mode === "vscode") {
-    return "vscode";
-  }
-  if (mode === "single") {
-    return isLightTheme(theme) ? "light" : "dark";
-  }
-  return "auto";
-}
+export function getResolvedTheme(): ResolvedTheme {
+  const configuration = getConfiguration();
+  const mode = readThemeValue(configuration, section.mode, ThemeModeKeys, "system");
+  const single = readThemeValue(configuration, section.single, ThemeKeys, "light");
+  const light = readThemeValue(configuration, section.light, ThemeKeys, "light");
+  const dark = readThemeValue(configuration, section.dark, ThemeKeys, "dark");
 
-export function getCurrentLightTheme(): Theme {
-  const themeMode = getThemeMode();
-  const singleTheme = getSingleTheme();
-  if (themeMode === "single") {
-    return isLightTheme(singleTheme) ? singleTheme : getLightTheme();
-  }
-  return getLightTheme();
-}
-
-export function getCurrentDarkTheme(): Theme {
-  const themeMode = getThemeMode();
-  const singleTheme = getSingleTheme();
-  if (themeMode === "single") {
-    return isLightTheme(singleTheme) ? getDarkTheme() : singleTheme;
-  }
-  return getDarkTheme();
+  if (mode === "vscode") return { colorMode: "vscode", light, dark };
+  if (mode === "system") return { colorMode: "auto", light, dark };
+  return isLightTheme(single)
+    ? { colorMode: "light", light: single, dark }
+    : { colorMode: "dark", light, dark: single };
 }
 
 export function getThemeModeList(): {
@@ -176,4 +167,14 @@ function themeList<T extends Theme>(themes: readonly T[]): { label: string; valu
     label: themeLabels[theme](),
     value: theme
   }));
+}
+
+function readThemeValue<T extends string>(
+  configuration: vscode.WorkspaceConfiguration,
+  key: string,
+  allowed: readonly T[],
+  fallback: T
+): T {
+  const value = configuration.get<unknown>(key);
+  return typeof value === "string" && allowed.includes(value as T) ? (value as T) : fallback;
 }
