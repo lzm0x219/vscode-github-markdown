@@ -154,6 +154,9 @@ const themeItems = [
   { label: "Dark Tritanopia", value: "dark_tritanopia" }
 ];
 
+const lightThemeItems = themeItems.slice(0, 4);
+const darkThemeItems = themeItems.slice(4);
+
 const themeCommandCases = [
   {
     commandId: "vscode-github-markdown.changeThemeMode",
@@ -175,7 +178,7 @@ const themeCommandCases = [
   },
   {
     commandId: "vscode-github-markdown.changeLightTheme",
-    quickPickItems: themeItems,
+    quickPickItems: lightThemeItems,
     placeHolder: "Select a light theme",
     newSelection: { label: "Light high contrast", value: "light_high_contrast" },
     currentSelection: { label: "Light Tritanopia", value: "light_tritanopia" },
@@ -184,7 +187,7 @@ const themeCommandCases = [
   },
   {
     commandId: "vscode-github-markdown.changeDarkTheme",
-    quickPickItems: themeItems,
+    quickPickItems: darkThemeItems,
     placeHolder: "Select a dark theme",
     newSelection: { label: "Dark dimmed", value: "dark_dimmed" },
     currentSelection: { label: "Dark Tritanopia", value: "dark_tritanopia" },

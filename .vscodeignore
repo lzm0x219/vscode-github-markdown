@@ -19,6 +19,7 @@
 .vscode
 AGENTS.md
 ARCHITECTURE.md
+CONTEXT.md
 CONTRIBUTING.md
 artifacts/**
 artifacts

@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Themes and appearance
+
+- Light and dark theme commands now show only palettes that match their appearance slot, while existing JSON settings continue to work unchanged.
+
 ## [v4.5.1] - 2026-09-01
 
 v4.5.1 preserves Markdown preview compatibility with VS Code's built-in Markdown parser. No settings changes are required.
