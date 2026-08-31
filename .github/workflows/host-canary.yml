@@ -1,0 +1,60 @@
+name: VS Code host canary
+
+on:
+  schedule:
+    - cron: "43 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: vscode-host-canary
+  cancel-in-progress: true
+
+jobs:
+  insiders:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Test VS Code Insiders host compatibility
+        id: smoke
+        continue-on-error: true
+        env:
+          VSCODE_TEST_VERSION: insiders
+        run: xvfb-run -a nub run test:host:desktop
+
+      - name: Create or update the deduplicated host canary issue
+        if: always() && steps.smoke.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: "[Host canary] VS Code Insiders compatibility changed"
+          ISSUE_BODY: |
+            The scheduled VS Code Insiders host smoke test failed.
+
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          issue_number="$(gh issue list \
+            --state open \
+            --search "${ISSUE_TITLE} in:title" \
+            --json number,title \
+            --jq 'map(select(.title == env.ISSUE_TITLE))[0].number // ""')"
+          if [[ -n "${issue_number}" ]]; then
+            gh issue comment "${issue_number}" --body "${ISSUE_BODY}"
+          else
+            gh issue create \
+              --title "${ISSUE_TITLE}" \
+              --body "${ISSUE_BODY}" \
+              --label needs-triage
+          fi
+
+      - name: Preserve the host canary result
+        if: always() && steps.smoke.outcome == 'failure'
+        run: exit 1
