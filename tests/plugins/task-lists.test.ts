@@ -85,4 +85,14 @@ describe("markdown-it-github-task-lists", () => {
 
     expect(taskListClassCounts).toEqual([0, 1]);
   });
+
+  it("renders a large task list without losing task metadata", () => {
+    const count = 2_000;
+    const markdown = Array.from({ length: count }, (_, index) => `- [ ] Task ${index}`).join("\n");
+
+    const html = new MarkdownIt().use(githubTaskLists).render(markdown);
+
+    expect(html.match(/task-list-item-checkbox/g)).toHaveLength(count);
+    expect(html.match(/class="contains-task-list"/g)).toHaveLength(1);
+  });
 });

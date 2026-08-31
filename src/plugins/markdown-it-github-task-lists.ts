@@ -14,8 +14,19 @@ export default function markdownItGitHubTaskLists(md: MarkdownIt): MarkdownIt {
 }
 
 function applyTaskLists(state: MarkdownState, escapeHtml: HtmlEscaper) {
-  for (let index = 0; index < state.tokens.length - 3; index += 1) {
+  const openLists = new Map<number, MarkdownToken>();
+
+  for (let index = 0; index < state.tokens.length; index += 1) {
     const listItemOpen = state.tokens[index];
+    if (listItemOpen?.type === "bullet_list_open" || listItemOpen?.type === "ordered_list_open") {
+      openLists.set(listItemOpen.level, listItemOpen);
+      continue;
+    }
+    if (listItemOpen?.type === "bullet_list_close" || listItemOpen?.type === "ordered_list_close") {
+      openLists.delete(listItemOpen.level);
+      continue;
+    }
+
     const paragraphOpen = state.tokens[index + 1];
     const inline = state.tokens[index + 2];
     const paragraphClose = state.tokens[index + 3];
@@ -62,7 +73,7 @@ function applyTaskLists(state: MarkdownState, escapeHtml: HtmlEscaper) {
     attrJoinOnce(listItemOpen, "class", "task-list-item");
     attrJoinOnce(paragraphOpen, "class", "task-list-item-paragraph");
 
-    const listOpen = findParentListOpen(state.tokens, index, listItemOpen.level - 1);
+    const listOpen = openLists.get(listItemOpen.level - 1);
     if (listOpen) {
       attrJoinOnce(listOpen, "class", "contains-task-list");
     }
@@ -76,27 +87,4 @@ function attrJoinOnce(token: MarkdownToken, name: string, value: string) {
   }
 
   token.attrJoin(name, value);
-}
-
-function findParentListOpen(
-  tokens: MarkdownToken[],
-  fromIndex: number,
-  level: number
-): MarkdownToken | undefined {
-  for (let index = fromIndex - 1; index >= 0; index -= 1) {
-    const token = tokens[index];
-    if (!token) {
-      continue;
-    }
-
-    if (token.level !== level || token.nesting !== 1) {
-      continue;
-    }
-
-    if (token.type === "bullet_list_open" || token.type === "ordered_list_open") {
-      return token;
-    }
-  }
-
-  return undefined;
 }
