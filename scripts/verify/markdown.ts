@@ -1,4 +1,4 @@
-import MarkdownIt, { type MarkdownIt as MarkdownItInstance } from "markdown-it";
+import MarkdownIt from "markdown-it";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import githubAlerts from "../../src/plugins/markdown-it-github-alerts";
@@ -30,7 +30,7 @@ export function verifyMarkdownCompatibility(): void {
   verifyMermaidBoundary();
 }
 
-function verifyDirectionality(markdown: MarkdownItInstance): void {
+function verifyDirectionality(markdown: MarkdownIt): void {
   const html = markdown.render(
     '# العربية\n\nMixed English العربية.\n\n- عنصر عربي\n\n`code العربية`\n\n```text\nblock العربية\n```\n\n<p dir="rtl">explicit العربية</p>\n'
   );
@@ -41,7 +41,7 @@ function verifyDirectionality(markdown: MarkdownItInstance): void {
   assert.match(html, /<p dir="rtl">explicit العربية<\/p>/, "explicit direction");
 }
 
-function verifyTagfilter(markdown: MarkdownItInstance): void {
+function verifyTagfilter(markdown: MarkdownIt): void {
   const html = markdown.render(
     "<strong>allowed</strong> <title>title</title> <textarea>textarea</textarea> <style>style</style> <xmp>xmp</xmp> <iframe>iframe</iframe> <noembed>noembed</noembed> <noframes>noframes</noframes> <script>script</script> <plaintext>plaintext</plaintext>\n"
   );
@@ -66,7 +66,7 @@ function verifyTagfilter(markdown: MarkdownItInstance): void {
   }
 }
 
-function verifyStrikethrough(markdown: MarkdownItInstance): void {
+function verifyStrikethrough(markdown: MarkdownIt): void {
   const html = markdown.render(
     "~~Hi~~ Hello, ~there~ world!\n\n\\~escaped\\~ `~code~` ~~ ~open ~~~not~~~\n"
   );
@@ -82,7 +82,7 @@ function verifyStrikethrough(markdown: MarkdownItInstance): void {
   );
 }
 
-function verifyTaskLists(markdown: MarkdownItInstance): void {
+function verifyTaskLists(markdown: MarkdownIt): void {
   const html = markdown.render(
     "- [x] #739\n- [ ] [https://github.com/octo-org/octo-repo/issues/740](https://github.com/octo-org/octo-repo/issues/740)\n"
   );
@@ -96,7 +96,7 @@ function verifyTaskLists(markdown: MarkdownItInstance): void {
   assert.match(html, /aria-label="Incomplete task"> <a href=/, "incomplete linked task item");
 }
 
-function verifyFootnotes(markdown: MarkdownItInstance): void {
+function verifyFootnotes(markdown: MarkdownIt): void {
   const html = markdown.render(
     "Here is a footnote[^1].\n\nHere is the same footnote[^1].\n\nAnother footnote[^2].\n\n[^1]: My *reference*.\n\n[^2]:\n    To add line breaks within a footnote, add 2 spaces to the end of a line.\n    This is a second line.\n"
   );
@@ -118,7 +118,7 @@ function verifyFootnotes(markdown: MarkdownItInstance): void {
   assert.doesNotMatch(wrapped, /<li[^>]*>[\s\S]*vscode-github-markdown/, "wrapped footnotes");
 }
 
-function verifyAlerts(markdown: MarkdownItInstance): void {
+function verifyAlerts(markdown: MarkdownIt): void {
   const html = markdown.render(
     "> [!NOTE]\n> Useful information that users should know, even when skimming content.\n"
   );
@@ -127,7 +127,7 @@ function verifyAlerts(markdown: MarkdownItInstance): void {
   assert.doesNotMatch(html, /<blockquote|markdown-alert-body/, "GitHub-compatible alert structure");
 }
 
-function verifyEmoji(markdown: MarkdownItInstance): void {
+function verifyEmoji(markdown: MarkdownIt): void {
   const html = markdown.render("Ship it :rocket: :+1: :warning: :shipit: :artist: :unknown:\n");
   assert.match(
     html,
@@ -157,7 +157,7 @@ function verifyMermaidBoundary(): void {
   );
 }
 
-function wrapRender(markdown: MarkdownItInstance): MarkdownItInstance {
+function wrapRender(markdown: MarkdownIt): MarkdownIt {
   const render = markdown.renderer.render.bind(markdown.renderer);
   markdown.renderer.render = (...args) =>
     `<div class="vscode-github-markdown">${render(...args)}</div>`;

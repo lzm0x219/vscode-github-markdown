@@ -1,5 +1,5 @@
 import vscode from "vscode";
-import type { MarkdownIt } from "markdown-it";
+import type MarkdownIt from "markdown-it";
 import { registerThemeCommands } from "./commands";
 import { registerMarkdownPreviewEvents } from "./events";
 import { restoreMermaidThemeSync, updateMermaidThemeSync } from "./integrations/mermaid";

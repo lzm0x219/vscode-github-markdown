@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import type { MarkdownIt } from "markdown-it";
+import type MarkdownIt from "markdown-it";
 import { replaceCodePoint } from "entities/decode";
 
 const imageTagPattern = /<img(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;

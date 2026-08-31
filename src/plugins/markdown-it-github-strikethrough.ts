@@ -1,4 +1,6 @@
-import type { Delimiter, MarkdownIt, StateInline } from "markdown-it";
+import type MarkdownIt from "markdown-it";
+import type StateInline from "markdown-it/lib/rules_inline/state_inline.mjs";
+import type { Delimiter } from "markdown-it/lib/rules_inline/state_inline.mjs";
 
 const tildeCharacter = 0x7e;
 const singleTildeDelimiter = 0x1007e;

@@ -7,8 +7,23 @@ describe("hostVersions", () => {
     expect(hostVersions.latestStableDesktop).toBe("stable");
     expect(hostVersions.pinnedPreview).toEqual({
       desktopVersion: "1.129.0",
+      markdownItVersion: "14.2.0",
+      markdownItTypesVersion: "14.1.2",
       webCommit: "125df4672b8a6a34975303c6b0baa124e560a4f7"
     });
+  });
+
+  it("matches the MarkdownIt dependency to the pinned VS Code preview host", () => {
+    const manifest = JSON.parse(
+      readFileSync(new URL("../../../package.json", import.meta.url), "utf8")
+    ) as { devDependencies?: Record<string, string> };
+
+    expect(manifest.devDependencies?.["markdown-it"]).toBe(
+      hostVersions.pinnedPreview.markdownItVersion
+    );
+    expect(manifest.devDependencies?.["@types/markdown-it"]).toBe(
+      hostVersions.pinnedPreview.markdownItTypesVersion
+    );
   });
 
   it("keeps the pinned desktop version in one source of truth", () => {
