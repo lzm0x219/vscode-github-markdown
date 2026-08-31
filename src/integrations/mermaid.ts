@@ -1,13 +1,6 @@
 import vscode from "vscode";
 import { getConfiguration } from "../configuration";
-import {
-  getCurrentDarkTheme,
-  getCurrentLightTheme,
-  getSingleTheme,
-  getThemeMode,
-  isLightTheme,
-  type Theme
-} from "../theme";
+import { getResolvedTheme, isLightTheme, type Theme } from "../theme";
 
 export const originSection = {
   namespace: "markdown-mermaid",
@@ -533,13 +526,17 @@ function enqueue(operation: () => Promise<void>): Promise<void> {
 }
 
 function resolveThemes(): readonly [MermaidTheme, MermaidTheme] {
-  const mode = getThemeMode();
-  if (mode === "vscode") return ["vscode", "vscode"];
-  if (mode === "single") {
-    const theme = resolveTheme(getSingleTheme());
+  const { colorMode, light, dark } = getResolvedTheme();
+  if (colorMode === "vscode") return ["vscode", "vscode"];
+  if (colorMode === "light") {
+    const theme = resolveTheme(light);
     return [theme, theme];
   }
-  return [resolveTheme(getCurrentLightTheme()), resolveTheme(getCurrentDarkTheme())];
+  if (colorMode === "dark") {
+    const theme = resolveTheme(dark);
+    return [theme, theme];
+  }
+  return [resolveTheme(light), resolveTheme(dark)];
 }
 
 function resolveTheme(theme: Theme): MermaidTheme {

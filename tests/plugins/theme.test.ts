@@ -31,6 +31,9 @@ describe("markdown-it-github-theme", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     config["theme.mode"] = "system";
+    config["theme.single"] = "light";
+    config["theme.light"] = "light";
+    config["theme.dark"] = "dark";
     config["accessibility.linkUnderlines"] = true;
   });
 
@@ -57,6 +60,19 @@ describe("markdown-it-github-theme", () => {
     const html = new MarkdownIt().use(githubTheme).render("Hello world");
 
     expect(html).toContain('data-color-mode="vscode"');
+  });
+
+  it("uses safe defaults for invalid persisted theme settings", () => {
+    config["theme.mode"] = "unknown";
+    config["theme.single"] = "unknown";
+    config["theme.light"] = "unknown";
+    config["theme.dark"] = "unknown";
+
+    const html = new MarkdownIt().use(githubTheme).render("Hello world");
+
+    expect(html).toContain('data-color-mode="auto"');
+    expect(html).toContain('data-light-theme="light"');
+    expect(html).toContain('data-dark-theme="dark"');
   });
 
   it("wraps complex markdown content", () => {
