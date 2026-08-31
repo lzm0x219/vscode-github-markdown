@@ -1,4 +1,4 @@
-import type { MarkdownIt } from "markdown-it";
+import type MarkdownIt from "markdown-it";
 
 const disallowedRawHtmlTag =
   /<(?=\/?(?:title|textarea|style|xmp|iframe|noembed|noframes|script|plaintext)(?:[\t\n\f\r />]|$))/gi;

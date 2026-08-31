@@ -1,4 +1,4 @@
-import MarkdownIt, { type MarkdownIt as MarkdownItInstance } from "markdown-it";
+import MarkdownIt from "markdown-it";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("vscode", () => ({
@@ -29,7 +29,7 @@ vi.mock("vscode", () => ({
 
 import { extendMarkdownIt } from "../../src/markdown-it";
 
-function createChain(): MarkdownItInstance {
+function createChain(): MarkdownIt {
   return extendMarkdownIt(new MarkdownIt({ html: true }));
 }
 
