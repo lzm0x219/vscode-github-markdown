@@ -112,9 +112,6 @@ importers:
       entities:
         specifier: 8.0.0
         version: 8.0.0
-      unicode-case-folding:
-        specifier: 1.1.1
-        version: 1.1.1
     devDependencies:
       '@types/markdown-it':
         specifier: 14.1.2
@@ -191,6 +188,9 @@ importers:
       typescript:
         specifier: 7.0.2
         version: 7.0.2
+      unicode-case-folding:
+        specifier: 1.1.1
+        version: 1.1.1
       vitest:
         specifier: 4.1.11
         version: 4.1.11(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(vite@8.0.16(@types/node@24.13.3))

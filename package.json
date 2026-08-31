@@ -38,6 +38,7 @@
   "scripts": {
     "build": "nub scripts/build/index.ts",
     "dev": "nub scripts/build/dev.ts",
+    "update:case-folding": "nub scripts/case-folding/index.ts",
     "update:emoji": "nub scripts/emoji/index.ts",
     "update:parity": "nub scripts/parity/index.ts refresh",
     "update:parity:css-snapshot": "nub scripts/parity/index.ts snapshot",
@@ -61,8 +62,7 @@
     "release:note": "nub scripts/release/index.ts"
   },
   "dependencies": {
-    "entities": "8.0.0",
-    "unicode-case-folding": "1.1.1"
+    "entities": "8.0.0"
   },
   "devDependencies": {
     "@types/markdown-it": "14.1.2",
@@ -89,6 +89,7 @@
     "rollup-plugin-visualizer": "7.1.1",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
+    "unicode-case-folding": "1.1.1",
     "vitest": "4.1.11"
   },
   "l10n": "./l10n",

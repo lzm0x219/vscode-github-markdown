@@ -12,6 +12,7 @@ export default defineConfig({
         "src/generated/**",
         // Command entrypoints delegate to the script modules covered below.
         "scripts/build/index.ts",
+        "scripts/case-folding/index.ts",
         "scripts/drift/index.ts",
         "scripts/emoji/index.ts",
         "scripts/package-audit/index.ts",
