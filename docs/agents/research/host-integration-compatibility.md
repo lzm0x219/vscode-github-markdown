@@ -1,139 +1,82 @@
 # 跨宿主与伴生渲染器兼容矩阵
 
-- 调研日期：2026-07-15
-- 项目基线：`04bbb46aaa7e7bf03ade8ddab83f804b826e2903`
+- 核验日期：2026-09-01
+- 项目基线：`09f1a827b9b906e15e4a17f5ae2b9fb04f4d968f`
 
 ## 结论摘要
 
-1. **桌面端与 Web 端的基础扩展路径可用，但验证深度不足。** `main` 与 `browser` 指向同一 bundle；CI 在 VS Code 1.74.0、桌面稳定版和 Web 稳定版中验证激活、Markdown-it 插件链与预览样式文件。现有宿主测试没有验证九套主题的实际 CSS、运行时配色切换、Mermaid 或 KaTeX 的最终渲染。[扩展清单](../../../package.json)、[宿主 smoke](../../../tests/host/smoke.ts)、[CI](../../../.github/workflows/ci.yml)
-2. **VS Code 1.121 及以上存在已确认的 Mermaid 主题同步断点。** VS Code 1.121 将原 `markdown-mermaid` 合并为内置的 `vscode.mermaid-markdown-features`；它沿用 `markdown-mermaid.lightModeTheme` 和 `markdown-mermaid.darkModeTheme` 设置。当前实现却先检查 `bierner.markdown-mermaid` 是否存在，不存在便返回，因此只安装新内置扩展时不会同步 GitHub 主题。新内置扩展的两个槽位默认都是 `vscode`，而不是本项目期望的 `default`/`dark`。[VS Code 1.121 发布说明](https://code.visualstudio.com/updates/v1_121#_mermaid-diagrams-in-markdown-preview-and-notebooks)、[内置扩展清单（固定版本）](https://github.com/microsoft/vscode/blob/bc2ac764ddd66802104366c182d490a03253f7e1/extensions/mermaid-markdown-features/package.json)、[当前同步实现](../../../src/integrations/mermaid.ts)
-3. **九套 GitHub 主题的正文选择逻辑完整，Mermaid 只保持亮暗方向而非主题等价。** 四套亮色主题全部映射为 Mermaid `default`，五套暗色主题全部映射为 `dark`；色盲、高对比度、Tritanopia 与 Dimmed 的差异不会传递给 Mermaid。这符合当前 README 所承诺的“匹配亮色或暗色”，但不能证明与 GitHub 的图表配色一致。[主题逻辑](../../../src/theme.ts)、[Mermaid 映射](../../../src/integrations/mermaid.ts)、[README](../../../README.md#mermaid-diagrams)
-4. **System 模式依赖 CSS `prefers-color-scheme`，而不是 VS Code 明示的 Webview 主题类。** VS Code 官方为当前编辑器主题提供 `body.vscode-light`、`body.vscode-dark`、`body.vscode-high-contrast`；本项目生成的主题 CSS 只使用亮/暗媒体查询。操作系统自动配色时两者预期趋同，但手动切换 VS Code 主题、高对比度切换以及桌面/Web 是否完全一致仍缺少真实宿主证据，不能视为已验证。[主题 CSS 生成](../../../scripts/build/github-css.ts)、[VS Code Webview 主题契约](https://code.visualstudio.com/api/extension-guides/webview#theming-webview-content)、[VS Code 自动配色说明](https://code.visualstudio.com/docs/configure/themes#_automatically-switch-based-on-os-color-scheme)
-5. **KaTeX 是应保留的回归边界，不是已确认的新缺陷。** VS Code 当前内置预览使用 KaTeX；项目历史 [Issue #604](https://github.com/lzm0x219/vscode-github-markdown/issues/604) 记录过长公式导致双滚动条。该问题已关闭，当前代码没有专门的真实宿主回归测试，因此 v4.3 应先复现再决定是否改 CSS。[VS Code Markdown 数学公式说明](https://code.visualstudio.com/docs/languages/markdown#_math-formula-rendering)
+1. **桌面与 Web 已共享同一扩展实现和同一组 GFM 语义契约。** VS Code 1.74.0、桌面稳定版和 Web 稳定版运行 renderer smoke；固定桌面 1.129.0 与 Web 稳定版还运行真实 Markdown Webview 预览。
+2. **旧基线的内置 Mermaid 断点已经关闭。** 同步逻辑同时识别 `vscode.mermaid-markdown-features` 与 `bierner.markdown-mermaid`；固定桌面和 Web 预览要求 Mermaid 生成 SVG，并验证亮暗调色板随主题切换。
+3. **System 模式已经使用 VS Code Webview 主题类。** 生成 CSS 同时处理 `body.vscode-light`、`body.vscode-dark` 和两类高对比度主题；宿主预览会真实切换 VS Code 主题并等待对应调色板。
+4. **KaTeX 长内容已有回归门禁。** 固定桌面和 Web 预览要求公式可见、源表达式完整、页面可滚动且不存在第二个纵向滚动容器。
+5. **当前主要风险已从“功能未知”转为“矩阵边缘”。** 滚动桌面稳定版只有 renderer smoke，旧版外置 Mermaid 没有端到端组合测试，多窗口下的设置所有权仍依赖单元契约。
 
-## 范围与风险定义
+## 宿主矩阵
 
-- **高：** 已有源码级确定性冲突，或会使 GitHub 可渲染内容退化、主题明显错误、预览不可用。
-- **中：** 基础路径存在，但缺少真实宿主/切换/组合验证，或历史上发生过用户可见故障。
-- **低：** 当前实现和至少一层宿主测试一致，剩余风险主要是视觉覆盖不足。
-- “当前行为”区分“由测试证明”和“由源码推断”；未在真实宿主复现的项目明确标为待验证。
+| 宿主                                | 运行方式                               | 当前验证                                                                                                                  | 未覆盖                                                               |
+| ----------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| 桌面 VS Code 1.74.0                 | `@vscode/test-electron` renderer smoke | 扩展激活、插件链、主题模式、单/双删除线、tagfilter、RTL、脚注语义                                                         | 内置 Mermaid/KaTeX 客户端渲染；该版本本身不提供当前内置 Mermaid 组合 |
+| 桌面稳定版                          | `@vscode/test-electron` renderer smoke | 与最低版相同，用于发现当前稳定 API 漂移                                                                                   | 不执行完整 Webview、九主题压力、脚注交互和客户端渲染器               |
+| 桌面 VS Code 1.129.0                | Playwright 驱动真实 VS Code            | 最终 GFM DOM、脚注点击/键盘导航、九套 Single 主题、System 亮暗/高对比度、VS Code 主题模式、Mermaid、KaTeX、图片和滚动布局 | 固定版本不会自动证明未来稳定版行为                                   |
+| Web 稳定版                          | `@vscode/test-web` + Chromium          | renderer smoke 与完整最终预览；使用与桌面相同的语义、主题、客户端渲染和布局断言                                           | 不能代表所有浏览器、远程权限或 `github.dev` 仓库上下文               |
+| VS Code Insiders                    | 每日计划任务                           | renderer smoke；失败时创建或更新去重 Issue                                                                                | 不执行完整最终预览，因此主要用于提前发现 API/解析漂移                |
+| 旧宿主 + `bierner.markdown-mermaid` | 单元与设置契约                         | 扩展 ID、主题槽位、恢复和用户接管语义                                                                                     | 未安装固定版本配套扩展运行桌面/Web 端到端图表测试                    |
 
-GitHub 的目标行为是：`mermaid` 围栏代码块在 Markdown 文件、Issue、PR、Discussion 和 Wiki 中渲染为图表，而不是普通代码块。GitHub 同时提醒第三方 Mermaid 插件可能产生错误，因此本项目应验证组合行为，不能只验证单个插件输出。[GitHub 图表文档](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams#creating-mermaid-diagrams)
+## 主题与渲染器契约
 
-## 兼容矩阵
+| GitHub 主题类别                                                                   | 正文主题                 | Mermaid 同步值 | 最终预览证据                                                                  |
+| --------------------------------------------------------------------------------- | ------------------------ | -------------- | ----------------------------------------------------------------------------- |
+| `light`、`light_colorblind`、`light_high_contrast`、`light_tritanopia`            | 保留各自 GitHub CSS 变量 | `default`      | 四套 Single 主题都进入压力矩阵；System 亮色与高对比度亮色使用 VS Code body 类 |
+| `dark`、`dark_colorblind`、`dark_dimmed`、`dark_high_contrast`、`dark_tritanopia` | 保留各自 GitHub CSS 变量 | `dark`         | 五套 Single 主题都进入压力矩阵；System 暗色与高对比度暗色使用 VS Code body 类 |
 
-| 宿主                                           | 主题模式                                | 伴生/宿主渲染器                             | 预期行为                                                                         | 当前行为与证据                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 风险                           |
-| ---------------------------------------------- | --------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
-| 桌面 VS Code 1.74.0                            | Single，九主题任一                      | 无                                          | 扩展激活，GitHub 语法插件和固定主题生效                                          | CI 真实宿主 smoke 覆盖激活、插件链和样式文件；未截图或检查最终主题变量。[CI](../../../.github/workflows/ci.yml)、[宿主 smoke](../../../tests/host/smoke.ts)                                                                                                                                                                                                                                                                                                                    | 低（功能）/中（视觉）          |
-| 桌面稳定版                                     | Single，九主题任一                      | 无                                          | 与最低版本相同，且跟随当前 VS Code Markdown API                                  | CI 有稳定版 smoke；测试内容不含主题断言、Mermaid 或数学公式。[宿主 smoke](../../../tests/host/smoke.ts)                                                                                                                                                                                                                                                                                                                                                                        | 低（功能）/中（视觉）          |
-| Web 稳定版（`vscode.dev`/`github.dev` 类环境） | Single，九主题任一                      | 无                                          | 与桌面端产生相同插件 HTML 和 GitHub 主题                                         | `browser` 入口和 WebWorker 宿主 smoke 已覆盖；同一 bundle 避免了实现分叉，但测试仍只验证插件 HTML 与样式存在。[扩展清单](../../../package.json)、[CI](../../../.github/workflows/ci.yml)、[VS Code Web 扩展契约](https://code.visualstudio.com/api/extension-guides/web-extensions#web-extension-main-file)                                                                                                                                                                    | 低（功能）/中（视觉）          |
-| 桌面与 Web                                     | System，普通亮/暗系统配色               | 无                                          | 操作系统配色变化时，在配置的 GitHub 亮/暗主题之间切换                            | 包装元素写入 `data-color-mode="auto"`，生成 CSS 使用 `prefers-color-scheme`；单测只断言属性，没有在真实宿主触发切换。[主题插件](../../../src/plugins/markdown-it-github-theme.ts)、[主题单测](../../../tests/theme.test.ts)                                                                                                                                                                                                                                                    | 中，待真实宿主验证             |
-| 桌面与 Web                                     | System，手动切换 VS Code 主题或高对比度 | 无                                          | 必须明确产品语义：跟随 OS，或跟随当前 VS Code 主题；无论选哪一种都应在两宿主一致 | 官方 Webview 契约提供 VS Code 当前主题类及独立高对比度类别；当前 CSS 未使用这些信号，只区分媒体查询亮/暗。是否产生实际错配待复现。[VS Code Webview 主题契约](https://code.visualstudio.com/api/extension-guides/webview#theming-webview-content)                                                                                                                                                                                                                               | 中                             |
-| 桌面与 Web，VS Code 1.100–1.120                | Single                                  | 外置 `bierner.markdown-mermaid` 当前版      | Mermaid 图表渲染；两个 Mermaid 槽位都与固定 GitHub 主题保持同一亮暗方向          | 当前实现把两个槽位都写为 `default` 或 `dark`；单元测试覆盖映射和恢复。外置扩展同时提供 `main`、`browser`、Markdown 插件和预览脚本，但项目没有真实双扩展宿主测试。[Mermaid 单测](../../../tests/integrations/mermaid.test.ts)、[外置扩展清单（固定版本）](https://github.com/mjbvz/vscode-markdown-mermaid/blob/9f4d37ded0cc7fdf05bbab17fb082a6fc118e269/package.json)                                                                                                          | 中                             |
-| 桌面与 Web，VS Code 1.100–1.120                | System                                  | 外置 `bierner.markdown-mermaid` 当前版      | Mermaid 分别使用与 GitHub 亮/暗槽位相符的主题，并可恢复用户原值                  | 源码与单测证明首次同步会保存全局值、写入 `default`/`dark`，关闭同步后恢复；尚未验证多窗口、用户在同步期间修改 Mermaid 设置或 Web 宿主重载。[同步实现](../../../src/integrations/mermaid.ts)、[Mermaid 单测](../../../tests/integrations/mermaid.test.ts)                                                                                                                                                                                                                       | 中                             |
-| 桌面与 Web，VS Code 1.121+                     | Single 或 System                        | 内置 `vscode.mermaid-markdown-features`     | Mermaid 图表渲染且继续与选定 GitHub 主题保持亮暗一致                             | 图表由 VS Code 内置扩展渲染；本项目只查找旧 ID，所以主题同步提前返回。内置扩展沿用设置键，但默认两个槽位均为 `vscode`。这是源码级可复现断点。[VS Code 1.121 发布说明](https://code.visualstudio.com/updates/v1_121#_mermaid-diagrams-in-markdown-preview-and-notebooks)、[内置扩展清单](https://github.com/microsoft/vscode/blob/bc2ac764ddd66802104366c182d490a03253f7e1/extensions/mermaid-markdown-features/package.json)、[同步实现](../../../src/integrations/mermaid.ts) | **高**                         |
-| 桌面与 Web                                     | Single 或 System                        | VS Code 内置 KaTeX                          | 长公式正常渲染，页面只有一个主滚动容器，正文主题不破坏公式可读性                 | 官方确认内置预览使用 KaTeX；历史 Issue 曾出现双滚动条，当前宿主 smoke 与视觉 parity 都没有执行真实 KaTeX 客户端渲染。[Issue #604](https://github.com/lzm0x219/vscode-github-markdown/issues/604)、[平台边界定义](../../../scripts/parity/cases.ts)                                                                                                                                                                                                                             | 中，待复现                     |
-| 桌面与 Web                                     | 任意                                    | GeoJSON、TopoJSON、STL 或其他第三方预览脚本 | 不破坏宿主或第三方渲染；是否追求 GitHub 功能等价由一致性覆盖矩阵决定             | GitHub 支持这些客户端渲染器；本项目只保留源代码块并把它们列为 integration boundary，没有伴生扩展或历史 Issue 证明应在 v4.3 实现。[GitHub 图表文档](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)、[平台边界测试](../../../tests/scripts/parity/platform-features.test.ts)                                                                                                                                       | 中（验证缺口），不直接纳入实现 |
+Mermaid 的契约是保持亮暗方向和可读性，不是复制 GitHub 每套图表配色。KaTeX 的契约是正确渲染、表达式完整和不制造第二个页面滚动区，不是与 GitHub MathJax 逐像素一致。
 
-## 九主题映射
+## 已关闭的旧风险
 
-| GitHub 主题           | 类别 | Single 正文选择            | System 槽位 | 外置 Mermaid 同步值 | VS Code 1.121+ 内置 Mermaid 当前结果 |
-| --------------------- | ---- | -------------------------- | ----------- | ------------------- | ------------------------------------ |
-| `light`               | 亮   | 固定 `light`               | light       | `default`           | 不由本扩展更新；新配置默认 `vscode`  |
-| `light_colorblind`    | 亮   | 固定 `light_colorblind`    | light       | `default`           | 同上                                 |
-| `light_high_contrast` | 亮   | 固定 `light_high_contrast` | light       | `default`           | 同上                                 |
-| `light_tritanopia`    | 亮   | 固定 `light_tritanopia`    | light       | `default`           | 同上                                 |
-| `dark`                | 暗   | 固定 `dark`                | dark        | `dark`              | 同上                                 |
-| `dark_colorblind`     | 暗   | 固定 `dark_colorblind`     | dark        | `dark`              | 同上                                 |
-| `dark_dimmed`         | 暗   | 固定 `dark_dimmed`         | dark        | `dark`              | 同上                                 |
-| `dark_high_contrast`  | 暗   | 固定 `dark_high_contrast`  | dark        | `dark`              | 同上                                 |
-| `dark_tritanopia`     | 暗   | 固定 `dark_tritanopia`     | dark        | `dark`              | 同上                                 |
+### 内置 Mermaid 扩展 ID 漂移
 
-正文映射由 [主题实现](../../../src/theme.ts) 和 [主题 CSS 生成器](../../../scripts/build/github-css.ts)确定；Mermaid 映射由 [集成实现](../../../src/integrations/mermaid.ts)确定。当前单测覆盖九主题枚举和亮暗分支，但没有逐主题真实宿主截图。[主题单测](../../../tests/theme.test.ts)
+`src/integrations/mermaid.ts` 同时识别内置与外置扩展 ID；渲染器移除或禁用时会释放仍由本扩展拥有的设置。固定桌面和 Web 最终预览验证 SVG 及亮暗调色板，避免只凭设置单测宣称兼容。
 
-## 可复现的高影响不一致
+### System 与 VS Code 主题信号脱节
 
-### 1. VS Code 1.121+ 内置 Mermaid 不再同步主题（已确认）
+`scripts/build/github-css.ts` 为 System 模式生成 VS Code 亮、暗和高对比度 body 类选择器。最终预览通过命令切换 VS Code 主题，检查容器元数据、正文压力 fixture 与 Mermaid 调色板。
 
-复现前提：VS Code 1.121 或以上，不安装已弃用的外置 `bierner.markdown-mermaid`。
+### KaTeX 双滚动条回归
 
-1. 保持 `githubMarkdown.mermaid.syncTheme = true`。
-2. 选择 Single `dark_dimmed`，或在 System 中配置任意 GitHub 亮/暗主题。
-3. 打开含 `mermaid` 围栏代码块的 Markdown 预览。
-4. 内置 Mermaid 能渲染图表，但 `updateMermaidThemeSync` 因找不到旧扩展 ID 而在读取设置前返回；`markdown-mermaid.*ModeTheme` 不会被本项目更新。
+`scripts/host/client-rendering.ts` 使用长公式 fixture，验证 KaTeX 可见尺寸、源表达式、主页面滚动和嵌套纵向滚动器数量。历史 Issue #604 继续作为背景，不再描述为“当前待确认缺陷”。
 
-影响：v4 当前稳定宿主的 Mermaid 图表会使用内置扩展的有效主题（新配置默认 `vscode`），而不是项目声明的 GitHub 主题亮暗映射。功能没有退化为代码块，但主题一致性承诺失效。
+## 当前待优化项
 
-### 2. System 模式与 VS Code 手动主题/高对比度的关系不明确（待真实宿主确认）
+1. **稳定版最终预览策略**：固定 1.129.0 保证可复现，稳定/Insiders smoke 保证低成本漂移提示；只有出现 renderer 与客户端行为分叉的证据时，再增加滚动最终预览任务。
+2. **外置 Mermaid 端到端**：若产品继续承诺旧宿主组合，应固定 `bierner.markdown-mermaid` 版本并在其支持的桌面/Web 宿主运行图表与主题切换。
+3. **设置所有权组合**：继续用多窗口、同步期间用户修改设置、安装/禁用渲染器的复现驱动改动；不在没有失败证据时重写现有事务模型。
+4. **浏览器与远程上下文**：Web CI 证明 Web Extension Host 兼容，不等于所有浏览器、Codespaces、`vscode.dev` 和 `github.dev` 权限组合。
 
-候选复现：固定 OS 为亮色，System 模式配置 `light`/`dark`，手动把 VS Code 从亮色切到暗色及高对比度，再分别观察桌面与 Web 预览。当前 CSS 只读 `prefers-color-scheme`，而官方推荐的当前 VS Code 主题信号是 `body.vscode-*`。在完成真实宿主验证前，不断言一定错配；但这必须在 v4.3 确定语义并锁定测试。
+## 范围边界
 
-### 3. 长 KaTeX 内容可能再次产生双滚动条（历史高影响回归，当前待确认）
+- 不创建自定义 Markdown 预览或 Webview；继续使用 VS Code 的 Markdown 贡献点。
+- 不内置 Mermaid 或 KaTeX 运行时；本扩展维护主题和布局兼容契约。
+- 不把 Notebook、Chat、独立 Mermaid 编辑器、GeoJSON/TopoJSON/STL 客户端渲染纳入当前宿主矩阵。
+- 不把 DOM/交互断言表述为 GitHub 页面逐像素等价。
 
-使用 [Issue #604](https://github.com/lzm0x219/vscode-github-markdown/issues/604) 的长公式场景，在桌面稳定版和 Web 稳定版打开预览，检查页面与公式容器的滚动区域。旧问题已关闭，只有当前版本复现后才能创建 CSS 修复 Ticket；无复现时只保留回归测试。
+## 仓库证据
 
-## 建议纳入 v4.3 的范围
+- 宿主 CI：[.github/workflows/ci.yml](../../../.github/workflows/ci.yml)
+- Insiders canary：[.github/workflows/host-canary.yml](../../../.github/workflows/host-canary.yml)
+- renderer smoke：[tests/host/smoke.ts](../../../tests/host/smoke.ts)
+- 最终预览与主题压力：[scripts/host/preview.ts](../../../scripts/host/preview.ts)
+- Mermaid、KaTeX 与滚动布局：[scripts/host/client-rendering.ts](../../../scripts/host/client-rendering.ts)
+- Mermaid 设置同步：[src/integrations/mermaid.ts](../../../src/integrations/mermaid.ts)
+- 主题 CSS 生成：[scripts/build/github-css.ts](../../../scripts/build/github-css.ts)
+- 固定宿主版本：[scripts/host/versions.ts](../../../scripts/host/versions.ts)
 
-### P0：兼容 VS Code 1.121+ 内置 Mermaid
+## 上游资料
 
-可拆为独立实现 Ticket：
-
-- 同时识别内置 `vscode.mermaid-markdown-features` 与旧 `bierner.markdown-mermaid`，或改为以设置能力检测为准；不得提高 `engines.vscode`。
-- 保持现有设置键和关闭同步时的恢复语义，补充旧扩展、内置扩展、两者均不存在三类单测。
-- 在桌面稳定版与 Web 稳定版真实渲染 Mermaid，验证 Single/System 的亮暗切换；最低版宿主继续验证无 Mermaid 依赖时扩展可用。
-
-### P1：建立真实宿主主题与客户端渲染回归
-
-可拆为独立测试 Ticket：
-
-- 桌面最低版、桌面稳定版、Web 稳定版继续作为宿主轴。
-- 以四个亮色与五个暗色的 DOM 主题属性全覆盖；视觉验证至少覆盖普通、色盲、高对比度、Dimmed/Tritanopia 各类别，不把九主题只压缩成一个亮暗样例。
-- System 模式分别验证浏览器/OS 亮暗切换、VS Code 手动主题切换和高对比度；根据结果明确“跟随 OS”还是“跟随 VS Code 当前主题”。
-- 在稳定宿主加入 Mermaid 与长 KaTeX 内容，断言不是原始代码块、文本可读且不存在第二个页面滚动条。
-
-### P2：收紧 Mermaid 设置所有权（复现后实施）
-
-当前同步写入 `ConfigurationTarget.Global`，只监听 `githubMarkdown` 配置变化，并用一次性快照恢复。先用多窗口、同步期间用户修改 Mermaid 设置、安装/禁用渲染器三种场景验证；只有证明会覆盖新值或跨窗口漂移后，再拆分实现 Ticket，避免凭假设重构。
-
-## 依赖与排除项
-
-### 依赖
-
-- 版本范围汇总应读取“一致性覆盖矩阵”对 GeoJSON、STL、数学等平台功能的归属决定；本调研只确定组合风险，不替代功能差距排序。
-- P0 依赖 VS Code 1.121 的内置扩展清单作为上游契约，同时必须保留旧扩展路径以覆盖最低版本区间。
-- P1 可与 P0 并行搭建，但内置 Mermaid 的通过断言要等 P0 完成。
-
-### 排除
-
-- 不创建自定义 Markdown 预览或 Webview；继续使用 VS Code 的 `markdown.markdownItPlugins`、`markdown.previewStyles` 与宿主脚本组合契约。[VS Code Markdown 扩展指南](https://code.visualstudio.com/api/extension-guides/markdown-extension)
-- 不重新内置 Mermaid 运行时。VS Code 1.121+ 已内置；旧版本继续通过可选伴生扩展兼容。
-- 不在没有用户/源码证据时新增 GeoJSON、TopoJSON、STL 伴生渲染器。
-- 不承诺 Mermaid、KaTeX 等宿主客户端渲染器的逐像素等价；v4.3 的门槛是正确渲染、主题方向一致、可读、无布局破坏。
-- 不把 Notebook、Chat 或独立 Mermaid 编辑器纳入本项目范围；本项目贡献点只面向 VS Code 内置 Markdown 预览。
-
-## 验证方式与通过标准
-
-| 轴           | 最小验证                                   | 通过标准                                                            |
-| ------------ | ------------------------------------------ | ------------------------------------------------------------------- |
-| 桌面最低版   | VS Code 1.74.0 宿主 smoke                  | 扩展激活、插件链与样式存在；未安装 Mermaid 渲染器时无异常           |
-| 桌面稳定版   | 内置 Markdown 预览端到端                   | 九主题元数据正确；Single/System 切换刷新；Mermaid 和 KaTeX 正常渲染 |
-| Web 稳定版   | `@vscode/test-web` Chromium                | 与桌面稳定版使用相同断言；不依赖 Node API                           |
-| 外置 Mermaid | 兼容其 `engines.vscode` 的旧宿主           | 两主题槽位同步、关闭后恢复原值、图表不是代码块                      |
-| 内置 Mermaid | VS Code 1.121+                             | 新内置 ID/能力被识别；Single/System 下图表亮暗与正文一致            |
-| System 模式  | OS/浏览器亮暗、手动 VS Code 主题、高对比度 | 产品语义明确且两宿主一致；每次切换无需重启预览                      |
-| KaTeX        | 长行与多行公式                             | 公式可读；页面只有一个主滚动区；无横向内容截断                      |
-
-现有像素 parity 把 Mermaid、GeoJSON、STL 和数学标为 `integration-boundary`，且本地路径只保留源代码块，因此不能替代上述真实宿主测试。[Parity cases](../../../scripts/parity/cases.ts)、[平台边界测试](../../../tests/scripts/parity/platform-features.test.ts)
-
-## 关键来源
-
-- [VS Code：Markdown 扩展贡献点](https://code.visualstudio.com/api/extension-guides/markdown-extension)
-- [VS Code：Web 扩展运行时与测试](https://code.visualstudio.com/api/extension-guides/web-extensions)
-- [VS Code：Webview 当前主题信号](https://code.visualstudio.com/api/extension-guides/webview#theming-webview-content)
-- [VS Code 1.121：内置 Mermaid](https://code.visualstudio.com/updates/v1_121#_mermaid-diagrams-in-markdown-preview-and-notebooks)
-- [VS Code 内置 Mermaid 清单，固定提交](https://github.com/microsoft/vscode/blob/bc2ac764ddd66802104366c182d490a03253f7e1/extensions/mermaid-markdown-features/package.json)
-- [旧 `markdown-mermaid` 清单，固定提交](https://github.com/mjbvz/vscode-markdown-mermaid/blob/9f4d37ded0cc7fdf05bbab17fb082a6fc118e269/package.json)
-- [GitHub：创建 Mermaid、GeoJSON、TopoJSON 与 STL 图表](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)
-- [VS Code：内置 Markdown KaTeX](https://code.visualstudio.com/docs/languages/markdown#_math-formula-rendering)
+- [VS Code Markdown 扩展贡献点](https://code.visualstudio.com/api/extension-guides/markdown-extension)
+- [VS Code Web 扩展](https://code.visualstudio.com/api/extension-guides/web-extensions)
+- [VS Code Webview 主题](https://code.visualstudio.com/api/extension-guides/webview#theming-webview-content)
+- [VS Code 1.121 内置 Mermaid](https://code.visualstudio.com/updates/v1_121#_mermaid-diagrams-in-markdown-preview-and-notebooks)
+- [VS Code Markdown 数学公式](https://code.visualstudio.com/docs/languages/markdown#_math-formula-rendering)
+- [GitHub 图表](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)
 - [历史 Mermaid 冲突 Issue #203](https://github.com/lzm0x219/vscode-github-markdown/issues/203)
 - [历史 KaTeX 双滚动条 Issue #604](https://github.com/lzm0x219/vscode-github-markdown/issues/604)
