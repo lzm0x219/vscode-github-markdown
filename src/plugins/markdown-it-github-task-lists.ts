@@ -1,5 +1,5 @@
 import { l10n } from "vscode";
-import { type MarkdownIt } from "markdown-it";
+import type { MarkdownIt } from "markdown-it";
 import type { MarkdownToken, MarkdownState } from "./shared";
 
 const taskListMarkerPattern = /^[ \t]*\[( |x|X)\][ \t]+/;

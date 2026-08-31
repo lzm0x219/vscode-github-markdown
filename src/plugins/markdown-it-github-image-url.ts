@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
+import type { MarkdownIt } from "markdown-it";
 import { replaceCodePoint } from "entities/decode";
-import { type MarkdownIt } from "markdown-it";
 
 const imageTagPattern = /<img(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
 const responsiveImageTagPattern = /<(?:img|source)(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;

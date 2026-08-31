@@ -1,5 +1,5 @@
 import { l10n } from "vscode";
-import { type MarkdownIt, type StateBlock } from "markdown-it";
+import type { MarkdownIt, StateBlock } from "markdown-it";
 import { caseFold } from "unicode-case-folding";
 import type { MarkdownToken, MarkdownState } from "./shared";
 

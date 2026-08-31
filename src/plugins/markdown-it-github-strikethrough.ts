@@ -1,4 +1,4 @@
-import { type Delimiter, type MarkdownIt, type StateInline } from "markdown-it";
+import type { Delimiter, MarkdownIt, StateInline } from "markdown-it";
 
 const tildeCharacter = 0x7e;
 const singleTildeDelimiter = 0x1007e;

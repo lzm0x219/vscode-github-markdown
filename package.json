@@ -56,7 +56,7 @@
     "test:host:web:preview": "nub run build && nub scripts/host/web-preview.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "package": "nub scripts/package/index.ts",
+    "package": "nub run build && nub scripts/package/index.ts",
     "release:note": "nub scripts/release/index.ts"
   },
   "dependencies": {

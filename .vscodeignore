@@ -10,6 +10,8 @@
 .oxlintrc.json
 .pnpm-store/**
 .pnpm-store
+.playwright-cli/**
+.playwright-cli
 .release-please-manifest.json
 .serena/**
 .serena
