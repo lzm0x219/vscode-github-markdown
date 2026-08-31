@@ -5,26 +5,38 @@ export type ThemeMode = "single" | "system" | "vscode";
 
 export type ThemeColorMode = "light" | "dark" | "auto" | "vscode";
 
-export type Theme =
-  | "light"
-  | "light_colorblind"
-  | "light_high_contrast"
-  | "light_tritanopia"
+export type LightTheme = "light" | "light_colorblind" | "light_high_contrast" | "light_tritanopia";
+
+export type DarkTheme =
   | "dark"
   | "dark_colorblind"
   | "dark_dimmed"
   | "dark_high_contrast"
   | "dark_tritanopia";
 
-const lightThemeNames: Set<Theme> = new Set([
+export type Theme = LightTheme | DarkTheme;
+
+export const LightThemeKeys: readonly LightTheme[] = [
   "light",
   "light_colorblind",
   "light_high_contrast",
   "light_tritanopia"
-]);
+] as const;
 
-export function isLightTheme(theme: Theme): boolean {
-  return lightThemeNames.has(theme);
+export const DarkThemeKeys: readonly DarkTheme[] = [
+  "dark",
+  "dark_colorblind",
+  "dark_dimmed",
+  "dark_high_contrast",
+  "dark_tritanopia"
+] as const;
+
+export const ThemeKeys: readonly Theme[] = [...LightThemeKeys, ...DarkThemeKeys];
+
+const lightThemeNames: ReadonlySet<Theme> = new Set(LightThemeKeys);
+
+export function isLightTheme(theme: unknown): theme is LightTheme {
+  return lightThemeNames.has(theme as Theme);
 }
 
 const themeLabels: Record<Theme, () => string> = {
@@ -38,8 +50,6 @@ const themeLabels: Record<Theme, () => string> = {
   dark_high_contrast: () => l10n.t("Dark high contrast"),
   dark_tritanopia: () => l10n.t("Dark Tritanopia")
 } as const;
-
-export const ThemeKeys = Object.keys(themeLabels) as Theme[];
 
 const themeModeLabels: Record<ThemeMode, () => string> = {
   single: () => l10n.t("Single theme"),
@@ -89,7 +99,7 @@ export function getLightTheme(): Theme {
   return getConfiguration().get<Theme>(section.light, "light");
 }
 
-export async function setLightTheme(theme: Theme): Promise<void> {
+export async function setLightTheme(theme: LightTheme): Promise<void> {
   await updateThemeConfiguration(section.light, theme);
 }
 
@@ -97,7 +107,7 @@ export function getDarkTheme(): Theme {
   return getConfiguration().get<Theme>(section.dark, "dark");
 }
 
-export async function setDarkTheme(theme: Theme): Promise<void> {
+export async function setDarkTheme(theme: DarkTheme): Promise<void> {
   await updateThemeConfiguration(section.dark, theme);
 }
 
@@ -144,7 +154,25 @@ export function getThemeList(): {
   label: string;
   value: Theme;
 }[] {
-  return ThemeKeys.map((theme) => ({
+  return themeList(ThemeKeys);
+}
+
+export function getLightThemeList(): {
+  label: string;
+  value: LightTheme;
+}[] {
+  return themeList(LightThemeKeys);
+}
+
+export function getDarkThemeList(): {
+  label: string;
+  value: DarkTheme;
+}[] {
+  return themeList(DarkThemeKeys);
+}
+
+function themeList<T extends Theme>(themes: readonly T[]): { label: string; value: T }[] {
+  return themes.map((theme) => ({
     label: themeLabels[theme](),
     value: theme
   }));

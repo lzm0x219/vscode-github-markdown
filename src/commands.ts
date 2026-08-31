@@ -5,6 +5,8 @@ import {
   setSingleTheme,
   getThemeModeList,
   getThemeList,
+  getLightThemeList,
+  getDarkThemeList,
   setLightTheme,
   setDarkTheme,
   getSingleTheme,
@@ -15,7 +17,7 @@ import {
 function createThemeCommand<T extends string>(
   commandId: string,
   getList: () => { label: string; value: T }[],
-  getCurrent: () => T,
+  getCurrent: () => string,
   setCurrent: (value: T) => Promise<void>,
   placeholder: string,
   successMessage: (label: string) => string
@@ -63,7 +65,7 @@ export function registerThemeCommands(): vscode.Disposable[] {
     ),
     createThemeCommand(
       "vscode-github-markdown.changeLightTheme",
-      getThemeList,
+      getLightThemeList,
       getLightTheme,
       setLightTheme,
       l10n.t("Select a light theme"),
@@ -71,7 +73,7 @@ export function registerThemeCommands(): vscode.Disposable[] {
     ),
     createThemeCommand(
       "vscode-github-markdown.changeDarkTheme",
-      getThemeList,
+      getDarkThemeList,
       getDarkTheme,
       setDarkTheme,
       l10n.t("Select a dark theme"),
