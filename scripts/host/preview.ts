@@ -8,16 +8,18 @@ const maxThemeAttempts = 3;
 
 export async function assertClientRenderedPreview(page: Page): Promise<void> {
   await page.locator(".monaco-workbench").waitFor({ state: "visible", timeout: 30_000 });
+  await runCommand(page, "View: Close All Editors");
+
+  await openFile(page, "gfm-semantics.md");
+  await runCommand(page, "Markdown: Open Preview to the Side");
+  await assertGfmSemanticRendering(page);
+  await assertFootnoteNavigation(page);
 
   await openFile(page, "client-rendering.md");
   await runCommand(page, "Markdown: Open Preview to the Side");
 
   await assertFinalClientRendering(page);
   await assertThemeRendering(page);
-
-  await openFile(page, "gfm-semantics.md");
-  await runCommand(page, "Markdown: Open Preview to the Side");
-  await assertGfmSemanticRendering(page);
 }
 
 export type GfmSemanticDom = {
@@ -59,7 +61,7 @@ export async function assertGfmSemanticRendering(page: Page, timeoutMs = 30_000)
   let lastError: unknown;
 
   while (Date.now() < deadline) {
-    for (const frame of page.frames()) {
+    for (const frame of [...page.frames()].reverse()) {
       try {
         const snapshot = await readGfmSemanticDom(frame);
         if (!snapshot?.available) continue;
@@ -76,6 +78,75 @@ export async function assertGfmSemanticRendering(page: Page, timeoutMs = 30_000)
 
   const detail = lastError instanceof Error ? ` Last renderer error: ${lastError.message}.` : "";
   throw new Error(`Host preview test failed: final GFM semantic DOM was not found.${detail}`);
+}
+
+export async function assertFootnoteNavigation(page: Page, timeoutMs = 30_000): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  let lastError: unknown;
+
+  while (Date.now() < deadline) {
+    for (const frame of [...page.frames()].reverse()) {
+      try {
+        if (!(await frame.locator(".vscode-github-markdown").count())) continue;
+
+        const reference = frame.locator("[data-footnote-ref]").first();
+        const backreference = frame.locator("[data-footnote-backref]").first();
+        const referenceTarget = await requiredFragment(reference, "footnote reference");
+        const backreferenceTarget = await requiredFragment(backreference, "footnote backreference");
+        if (!(await frame.locator(referenceTarget).count())) {
+          throw new Error(`footnote reference target ${referenceTarget} is missing`);
+        }
+        if (!(await frame.locator(backreferenceTarget).count())) {
+          throw new Error(`footnote backreference target ${backreferenceTarget} is missing`);
+        }
+
+        await reference.click({ timeout: quickInputTimeoutMs });
+        await waitForFrameTargetInViewport(page, frame, referenceTarget, deadline);
+
+        await backreference.focus();
+        const backreferenceFocused = await backreference.evaluate(
+          (element) => document.activeElement === element
+        );
+        if (!backreferenceFocused) throw new Error("footnote backreference did not receive focus");
+
+        await backreference.press("Enter");
+        await waitForFrameTargetInViewport(page, frame, backreferenceTarget, deadline);
+        return;
+      } catch (error) {
+        lastError = error;
+        // Preview frames can be replaced while an anchor interaction is in flight.
+      }
+    }
+    await page.waitForTimeout(100);
+  }
+
+  const detail = lastError instanceof Error ? ` Last interaction error: ${lastError.message}.` : "";
+  throw new Error(`Host preview test failed: footnote navigation did not complete.${detail}`);
+}
+
+async function requiredFragment(locator: Locator, label: string): Promise<string> {
+  const href = await locator.getAttribute("href");
+  if (!href?.startsWith("#")) throw new Error(`${label} has no local fragment target`);
+  return href;
+}
+
+async function waitForFrameTargetInViewport(
+  page: Page,
+  frame: Frame,
+  selector: string,
+  deadline: number
+): Promise<void> {
+  while (Date.now() < deadline) {
+    const visible = await frame.evaluate((targetSelector) => {
+      const target = document.querySelector(targetSelector);
+      if (!target) return false;
+      const rectangle = target.getBoundingClientRect();
+      return rectangle.bottom > 0 && rectangle.top < window.innerHeight;
+    }, selector);
+    if (visible) return;
+    await page.waitForTimeout(50);
+  }
+  throw new Error(`footnote navigation did not reveal ${selector}`);
 }
 
 async function readGfmSemanticDom(frame: Frame): Promise<GfmSemanticDom | undefined> {

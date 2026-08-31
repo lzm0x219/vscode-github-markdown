@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { assertFinalClientRendering } from "../../../scripts/host/client-rendering";
 import {
   assertClientRenderedPreview,
+  assertFootnoteNavigation,
   assertGfmSemanticDom,
   type GfmSemanticDom
 } from "../../../scripts/host/preview";
@@ -29,6 +30,14 @@ afterEach(() => {
 });
 
 describe("assertClientRenderedPreview", () => {
+  it("follows a footnote reference by click and returns by keyboard", async () => {
+    const preview = createFootnoteNavigationPage();
+
+    await expect(assertFootnoteNavigation(preview.page)).resolves.toBeUndefined();
+
+    expect(preview.readActivationCounts()).toEqual({ click: 1, keyboard: 1 });
+  });
+
   it("waits for system theme palettes when the first rendered sample is stale", async () => {
     vi.useFakeTimers();
     const preview = createThemePreviewPage();
@@ -81,6 +90,60 @@ describe("assertClientRenderedPreview", () => {
     expect(() => assertGfmSemanticDom(snapshot)).toThrow("fenced code has no direction attribute");
   });
 });
+
+function createFootnoteNavigationPage(): {
+  page: Page;
+  readActivationCounts: () => { click: number; keyboard: number };
+} {
+  const state = {
+    click: 0,
+    focused: "",
+    keyboard: 0,
+    visibleTargets: new Set<string>()
+  };
+  const locator = (selector: string): Locator => {
+    const target = {
+      count: async () => 1,
+      click: async () => {
+        state.click += 1;
+        state.visibleTargets.add("#user-content-fn-1");
+      },
+      evaluate: async () =>
+        selector === "[data-footnote-ref]"
+          ? state.focused === "reference"
+          : state.focused === "backreference",
+      first: () => target,
+      focus: async () => {
+        state.focused = "backreference";
+      },
+      getAttribute: async (name: string) => {
+        if (name !== "href") return null;
+        return selector === "[data-footnote-ref]" ? "#user-content-fn-1" : "#user-content-fnref-1";
+      },
+      press: async (key: string) => {
+        if (key !== "Enter") return;
+        state.keyboard += 1;
+        state.visibleTargets.add("#user-content-fnref-1");
+        state.focused = "reference";
+      }
+    };
+    return target as unknown as Locator;
+  };
+  const frame = {
+    evaluate: async (_callback: unknown, selector: string) => state.visibleTargets.has(selector),
+    locator,
+    url: () => "vscode-webview://preview"
+  } as unknown as Frame;
+  const page = {
+    frames: () => [frame],
+    waitForTimeout: async () => {}
+  } as unknown as Page;
+
+  return {
+    page,
+    readActivationCounts: () => ({ click: state.click, keyboard: state.keyboard })
+  };
+}
 
 describe("assertFinalClientRendering", () => {
   it("reacquires the preview when its frame reloads during the final assertions", async () => {
@@ -178,6 +241,8 @@ type ThemePreviewState = {
   copyButtonAvailable: boolean;
   copyButtonEvaluations: number;
   dark: string;
+  footnoteFocus: "backreference" | "reference" | undefined;
+  footnoteVisibleTargets: Set<string>;
   inputValue: string;
   light: string;
   mode: "auto" | "dark" | "light" | "vscode";
@@ -203,6 +268,8 @@ function createThemePreviewPage({
     copyButtonAvailable,
     copyButtonEvaluations: 0,
     dark: "dark",
+    footnoteFocus: undefined,
+    footnoteVisibleTargets: new Set(),
     inputValue: "",
     light: "light",
     mode: "light",
@@ -383,18 +450,30 @@ function applySingleTheme(state: ThemePreviewState, option: string): void {
 
 function createThemeFrame(state: ThemePreviewState): Frame {
   return {
-    evaluate: async () => ({
-      pageScrollable: true,
-      nestedVerticalScrollerLabels: [],
-      ...createSemanticSnapshot()
-    }),
+    evaluate: async (_callback: unknown, selector?: string) =>
+      selector
+        ? state.footnoteVisibleTargets.has(selector)
+        : {
+            pageScrollable: true,
+            nestedVerticalScrollerLabels: [],
+            ...createSemanticSnapshot()
+          },
     locator(selector: string) {
       const imageLocator = createImageLocator(selector);
       if (imageLocator) return imageLocator;
       const locator = {
         boundingBox: async () => ({ x: 0, y: 0, width: 100, height: 100 }),
         count: async () => countThemeSelector(selector, state),
+        click: async () => {
+          if (selector === "[data-footnote-ref]") {
+            state.footnoteVisibleTargets.add("#user-content-fn-1");
+          }
+        },
         evaluate: async () => {
+          if (selector === "[data-footnote-ref]") return state.footnoteFocus === "reference";
+          if (selector === "[data-footnote-backref]") {
+            return state.footnoteFocus === "backreference";
+          }
           if (selector === ".code-block-copy-button") {
             if (!state.copyButtonAvailable) throw new Error("Code copy button is unavailable");
             state.copyButtonEvaluations += 1;
@@ -424,7 +503,24 @@ function createThemeFrame(state: ThemePreviewState): Frame {
         },
         evaluateAll: async () => [],
         first: () => locator,
+        focus: async () => {
+          if (selector === "[data-footnote-backref]") {
+            state.footnoteFocus = "backreference";
+          }
+        },
+        getAttribute: async (name: string) => {
+          if (name !== "href") return null;
+          if (selector === "[data-footnote-ref]") return "#user-content-fn-1";
+          if (selector === "[data-footnote-backref]") return "#user-content-fnref-1";
+          return null;
+        },
         isVisible: async () => true,
+        press: async (key: string) => {
+          if (selector === "[data-footnote-backref]" && key === "Enter") {
+            state.footnoteVisibleTargets.add("#user-content-fnref-1");
+            state.footnoteFocus = "reference";
+          }
+        },
         textContent: async () => {
           if (selector === ".mermaid svg") return "Alpha Beta";
           if (selector.includes("annotation")) return "S_{12}";
@@ -454,6 +550,13 @@ function countThemeSelector(selector: string, state: ThemePreviewState): number 
   if (selector === `body.${state.body}`) return 1;
   if (selector === ".mermaid svg[data-host-preview-stale]") return 0;
   if (selector === ".code-block-copy-button") return state.copyButtonAvailable ? 1 : 0;
+  if (
+    selector === "[data-footnote-backref]" ||
+    selector === "#user-content-fn-1" ||
+    selector === "#user-content-fnref-1"
+  ) {
+    return 1;
+  }
   if (selector === ".mermaid svg" || selector === ".katex-display .katex") return 1;
   if (
     [
