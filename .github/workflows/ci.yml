@@ -72,19 +72,23 @@ jobs:
           - name: desktop-minimum
             kind: desktop
             vscode: 1.74.0
+            cache_vscode: true
             smoke: true
             preview: false
           - name: desktop-stable
             kind: desktop
             vscode: stable
+            cache_vscode: false
             smoke: true
             preview: false
           - name: desktop-preview-pinned
             kind: desktop
+            cache_vscode: true
             smoke: false
             preview: true
           - name: web-stable
             kind: web
+            cache_vscode: false
             smoke: true
             preview: true
 
@@ -94,6 +98,13 @@ jobs:
       - uses: jdx/mise-action@v4
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Cache fixed VS Code host
+        if: matrix.cache_vscode
+        uses: actions/cache@v6
+        with:
+          path: .vscode-test
+          key: vscode-${{ runner.os }}-${{ matrix.name }}-${{ hashFiles('.github/workflows/ci.yml', 'scripts/host/versions.ts') }}
 
       - name: Cache Chromium
         if: matrix.kind == 'web'
