@@ -7,6 +7,12 @@
     {
       "groupName": "oxc",
       "matchPackageNames": ["ox**"]
+    },
+    {
+      "description": "Update MarkdownIt only with the pinned VS Code preview host",
+      "enabled": false,
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["markdown-it", "@types/markdown-it"]
     }
   ],
   "autoApprove": true,
