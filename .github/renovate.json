@@ -13,6 +13,12 @@
       "enabled": false,
       "matchManagers": ["npm"],
       "matchPackageNames": ["markdown-it", "@types/markdown-it"]
+    },
+    {
+      "description": "Keep @types/vscode aligned with engines.vscode (the minimum supported host)",
+      "enabled": false,
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["@types/vscode"]
     }
   ],
   "autoApprove": true,
