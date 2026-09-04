@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.ts"],
     environment: "node",
+    setupFiles: ["tests/helpers/temporal-setup.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
