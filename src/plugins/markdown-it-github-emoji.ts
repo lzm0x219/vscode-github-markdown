@@ -38,7 +38,9 @@ function applyEmojiShortcodes(state: MarkdownState, md: MarkdownIt) {
         continue;
       }
 
-      nextChildren.push(...emojiTokens(child.content, state, md));
+      for (const emoji of emojiTokens(child.content, state, md)) {
+        nextChildren.push(emoji);
+      }
     }
 
     token.children = nextChildren;

@@ -17,6 +17,13 @@ describe("markdown-it-github-emoji", () => {
     expect(html).toContain("🎉");
   });
 
+  it("renders a paragraph with more emoji tokens than the function argument limit", () => {
+    const md = new MarkdownIt().use(githubEmoji);
+    const count = 64_000;
+
+    expect(md.render(":smile: ".repeat(count))).toBe(`<p>${"😄 ".repeat(count).trimEnd()}</p>\n`);
+  });
+
   it("renders custom image emoji", () => {
     const md = new MarkdownIt().use(githubEmoji);
     const html = md.render(":shipit:");
