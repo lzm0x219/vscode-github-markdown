@@ -52,9 +52,43 @@ function rewriteImgSrcset(
 }
 
 function rewriteSrcset(srcset: string, env: ImageRenderEnv | undefined): string {
-  return srcset.replace(/(^\s*|,\s*)(\/(?!\/)[^\s,]+)/g, (_match, separator, src) => {
-    return `${separator}${toProjectRootResourceUri(src, env)}`;
-  });
+  const parts: string[] = [];
+  let position = 0;
+  let unchangedStart = 0;
+
+  // Follow the HTML srcset tokenizer's URL and descriptor boundaries. Commas
+  // inside a URL (including data URLs) are not candidate separators.
+  // https://html.spec.whatwg.org/multipage/images.html#parse-a-srcset-attribute
+  while (position < srcset.length) {
+    while (position < srcset.length && /[\t\n\f\r ,]/.test(srcset[position]!)) position += 1;
+    const urlStart = position;
+    while (position < srcset.length && !/[\t\n\f\r ]/.test(srcset[position]!)) position += 1;
+    let urlEnd = position;
+    while (urlEnd > urlStart && srcset[urlEnd - 1] === ",") urlEnd -= 1;
+
+    const url = srcset.slice(urlStart, urlEnd);
+    if (isProjectRootPath(url)) {
+      parts.push(srcset.slice(unchangedStart, urlStart), toProjectRootResourceUri(url, env));
+      unchangedStart = urlEnd;
+    }
+    if (urlEnd < position) continue;
+
+    // Descriptors remain untouched, including unknown/future descriptors with
+    // parentheses. Let the browser decide whether a candidate is valid.
+    let inParens = false;
+    while (position < srcset.length) {
+      const character = srcset[position++];
+      if (inParens) {
+        if (character === ")") inParens = false;
+      } else if (character === "(") {
+        inParens = true;
+      } else if (character === ",") {
+        break;
+      }
+    }
+  }
+  parts.push(srcset.slice(unchangedStart));
+  return parts.join("");
 }
 
 function decodeHtmlAttribute(value: string, decodeNamedEntity: (value: string) => string): string {

@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Markdown preview
+
+- Responsive images preserve embedded data URLs and commas within image paths, so valid images no longer break during preview URL conversion.
+
 ## [v4.5.2] - 2026-09-01
 
 v4.5.2 makes theme settings more resilient, keeps localized task and footnote labels intact, and reduces the work required to render large task lists. Existing settings continue to work unchanged.
