@@ -15,25 +15,48 @@ export default function markdownItGitHubEmoji(md: MarkdownIt): MarkdownIt {
 }
 
 function applyEmojiShortcodes(state: MarkdownState, md: MarkdownIt) {
+  let htmlCodeDepth = 0;
   for (const token of state.tokens) {
+    if (token.type === "html_block") {
+      htmlCodeDepth = codeDepthAfterHtml(token.content, htmlCodeDepth);
+      continue;
+    }
     if (token.type !== "inline" || !token.children) {
       continue;
     }
 
     const nextChildren: MarkdownToken[] = [];
     let automaticLinkDepth = 0;
+    let linkDepth = 0;
     for (const child of token.children) {
-      if (child.type === "link_open" && child.markup === "linkify") {
-        automaticLinkDepth += 1;
+      if (child.type === "html_inline") {
+        htmlCodeDepth = codeDepthAfterHtml(child.content, htmlCodeDepth);
         nextChildren.push(child);
         continue;
       }
-      if (child.type === "link_close" && child.markup === "linkify") {
+      if (child.type === "link_open") {
+        linkDepth += 1;
+        if (child.markup === "linkify" || child.markup === "autolink") {
+          automaticLinkDepth += 1;
+        }
         nextChildren.push(child);
-        automaticLinkDepth = Math.max(0, automaticLinkDepth - 1);
         continue;
       }
-      if (automaticLinkDepth > 0 || child.type !== "text" || !child.content.includes(":")) {
+      if (child.type === "link_close") {
+        nextChildren.push(child);
+        linkDepth = Math.max(0, linkDepth - 1);
+        if (child.markup === "linkify" || child.markup === "autolink") {
+          automaticLinkDepth = Math.max(0, automaticLinkDepth - 1);
+        }
+        continue;
+      }
+      if (
+        htmlCodeDepth > 0 ||
+        automaticLinkDepth > 0 ||
+        child.type !== "text" ||
+        !child.content.includes(":") ||
+        (linkDepth > 0 && isUrlLabel(child.content, md))
+      ) {
         nextChildren.push(child);
         continue;
       }
@@ -45,6 +68,65 @@ function applyEmojiShortcodes(state: MarkdownState, md: MarkdownIt) {
 
     token.children = nextChildren;
   }
+}
+
+function codeDepthAfterHtml(html: string, depth: number): number {
+  let position = 0;
+  while ((position = html.indexOf("<", position)) !== -1) {
+    // Consume comments and other opaque markup before looking for tag names.
+    const marker = html.startsWith("<!--", position)
+      ? "-->"
+      : html.startsWith("<![CDATA[", position)
+        ? "]]>"
+        : html.startsWith("<?", position)
+          ? "?>"
+          : undefined;
+    if (marker) {
+      const end = html.indexOf(marker, position + 2);
+      position = end === -1 ? html.length : end + marker.length;
+      continue;
+    }
+
+    const closing = html[position + 1] === "/";
+    const nameStart = position + (closing ? 2 : 1);
+    if (!/[a-z!]/i.test(html[nameStart] ?? "")) {
+      position += 1;
+      continue;
+    }
+    let nameEnd = nameStart;
+    while (/[a-z0-9-]/i.test(html[nameEnd] ?? "")) {
+      nameEnd += 1;
+    }
+    const name = html.slice(nameStart, nameEnd).toLowerCase();
+    if ((!name || !/[\s/>]/.test(html[nameEnd] ?? "")) && html[nameStart] !== "!") {
+      position += 1;
+      continue;
+    }
+
+    // Scan each tag once, keeping apparent tags inside quoted attributes opaque.
+    let quote: string | undefined;
+    let end = nameEnd;
+    for (; end < html.length; end += 1) {
+      const character = html[end];
+      if (quote) {
+        if (character === quote) quote = undefined;
+      } else if (character === '"' || character === "'") {
+        quote = character;
+      } else if (character === ">") {
+        break;
+      }
+    }
+    if (end === html.length) break;
+    if (name === "code") depth = closing ? Math.max(0, depth - 1) : depth + 1;
+    position = end + 1;
+  }
+  return depth;
+}
+
+function isUrlLabel(content: string, md: MarkdownIt): boolean {
+  // Explicit links are excluded from MarkdownIt's linkify rule. Reuse its URL
+  // recognition for complete URL labels, while keeping ordinary labels eligible.
+  return !/\s/.test(content) && md.linkify.match(content)?.[0]?.index === 0;
 }
 
 function emojiTokens(content: string, state: MarkdownState, md: MarkdownIt): MarkdownToken[] {
