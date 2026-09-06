@@ -132,12 +132,17 @@ function toProjectRootResourceUri(src: string, env: ImageRenderEnv | undefined):
   if (!workspaceFolder || !resourceProvider) return `.${src}`;
 
   try {
-    const parsed = vscode.Uri.parse(`markdown-link:${src}`);
+    // Encode the resource path while preserving the URL query and fragment.
+    // URI query serialization treats separators such as '&' as component data.
+    const suffixStart = src.search(/[?#]/);
+    const path = suffixStart < 0 ? src : src.slice(0, suffixStart);
+    const suffix = suffixStart < 0 ? "" : src.slice(suffixStart);
+    const parsed = vscode.Uri.parse(`markdown-link:${path}`);
     const resource = vscode.Uri.joinPath(workspaceFolder.uri, parsed.path).with({
-      fragment: parsed.fragment,
-      query: parsed.query
+      fragment: "",
+      query: ""
     });
-    return resourceProvider.asWebviewUri(resource).toString(true);
+    return `${resourceProvider.asWebviewUri(resource).toString()}${suffix}`;
   } catch {
     return `.${src}`;
   }
