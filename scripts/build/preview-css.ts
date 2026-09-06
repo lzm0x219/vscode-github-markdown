@@ -19,6 +19,8 @@ export async function buildPreviewCss(): Promise<CssBuildResult> {
   const result = await bundleAsync({
     filename: project.paths.previewCssSource,
     minify: true,
+    // VS Code 1.74, our minimum supported host, embeds Chromium 102.
+    targets: { chrome: 102 << 16 },
     drafts: { customMedia: true },
     resolver: {
       read: (path) => readFile(path, "utf8"),
