@@ -258,6 +258,44 @@ describe("markdown-it-github-image-url", () => {
     );
   });
 
+  it.each([
+    [
+      '<img src="/assets/it\'s.png" alt="author">',
+      '<img src="https://webview.test/workspace/assets/it\'s.png" alt="author">'
+    ],
+    [
+      "<img src='/assets/a\"b.png' alt='quote'>",
+      "<img src='https://webview.test/workspace/assets/a\"b.png' alt='quote'>"
+    ],
+    [
+      '<img srcset="/assets/it\'s.png 1x, /assets/other.png 2x">',
+      '<img srcset="https://webview.test/workspace/assets/it\'s.png 1x, https://webview.test/workspace/assets/other.png 2x">'
+    ],
+    [
+      "<source srcset='/assets/a\"b.png 1x'>",
+      "<source srcset='https://webview.test/workspace/assets/a\"b.png 1x'>"
+    ],
+    [
+      '<img title=\'literal src="/untouched.png"\' src="/actual.png">',
+      '<img title=\'literal src="/untouched.png"\' src="https://webview.test/workspace/actual.png">'
+    ],
+    [
+      '<source title="literal srcset=\'/untouched.png 1x\'" srcset="/actual.png 1x">',
+      '<source title="literal srcset=\'/untouched.png 1x\'" srcset="https://webview.test/workspace/actual.png 1x">'
+    ],
+    [
+      '<img data-src="/assets/it\'s.png" src="https://cdn.test/it\'s.png">',
+      '<img data-src="/assets/it\'s.png" src="https://cdn.test/it\'s.png">'
+    ],
+    [
+      "<img src=\"/assets/it's.png\"><img src='/assets/a\"b.png'>",
+      "<img src=\"https://webview.test/workspace/assets/it's.png\"><img src='https://webview.test/workspace/assets/a\"b.png'>"
+    ]
+  ])("respects HTML attribute quote boundaries in %s", (input, expected) => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    expect(md.renderInline(input, renderEnv())).toBe(expected);
+  });
+
   it("preserves a double-quoted src while escaping a decoded quotation mark", () => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render('<img src="/assets/%22logo%22.svg" alt="logo">', renderEnv());

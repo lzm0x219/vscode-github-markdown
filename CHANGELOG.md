@@ -9,6 +9,7 @@ This file records notable changes that people can observe or act on when using t
 ### Markdown preview
 
 - Responsive images preserve embedded data URLs and commas within image paths, so valid images no longer break during preview URL conversion.
+- HTML images with apostrophes or quotation marks in their project-root paths now resolve correctly in preview.
 
 ## [v4.5.2] - 2026-09-01
 
