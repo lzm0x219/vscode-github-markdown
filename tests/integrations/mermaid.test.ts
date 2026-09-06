@@ -66,6 +66,7 @@ function createControlledMemento(
 vi.mock("vscode", () => ({
   default: {
     ConfigurationTarget: { Global: 1, Workspace: 2 },
+    env: { sessionId: "editor-session" },
     extensions: {
       getExtension: (id: string) => (mermaidExtensionIds.has(id) ? {} : undefined)
     },
@@ -358,7 +359,75 @@ describe("Mermaid theme synchronization", () => {
     ]);
   });
 
-  it("allows another global-target workspace to restore a crashed owner's settings", async () => {
+  it.each([
+    { workspace: "file:///workspace-b.code-workspace", target: "global" },
+    { workspace: "file:///workspace-a.code-workspace", target: "global" },
+    { workspace: "file:///workspace-a.code-workspace", target: "workspace" }
+  ])(
+    "does not let an inactive window restore an active $target owner in $workspace",
+    async ({ workspace, target }) => {
+      const memento = createTestMemento();
+      if (target === "workspace") {
+        mermaidWorkspaceConfig = { lightModeTheme: "base", darkModeTheme: "vscode" };
+      }
+      await updateMermaidThemeSync(memento);
+      const originalState = memento.keys().map((key) => [key, memento.get(key)]);
+
+      // Independent module instances model separate extension hosts, even when the
+      // same editor session or workspace is reused after an extension host restart.
+      vi.resetModules();
+      const inactiveWindow = await import("../../src/integrations/mermaid");
+      workspaceIdentity = workspace;
+      markdownConfig["mermaid.syncTheme"] = false;
+      updateCalls.length = 0;
+      await inactiveWindow.updateMermaidThemeSync(memento);
+      await inactiveWindow.restoreMermaidThemeSync(memento);
+
+      expect(updateCalls).toEqual([]);
+      expect(memento.keys().map((key) => [key, memento.get(key)])).toEqual(originalState);
+      expect(getEffectiveMermaidConfig()).toEqual({
+        lightModeTheme: "default",
+        darkModeTheme: "dark"
+      });
+
+      workspaceIdentity = "file:///workspace-a.code-workspace";
+      await restoreMermaidThemeSync(memento);
+      expect(getEffectiveMermaidConfig()).toEqual(
+        target === "workspace"
+          ? { lightModeTheme: "base", darkModeTheme: "vscode" }
+          : { lightModeTheme: "neutral", darkModeTheme: "forest" }
+      );
+    }
+  );
+
+  it("keeps an active window's pending snapshot when an inactive window opens during a write", async () => {
+    const memento = createTestMemento();
+    let releaseWrite = () => {};
+    updateGateCalls.set(
+      1,
+      new Promise<void>((resolve) => {
+        releaseWrite = resolve;
+      })
+    );
+    const applying = updateMermaidThemeSync(memento);
+    await vi.waitFor(() => expect(updateCalls).toHaveLength(1));
+    const pending = memento.keys().map((key) => [key, memento.get(key)]);
+
+    vi.resetModules();
+    const inactiveWindow = await import("../../src/integrations/mermaid");
+    markdownConfig["mermaid.syncTheme"] = false;
+    try {
+      await inactiveWindow.updateMermaidThemeSync(memento);
+      expect(memento.keys().map((key) => [key, memento.get(key)])).toEqual(pending);
+    } finally {
+      releaseWrite();
+      await applying;
+    }
+    await restoreMermaidThemeSync(memento);
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "neutral", darkModeTheme: "forest" });
+  });
+
+  it("restores its own global writes after the same runtime changes workspaces", async () => {
     const memento = createTestMemento();
     await updateMermaidThemeSync(memento);
 
@@ -371,6 +440,96 @@ describe("Mermaid theme synchronization", () => {
       { key: "lightModeTheme", value: "neutral", target: 1 },
       { key: "darkModeTheme", value: "forest", target: 1 }
     ]);
+  });
+
+  it.each(["global", "workspace"])(
+    "lets a new runtime reclaim %s settings without losing the original values",
+    async (target) => {
+      const memento = createTestMemento();
+      if (target === "workspace") {
+        mermaidWorkspaceConfig = { lightModeTheme: "base", darkModeTheme: "vscode" };
+      }
+      await updateMermaidThemeSync(memento);
+      const firstSession = memento.get<{ session: string }>(memento.keys()[0]!)?.session;
+
+      vi.resetModules();
+      const restartedWindow = await import("../../src/integrations/mermaid");
+      markdownConfig["mermaid.syncTheme"] = false;
+      updateCalls.length = 0;
+      await restartedWindow.updateMermaidThemeSync(memento);
+      expect(updateCalls).toEqual([]);
+
+      markdownConfig["mermaid.syncTheme"] = true;
+      await restartedWindow.updateMermaidThemeSync(memento);
+      // The desired values already match the prior session's applied values.
+      // Reclaiming must still confirm writes before this runtime can restore them.
+      const configurationTarget = target === "workspace" ? 2 : 1;
+      expect(updateCalls).toEqual([
+        { key: "lightModeTheme", value: "default", target: configurationTarget },
+        { key: "darkModeTheme", value: "dark", target: configurationTarget }
+      ]);
+      expect(memento.get<{ session: string }>(memento.keys()[0]!)?.session).not.toBe(firstSession);
+      updateCalls.length = 0;
+      // If the earlier runtime is still alive, its later deactivation must not
+      // restore a value now held by the runtime that explicitly enabled sync.
+      await restoreMermaidThemeSync(memento);
+      expect(updateCalls).toEqual([]);
+      expect(getEffectiveMermaidConfig()).toEqual({
+        lightModeTheme: "default",
+        darkModeTheme: "dark"
+      });
+
+      markdownConfig["mermaid.syncTheme"] = false;
+      await restartedWindow.updateMermaidThemeSync(memento);
+      expect(getEffectiveMermaidConfig()).toEqual(
+        target === "workspace"
+          ? { lightModeTheme: "base", darkModeTheme: "vscode" }
+          : { lightModeTheme: "neutral", darkModeTheme: "forest" }
+      );
+      expect(memento.keys()).toEqual([]);
+    }
+  );
+
+  it("preserves a user's newer Mermaid choice when reclaiming a prior runtime's snapshot", async () => {
+    const memento = createTestMemento();
+    await updateMermaidThemeSync(memento);
+    mermaidGlobalConfig["lightModeTheme"] = "base";
+
+    vi.resetModules();
+    const restartedWindow = await import("../../src/integrations/mermaid");
+    updateCalls.length = 0;
+    await restartedWindow.updateMermaidThemeSync(memento);
+    expect(updateCalls).toEqual([{ key: "darkModeTheme", value: "dark", target: 1 }]);
+    markdownConfig["mermaid.syncTheme"] = false;
+    await restartedWindow.updateMermaidThemeSync(memento);
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "base", darkModeTheme: "forest" });
+    expect(memento.keys()).toEqual([]);
+
+    markdownConfig["mermaid.syncTheme"] = true;
+    await restartedWindow.updateMermaidThemeSync(memento);
+    markdownConfig["mermaid.syncTheme"] = false;
+    await restartedWindow.updateMermaidThemeSync(memento);
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "base", darkModeTheme: "forest" });
+  });
+
+  it("returns a failed takeover to the earlier runtime without losing its original snapshot", async () => {
+    const memento = createTestMemento();
+    await updateMermaidThemeSync(memento);
+    const originalState = memento.keys().map((key) => [key, memento.get(key)]);
+    vi.resetModules();
+    const nextWindow = await import("../../src/integrations/mermaid");
+    markdownConfig["theme.mode"] = "vscode";
+    updateFailures.add("lightModeTheme");
+
+    await expect(nextWindow.updateMermaidThemeSync(memento)).rejects.toThrow(
+      "Failed to update lightModeTheme"
+    );
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "default", darkModeTheme: "dark" });
+    expect(memento.keys().map((key) => [key, memento.get(key)])).toEqual(originalState);
+
+    updateFailures.clear();
+    await restoreMermaidThemeSync(memento);
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "neutral", darkModeTheme: "forest" });
   });
 
   it("clears a global release so a later enable can capture and synchronize again", async () => {
@@ -564,7 +723,7 @@ describe("Mermaid theme synchronization", () => {
     });
   });
 
-  it("restores global snapshots created before workspace targets were recorded", async () => {
+  it("reclaims legacy global snapshots only after synchronization is enabled", async () => {
     const memento = createTestMemento();
     await memento.update("githubMarkdown.mermaid.originalGlobalThemes", {
       light: "neutral",
@@ -580,6 +739,13 @@ describe("Mermaid theme synchronization", () => {
     };
     markdownConfig["mermaid.syncTheme"] = false;
 
+    await updateMermaidThemeSync(memento);
+
+    expect(updateCalls).toEqual([]);
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "default", darkModeTheme: "dark" });
+    markdownConfig["mermaid.syncTheme"] = true;
+    await updateMermaidThemeSync(memento);
+    markdownConfig["mermaid.syncTheme"] = false;
     await updateMermaidThemeSync(memento);
 
     expect(mermaidGlobalConfig).toEqual({
@@ -616,6 +782,11 @@ describe("Mermaid theme synchronization", () => {
     expect(updateCalls).toEqual([]);
 
     workspaceIdentity = "file:///workspace-a.code-workspace";
+    await updateMermaidThemeSync(memento);
+    expect(updateCalls).toEqual([]);
+    markdownConfig["mermaid.syncTheme"] = true;
+    await updateMermaidThemeSync(memento);
+    markdownConfig["mermaid.syncTheme"] = false;
     await updateMermaidThemeSync(memento);
 
     expect(mermaidWorkspaceConfig).toEqual({
@@ -1199,7 +1370,7 @@ describe("Mermaid theme synchronization", () => {
     expect(memento.get(lightStateKey)).not.toHaveProperty("releasedBy");
   });
 
-  it("restores an apply that wrote configuration before synchronization was disabled", async () => {
+  it("reclaims a pending apply from an unknown runtime before restoring it", async () => {
     const memento = createTestMemento();
     const lightStateKey = "githubMarkdown.mermaid.themeState.v2.global.light";
     await memento.update(lightStateKey, {
@@ -1225,6 +1396,14 @@ describe("Mermaid theme synchronization", () => {
     mermaidGlobalConfig["lightModeTheme"] = "dark";
     markdownConfig["mermaid.syncTheme"] = false;
 
+    await updateMermaidThemeSync(memento);
+    expect(updateCalls).toEqual([]);
+    expect(mermaidGlobalConfig["lightModeTheme"]).toBe("dark");
+
+    markdownConfig["mermaid.syncTheme"] = true;
+    await updateMermaidThemeSync(memento);
+    updateCalls.length = 0;
+    markdownConfig["mermaid.syncTheme"] = false;
     await updateMermaidThemeSync(memento);
 
     expect(updateCalls).toEqual([{ key: "lightModeTheme", value: "neutral", target: 1 }]);
@@ -1362,6 +1541,27 @@ describe("Mermaid theme synchronization", () => {
       lightModeTheme: "neutral",
       darkModeTheme: "forest"
     });
+    expect(storedMemento.keys()).toEqual([]);
+  });
+
+  it("keeps confirmed ownership retryable when restoring rolls back after partial state cleanup", async () => {
+    let failCleanup = true;
+    const { memento, storedMemento } = createControlledMemento(async ({ key, value, persist }) => {
+      if (failCleanup && key.endsWith(".dark") && value === undefined) {
+        failCleanup = false;
+        throw new Error("Failed to clear the dark snapshot");
+      }
+      await persist();
+    });
+    await updateMermaidThemeSync(memento);
+
+    await expect(restoreMermaidThemeSync(memento)).rejects.toThrow(
+      "Failed to clear the dark snapshot"
+    );
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "default", darkModeTheme: "dark" });
+    await restoreMermaidThemeSync(memento);
+
+    expect(mermaidGlobalConfig).toEqual({ lightModeTheme: "neutral", darkModeTheme: "forest" });
     expect(storedMemento.keys()).toEqual([]);
   });
 

@@ -33,6 +33,7 @@ const harness = vi.hoisted(() => ({
 vi.mock("vscode", () => ({
   default: {
     ConfigurationTarget: { Global: 1, Workspace: 2 },
+    env: { sessionId: "editor-session" },
     extensions: {
       getExtension: (id: string) => (harness.mermaidExtensionIds.has(id) ? {} : undefined),
       onDidChange: (listener: () => Promise<void>) => {
