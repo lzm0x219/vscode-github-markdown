@@ -48,9 +48,12 @@ function octicon(name: string, path: string): string {
 }
 
 function applyAlerts(state: MarkdownState) {
-  for (let index = 0; index < state.tokens.length - 2; index += 1) {
+  let nextTokens: MarkdownToken[] | undefined;
+  for (let index = 0; index < state.tokens.length; index += 1) {
     const blockquoteOpen = state.tokens[index];
-    if (blockquoteOpen?.type !== "blockquote_open" || blockquoteOpen.level !== 0) {
+    if (!blockquoteOpen) continue;
+    nextTokens?.push(blockquoteOpen);
+    if (blockquoteOpen.type !== "blockquote_open" || blockquoteOpen.level !== 0) {
       continue;
     }
 
@@ -91,11 +94,14 @@ function applyAlerts(state: MarkdownState) {
       bodyChildren.shift();
     }
 
-    state.tokens.splice(index + 1, 0, ...createTitleTokens(state, alertKind));
+    // Keep original token objects and source metadata; only add title tokens.
+    // Build once instead of shifting the remaining document for every alert.
+    nextTokens ??= state.tokens.slice(0, index + 1);
+    nextTokens.push(...createTitleTokens(state, alertKind));
     inline.content = bodyChildren.map((token) => token.content).join("");
     inline.children = bodyChildren;
-    index += 3;
   }
+  if (nextTokens) state.tokens = nextTokens;
 }
 
 function createTitleTokens(state: MarkdownState, alertKind: AlertKind): MarkdownToken[] {
