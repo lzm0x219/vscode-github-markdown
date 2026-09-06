@@ -14,6 +14,10 @@ This file records notable changes that people can observe or act on when using t
 - HTML images with apostrophes or quotation marks in their project-root paths now resolve correctly in preview.
 - Documents containing many GitHub alerts update more quickly in preview.
 
+### Mermaid
+
+- Opening a window with Mermaid theme synchronization disabled no longer restores another window's themes or clears its saved originals. After an abnormal exit, enable synchronization and then disable it in the same workspace to restore saved values that you have not changed yourself.
+
 ## [v4.5.2] - 2026-09-01
 
 v4.5.2 makes theme settings more resilient, keeps localized task and footnote labels intact, and reduces the work required to render large task lists. Existing settings continue to work unchanged.

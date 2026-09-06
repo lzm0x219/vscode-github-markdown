@@ -20,6 +20,7 @@ type Pending =
   | { kind: "restore"; desired?: MermaidTheme | undefined; previous?: MermaidTheme | undefined };
 type SlotState = {
   version: 2;
+  session?: string;
   revision?: string;
   target: "global" | "workspace";
   workspaceIdentity?: string | undefined;
@@ -55,6 +56,7 @@ type WriteOutcome = "released" | "skipped" | "written";
 type ConfigurationUpdate = Pick<Transaction, "key" | "target" | "desiredValue" | "shouldWrite"> & {
   expectedValue: MermaidTheme | undefined;
   onOwnershipLost: () => Promise<void>;
+  onWritten?: () => void;
 };
 
 const snapshotKey = "githubMarkdown.mermaid.originalGlobalThemes";
@@ -68,6 +70,10 @@ const mermaidExtensionIds = [
   "bierner.markdown-mermaid"
 ] as const;
 let operationQueue: Promise<void> = Promise.resolve();
+// A workspace can have several windows, and an extension host can restart within
+// one editor session. A fresh runtime must not restore another runtime's writes.
+const sessionId = `${vscode.env.sessionId}:${Math.random().toString(36).slice(2)}`;
+const confirmedWrites = new WeakMap<vscode.Memento, Set<string>>();
 
 export function getMermaidSyncTheme(): boolean {
   return getConfiguration().get<boolean>(section.syncTheme, true);
@@ -134,6 +140,22 @@ async function updateNow(memento: vscode.Memento): Promise<void> {
   const failure = results.find((result) => result.status === "rejected");
   if (failure?.status !== "rejected") return;
 
+  if (
+    transactions.some(({ previousState }) => previousState && previousState.session !== sessionId)
+  ) {
+    // A failed takeover must leave the earlier session's values and original
+    // snapshot available, rather than restoring that session's original themes.
+    const failures = await recoverTransactions(
+      memento,
+      configuration,
+      identity,
+      transactions,
+      results
+    );
+    if (failures.length) throw new AggregateError([failure.reason, ...failures]);
+    throw failure.reason;
+  }
+
   try {
     await restoreNow(
       memento,
@@ -174,10 +196,17 @@ async function restoreNow(
       const context = loadContext(memento, identity, slot, key, target);
       if (
         context.state &&
+        context.state.session === sessionId &&
         !preservedStateKeys.has(context.stateKey) &&
         !(preserveReleased && context.state.releasedBy !== undefined)
       ) {
-        transactions.push(prepareRestore(configuration, { ...context, state: context.state }));
+        transactions.push(
+          prepareRestore(
+            configuration,
+            { ...context, state: context.state },
+            confirmedWrites.get(memento)?.has(context.stateKey) === true
+          )
+        );
       }
     }
   }
@@ -205,6 +234,7 @@ async function prepareApply(
 ): Promise<Transaction | undefined> {
   const previousValue = getThemeAtTarget(configuration, context.key, context.target);
   let state = context.state ? { ...context.state } : undefined;
+  if (state?.session !== sessionId) confirmedWrites.get(memento)?.delete(context.stateKey);
   let reconciled = false;
   if (state?.pending?.kind === "apply") {
     reconciled = true;
@@ -218,11 +248,15 @@ async function prepareApply(
     else state = release(state, identity);
   }
   if (state?.releasedBy !== undefined) {
-    if (reconciled) await saveContext(memento, context, state);
+    // An explicit enable can acknowledge a previous user takeover without
+    // changing its value. A subsequent disable may then clear that release.
+    if (reconciled || state.session !== sessionId) {
+      await saveContext(memento, context, { ...state, session: sessionId });
+    }
     return undefined;
   }
   if (state?.applied !== undefined && previousValue !== state.applied) {
-    await saveContext(memento, context, release(state, identity));
+    await saveContext(memento, context, release({ ...state, session: sessionId }, identity));
     return undefined;
   }
 
@@ -233,13 +267,15 @@ async function prepareApply(
     original: previousValue
   };
   if (context.target === vscode.ConfigurationTarget.Workspace) state.workspaceIdentity = identity;
+  state.session = sessionId;
   state.pending = { kind: "apply", desired: desiredValue, previous: previousValue };
   return { ...context, state, previousState, previousValue, desiredValue, shouldWrite: true };
 }
 
 function prepareRestore(
   configuration: vscode.WorkspaceConfiguration,
-  context: SlotContext & { state: SlotState }
+  context: SlotContext & { state: SlotState },
+  confirmedWrite: boolean
 ): Transaction {
   const previousValue = getThemeAtTarget(configuration, context.key, context.target);
   const state = { ...context.state };
@@ -249,9 +285,11 @@ function prepareRestore(
     delete state.pending;
   }
   const pendingRestore = state.pending?.kind === "restore" ? state.pending : undefined;
-  const shouldWrite = pendingRestore
-    ? previousValue === pendingRestore.previous
-    : state.applied !== undefined && previousValue === state.applied;
+  const shouldWrite =
+    confirmedWrite &&
+    (pendingRestore
+      ? previousValue === pendingRestore.previous
+      : state.applied !== undefined && previousValue === state.applied);
   const previousState = { ...state };
   if (shouldWrite) {
     state.pending = { kind: "restore", desired: state.original, previous: previousValue };
@@ -301,15 +339,23 @@ async function executeTransactions(
       desiredValue: transaction.desiredValue,
       shouldWrite: transaction.shouldWrite,
       expectedValue: transaction.previousValue,
-      onOwnershipLost: () => markReleased(memento, transaction, identity)
+      onOwnershipLost: () => markReleased(memento, transaction, identity),
+      onWritten: () => {
+        let writes = confirmedWrites.get(memento);
+        if (!writes) confirmedWrites.set(memento, (writes = new Set()));
+        writes.add(transaction.stateKey);
+      }
     }))
   );
   await retryRejectedReleases(memento, identity, transactions, results);
+  const removedStateKeys: string[] = [];
   try {
     for (const [index, result] of results.entries()) {
       const transaction = transactions[index];
       if (result.status === "fulfilled" && result.value !== "released" && transaction) {
-        await saveContext(memento, transaction, finalize(transaction));
+        const state = finalize(transaction);
+        await saveContext(memento, transaction, state);
+        if (!state) removedStateKeys.push(transaction.stateKey);
       }
     }
   } catch (persistenceError) {
@@ -323,6 +369,9 @@ async function executeTransactions(
     if (failures.length) throw new AggregateError([persistenceError, ...failures]);
     throw persistenceError;
   }
+  // A later persistence failure can roll back an earlier cleanup. Keep its
+  // confirmed write until the entire transaction has finished successfully.
+  for (const stateKey of removedStateKeys) confirmedWrites.get(memento)?.delete(stateKey);
   return results;
 }
 
@@ -423,6 +472,7 @@ async function writeSequentially(
         await configuration.update(update.key, update.desiredValue, update.target);
         const current = getThemeAtTarget(configuration, update.key, update.target);
         if (current === update.desiredValue) {
+          update.onWritten?.();
           outcome = "written";
           break;
         }
