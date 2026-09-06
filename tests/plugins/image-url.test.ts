@@ -167,6 +167,66 @@ describe("markdown-it-github-image-url", () => {
     expect(html).toContain('data-src="/lazy.png" src="//cdn.example.com/photo.png"');
   });
 
+  it.each([
+    [
+      "JPEG data URL",
+      "data:image/jpeg;base64,/9j/4AAQSkZJRg== 1x",
+      "data:image/jpeg;base64,/9j/4AAQSkZJRg== 1x"
+    ],
+    [
+      "data and root candidates",
+      "data:image/jpeg;base64,/9j/AA== 1x, /assets/large.jpg 2x",
+      "data:image/jpeg;base64,/9j/AA== 1x, https://webview.test/workspace/assets/large.jpg 2x"
+    ],
+    [
+      "descriptorless data candidate",
+      "data:image/jpeg;base64,/9j/AA==, /assets/large.jpg 2x",
+      "data:image/jpeg;base64,/9j/AA==, https://webview.test/workspace/assets/large.jpg 2x"
+    ],
+    [
+      "commas within a URL",
+      "/assets/a,/b.jpg 1x, /assets/c.jpg 2x",
+      "https://webview.test/workspace/assets/a,/b.jpg 1x, https://webview.test/workspace/assets/c.jpg 2x"
+    ],
+    [
+      "remote URL containing a slash after a comma",
+      "https://cdn.example/a,/b.jpg 1x",
+      "https://cdn.example/a,/b.jpg 1x"
+    ],
+    [
+      "trailing and leading separators",
+      ", /assets/a.jpg,,  /assets/b.jpg,",
+      ", https://webview.test/workspace/assets/a.jpg,,  https://webview.test/workspace/assets/b.jpg,"
+    ],
+    [
+      "descriptor commas without spaces",
+      "/assets/a.jpg 1x,/assets/b.jpg 2x",
+      "https://webview.test/workspace/assets/a.jpg 1x,https://webview.test/workspace/assets/b.jpg 2x"
+    ],
+    [
+      "parenthesized descriptor text",
+      "/assets/a.jpg future(a,/unchanged.jpg), /assets/b.jpg 2x",
+      "https://webview.test/workspace/assets/a.jpg future(a,/unchanged.jpg), https://webview.test/workspace/assets/b.jpg 2x"
+    ],
+    [
+      "unclosed descriptor parentheses",
+      "/assets/a.jpg future(a,/unchanged.jpg",
+      "https://webview.test/workspace/assets/a.jpg future(a,/unchanged.jpg"
+    ],
+    [
+      "ASCII whitespace",
+      "\t/assets/a.jpg\t1x,\n/assets/b.jpg\r2x ",
+      "\thttps://webview.test/workspace/assets/a.jpg\t1x,\nhttps://webview.test/workspace/assets/b.jpg\n2x "
+    ],
+    ["empty input", "", ""],
+    ["separators only", " , , ", " , , "]
+  ])("preserves srcset candidate boundaries for %s", (_case, srcset, expected) => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    expect(md.renderInline(`<source srcset="${srcset}">`, renderEnv())).toBe(
+      `<source srcset="${expected}">`
+    );
+  });
+
   it("rewrites only the src attribute on raw HTML images", () => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render('<img data-src="/lazy.png" src="/actual.png">');
