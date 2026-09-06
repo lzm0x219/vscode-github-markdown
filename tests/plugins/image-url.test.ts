@@ -1,7 +1,8 @@
 import MarkdownIt from "markdown-it";
 import { describe, expect, it, vi } from "vitest";
 
-const vscode = vi.hoisted(() => {
+const vscode = await vi.hoisted(async () => {
+  const { URI } = await import("vscode-uri");
   class MockUri {
     constructor(
       readonly scheme: string,
@@ -12,8 +13,14 @@ const vscode = vi.hoisted(() => {
       readonly fsPath = path
     ) {}
 
-    toString(): string {
-      return `${this.scheme}://${this.authority}${this.path}${this.query ? `?${this.query}` : ""}${this.fragment ? `#${this.fragment}` : ""}`;
+    toString(skipEncoding = false): string {
+      return URI.from({
+        scheme: this.scheme,
+        authority: this.authority,
+        path: this.path,
+        query: this.query,
+        fragment: this.fragment
+      }).toString(skipEncoding);
     }
 
     with(change: { fragment?: string; query?: string }): MockUri {
@@ -38,10 +45,15 @@ const vscode = vi.hoisted(() => {
         );
       },
       parse(value: string): MockUri {
-        const match = /^(.*?):(?:\/\/)?([^?#]*)(?:\?([^#]*))?(?:#(.*))?$/.exec(value);
-        if (!match?.[1] || match[2] === undefined) throw new Error(`Invalid URI: ${value}`);
-        const path = decodeURIComponent(match[2]);
-        return new MockUri(match[1], path, match[3], match[4], "", path.replaceAll("/", "\\"));
+        const parsed = URI.parse(value);
+        return new MockUri(
+          parsed.scheme,
+          parsed.path,
+          parsed.query,
+          parsed.fragment,
+          parsed.authority,
+          parsed.path.replaceAll("/", "\\")
+        );
       }
     },
     workspace: {
@@ -99,6 +111,31 @@ describe("markdown-it-github-image-url", () => {
     expect(html).toContain('src="./images/photo.png"');
   });
 
+  it("keeps srcset candidates encoded when the workspace folder contains spaces", () => {
+    vscode.workspace.getWorkspaceFolder.mockReturnValueOnce({
+      uri: new vscode.MockUri("file", "/work folder")
+    });
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+
+    expect(md.renderInline('<img srcset="/assets/my%20logo.svg 1x">', renderEnv())).toBe(
+      '<img srcset="https://webview.test/work%20folder/assets/my%20logo.svg 1x">'
+    );
+  });
+
+  it.each([
+    ["/assets/a%2520b.svg", "/assets/a%2520b.svg"],
+    ["/assets/a%2Cb.svg", "/assets/a%2Cb.svg"],
+    [
+      "/assets/a.svg?theme=light&value=%26%3D%25#part%20one",
+      "/assets/a.svg?theme=light&amp;value=%26%3D%25#part%20one"
+    ]
+  ])("preserves URL semantics when rewriting %s", (input, expected) => {
+    const md = new MarkdownIt({ html: true }).use(githubImageUrl);
+    expect(md.renderInline(`<img srcset="${input} 1x">`, renderEnv())).toBe(
+      `<img srcset="https://webview.test/workspace${expected} 1x">`
+    );
+  });
+
   it("does not touch external URLs", () => {
     const md = new MarkdownIt().use(githubImageUrl);
     const html = md.render("![alt](https://example.com/img.png)");
@@ -131,7 +168,7 @@ describe("markdown-it-github-image-url", () => {
     );
 
     expect(html).toBe(
-      '<p><picture><source data-srcset="/lazy.webp 1x" srcset="https://webview.test/workspace/assets/hero.webp?theme=light&amp;size=wide#top 1x, https://cdn.example.com/hero.webp 2x, ../hero.webp 3x, //cdn.example.com/hero.webp 4x"><img srcset="https://webview.test/workspace/assets/fallback.webp 1x, https://webview.test/workspace/assets/fallback@2x.webp 2x" src="https://webview.test/workspace/assets/fallback.webp" alt="hero"></picture></p>\n'
+      '<p><picture><source data-srcset="/lazy.webp 1x" srcset="https://webview.test/workspace/assets/hero.webp?theme=light&amp;size=wide#top 1x, https://cdn.example.com/hero.webp 2x, ../hero.webp 3x, //cdn.example.com/hero.webp 4x"><img srcset="https://webview.test/workspace/assets/fallback.webp 1x, https://webview.test/workspace/assets/fallback%402x.webp 2x" src="https://webview.test/workspace/assets/fallback.webp" alt="hero"></picture></p>\n'
     );
   });
 
@@ -143,7 +180,7 @@ describe("markdown-it-github-image-url", () => {
     );
 
     expect(html).toBe(
-      '<source srcset="  https://webview.test/workspace/assets/hero.webp 1x, https://webview.test/workspace/assets/hero@2x.webp 2x">'
+      '<source srcset="  https://webview.test/workspace/assets/hero.webp 1x, https://webview.test/workspace/assets/hero%402x.webp 2x">'
     );
   });
 
@@ -186,7 +223,7 @@ describe("markdown-it-github-image-url", () => {
     [
       "commas within a URL",
       "/assets/a,/b.jpg 1x, /assets/c.jpg 2x",
-      "https://webview.test/workspace/assets/a,/b.jpg 1x, https://webview.test/workspace/assets/c.jpg 2x"
+      "https://webview.test/workspace/assets/a%2C/b.jpg 1x, https://webview.test/workspace/assets/c.jpg 2x"
     ],
     [
       "remote URL containing a slash after a comma",
@@ -246,7 +283,7 @@ describe("markdown-it-github-image-url", () => {
       renderEnv("/workspace/docs/guide.md")
     );
 
-    expect(html).toBe('<img src="https://webview.test/workspace/assets/my logo.svg" alt=logo>');
+    expect(html).toBe('<img src="https://webview.test/workspace/assets/my%20logo.svg" alt=logo>');
   });
 
   it("preserves a single-quoted src while escaping a decoded apostrophe", () => {
@@ -254,26 +291,26 @@ describe("markdown-it-github-image-url", () => {
     const html = md.render("<img src='/assets/author%27s-logo.svg' alt='logo'>", renderEnv());
 
     expect(html).toBe(
-      "<img src='https://webview.test/workspace/assets/author&#39;s-logo.svg' alt='logo'>"
+      "<img src='https://webview.test/workspace/assets/author%27s-logo.svg' alt='logo'>"
     );
   });
 
   it.each([
     [
       '<img src="/assets/it\'s.png" alt="author">',
-      '<img src="https://webview.test/workspace/assets/it\'s.png" alt="author">'
+      '<img src="https://webview.test/workspace/assets/it%27s.png" alt="author">'
     ],
     [
       "<img src='/assets/a\"b.png' alt='quote'>",
-      "<img src='https://webview.test/workspace/assets/a\"b.png' alt='quote'>"
+      "<img src='https://webview.test/workspace/assets/a%22b.png' alt='quote'>"
     ],
     [
       '<img srcset="/assets/it\'s.png 1x, /assets/other.png 2x">',
-      '<img srcset="https://webview.test/workspace/assets/it\'s.png 1x, https://webview.test/workspace/assets/other.png 2x">'
+      '<img srcset="https://webview.test/workspace/assets/it%27s.png 1x, https://webview.test/workspace/assets/other.png 2x">'
     ],
     [
       "<source srcset='/assets/a\"b.png 1x'>",
-      "<source srcset='https://webview.test/workspace/assets/a\"b.png 1x'>"
+      "<source srcset='https://webview.test/workspace/assets/a%22b.png 1x'>"
     ],
     [
       '<img title=\'literal src="/untouched.png"\' src="/actual.png">',
@@ -289,7 +326,7 @@ describe("markdown-it-github-image-url", () => {
     ],
     [
       "<img src=\"/assets/it's.png\"><img src='/assets/a\"b.png'>",
-      "<img src=\"https://webview.test/workspace/assets/it's.png\"><img src='https://webview.test/workspace/assets/a\"b.png'>"
+      "<img src=\"https://webview.test/workspace/assets/it%27s.png\"><img src='https://webview.test/workspace/assets/a%22b.png'>"
     ]
   ])("respects HTML attribute quote boundaries in %s", (input, expected) => {
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
@@ -301,7 +338,7 @@ describe("markdown-it-github-image-url", () => {
     const html = md.render('<img src="/assets/%22logo%22.svg" alt="logo">', renderEnv());
 
     expect(html).toBe(
-      '<img src="https://webview.test/workspace/assets/&quot;logo&quot;.svg" alt="logo">'
+      '<img src="https://webview.test/workspace/assets/%22logo%22.svg" alt="logo">'
     );
   });
 
@@ -325,7 +362,7 @@ describe("markdown-it-github-image-url", () => {
     );
 
     expect(html).toBe(
-      '<img src="https://webview.test/workspace/assets/a\\&amp;b.svg?theme=light&amp;size=wide#hero" alt=logo>'
+      '<img src="https://webview.test/workspace/assets/a%5C%26b.svg?theme=light&amp;size=wide#hero" alt=logo>'
     );
   });
 
@@ -334,7 +371,7 @@ describe("markdown-it-github-image-url", () => {
     const html = md.render('<img src="/assets/a&amp?theme=light#hero" alt=logo>', renderEnv());
 
     expect(html).toBe(
-      '<img src="https://webview.test/workspace/assets/a&amp;?theme=light#hero" alt=logo>'
+      '<img src="https://webview.test/workspace/assets/a%26?theme=light#hero" alt=logo>'
     );
   });
 
@@ -348,7 +385,7 @@ describe("markdown-it-github-image-url", () => {
     const html = md.render(`<img src="/assets/a${reference}.svg" alt=logo>`, renderEnv());
 
     expect(html).toBe(
-      `<img src="https://webview.test/workspace/assets/a${expected}.svg" alt=logo>`
+      `<img src="https://webview.test/workspace/assets/a${encodeURIComponent(expected)}.svg" alt=logo>`
     );
   });
 
@@ -363,11 +400,14 @@ describe("markdown-it-github-image-url", () => {
     );
 
     expect(html).toBe(
-      '<img src="https://webview.test/second-workspace/assets/my logo.svg" alt=logo>'
+      '<img src="https://webview.test/second-workspace/assets/my%20logo.svg" alt=logo>'
     );
   });
 
   it("serializes the relative fallback when URI parsing fails", () => {
+    vi.spyOn(vscode.Uri, "parse").mockImplementationOnce(() => {
+      throw new Error("URI parsing failed");
+    });
     const md = new MarkdownIt({ html: true }).use(githubImageUrl);
     const html = md.render("<img src=/assets/bad%ZZ.svg alt=logo>", renderEnv());
 

@@ -194,6 +194,9 @@ importers:
       vitest:
         specifier: 5.0.0
         version: 5.0.0(@types/node@24.13.3)(@vitest/coverage-v8@5.0.0)(vite@8.0.16(@types/node@24.13.3))
+      vscode-uri:
+        specifier: 3.2.0
+        version: 3.2.0
 
 packages:
 
