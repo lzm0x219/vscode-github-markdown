@@ -1,9 +1,10 @@
+import type { FSWatcher } from "node:fs";
 import { spawn, type ChildProcess } from "node:child_process";
-import { watch, type FSWatcher } from "node:fs";
 import { localBinary, waitForChild } from "../shared/process";
 import { project } from "../shared/project";
 import { buildCss, formatCssBuild } from "./css";
 import { createCssBuildRunner } from "./css-runner";
+import { watchPreviewCss } from "./css-watcher";
 import { shouldOpenVisualizer } from "./options";
 import { buildPreviewCss } from "./preview-css";
 import { createRebuildQueue } from "./rebuild-queue";
@@ -21,7 +22,7 @@ const queue = createRebuildQueue(
   async () => console.log(formatCssBuild(await css.rebuild())),
   (error) => console.error("[css] Rebuild failed", error)
 );
-const cssWatcher = watch(project.paths.previewCssSource, () => queue.request());
+const cssWatcher = watchPreviewCss(project.paths.previewCssSource, () => queue.request());
 const tsdown = spawn(localBinary("tsdown"), ["--watch"], {
   cwd: project.root,
   stdio: "inherit"
