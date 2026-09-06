@@ -8,6 +8,7 @@ This file records notable changes that people can observe or act on when using t
 
 ### Markdown preview
 
+- Paragraphs containing many emoji shortcodes render without interrupting the preview.
 - Responsive images preserve embedded data URLs and commas within image paths, so valid images no longer break during preview URL conversion.
 - HTML images with apostrophes or quotation marks in their project-root paths now resolve correctly in preview.
 - Documents containing many GitHub alerts update more quickly in preview.
