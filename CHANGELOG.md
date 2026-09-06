@@ -11,6 +11,7 @@ This file records notable changes that people can observe or act on when using t
 - Emoji shortcodes remain literal inside HTML code elements and URL link labels while ordinary link labels still display emoji.
 - Paragraphs containing many emoji shortcodes render without interrupting the preview.
 - Links, syntax highlighting, and other preview styles display correctly in older supported VS Code versions, including 1.74.
+- Project-root images keep spaces and special characters encoded in preview URLs, including responsive images in workspaces with spaces in their names.
 - Responsive images preserve embedded data URLs and commas within image paths, so valid images no longer break during preview URL conversion.
 - HTML images with apostrophes or quotation marks in their project-root paths now resolve correctly in preview.
 - Documents containing many GitHub alerts update more quickly in preview.
