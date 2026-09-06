@@ -5,9 +5,9 @@ import { replaceCodePoint } from "entities/decode";
 const imageTagPattern = /<img(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
 const responsiveImageTagPattern = /<(?:img|source)(?=[\t\n\f\r />])(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
 const projectRootSrcAttributePattern =
-  /(<img(?:[^"'<>]|"[^"]*"|'[^']*')*?[\t\n\f\r ]+src[\t\n\f\r ]*=[\t\n\f\r ]*)(?:(["'])(\/(?!\/)[^"']+)\2|(\/(?!\/)[^\t\n\f\r "'`=<>]+))/i;
+  /(<img(?:[^"'<>]|"[^"]*"|'[^']*')*?[\t\n\f\r ]+src[\t\n\f\r ]*=[\t\n\f\r ]*)(?:("\/(?!\/)[^"]*"|'\/(?!\/)[^']*')|(\/(?!\/)[^\t\n\f\r "'`=<>]+))/i;
 const projectRootSrcsetAttributePattern =
-  /(<(?:img|source)(?:[^"'<>]|"[^"]*"|'[^']*')*?[\t\n\f\r ]+srcset[\t\n\f\r ]*=[\t\n\f\r ]*)(?:(['"])([^"']*)\2|([^\t\n\f\r "'`=<>]+))/i;
+  /(<(?:img|source)(?:[^"'<>]|"[^"]*"|'[^']*')*?[\t\n\f\r ]+srcset[\t\n\f\r ]*=[\t\n\f\r ]*)(?:("[^"]*"|'[^']*')|([^\t\n\f\r "'`=<>]+))/i;
 const htmlEntityPattern = /&(?:#[xX][\da-fA-F]+;?|#\d+;?|[a-zA-Z][a-zA-Z0-9]{1,31};?)/g;
 const legacyHtmlEntityNames = new Set(
   "AElig AMP Aacute Acirc Agrave Aring Atilde Auml COPY Ccedil ETH Eacute Ecirc Egrave Euml GT Iacute Icirc Igrave Iuml LT Ntilde Oacute Ocirc Ograve Oslash Otilde Ouml QUOT REG THORN Uacute Ucirc Ugrave Uuml Yacute aacute acirc acute aelig agrave amp aring atilde auml brvbar ccedil cedil cent copy curren deg divide eacute ecirc egrave eth euml frac12 frac14 frac34 gt iacute icirc iexcl igrave iquest iuml laquo lt macr micro middot nbsp not ntilde oacute ocirc ograve ordf ordm oslash otilde ouml para plusmn pound quot raquo reg sect shy sup1 sup2 sup3 szlig thorn times uacute ucirc ugrave uml uuml yacute yen yuml".split(
@@ -25,13 +25,11 @@ function rewriteImgSrc(
   decodeNamedEntity: (value: string) => string
 ): string {
   return html.replace(imageTagPattern, (imageTag) =>
-    imageTag.replace(
-      projectRootSrcAttributePattern,
-      (_match, before, quote = "", quotedSrc, unquotedSrc) => {
-        const src = decodeHtmlAttribute(quotedSrc ?? unquotedSrc, decodeNamedEntity);
-        return `${before}${serializeAttributeValue(toProjectRootResourceUri(src, env), quote)}`;
-      }
-    )
+    imageTag.replace(projectRootSrcAttributePattern, (_match, before, quotedSrc, unquotedSrc) => {
+      const quote = quotedSrc?.[0] ?? "";
+      const src = decodeHtmlAttribute(quotedSrc?.slice(1, -1) ?? unquotedSrc, decodeNamedEntity);
+      return `${before}${serializeAttributeValue(toProjectRootResourceUri(src, env), quote)}`;
+    })
   );
 }
 
@@ -43,8 +41,12 @@ function rewriteImgSrcset(
   return html.replace(responsiveImageTagPattern, (imageTag) =>
     imageTag.replace(
       projectRootSrcsetAttributePattern,
-      (_match, before, quote = "", quotedSrcset, unquotedSrcset) => {
-        const srcset = decodeHtmlAttribute(quotedSrcset ?? unquotedSrcset, decodeNamedEntity);
+      (_match, before, quotedSrcset, unquotedSrcset) => {
+        const quote = quotedSrcset?.[0] ?? "";
+        const srcset = decodeHtmlAttribute(
+          quotedSrcset?.slice(1, -1) ?? unquotedSrcset,
+          decodeNamedEntity
+        );
         return `${before}${serializeAttributeValue(rewriteSrcset(srcset, env), quote)}`;
       }
     )
