@@ -9,6 +9,12 @@ type FootnoteReference = {
   referenceCount: number;
 };
 
+type FootnoteDefinition = {
+  label: string;
+  content: string;
+  hardbreaks: boolean;
+};
+
 type FootnoteGraph = {
   definitions: Map<string, string>;
   order: string[];
@@ -29,6 +35,7 @@ type HtmlEscaper = (value: string) => string;
 const footnoteDefinitionLinePattern = /^\[\^([^\]\n]+)\]:[ \t]*(.*)$/;
 const footnoteReferencePattern = /\[\^([^\]\n]+)\]/g;
 const footnoteDefinitionsKey = "githubMarkdownFootnoteDefinitions";
+const footnoteDefinitionBlocksKey = "githubMarkdownFootnoteDefinitionBlocks";
 const footnoteHardbreakLabelsKey = "githubMarkdownFootnoteHardbreakLabels";
 const nestedFootnoteParseKey = "githubMarkdownNestedFootnoteParse";
 
@@ -59,6 +66,12 @@ export default function markdownItGitHubFootnotes(md: MarkdownIt): MarkdownIt {
     token.content = fullMatch;
     state.pos += fullMatch.length;
     return true;
+  });
+
+  md.core.ruler.before("inline", "github-markdown-footnote-definitions", (state) => {
+    if (state.env[nestedFootnoteParseKey] !== true) {
+      collectFootnoteDefinitions(state, md);
+    }
   });
 
   md.core.ruler.after("inline", "github-markdown-footnotes", (state) => {
@@ -126,9 +139,16 @@ function footnoteDefinitionBlock(
 
   const label = normalizeFootnoteLabel(match[1] ?? "");
   const definitions = footnoteDefinitions(state);
+  const content = normalizeFootnoteDefinition(definition);
+  const hardbreaks = hasInlineDefinition && continuationLines.length > 0;
+  if (label && state.env[nestedFootnoteParseKey] !== true) {
+    const blocks = footnoteDefinitionBlocks(state);
+    blocks.push({ label, content, hardbreaks });
+    state.env[footnoteDefinitionBlocksKey] = blocks;
+  }
   if (label && !definitions.has(label)) {
-    definitions.set(label, normalizeFootnoteDefinition(definition));
-    if (hasInlineDefinition && continuationLines.length > 0) {
+    definitions.set(label, content);
+    if (hardbreaks) {
       const hardbreakLabels = footnoteHardbreakLabels(state);
       hardbreakLabels.add(label);
       state.env[footnoteHardbreakLabelsKey] = hardbreakLabels;
@@ -137,6 +157,55 @@ function footnoteDefinitionBlock(
   state.env[footnoteDefinitionsKey] = definitions;
   state.line = definitionEnd;
   return true;
+}
+
+function footnoteDefinitionBlocks(state: { env: Record<string, unknown> }): FootnoteDefinition[] {
+  const blocks = state.env[footnoteDefinitionBlocksKey];
+  return Array.isArray(blocks) ? blocks : [];
+}
+
+function collectFootnoteDefinitions(state: { env: Record<string, unknown> }, md: MarkdownIt): void {
+  const pending = footnoteDefinitionBlocks(state).reverse();
+  delete state.env[footnoteDefinitionBlocksKey];
+  if (pending.length === 0) return;
+
+  const definitions = new Map<string, string>();
+  const hardbreakLabels = new Set<string>();
+  const nestedByContent = new Map<string, FootnoteDefinition[]>();
+  const references = { ...(state.env["references"] as Record<string, unknown> | undefined) };
+  while (pending.length > 0) {
+    const definition = pending.pop();
+    if (!definition) continue;
+    if (!definitions.has(definition.label)) {
+      definitions.set(definition.label, definition.content);
+      if (definition.hardbreaks) hardbreakLabels.add(definition.label);
+    }
+
+    // Ordinary notes cannot introduce another definition; avoid parsing them twice.
+    if (!definition.content.includes("[^")) continue;
+
+    let nested = nestedByContent.get(definition.content);
+    if (!nested) {
+      // Discovery must not publish link definitions from unreferenced footnotes.
+      const environment = {
+        ...state.env,
+        references,
+        [footnoteDefinitionsKey]: new Map(),
+        [footnoteDefinitionBlocksKey]: [],
+        [footnoteHardbreakLabelsKey]: new Set()
+      };
+      md.block.parse(definition.content, md, environment, []);
+      nested = footnoteDefinitionBlocks({ env: environment });
+      nestedByContent.set(definition.content, nested);
+    }
+    // Visit nested definitions before later siblings: the first source definition wins.
+    for (let index = nested.length - 1; index >= 0; index -= 1) {
+      const child = nested[index];
+      if (child) pending.push(child);
+    }
+  }
+  state.env[footnoteDefinitionsKey] = definitions;
+  state.env[footnoteHardbreakLabelsKey] = hardbreakLabels;
 }
 
 function footnoteDefinitions(state: { env: Record<string, unknown> }): Map<string, string> {
