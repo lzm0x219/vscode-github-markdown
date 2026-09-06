@@ -161,6 +161,138 @@ describe("markdown-it-github-footnotes", () => {
     expect(html).not.toContain("[^second]:");
   });
 
+  it("resolves a document reference to a definition nested inside another footnote", () => {
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render("X[^a] and Y[^b]\n\n[^a]: first\n    [^b]: second");
+
+    expect(html).toContain('id="user-content-fnref-2"');
+    expect(html).toContain('<li id="user-content-fn-2">\n<p dir="auto">second ');
+    expect(html).not.toContain("[^b]");
+  });
+
+  it("collects nested definitions from an unreferenced footnote before parsing inline labels", () => {
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render("Text[^a*b*].\n\n[^unused]: hidden\n    [^a*b*]: Nested **note**.");
+
+    expect(html).toContain('id="user-content-fnref-1"');
+    expect(html).toContain("Nested <strong>note</strong>.");
+    expect(html).not.toContain("hidden");
+    expect(html).not.toContain("[^a");
+  });
+
+  it("collects nested definitions inside a discarded duplicate parent definition", () => {
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render("Text[^b].\n\n[^a]: unused first\n\n[^a]: unused duplicate\n    [^b]: nested body");
+
+    expect(html).toContain('<li id="user-content-fn-1">\n<p dir="auto">nested body ');
+    expect(html).not.toContain("unused");
+  });
+
+  it.each([
+    "[^outer]: hidden\n    [^Note]: First definition.\n\n[^note]: Second definition.",
+    "[^Note]: First definition.\n\n[^outer]: hidden\n    [^note]: Second definition.",
+    "[^outer]: hidden\n    [^deeper]: also hidden\n        [^Note]: First definition.\n    [^note]: Second definition."
+  ])("keeps the first definition in source order across nesting: %s", (definitions) => {
+    const html = new MarkdownIt().use(githubFootnotes).render(`Text[^note].\n\n${definitions}`);
+
+    expect(html).toContain("First definition.");
+    expect(html).not.toContain("Second definition.");
+    expect(html.match(/<li id="user-content-fn-/g)).toHaveLength(1);
+  });
+
+  it("numbers nested definitions by reference order and terminates reference cycles", () => {
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render("B[^b] A[^a]\n\n[^a]: First[^b].\n    [^b]: Second[^a].");
+    const first = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0] ?? "";
+    const second = html.match(/<li id="user-content-fn-2">[\s\S]*?<\/li>/)?.[0] ?? "";
+
+    expect(first).toContain("Second");
+    expect(first).toContain('id="user-content-fnref-2-2"');
+    expect(second).toContain("First");
+    expect(second).toContain('id="user-content-fnref-1-2"');
+    expect(html.match(/<li id="user-content-fn-/g)).toHaveLength(2);
+  });
+
+  it("does not add a second block parse for ordinary footnote bodies", () => {
+    const md = new MarkdownIt().use(githubFootnotes);
+    const parse = vi.spyOn(md.block, "parse");
+    const count = 100;
+    const source =
+      Array.from({ length: count }, (_, index) => `Text[^${index}].`).join(" ") +
+      "\n\n" +
+      Array.from({ length: count }, (_, index) => `[^${index}]: Note ${index}.`).join("\n");
+
+    expect(md.render(source).match(/<li id="user-content-fn-/g)).toHaveLength(count);
+    expect(parse).toHaveBeenCalledTimes(count + 1);
+  });
+
+  it("collects deeply nested definitions without recursive footnote parsing", () => {
+    const depth = 256;
+    const definitions = Array.from(
+      { length: depth },
+      (_, index) => `${"    ".repeat(index)}[^${index}]: ${index === depth - 1 ? "leaf" : "hidden"}`
+    ).join("\n");
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render(`Text[^${depth - 1}].\n\n${definitions}`);
+
+    expect(html).toContain('<li id="user-content-fn-1">\n<p dir="auto">leaf ');
+    expect(html.match(/<li id="user-content-fn-/g)).toHaveLength(1);
+    expect(html).not.toContain("hidden");
+  });
+
+  it("keeps independently rendered notes with identical nested content separate", () => {
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render(
+        "A[^a] B[^b] C[^child]\n\n[^a]: shared\n    [^child]: leaf\n\n[^b]: shared\n    [^child]: leaf"
+      );
+    const first = html.match(/<li id="user-content-fn-1">[\s\S]*?<\/li>/)?.[0] ?? "";
+    const second = html.match(/<li id="user-content-fn-2">[\s\S]*?<\/li>/)?.[0] ?? "";
+
+    expect(first).toContain('shared <a href="#user-content-fnref-1"');
+    expect(first).not.toContain('href="#user-content-fnref-2"');
+    expect(second).toContain('shared <a href="#user-content-fnref-2"');
+    expect(second).not.toContain('href="#user-content-fnref-1"');
+    expect(html.match(/<li id="user-content-fn-/g)).toHaveLength(3);
+  });
+
+  it("does not expose link definitions from unreferenced footnotes during discovery", () => {
+    const environment: Record<string, unknown> = {};
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render(
+        "Text[^b] [outside][hidden].\n\n[^unused]:\n    [hidden]: https://hidden.example\n    [^b]: [inside][hidden].",
+        environment
+      );
+
+    expect(html).toContain("[outside][hidden]");
+    expect(html).toContain("[inside][hidden]");
+    expect(html).not.toContain('href="https://hidden.example"');
+    expect(environment).not.toHaveProperty("references");
+    expect(environment).not.toHaveProperty("githubMarkdownFootnoteDefinitionBlocks");
+  });
+
+  it("preserves shared link-reference parsing when referenced notes are rendered", () => {
+    const environment: Record<string, unknown> = {};
+    const html = new MarkdownIt()
+      .use(githubFootnotes)
+      .render(
+        "A[^a] B[^b] [outside][shared].\n\n[^a]: [first][shared]\n\n    [shared]: https://example.com\n\n[^b]: [second][shared]",
+        environment
+      );
+
+    expect(html).toContain("[outside][shared]");
+    expect(html).toContain('<a href="https://example.com">first</a>');
+    expect(html).toContain('<a href="https://example.com">second</a>');
+    expect(environment).toHaveProperty("references.SHARED.href", "https://example.com");
+    expect(environment).not.toHaveProperty("githubMarkdownNestedFootnoteParse");
+  });
+
   it("recognizes a footnote definition inside a list item", () => {
     const md = new MarkdownIt().use(githubFootnotes);
     const html = md.render("Body[^a].\n\n- item\n  [^a]: list body\n");
