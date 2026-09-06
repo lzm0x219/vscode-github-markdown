@@ -6,20 +6,26 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+## [v4.5.3] - 2026-09-07
+
+v4.5.3 improves preview reliability for large documents and complex images and footnotes. It also protects Mermaid theme settings across windows and restores preview styling in older supported VS Code versions.
+
 ### Markdown preview
 
-- Emoji shortcodes remain literal inside HTML code elements and URL link labels while ordinary link labels still display emoji.
-- References to footnotes defined inside other footnotes now resolve, including when the enclosing footnote is not referenced.
 - Paragraphs containing many emoji shortcodes render without interrupting the preview.
-- Links, syntax highlighting, and other preview styles display correctly in older supported VS Code versions, including 1.74.
-- Project-root images keep spaces and special characters encoded in preview URLs, including responsive images in workspaces with spaces in their names.
+- Project-root images keep spaces and special characters encoded in preview URLs, including responsive images in workspaces with spaces in their names. HTML image paths containing apostrophes or quotation marks also resolve correctly.
 - Responsive images preserve embedded data URLs and commas within image paths, so valid images no longer break during preview URL conversion.
-- HTML images with apostrophes or quotation marks in their project-root paths now resolve correctly in preview.
+- References to footnotes defined inside other footnotes now resolve, including when the enclosing footnote is not referenced.
+- Emoji shortcodes remain literal inside HTML code elements and URL link labels while ordinary link labels still display emoji.
 - Documents containing many GitHub alerts update more quickly in preview.
 
 ### Mermaid
 
 - Opening a window with Mermaid theme synchronization disabled no longer restores another window's themes or clears its saved originals. After an abnormal exit, enable synchronization and then disable it in the same workspace to restore saved values that you have not changed yourself.
+
+### Themes and appearance
+
+- Links, syntax highlighting, and other preview styles display correctly in older supported VS Code versions, including 1.74.
 
 ## [v4.5.2] - 2026-09-01
 
@@ -220,6 +226,7 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 - v4 supports VS Code 1.74 or later and continues to enhance the built-in Markdown preview instead of opening a separate preview editor.
 - Commands and settings are available in English and Simplified Chinese according to the VS Code display language.
 
+[v4.5.3]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.5.2...v4.5.3
 [v4.5.2]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.5.1...v4.5.2
 [v4.5.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.5.0...v4.5.1
 [v4.5.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.4.4...v4.5.0
@@ -233,4 +240,4 @@ v4 is a new extension rather than an in-place update of `lzm0x219.vscode-markdow
 [v4.1.1]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/lzm0x219/vscode-github-markdown/compare/v3.1.0...v4.0.0
-[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.5.2...HEAD
+[Unreleased]: https://github.com/lzm0x219/vscode-github-markdown/compare/v4.5.3...HEAD
