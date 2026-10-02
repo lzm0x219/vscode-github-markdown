@@ -11,8 +11,8 @@ describe("generateCaseFoldingSource", () => {
       "utf8"
     );
 
-    expect(generated.entries).toBe(1_585);
-    expect(generated.byteLength).toBe(5_566);
+    expect(generated.entries).toBe(1_606);
+    expect(generated.byteLength).toBe(5_639);
     expect(generated.source).toBe(checkedInSource);
   });
 });
