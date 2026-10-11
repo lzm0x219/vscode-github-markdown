@@ -108,6 +108,8 @@ VS Code 模式保留 GitHub Markdown 的结构和排版，同时从当前 VS Cod
 
 随时通过 VS Code 命令（Quick Pick）切换主题，无需打开设置面板。
 
+遇到预览差异时，可在命令面板运行 **GitHub Markdown: 复制预览诊断信息**。命令会复制一份简要报告，包含 VS Code 与扩展版本、宿主类型、主题模式及设置作用域、Mermaid 渲染器状态和同步状态。报告不包含 Markdown 内容或工作区路径，也不会上传。
+
 ### Mermaid 图表
 
 在 VS Code 1.121 及以上版本中，Mermaid 主题同步可直接配合内置的 `vscode.mermaid-markdown-features` 扩展；在更早的受支持版本中，请安装外置的 `bierner.markdown-mermaid` 扩展。任一渲染器可用且已启用 `githubMarkdown.mermaid.syncTheme` 时，本扩展会更新它们共用的 `markdown-mermaid` 亮色和暗色主题设置。跟随系统模式会分别映射所选的 GitHub 亮色与暗色主题；单主题模式会为两个槽位应用同一个匹配主题；VS Code 模式会为两个槽位应用 Mermaid 的 `vscode` 主题。关闭同步或停用本扩展时，只会恢复当前扩展会话写入且仍持有的值，保留用户后续选择的 Mermaid 主题。打开未启用同步的窗口，不会恢复其他会话的设置或清除其保存的原始值。本扩展不内置 Mermaid 渲染器，也不引入 Mermaid 运行时依赖。

@@ -620,7 +620,7 @@ function hasConfiguration(configuration: vscode.WorkspaceConfiguration): boolean
   return slots.every(([, key]) => configuration.inspect(key) !== undefined);
 }
 
-function hasMermaidExtension(): boolean {
+export function hasMermaidExtension(): boolean {
   return mermaidExtensionIds.some((id) => vscode.extensions.getExtension(id) !== undefined);
 }
 

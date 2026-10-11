@@ -108,6 +108,8 @@ VS Code mode keeps GitHub's Markdown structure and typography while sourcing the
 
 Switch themes anytime via VS Code commands (Quick Pick) — no need to open settings.
 
+To troubleshoot a preview difference, run **GitHub Markdown: Copy Preview Diagnostics** from the Command Palette. It copies a short report with the VS Code and extension versions, host type, theme mode and setting scopes, Mermaid renderer availability, and sync status. The report excludes Markdown content and workspace paths and is not uploaded.
+
 ### Mermaid Diagrams
 
 On VS Code 1.121 or later, Mermaid theme sync works with the built-in `vscode.mermaid-markdown-features` extension. On older supported releases, install the external `bierner.markdown-mermaid` extension. When either renderer is available and `githubMarkdown.mermaid.syncTheme` is enabled, this extension updates their shared `markdown-mermaid` light and dark theme settings. System mode maps the selected GitHub light and dark themes independently; single mode applies one matching Mermaid theme to both slots; VS Code mode applies Mermaid's `vscode` theme to both slots. Disabling sync or deactivating this extension restores only values that the current extension session has written and still owns, preserving newer Mermaid theme choices. Opening a window with sync disabled leaves another session's settings and saved originals alone. This extension does not ship a Mermaid renderer or add a Mermaid runtime dependency.

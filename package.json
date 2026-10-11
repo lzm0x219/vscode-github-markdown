@@ -115,6 +115,10 @@
       {
         "command": "vscode-github-markdown.changeDarkTheme",
         "title": "%command.changeDarkTheme.title%"
+      },
+      {
+        "command": "vscode-github-markdown.copyPreviewDiagnostics",
+        "title": "%command.copyPreviewDiagnostics.title%"
       }
     ],
     "configuration": [
