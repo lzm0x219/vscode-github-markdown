@@ -6,6 +6,10 @@ This file records notable changes that people can observe or act on when using t
 
 ## [Unreleased]
 
+### Commands
+
+- The Command Palette now includes **GitHub Markdown: Copy Preview Diagnostics**, which copies version, host, theme, Mermaid renderer, and sync settings to help troubleshoot preview differences. The report excludes Markdown content and workspace paths.
+
 ## [v4.5.4] - 2026-09-15
 
 v4.5.4 is a maintenance release that updates internal dependencies. Preview behavior is unchanged.

@@ -133,7 +133,8 @@ import { extendMarkdownIt } from "../src/markdown-it";
 function createContext(): vscode.ExtensionContext {
   return {
     subscriptions: [],
-    globalState: createTestMemento()
+    globalState: createTestMemento(),
+    extension: { packageJSON: { version: "0.0.0-test" } }
   } as unknown as vscode.ExtensionContext;
 }
 
@@ -243,11 +244,12 @@ describe("extension lifecycle", () => {
       "vscode-github-markdown.changeThemeMode",
       "vscode-github-markdown.changeSingleTheme",
       "vscode-github-markdown.changeLightTheme",
-      "vscode-github-markdown.changeDarkTheme"
+      "vscode-github-markdown.changeDarkTheme",
+      "vscode-github-markdown.copyPreviewDiagnostics"
     ]);
     expect(harness.configurationListener).toBeTypeOf("function");
     expect(harness.extensionListener).toBeTypeOf("function");
-    expect(context.subscriptions).toHaveLength(5);
+    expect(context.subscriptions).toHaveLength(6);
     expect(harness.mermaidUpdates).toHaveLength(2);
     expect(api).toEqual(expect.objectContaining({ extendMarkdownIt }));
 

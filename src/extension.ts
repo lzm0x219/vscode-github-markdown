@@ -1,6 +1,7 @@
 import vscode from "vscode";
 import type MarkdownIt from "markdown-it";
 import { registerThemeCommands } from "./commands";
+import { registerPreviewDiagnosticsCommand } from "./diagnostics";
 import { registerMarkdownPreviewEvents } from "./events";
 import { restoreMermaidThemeSync, updateMermaidThemeSync } from "./integrations/mermaid";
 import { extendMarkdownIt } from "./markdown-it";
@@ -12,6 +13,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<{
 }> {
   activeMemento = context.globalState;
   context.subscriptions.push(...registerThemeCommands());
+  context.subscriptions.push(
+    registerPreviewDiagnosticsCommand(String(context.extension.packageJSON.version))
+  );
   context.subscriptions.push(registerMarkdownPreviewEvents(context.globalState));
 
   try {

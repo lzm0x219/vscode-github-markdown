@@ -6,6 +6,7 @@
   "command.changeSingleTheme.title": "GitHub Markdown: 更改单一主题",
   "command.changeLightTheme.title": "GitHub Markdown: 更改亮色主题",
   "command.changeDarkTheme.title": "GitHub Markdown: 更改暗色主题",
+  "command.copyPreviewDiagnostics.title": "GitHub Markdown: 复制预览诊断信息",
 
   "configuration.theme.mode.description": "选择固定 GitHub 主题、按预览配色分别使用 GitHub 亮暗主题，或直接使用当前 VS Code 主题配色",
   "configuration.theme.mode.single.enum.description": "GitHub Markdown 将始终使用所选主题",

@@ -6,6 +6,7 @@
   "command.changeSingleTheme.title": "GitHub Markdown: Change Single Theme",
   "command.changeLightTheme.title": "GitHub Markdown: Change Light Theme",
   "command.changeDarkTheme.title": "GitHub Markdown: Change Dark Theme",
+  "command.copyPreviewDiagnostics.title": "GitHub Markdown: Copy Preview Diagnostics",
 
   "configuration.theme.mode.description": "Select a fixed GitHub theme, follow the preview color scheme with separate GitHub themes, or use the active VS Code theme colors",
   "configuration.theme.mode.single.enum.description": "GitHub will use your selected theme",
