@@ -76,7 +76,7 @@
     "@vscode/vsce": "4.0.0",
     "generate-github-markdown-css": "6.6.0",
     "is-in-ci": "2.0.0",
-    "lefthook": "2.1.17",
+    "lefthook": "2.2.1",
     "lightningcss": "1.33.0",
     "markdown-it": "14.2.0",
     "oxfmt": "0.71.0",
