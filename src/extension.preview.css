@@ -16,6 +16,7 @@ body,
 }
 
 .vscode-github-markdown {
+  --github-markdown-preview-ready: 1;
   margin: 0 auto;
   min-height: calc(100vh - 36px * 2);
   padding: 36px;
