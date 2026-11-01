@@ -24,6 +24,7 @@ export async function assertClientRenderedPreview(page: Page): Promise<void> {
 
 export type GfmSemanticDom = {
   available: boolean;
+  stylesheetReady: boolean;
   thematicBreak: { height: number; followedByParagraph: boolean };
   strikethrough: {
     single: boolean;
@@ -66,10 +67,8 @@ export async function assertGfmSemanticRendering(page: Page, timeoutMs = 30_000)
       try {
         const snapshot = await readGfmSemanticDom(frame);
         if (!snapshot?.available) continue;
-        if (snapshot.thematicBreak.height !== 1) {
-          lastError = new GfmSemanticAssertionError(
-            `thematic break is 1px high (observed ${snapshot.thematicBreak.height}px)`
-          );
+        if (!snapshot.stylesheetReady) {
+          lastError = new Error("preview stylesheet has not loaded");
           continue;
         }
         assertGfmSemanticDom(snapshot);
@@ -185,6 +184,8 @@ async function readGfmSemanticDom(frame: Frame): Promise<GfmSemanticDom | undefi
 
     return {
       available: Boolean(markerElement("h1", "host-gfm-heading")),
+      stylesheetReady:
+        getComputedStyle(root).getPropertyValue("--github-markdown-preview-ready").trim() === "1",
       thematicBreak: {
         height: thematicBreak?.getBoundingClientRect().height ?? 0,
         followedByParagraph:
@@ -244,7 +245,10 @@ async function readGfmSemanticDom(frame: Frame): Promise<GfmSemanticDom | undefi
 
 export function assertGfmSemanticDom(snapshot: GfmSemanticDom): void {
   const missing = [
-    [snapshot.thematicBreak.height === 1, "thematic break is 1px high"],
+    [
+      snapshot.thematicBreak.height === 1,
+      `thematic break is 1px high (observed ${snapshot.thematicBreak.height}px)`
+    ],
     [snapshot.thematicBreak.followedByParagraph, "thematic break preserves following content"],
     [snapshot.strikethrough.single, "single-tilde strikethrough renders <del>"],
     [snapshot.strikethrough.double, "double-tilde strikethrough renders <s>"],

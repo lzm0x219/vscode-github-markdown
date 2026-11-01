@@ -584,6 +584,7 @@ function countThemeSelector(selector: string, state: ThemePreviewState): number 
 function createSemanticSnapshot(): GfmSemanticDom {
   return {
     available: true,
+    stylesheetReady: true,
     thematicBreak: { height: 1, followedByParagraph: true },
     strikethrough: {
       single: true,
