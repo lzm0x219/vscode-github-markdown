@@ -23,8 +23,9 @@ describe("GFM semantic final DOM contract", () => {
     const browser = await chromium.launch({ headless: true });
     browsers.push(browser);
     const page = await browser.newPage();
+    const referenceCss = readFileSync(project.paths.parityReferenceCss, "utf8");
     await page.setContent(
-      `<main class="vscode-github-markdown">${renderLocalMarkdown(markdown)}</main>`
+      `<style>${referenceCss}</style><main class="vscode-github-markdown">${renderLocalMarkdown(markdown)}</main>`
     );
 
     await expect(assertGfmSemanticRendering(page, 1_000)).resolves.toBeUndefined();

@@ -3,7 +3,7 @@
   "generatedAt": "2026-08-07T00:49:55.488Z",
   "chromiumVersion": "151.0.7922.34",
   "rendererSha256": "39ce05cd40a6b3874bed31b01eb995b9b7442a5737f66691f227e33306599620",
-  "referenceCssSha256": "1677f9b291f044d61f8087a1a88b8e338d1f60959e322ef1445da7c94dbca507",
+  "referenceCssSha256": "1ca1cdf4547af68eff87f208e8d702c52adf258f85415ede900aa50258374617",
   "cases": {
     "formatting-light": {
       "markdownSha256": "16496fee7215af02a09d7e51d9bd1aacef9840cf9946c8a16dc73c58d244303d",

@@ -24,6 +24,7 @@ export async function assertClientRenderedPreview(page: Page): Promise<void> {
 
 export type GfmSemanticDom = {
   available: boolean;
+  thematicBreak: { height: number; followedByParagraph: boolean };
   strikethrough: {
     single: boolean;
     double: boolean;
@@ -163,6 +164,7 @@ async function readGfmSemanticDom(frame: Frame): Promise<GfmSemanticDom | undefi
       [...root.querySelectorAll("code")].find((element) => element.textContent?.includes(marker));
     const fencedCode = codeWithMarker("host-gfm-fenced-code");
     const fencedPre = fencedCode?.closest("pre");
+    const thematicBreak = root.querySelector("hr");
     const filteredTags = [
       "title",
       "textarea",
@@ -177,6 +179,13 @@ async function readGfmSemanticDom(frame: Frame): Promise<GfmSemanticDom | undefi
 
     return {
       available: Boolean(markerElement("h1", "host-gfm-heading")),
+      thematicBreak: {
+        height: thematicBreak?.getBoundingClientRect().height ?? 0,
+        followedByParagraph:
+          thematicBreak?.nextElementSibling?.textContent?.includes(
+            "host-gfm-after-thematic-break"
+          ) ?? false
+      },
       strikethrough: {
         single: markerContainerHasElement("host-gfm-single", "del"),
         double: markerContainerHasElement("host-gfm-double", "s"),
@@ -229,6 +238,8 @@ async function readGfmSemanticDom(frame: Frame): Promise<GfmSemanticDom | undefi
 
 export function assertGfmSemanticDom(snapshot: GfmSemanticDom): void {
   const missing = [
+    [snapshot.thematicBreak.height === 1, "thematic break is 1px high"],
+    [snapshot.thematicBreak.followedByParagraph, "thematic break preserves following content"],
     [snapshot.strikethrough.single, "single-tilde strikethrough renders <del>"],
     [snapshot.strikethrough.double, "double-tilde strikethrough renders <s>"],
     [snapshot.strikethrough.escaped, "escaped tildes remain literal"],

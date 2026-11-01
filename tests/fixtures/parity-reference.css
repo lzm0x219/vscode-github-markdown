@@ -141,7 +141,7 @@
   border-bottom: 1px solid var(--borderColor-muted);
   background: 0 0;
   overflow: hidden;
-  height: .25em;
+  height: 1px;
   margin: var(--base-size-24) 0;
   background-color: var(--borderColor-default);
   border: 0;

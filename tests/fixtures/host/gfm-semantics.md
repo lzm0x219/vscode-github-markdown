@@ -2,6 +2,10 @@
 
 host-gfm-paragraph فقرة عربية لاختبار اتجاه النص.
 
+---
+
+host-gfm-after-thematic-break
+
 - host-gfm-list عنصر عربي
 - host-gfm-mixed-list Mixed item العربية
 

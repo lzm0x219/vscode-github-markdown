@@ -83,6 +83,13 @@ describe("assertClientRenderedPreview", () => {
     expect(() => assertGfmSemanticDom(createSemanticSnapshot())).not.toThrow();
   });
 
+  it("rejects a horizontal rule that is thicker than GitHub's", () => {
+    const snapshot = createSemanticSnapshot();
+    snapshot.thematicBreak.height = 4;
+
+    expect(() => assertGfmSemanticDom(snapshot)).toThrow("thematic break is 1px high");
+  });
+
   it("reports the first missing semantic contract instead of accepting a partial DOM", () => {
     const snapshot = createSemanticSnapshot();
     snapshot.directionality.fencedCodeHasDirection = true;
@@ -577,6 +584,7 @@ function countThemeSelector(selector: string, state: ThemePreviewState): number 
 function createSemanticSnapshot(): GfmSemanticDom {
   return {
     available: true,
+    thematicBreak: { height: 1, followedByParagraph: true },
     strikethrough: {
       single: true,
       double: true,
