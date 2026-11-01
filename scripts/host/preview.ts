@@ -66,6 +66,12 @@ export async function assertGfmSemanticRendering(page: Page, timeoutMs = 30_000)
       try {
         const snapshot = await readGfmSemanticDom(frame);
         if (!snapshot?.available) continue;
+        if (snapshot.thematicBreak.height !== 1) {
+          lastError = new GfmSemanticAssertionError(
+            `thematic break is 1px high (observed ${snapshot.thematicBreak.height}px)`
+          );
+          continue;
+        }
         assertGfmSemanticDom(snapshot);
         return;
       } catch (error) {
