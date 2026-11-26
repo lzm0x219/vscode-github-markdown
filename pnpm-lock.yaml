@@ -246,8 +246,8 @@ importers:
         specifier: 0.3.25
         version: 0.3.25
       rollup-plugin-visualizer:
-        specifier: 7.1.3
-        version: 7.1.3(rolldown@1.3.2)
+        specifier: 7.3.0
+        version: 7.3.0(rolldown@1.3.2)
       tsdown:
         specifier: 0.23.7
         version: 0.23.7(publint@0.3.25)(typescript@7.0.2)
@@ -2569,8 +2569,8 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  rollup-plugin-visualizer@7.1.3:
-    resolution: {integrity: sha512-P7G0p9RowDd0ahXXBtx4MOHlSVzclyW5pDeZ2Z0HensWSI9vJdu2bqdZDsD375g+0AxND8VJzWYuKD9yH38etw==}
+  rollup-plugin-visualizer@7.3.0:
+    resolution: {integrity: sha512-m0NuTHu7vRzNVEQexWaj8BqXNBl9Jhj2OGbD7zW5qfXzxMAEUH/nlyIjcpfwchk3gbD1dTBq0Z18AjTWm9Feow==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -2648,10 +2648,6 @@ packages:
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
-
-  source-map@0.8.0:
-    resolution: {integrity: sha512-d8EqvL+k/SOXCreS/SUzg2ciyHqBBLcN/yuRjFsbvVhHTE2pgei7oAhmPM7kWFbkX6OSMQfUq4KbkF3au9lhYQ==}
-    engines: {node: '>= 12'}
 
   statuses@1.5.0:
     resolution: {integrity: sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==}
@@ -4952,11 +4948,11 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.3.2
       '@rolldown/binding-win32-x64-msvc': 1.3.2
 
-  rollup-plugin-visualizer@7.1.3(rolldown@1.3.2):
+  rollup-plugin-visualizer@7.3.0(rolldown@1.3.2):
     dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
       open: 11.0.1
       picomatch: 4.0.7
-      source-map: 0.8.0
       yargs: 18.1.0
     optionalDependencies:
       rolldown: 1.3.2
@@ -5020,8 +5016,6 @@ snapshots:
   signal-exit@4.1.0: {}
 
   source-map-js@1.2.1: {}
-
-  source-map@0.8.0: {}
 
   statuses@1.5.0: {}
 
