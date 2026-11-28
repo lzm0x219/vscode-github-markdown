@@ -265,8 +265,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       unicode-case-folding:
-        specifier: 1.1.2
-        version: 1.1.2
+        specifier: 2.1.0
+        version: 2.1.0
       vitest:
         specifier: 5.1.2
         version: 5.1.2(@types/node@26.6.11)(@vitest/coverage-v8@5.1.2)(vite@8.0.16(@types/node@26.6.11))
@@ -2834,8 +2834,8 @@ packages:
   undici-types@8.9.0:
     resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
-  unicode-case-folding@1.1.2:
-    resolution: {integrity: sha512-03vMM1kVkJbiSIPDW1D0hu42prq3Pe000yC5PaNMjhBJQxDuhAfh+R1V4TXXL21adjBqj7fUtBjZuWCRmiOQQQ==}
+  unicode-case-folding@2.1.0:
+    resolution: {integrity: sha512-2eASTy6/kWvKIQbh4QSbfDN7yoT9QhV083XaOg1Yn7jFCX81R1OnuAr13G2nNYC/BOzeIDCfjj0uC39P/R5Sxw==}
 
   url-join@4.0.1:
     resolution: {integrity: sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==}
@@ -5233,7 +5233,7 @@ snapshots:
 
   undici-types@8.9.0: {}
 
-  unicode-case-folding@1.1.2: {}
+  unicode-case-folding@2.1.0: {}
 
   url-join@4.0.1: {}
 

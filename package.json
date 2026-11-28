@@ -89,7 +89,7 @@
     "rollup-plugin-visualizer": "7.3.0",
     "tsdown": "0.23.7",
     "typescript": "7.0.2",
-    "unicode-case-folding": "1.1.2",
+    "unicode-case-folding": "2.1.0",
     "vitest": "5.1.2",
     "vscode-uri": "3.2.0"
   },
